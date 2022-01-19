@@ -4,7 +4,9 @@
 class MaterialReference : public Component
 {
 public:
-	enum MATERIALID { ID_BRICKS, ID_STONE, ID_TILE, ID_CRATE, ID_ICE, ID_GRASS, ID_SKULLMAT, ID_SKY };
+	enum MATERIALID { ID_BRICKS, ID_STONE, ID_TILE, ID_CRATE, ID_ICE, ID_GRASS, ID_SKULLMAT, ID_SKY,ID_SKY2, ID_SKY3, ID_SKY4
+		, ID_SKY5, ID_SKY6
+	};
 
 public:
 	explicit MaterialReference();

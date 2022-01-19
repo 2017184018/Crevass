@@ -214,7 +214,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	g_Device->CreateShaderResourceView(sky5.Get(), &srvDesc, hDescriptor);
 
 
-	mSkyTexHeapIndex = 7;
+	mSkyTexHeapIndex = 12;
 }
 
 void GraphicsRenderer::BuildShaderAndInputLayout()
