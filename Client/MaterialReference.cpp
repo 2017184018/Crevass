@@ -81,6 +81,41 @@ void MaterialReference::BuildMaterials()
 	sky->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	sky->Roughness = 1.0f;
 
+	auto sky2 = std::make_unique<Material>();
+	sky2->MatCBIndex = MaterialReference::MATERIALID::ID_SKY2;
+	sky2->DiffuseSrvHeapIndex = MaterialReference::MATERIALID::ID_SKY2;
+	sky2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	sky2->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	sky2->Roughness = 1.0f;
+
+	auto sky3 = std::make_unique<Material>();
+	sky3->MatCBIndex = MaterialReference::MATERIALID::ID_SKY3;
+	sky3->DiffuseSrvHeapIndex = MaterialReference::MATERIALID::ID_SKY3;
+	sky3->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	sky3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	sky3->Roughness = 1.0f;
+
+	auto sky4 = std::make_unique<Material>();
+	sky4->MatCBIndex = MaterialReference::MATERIALID::ID_SKY4;
+	sky4->DiffuseSrvHeapIndex = MaterialReference::MATERIALID::ID_SKY4;
+	sky4->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	sky4->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	sky4->Roughness = 1.0f;
+
+	auto sky5 = std::make_unique<Material>();
+	sky5->MatCBIndex = MaterialReference::MATERIALID::ID_SKY5;
+	sky5->DiffuseSrvHeapIndex = MaterialReference::MATERIALID::ID_SKY5;
+	sky5->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	sky5->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	sky5->Roughness = 1.0f;
+
+	auto sky6 = std::make_unique<Material>();
+	sky6->MatCBIndex = MaterialReference::MATERIALID::ID_SKY6;
+	sky6->DiffuseSrvHeapIndex = MaterialReference::MATERIALID::ID_SKY6;
+	sky6->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	sky6->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	sky6->Roughness = 1.0f;
+
 	m_Materials[MATERIALID::ID_BRICKS] = std::move(bricks0);
 	m_Materials[MATERIALID::ID_STONE] = std::move(stone0);
 	m_Materials[MATERIALID::ID_TILE] = std::move(tile0);
@@ -89,4 +124,9 @@ void MaterialReference::BuildMaterials()
 	m_Materials[MATERIALID::ID_GRASS] = std::move(grass0);
 	m_Materials[MATERIALID::ID_SKULLMAT] = std::move(skullMat);
 	m_Materials[MATERIALID::ID_SKY] = std::move(sky);
+	m_Materials[MATERIALID::ID_SKY2] = std::move(sky2);
+	m_Materials[MATERIALID::ID_SKY3] = std::move(sky3);
+	m_Materials[MATERIALID::ID_SKY4] = std::move(sky4);
+	m_Materials[MATERIALID::ID_SKY5] = std::move(sky5);
+	m_Materials[MATERIALID::ID_SKY6] = std::move(sky6);
 }

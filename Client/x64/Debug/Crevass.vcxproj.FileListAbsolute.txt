@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 C:\Users\N-Main\Documents\Crevass\Client\x64\Debug\Crevass.exe
+=======
+C:\Users\오성훈\Desktop\git\GitHub\Crevass\Client\x64\Debug\Crevass.exe
+>>>>>>> fc7e681d438c6d84e718521d58255dddbeaa794a

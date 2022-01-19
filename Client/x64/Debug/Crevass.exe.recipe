@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\N-Main\Documents\Crevass\Client\x64\Debug\Crevass.exe</FullPath>
+=======
+      <FullPath>C:\Users\오성훈\Desktop\git\GitHub\Crevass\Client\x64\Debug\Crevass.exe</FullPath>
+>>>>>>> fc7e681d438c6d84e718521d58255dddbeaa794a
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
