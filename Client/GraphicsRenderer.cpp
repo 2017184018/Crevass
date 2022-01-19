@@ -63,7 +63,12 @@ void GraphicsRenderer::LoadTextures()
 		"iceTex",
 		"grassTex",
 		"defaultTex",
-		"skyCubeMap"
+		"X+",
+		"X-",
+		"Y+",
+		"Y-",
+		"Z+",
+		"Z-"
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -75,7 +80,12 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/ice.dds",
 		L"./Textures/grass.dds",
 		L"./Textures/white1x1.dds",
-		L"./Textures/grasscube1024.dds"
+		L"./Textures/0.dds",
+		L"./Textures/1.dds",
+		L"./Textures/2.dds",
+		L"./Textures/3.dds",
+		L"./Textures/4.dds",
+		L"./Textures/5.dds"
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -97,7 +107,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	// Create the SRV heap.
 	//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = 8;
+	srvHeapDesc.NumDescriptors = 13;	//텍스쳐 수
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
@@ -114,7 +124,12 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	auto iceTex = m_Textures["iceTex"]->Resource;
 	auto grassTex = m_Textures["grassTex"]->Resource;
 	auto defaultTex = m_Textures["defaultTex"]->Resource;
-	auto skyTex = m_Textures["skyCubeMap"]->Resource;
+	auto sky0 = m_Textures["X+"]->Resource;
+	auto sky1 = m_Textures["X-"]->Resource;
+	auto sky2 = m_Textures["Y+"]->Resource;
+	auto sky3 = m_Textures["Y-"]->Resource;
+	auto sky4 = m_Textures["Z+"]->Resource;
+	auto sky5 = m_Textures["Z-"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -164,14 +179,40 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 
 	// next descriptor
 	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+	srvDesc.Format = sky0->GetDesc().Format;
+	srvDesc.Texture2D.MipLevels = sky0->GetDesc().MipLevels;
+	g_Device->CreateShaderResourceView(sky0.Get(), &srvDesc, hDescriptor);
 
-	// 입방체는 TECTURECUBE
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = skyTex->GetDesc().MipLevels;
-	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	srvDesc.Format = skyTex->GetDesc().Format;
-	g_Device->CreateShaderResourceView(skyTex.Get(), &srvDesc, hDescriptor);
+	// next descriptor
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+	srvDesc.Format = sky1->GetDesc().Format;
+	srvDesc.Texture2D.MipLevels = sky1->GetDesc().MipLevels;
+	g_Device->CreateShaderResourceView(sky1.Get(), &srvDesc, hDescriptor);
+
+	// next descriptor
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+	srvDesc.Format = sky2->GetDesc().Format;
+	srvDesc.Texture2D.MipLevels = sky2->GetDesc().MipLevels;
+	g_Device->CreateShaderResourceView(sky2.Get(), &srvDesc, hDescriptor);
+
+	// next descriptor
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+	srvDesc.Format = sky3->GetDesc().Format;
+	srvDesc.Texture2D.MipLevels = sky3->GetDesc().MipLevels;
+	g_Device->CreateShaderResourceView(sky3.Get(), &srvDesc, hDescriptor);
+
+	// next descriptor
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+	srvDesc.Format = sky4->GetDesc().Format;
+	srvDesc.Texture2D.MipLevels = sky4->GetDesc().MipLevels;
+	g_Device->CreateShaderResourceView(sky4.Get(), &srvDesc, hDescriptor);
+
+	// next descriptor
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+	srvDesc.Format = sky5->GetDesc().Format;
+	srvDesc.Texture2D.MipLevels = sky5->GetDesc().MipLevels;
+	g_Device->CreateShaderResourceView(sky5.Get(), &srvDesc, hDescriptor);
+
 
 	mSkyTexHeapIndex = 7;
 }
@@ -204,7 +245,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 8, 1, 0);
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 13, 1, 0);
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[5];
 

@@ -66,6 +66,12 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	if (GetAsyncKeyState('D') & 0x8000)
 		m_Camera.Strafe(20.0f * deltaT);
 
+	if (GetAsyncKeyState('Q') & 0x8000)
+		m_Camera.RotateY(0.005);
+
+	if (GetAsyncKeyState('E') & 0x8000)
+		m_Camera.RotateY(-0.005);
+
 	m_Camera.UpdateViewMatrix();
 }
 
@@ -114,7 +120,7 @@ void CREVASS::BuildScene()
 					x + j * dx, y + i * dy, z + k * dz, 1.0f);
 
 				XMStoreFloat4x4(&instancingObj->Instances[index].TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
-				instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_ICE;
+				instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_SKY;
 
 				//instancingObj->Instances[index].MaterialIndex = index % ObjectManager::GetApp()->m_MaterialRef->m_Materials.size();
 			}
