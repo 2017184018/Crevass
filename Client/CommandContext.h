@@ -39,7 +39,7 @@ public:
 
 public:
 	void UpdateInstanceData(std::vector<GameObject*>& rItems);
-	void UpdateMaterialBuffer(std::unordered_map<int, std::unique_ptr<Material>>& materials);
+	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera);
 	void DrawRenderItems(const std::vector<GameObject*>& ritems);
 

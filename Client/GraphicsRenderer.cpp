@@ -56,36 +56,14 @@ void GraphicsRenderer::LoadTextures()
 
 	std::vector<std::string> texNames =
 	{
-		"bricksTex",
-		"stoneTex",
-		"tileTex",
-		"crateTex",
-		"iceTex",
-		"grassTex",
-		"defaultTex",
-		"X+",
-		"X-",
-		"Y+",
-		"Y-",
-		"Z+",
-		"Z-"
+		"desertcube1024",
+		"ice"
 	};
 
 	std::vector<std::wstring> texFilenames =
 	{
-		L"./Textures/bricks.dds",
-		L"./Textures/stone.dds",
-		L"./Textures/tile.dds",
-		L"./Textures/WoodCrate01.dds",
+			L"./Textures/desertcube1024.dds",
 		L"./Textures/ice.dds",
-		L"./Textures/grass.dds",
-		L"./Textures/white1x1.dds",
-		L"./Textures/0.dds",
-		L"./Textures/1.dds",
-		L"./Textures/2.dds",
-		L"./Textures/3.dds",
-		L"./Textures/4.dds",
-		L"./Textures/5.dds"
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -104,10 +82,10 @@ void GraphicsRenderer::LoadTextures()
 void GraphicsRenderer::BuildDescriptorHeaps()
 {
 	//
-	// Create the SRV heap.
-	//
+		// Create the SRV heap.
+		//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = 13;	//텍스쳐 수
+	srvHeapDesc.NumDescriptors = m_Textures.size();
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
@@ -117,104 +95,31 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	//
 	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	auto bricksTex = m_Textures["bricksTex"]->Resource;
-	auto stoneTex = m_Textures["stoneTex"]->Resource;
-	auto tileTex = m_Textures["tileTex"]->Resource;
-	auto crateTex = m_Textures["crateTex"]->Resource;
-	auto iceTex = m_Textures["iceTex"]->Resource;
-	auto grassTex = m_Textures["grassTex"]->Resource;
-	auto defaultTex = m_Textures["defaultTex"]->Resource;
-	auto sky0 = m_Textures["X+"]->Resource;
-	auto sky1 = m_Textures["X-"]->Resource;
-	auto sky2 = m_Textures["Y+"]->Resource;
-	auto sky3 = m_Textures["Y-"]->Resource;
-	auto sky4 = m_Textures["Z+"]->Resource;
-	auto sky5 = m_Textures["Z-"]->Resource;
+	auto desertcube1024 = m_Textures["desertcube1024"]->Resource;
+	auto ice = m_Textures["ice"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-	srvDesc.Format = bricksTex->GetDesc().Format;
+	// 입방체는 TECTURECUBE
+	srvDesc.Format = desertcube1024->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+	srvDesc.TextureCube.MostDetailedMip = 0;
+	srvDesc.TextureCube.MipLevels = desertcube1024->GetDesc().MipLevels;
+	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(desertcube1024.Get(), &srvDesc, hDescriptor);
+
+	// next descriptor
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = ice->GetDesc().Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = bricksTex->GetDesc().MipLevels;
+	srvDesc.Texture2D.MipLevels = ice->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(bricksTex.Get(), &srvDesc, hDescriptor);
+	g_Device->CreateShaderResourceView(ice.Get(), &srvDesc, hDescriptor);
 
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = stoneTex->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = stoneTex->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(stoneTex.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = tileTex->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = tileTex->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(tileTex.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = crateTex->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = crateTex->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(crateTex.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = iceTex->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = iceTex->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(iceTex.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = grassTex->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = grassTex->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(grassTex.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = defaultTex->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = defaultTex->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(defaultTex.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = sky0->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = sky0->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(sky0.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = sky1->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = sky1->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(sky1.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = sky2->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = sky2->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(sky2.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = sky3->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = sky3->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(sky3.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = sky4->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = sky4->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(sky4.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-	srvDesc.Format = sky5->GetDesc().Format;
-	srvDesc.Texture2D.MipLevels = sky5->GetDesc().MipLevels;
-	g_Device->CreateShaderResourceView(sky5.Get(), &srvDesc, hDescriptor);
-
-
-	mSkyTexHeapIndex = 12;
+	mSkyTexHeapIndex = 0;
 }
 
 void GraphicsRenderer::BuildShaderAndInputLayout()
@@ -245,7 +150,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 13, 1, 0);
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 1, 0);
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[5];
 
@@ -320,26 +225,32 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.SampleDesc.Count = g_4xMsaaState ? 4 : 1;
 	opaquePsoDesc.SampleDesc.Quality = g_4xMsaaState ? (g_4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
-	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&m_OpaquePSO)));
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&mPSOs["opaque"])));
 
 	////
 	//// PSO for sky.
 	////
 	//D3D12_GRAPHICS_PIPELINE_STATE_DESC skyPsoDesc = opaquePsoDesc;
+
+	//// The camera is inside the sky sphere, so just turn off culling.
 	//skyPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-	//skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	//skyPsoDesc.pRootSignature = mRootSignature.Get();
-	//skyPsoDesc.VS =
-	//{
-	//	reinterpret_cast<BYTE*>(m_Shaders[SHADER_VS::ID_SKY_VS]->GetBufferPointer()),
-	//	m_Shaders[SHADER_VS::ID_SKY_VS]->GetBufferSize()
-	//};
-	//skyPsoDesc.PS =
-	//{
-	//	reinterpret_cast<BYTE*>(m_Shaders[SHADER_PS::ID_SKY_PS]->GetBufferPointer()),
-	//	m_Shaders[SHADER_PS::ID_SKY_PS]->GetBufferSize()
-	//};
-	//ThrowIfFailed(pDevice->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&mPSOs["sky"])));
+
+	// Make sure the depth function is LESS_EQUAL and not just LESS.  
+	// Otherwise, the normalized depth values at z = 1 (NDC) will 
+	// fail the depth test if the depth buffer was cleared to 1.
+	/*skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	skyPsoDesc.pRootSignature = m_RenderRS.Get();
+	skyPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["skyVS"]->GetBufferPointer()),
+		m_Shaders["skyVS"]->GetBufferSize()
+	};
+	skyPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["skyPS"]->GetBufferPointer()),
+		m_Shaders["skyPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&mPSOs["sky"])));*/
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GraphicsRenderer::GetStaticSamplers()

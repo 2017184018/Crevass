@@ -50,6 +50,7 @@ void CREVASS::Update(float deltaT)
 void CREVASS::RenderScene(void)
 {
 	GraphicsContext::GetApp()->DrawRenderItems(m_AllRItems);
+
 }
 
 void CREVASS::OnKeyboardInput(const float deltaT)
@@ -80,13 +81,13 @@ void CREVASS::BuildScene()
 	// Instaincing Obj
 	GameObject* instancingObj = new GameObject;
 	instancingObj->Initialize();
-	instancingObj->Geo = m_MeshRef->m_GeometryMesh[MeshReference::MESHID::ID_SKULL].get();
+	instancingObj->Geo = m_MeshRef->m_GeometryMesh["skull"].get();
 	instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	instancingObj->IndexCount = instancingObj->Geo->DrawArgs[GeometryMesh::GEOID::ID_SKULL].IndexCount;
-	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs[GeometryMesh::GEOID::ID_SKULL].StartIndexLocation;
-	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs[GeometryMesh::GEOID::ID_SKULL].BaseVertexLocation;
-	instancingObj->Bounds = instancingObj->Geo->DrawArgs[GeometryMesh::GEOID::ID_SKULL].Bounds;
-	instancingObj->Mat = m_MaterialRef->m_Materials[MaterialReference::MATERIALID::ID_ICE].get();
+	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["skull"].IndexCount;
+	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["skull"].StartIndexLocation;
+	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["skull"].BaseVertexLocation;
+	instancingObj->Bounds = instancingObj->Geo->DrawArgs["skull"].Bounds;
+	instancingObj->Mat = m_MaterialRef->m_Materials["ice"].get();
 
 	// Generate instance data.
 	// 위치와 텍스처, 재질에만 자유로움
@@ -120,14 +121,8 @@ void CREVASS::BuildScene()
 					x + j * dx, y + i * dy, z + k * dz, 1.0f);
 
 				XMStoreFloat4x4(&instancingObj->Instances[index].TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
-			//	instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_SKY;
-			//	instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_SKY2;
-			//	instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_SKY3;
-			//	instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_SKY4;
-			//	instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_SKY5;
-				instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_SKY6;
+			
 
-				//instancingObj->Instances[index].MaterialIndex = index % ObjectManager::GetApp()->m_MaterialRef->m_Materials.size();
 			}
 		}
 	}

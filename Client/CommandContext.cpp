@@ -45,7 +45,7 @@ void GraphicsContext::UpdateInstanceData(std::vector<GameObject*>& rItems)
 	}
 }
 
-void GraphicsContext::UpdateMaterialBuffer(std::unordered_map<int, std::unique_ptr<Material>>& materials)
+void GraphicsContext::UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials)
 {
 	auto currMaterialBuffer = MaterialBuffer.get();
 	for (auto& e : materials)

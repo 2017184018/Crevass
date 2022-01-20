@@ -8,20 +8,6 @@ MeshReference::MeshReference()
 
 MeshReference::~MeshReference()
 {
-	this->ReleaseComponent();
-}
-
-HRESULT MeshReference::InitializeComponent()
-{
-	return S_OK;
-}
-
-void MeshReference::UpdateComponent(const float& fTimeDelta)
-{
-}
-
-void MeshReference::ReleaseComponent()
-{
 }
 
 void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -127,12 +113,12 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
 	geo->IndexBufferByteSize = ibByteSize;
 
-	geo->DrawArgs[GeometryMesh::GEOID::ID_BOX] = boxSubmesh;
-	geo->DrawArgs[GeometryMesh::GEOID::ID_GRID] = gridSubmesh;
-	geo->DrawArgs[GeometryMesh::GEOID::ID_SPHERE] = sphereSubmesh;
-	geo->DrawArgs[GeometryMesh::GEOID::ID_CYLINDER] = cylinderSubmesh;
+	geo->DrawArgs["box"] = boxSubmesh;
+	geo->DrawArgs["grid"] = gridSubmesh;
+	geo->DrawArgs["sphere"] = sphereSubmesh;
+	geo->DrawArgs["cylinder"] = cylinderSubmesh;
 
-	m_GeometryMesh[MeshReference::MESHID::ID_GEO] = std::move(geo);
+	m_GeometryMesh["geo"] = std::move(geo);
 }
 
 void MeshReference::BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -237,7 +223,7 @@ void MeshReference::BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsComm
 	submesh.BaseVertexLocation = 0;
 	submesh.Bounds = bounds;
 
-	geo->DrawArgs[GeometryMesh::GEOID::ID_SKULL] = submesh;
+	geo->DrawArgs["skull"] = submesh;
 
-	m_GeometryMesh[MESHID::ID_SKULL] = std::move(geo);
+	m_GeometryMesh["skull"] = std::move(geo);
 }

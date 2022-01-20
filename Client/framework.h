@@ -59,3 +59,5 @@ using namespace DirectX::PackedVector;
 		ptr = nullptr;			\
 	}							\
 }	
+
+enum class RenderLayer { ID_OPAQUE, ID_SKY, ID_COUNT };

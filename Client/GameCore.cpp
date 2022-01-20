@@ -310,7 +310,7 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 void GameCore::PreparePresent()
 {
 	ThrowIfFailed(g_DirectCmdListAlloc->Reset());
-	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), m_GraphicsRenderer->m_OpaquePSO.Get()));
+	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), m_GraphicsRenderer->mPSOs["opaque"].Get()));
 
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);
