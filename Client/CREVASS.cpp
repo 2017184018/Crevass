@@ -121,7 +121,7 @@ void CREVASS::BuildScene()
 					x + j * dx, y + i * dy, z + k * dz, 1.0f);
 
 				XMStoreFloat4x4(&instancingObj->Instances[index].TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
-			
+				instancingObj->Instances[index].MaterialIndex = 1;
 
 			}
 		}
