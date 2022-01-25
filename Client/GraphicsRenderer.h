@@ -44,8 +44,6 @@ private:
 
 public:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RenderRS;
-	//Microsoft::WRL::ComPtr<ID3D12PipelineState> m_OpaquePSO;
-	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> m_Shaders;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Instancing_InputLayout;

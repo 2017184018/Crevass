@@ -3,6 +3,11 @@
 #include "Singleton.h"
 #include "Camera.h"
 
+namespace Graphics
+{
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+}
+
 namespace Core
 {
 	extern Microsoft::WRL::ComPtr<ID3D12Device> g_Device;

@@ -8,6 +8,9 @@
 
 using namespace Core;
 
+
+
+
 void CREVASS::Startup(void)
 {
 	m_Camera.SetPosition(0.0f, 2.0f, -15.0f);
@@ -51,6 +54,8 @@ void CREVASS::RenderScene(void)
 {
 	GraphicsContext::GetApp()->DrawRenderItems(m_AllRItems);
 
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
+
 }
 
 void CREVASS::OnKeyboardInput(const float deltaT)
@@ -78,6 +83,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 void CREVASS::BuildScene()
 {
+
 	// Instaincing Obj
 	GameObject* instancingObj = new GameObject;
 	instancingObj->Initialize();

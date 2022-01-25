@@ -13,6 +13,11 @@ namespace Core
 	void CalculateFrameStats();
 }
 
+namespace Graphics
+{
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
+}
+
 #define CREATE_APPLICATION( app_class ) \
     IGameApp* app = app_class::GetApp(); \
     Core::RunApplication( *app, L#app_class ); \

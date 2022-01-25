@@ -22,6 +22,9 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 {
 	VertexOut vout;
 
+	InstanceData instData = gInstanceData[instanceID];
+	float4x4 world = instData.World;
+
 	// Use local vertex position as cubemap lookup vector.
 	vout.PosL = vin.PosL;
 

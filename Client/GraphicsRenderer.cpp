@@ -10,7 +10,14 @@
 
 #include "MaterialReference.h"
 
+namespace Graphics
+{
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+}
+
 using namespace Core;
+using namespace Graphics;
 
 void GraphicsRenderer::Initialize()
 {
@@ -46,9 +53,6 @@ void GraphicsRenderer::RenderGraphics()
 	g_CommandList->SetGraphicsRootDescriptorTable(3, skyTexDescriptor);
 
 	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-
-	//g_CommandList->SetPipelineState(mPSOs["sky"].Get());
-	//DrawRenderCBItems( ObjectManager::GetApp()->m_RitemLayer[static_cast<int>(ObjectManager::RENDER_LAYER::ID_SKYCUBE)]);
 }
 
 void GraphicsRenderer::LoadTextures()
@@ -133,8 +137,8 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
 
-	m_Shaders["skyboxVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
-	m_Shaders["skyboxPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
+	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
 	m_Instancing_InputLayout =
 	{
@@ -225,20 +229,14 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.SampleDesc.Count = g_4xMsaaState ? 4 : 1;
 	opaquePsoDesc.SampleDesc.Quality = g_4xMsaaState ? (g_4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
-	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&mPSOs["opaque"])));
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
 
 	////
 	//// PSO for sky.
 	////
-	//D3D12_GRAPHICS_PIPELINE_STATE_DESC skyPsoDesc = opaquePsoDesc;
-
-	//// The camera is inside the sky sphere, so just turn off culling.
-	//skyPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-
-	// Make sure the depth function is LESS_EQUAL and not just LESS.  
-	// Otherwise, the normalized depth values at z = 1 (NDC) will 
-	// fail the depth test if the depth buffer was cleared to 1.
-	/*skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC skyPsoDesc = opaquePsoDesc;
+	skyPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	skyPsoDesc.pRootSignature = m_RenderRS.Get();
 	skyPsoDesc.VS =
 	{
@@ -250,7 +248,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 		reinterpret_cast<BYTE*>(m_Shaders["skyPS"]->GetBufferPointer()),
 		m_Shaders["skyPS"]->GetBufferSize()
 	};
-	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&mPSOs["sky"])));*/
+	g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO));
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GraphicsRenderer::GetStaticSamplers()

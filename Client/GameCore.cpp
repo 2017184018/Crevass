@@ -310,7 +310,7 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 void GameCore::PreparePresent()
 {
 	ThrowIfFailed(g_DirectCmdListAlloc->Reset());
-	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), m_GraphicsRenderer->mPSOs["opaque"].Get()));
+	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), Graphics::g_OpaquePSO.Get()));
 
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);
@@ -341,9 +341,6 @@ void GameCore::ExecuteCommandLists()
 	// swap the back and front buffers
 	ThrowIfFailed(mSwapChain->Present(0, 0));
 	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
-
-	//ResourceManager::GetApp()->m_pCurrFrameResource->Fence = ++mCurrentFence;
-	//g_CommandQueue->Signal(mFence.Get(), mCurrentFence);
 
 	FlushCommandQueue();
 }
