@@ -60,13 +60,13 @@ void GraphicsRenderer::LoadTextures()
 
 	std::vector<std::string> texNames =
 	{
-		"desertcube1024",
+		"snowcube1024",
 		"ice"
 	};
 
 	std::vector<std::wstring> texFilenames =
 	{
-			L"./Textures/desertcube1024.dds",
+			L"./Textures/snowcube1024.dds",
 		L"./Textures/ice.dds",
 	};
 
@@ -89,7 +89,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		// Create the SRV heap.
 		//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = m_Textures.size();	
+	srvHeapDesc.NumDescriptors = m_Textures.size();
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
@@ -99,19 +99,19 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	//
 	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	auto desertcube1024 = m_Textures["desertcube1024"]->Resource;
+	auto snowcube1024 = m_Textures["snowcube1024"]->Resource;
 	auto ice = m_Textures["ice"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	// 입방체는 TECTURECUBE
-	srvDesc.Format = desertcube1024->GetDesc().Format;
+	srvDesc.Format = snowcube1024->GetDesc().Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = desertcube1024->GetDesc().MipLevels;
+	srvDesc.TextureCube.MipLevels = snowcube1024->GetDesc().MipLevels;
 	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(desertcube1024.Get(), &srvDesc, hDescriptor);
+	g_Device->CreateShaderResourceView(snowcube1024.Get(), &srvDesc, hDescriptor);
 
 	// next descriptor
 	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
@@ -248,7 +248,8 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 		reinterpret_cast<BYTE*>(m_Shaders["skyPS"]->GetBufferPointer()),
 		m_Shaders["skyPS"]->GetBufferSize()
 	};
-	g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO));
+
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO)));
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GraphicsRenderer::GetStaticSamplers()

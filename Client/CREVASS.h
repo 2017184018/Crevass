@@ -2,6 +2,9 @@
 #include "IGameApp.h"
 #include "Singleton.h"
 #include "Camera.h"
+#include "GameObject.h"
+#include "ObjectInfo.h"
+
 
 namespace Graphics
 {
@@ -22,8 +25,6 @@ class MaterialReference;
 class GameObject;
 class CREVASS : public IGameApp, public TemplateSingleton<CREVASS>
 {
-public:
-	enum class RenderLayer : int { ID_OPAQUE = 0, ID_SKYCUBE, ID_COUNT };
 
 public:
 	virtual void Startup(void) override;
@@ -36,12 +37,42 @@ public:
 private:
 	void BuildScene();
 
+public:
+	template <class TObject>
+	TObject* CreateObject(RenderLayer layer, std::string type, std::string instID)
+	{
+		GameObject* obj = new TObject(layer, type, instID);
+		m_RItemsVec.push_back(obj);
+		//중복이면 index++해서 info 수정
+		//중복이 아니라면 info를 생성하여 m_RItemsMap에 add 
+		if (m_RItemsMap.find(type) != m_RItemsMap.end()) {
+			cout << "create instance" << endl;
+			//type , obinfo   objinfo = ((string)instID, (int)instindex)
+
+			m_RItemsMap[type]->AddInstance(instID, obj->GetIndex());
+
+		}
+		else {
+			ObjectInfo* objInfo = new ObjectInfo(instID, obj->GetIndex());
+			objInfo->m_Type = type;
+			m_RItemsMap[type] = objInfo;
+
+		}
+		//다이나믹 케스트를 왜했을까 
+		return dynamic_cast<TObject*>(obj);
+
+	}
 private:
 	Camera m_Camera;
 
 public:
 	MeshReference* m_MeshRef;
 	MaterialReference* m_MaterialRef;
+
+public:
+	std::map<std::string, ObjectInfo*> m_RItemsMap;
+	std::vector<GameObject*> m_RItemsVec;
+	
 
 	std::vector<GameObject*>	m_AllRItems;
 	std::vector<GameObject*>	m_RitemLayer[static_cast<int>(RenderLayer::ID_COUNT)];

@@ -111,9 +111,6 @@
     <ClInclude Include="CommandContext.h">
       <Filter>03_Context</Filter>
     </ClInclude>
-    <ClInclude Include="SkyCube.h">
-      <Filter>02_App\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>02_App\Component</Filter>
     </ClInclude>
@@ -133,6 +130,9 @@
       <Filter>00_Base</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
+      <Filter>02_App\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectInfo.h">
       <Filter>02_App\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
@@ -179,9 +179,6 @@
     <ClCompile Include="CommandContext.cpp">
       <Filter>03_Context</Filter>
     </ClCompile>
-    <ClCompile Include="SkyCube.cpp">
-      <Filter>02_App\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>02_App\Component</Filter>
     </ClCompile>
@@ -201,6 +198,9 @@
       <Filter>00_Base</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
+      <Filter>02_App\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectInfo.cpp">
       <Filter>02_App\GameObject</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,6 +3,7 @@
 #include "UploadBuffer.h"
 
 class GameObject;
+class ObjectInfo;
 class Camera;
 class GameTimer;
 
@@ -38,10 +39,13 @@ public:
 	virtual void Release() override;
 
 public:
-	void UpdateInstanceData(std::vector<GameObject*>& rItems);
+	void BuildInstanceBuffer(ObjectInfo* objInfo);
+
+	void UpdateInstanceData(std::map<std::string, ObjectInfo*>& objInfos,std::vector<GameObject*>& rItems);
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera);
-	void DrawRenderItems(const std::vector<GameObject*>& ritems);
+
+	void DrawRenderItems(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems);
 
 	void SetPipelineState(ID3D12PipelineState* PSO);
 	void SetGraphicsRootSignature(ID3D12RootSignature* RootSignature);
@@ -51,9 +55,8 @@ public:
 public:
 	ShaderResource::PassConstants mMainPassCB;
 	std::unique_ptr<UploadBuffer<ShaderResource::PassConstants>>	PassCB = nullptr;
-	/* map<string, UploadBuffer-InstanceData>*/
-	std::unique_ptr<UploadBuffer<ShaderResource::InstanceData>>		InstanceBuffer = nullptr;
+	std::map<string, std::unique_ptr<UploadBuffer<ShaderResource::InstanceData>>> m_InstanceBuffers;
 	std::unique_ptr<UploadBuffer<ShaderResource::MaterialData>>		MaterialBuffer = nullptr;
 
-	UINT passCount; UINT objectCount; UINT InstanceCount; UINT materialCount;
+	UINT passCount; UINT materialCount;
 };

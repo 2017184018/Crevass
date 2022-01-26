@@ -1,19 +1,17 @@
 #include "pch.h"
 #include "GameObject.h"
 
-GameObject::GameObject()
+static unsigned int s_currentIndex = 0;
+
+GameObject::GameObject(RenderLayer layer, std::string type, std::string id):
+	m_Layer(layer),
+	m_Type(type),
+	m_ID(id),
+	m_Index(s_currentIndex++)
 {
 	World = MathHelper::Identity4x4();
 	TexTransform = MathHelper::Identity4x4();
 
-	Mat = nullptr;
-	Geo = nullptr;
-
-	PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	IndexCount = 0;
-	InstanceCount = 0;
-	StartIndexLocation = 0;
-	BaseVertexLocation = 0;
 }
 
 GameObject::~GameObject()

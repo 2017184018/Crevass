@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CommandContext.h"
 #include "GameObject.h"
+#include "ObjectInfo.h"
 #include "GameTimer.h"
 #include "Camera.h"
 #include "GeometryMesh.h"
@@ -8,7 +9,7 @@
 void GraphicsContext::Initialize()
 {
 	PassCB = std::make_unique<UploadBuffer<ShaderResource::PassConstants>>(Core::g_Device.Get(), passCount, true);
-	InstanceBuffer = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), InstanceCount, false);
+	//InstanceBuffer = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), InstanceCount, false);
 	MaterialBuffer = std::make_unique<UploadBuffer<ShaderResource::MaterialData>>(Core::g_Device.Get(), materialCount, false);
 }
 
@@ -16,34 +17,37 @@ void GraphicsContext::Release()
 {
 }
 
-void GraphicsContext::UpdateInstanceData(std::vector<GameObject*>& rItems)
+void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 {
-	auto currInstanceBuffer = InstanceBuffer.get();
-	for (auto& e : rItems)
+	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
+}
+
+void GraphicsContext::UpdateInstanceData(std::map<std::string, ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems)
+{
+	for (auto& objinfo : objInfos)
 	{
-		const auto& instanceData = e->Instances;
+		//const auto& instanceData = e->Instances;
+		const std::map<std::string, UINT>& info = objinfo.second->GetinstanceKeymap();
 
 		int visibleInstanceCount = 0;
 
-		for (UINT i = 0; i < (UINT)instanceData.size(); ++i)
+		for (auto& i : info)
 		{
-			XMMATRIX world = XMLoadFloat4x4(&instanceData[i].World);
-			XMMATRIX texTransform = XMLoadFloat4x4(&instanceData[i].TexTransform);
-
+			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->World);
+			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->TexTransform);
 			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 
 			ShaderResource::InstanceData data;
 			XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
 			XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
-			data.MaterialIndex = instanceData[i].MaterialIndex;
+			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
 
 			// Write the instance data to structured buffer for the visible objects.
-			currInstanceBuffer->CopyData(visibleInstanceCount++, data);
+			m_InstanceBuffers[objinfo.first]->CopyData(visibleInstanceCount++, data);
 		}
-
-		e->InstanceCount = visibleInstanceCount;
 	}
 }
+
 
 void GraphicsContext::UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials)
 {
@@ -93,30 +97,31 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 	mMainPassCB.AmbientLight = { 0.25f, 0.25f, 0.35f, 1.0f };
 	mMainPassCB.Lights[0].Direction = { 0.57735f, -0.57735f, 0.57735f };
 	mMainPassCB.Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
-	mMainPassCB.Lights[1].Direction = { -0.57735f, -0.57735f, 0.57735f };
-	mMainPassCB.Lights[1].Strength = { 0.4f, 0.4f, 0.4f };
-	mMainPassCB.Lights[2].Direction = { 0.0f, -0.707f, -0.707f };
-	mMainPassCB.Lights[2].Strength = { 0.2f, 0.2f, 0.2f };
+	//mMainPassCB.Lights[1].Direction = { -0.57735f, -0.57735f, 0.57735f };
+	//mMainPassCB.Lights[1].Strength = { 0.4f, 0.4f, 0.4f };
+	//mMainPassCB.Lights[2].Direction = { 0.0f, -0.707f, -0.707f };
+	//mMainPassCB.Lights[2].Strength = { 0.2f, 0.2f, 0.2f };
 
 	auto currPassCB = PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
 }
 
-void GraphicsContext::DrawRenderItems(const std::vector<GameObject*>& ritems)
+void GraphicsContext::DrawRenderItems(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems)
 {
-	// For each render item...
-	for (size_t i = 0; i < ritems.size(); ++i)
+	const std::map<std::string, UINT>& info = objInfo->GetinstanceKeymap();
+
+	for (auto& i : info)
 	{
-		auto ri = ritems[i];
+		auto ri = rItems[i.second];
 
 		Core::g_CommandList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
 		Core::g_CommandList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
 		Core::g_CommandList->IASetPrimitiveTopology(ri->PrimitiveType);
 
-		auto instanceBuffer = InstanceBuffer->Resource();
+		auto instanceBuffer = m_InstanceBuffers[ri->GetType()]->Resource();
 		Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
 
-		Core::g_CommandList->DrawIndexedInstanced(ri->IndexCount, ri->InstanceCount, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
+		Core::g_CommandList->DrawIndexedInstanced(ri->IndexCount, info.size(), ri->StartIndexLocation, ri->BaseVertexLocation, 0);
 	}
 }
 
@@ -124,9 +129,10 @@ void GraphicsContext::SetPipelineState(ID3D12PipelineState* PSO)
 {
 	if (m_CurPipelineState == PSO)
 		return;
-
+	//
+	//m_CurPipelineState = PSO;
 	Core::g_CommandList->SetPipelineState(PSO);
-	m_CurPipelineState = PSO;
+	
 }
 
 void GraphicsContext::SetGraphicsRootSignature(ID3D12RootSignature* RootSignature)

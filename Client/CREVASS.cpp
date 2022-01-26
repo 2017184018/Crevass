@@ -21,14 +21,21 @@ void CREVASS::Startup(void)
 	m_MaterialRef = new MaterialReference;
 
 	m_MeshRef->BuildSkullGeometry(g_Device.Get(), g_CommandList.Get());
+	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
+
 	m_MaterialRef->BuildMaterials();
 
 	// Build RenderItem
 	BuildScene();
 
 	GraphicsContext::GetApp()->passCount = 1;
-	GraphicsContext::GetApp()->InstanceCount = 125;
 	GraphicsContext::GetApp()->materialCount = m_MaterialRef->m_Materials.size();
+
+	for (auto& p : m_RItemsMap)
+	{
+		GraphicsContext::GetApp()->BuildInstanceBuffer(p.second);
+	}
+
 }
 
 void CREVASS::Cleanup(void)
@@ -39,23 +46,38 @@ void CREVASS::Cleanup(void)
 
 	SAFE_DELETE_PTR(m_MeshRef);
 	SAFE_DELETE_PTR(m_MaterialRef);
+
+	for (auto& p : m_RItemsMap)
+	{
+		SAFE_DELETE_PTR(p.second);
+	}
+
+	for (auto& p : m_RItemsVec)
+		SAFE_DELETE_PTR(p);
+	m_RItemsVec.clear();
+	m_RItemsMap.clear();
+
+	/* Release References */
+	SAFE_DELETE_PTR(m_MeshRef);
+	SAFE_DELETE_PTR(m_MaterialRef);
 }
 
 void CREVASS::Update(float deltaT)
 {
 	OnKeyboardInput(deltaT);
-
-	GraphicsContext::GetApp()->UpdateInstanceData(m_AllRItems);
+	//Map = object info
+	//Vec = game object
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap, m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(m_MaterialRef->m_Materials);
 	GraphicsContext::GetApp()->UpdateMainPassCB(m_Camera);
 }
 
 void CREVASS::RenderScene(void)
 {
-	GraphicsContext::GetApp()->DrawRenderItems(m_AllRItems);
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["skull"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
-
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
 }
 
 void CREVASS::OnKeyboardInput(const float deltaT)
@@ -83,55 +105,56 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 void CREVASS::BuildScene()
 {
+	//layer ,mesh type , id 
+	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");
+	skyRitem->Geo = m_MeshRef->m_GeometryMesh["geo"].get();
+	//XMStoreFloat4x4(&skyRitem->World, XMMatrixScaling(5000.0f, 5000.0f, 5000.0f));
+	//skyRitem->Mat = m_MaterialRef->m_Materials["desertcube1024"].get();
+	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
+	skyRitem->StartIndexLocation = skyRitem->Geo->DrawArgs["sphere"].StartIndexLocation;
+	skyRitem->BaseVertexLocation = skyRitem->Geo->DrawArgs["sphere"].BaseVertexLocation;
+	skyRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	skyRitem->m_MaterialIndex = 0;
+
+	skyRitem->World = MathHelper::Identity4x4();
+	skyRitem->TexTransform = MathHelper::Identity4x4();
 
 	// Instaincing Obj
-	GameObject* instancingObj = new GameObject;
-	instancingObj->Initialize();
+	GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "skull", "skull0");
 	instancingObj->Geo = m_MeshRef->m_GeometryMesh["skull"].get();
 	instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["skull"].IndexCount;
 	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["skull"].StartIndexLocation;
 	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["skull"].BaseVertexLocation;
-	instancingObj->Bounds = instancingObj->Geo->DrawArgs["skull"].Bounds;
-	instancingObj->Mat = m_MaterialRef->m_Materials["ice"].get();
 
+	instancingObj->m_MaterialIndex = 1;
 	// Generate instance data.
 	// 위치와 텍스처, 재질에만 자유로움
 	// 매쉬는 단 한개만 가능
-	const int n = 5;
-	instancingObj->InstanceCount = n * n * n;
-	instancingObj->Instances.resize(instancingObj->InstanceCount);
+	//const int n = 1;
+	//instancingObj->InstanceCount = 1;
+	//instancingObj->Instances.resize(instancingObj->InstanceCount);
 
-	float width = 200.0f;
-	float height = 200.0f;
-	float depth = 200.0f;
+	//float width = 200.0f;
+	//float height = 200.0f;
+	//float depth = 200.0f;
 
-	float x = -0.5f * width;
-	float y = -0.5f * height;
-	float z = -0.5f * depth;
-	float dx = width / (n - 1);
-	float dy = height / (n - 1);
-	float dz = depth / (n - 1);
-	for (int k = 0; k < n; ++k)
-	{
-		for (int i = 0; i < n; ++i)
-		{
-			for (int j = 0; j < n; ++j)
-			{
-				int index = k * n * n + i * n + j;
-				// Position instanced along a 3D grid.
-				instancingObj->Instances[index].World = XMFLOAT4X4(
-					1.0f, 0.0f, 0.0f, 0.0f,
-					0.0f, 1.0f, 0.0f, 0.0f,
-					0.0f, 0.0f, 1.0f, 0.0f,
-					x + j * dx, y + i * dy, z + k * dz, 1.0f);
+	//float x = -0.5f * width;
+	//float y = -0.5f * height;
+	//float z = -0.5f * depth;
+	//float dx = width / (n - 1);
+	//float dy = height / (n - 1);
+	//float dz = depth / (n - 1);
 
-				XMStoreFloat4x4(&instancingObj->Instances[index].TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
-				instancingObj->Instances[index].MaterialIndex = 1;
+	//int index = 0;
+	//// Position instanced along a 3D grid.
+	//instancingObj->Instances[index].World = XMFLOAT4X4(
+	//	1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, 1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, 1.0f, 0.0f,
+	//	0, 0, 0, 1.0f);
 
-			}
-		}
-	}
+	//XMStoreFloat4x4(&instancingObj->Instances[index].TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
+	//instancingObj->Instances[index].MaterialIndex = 1;
 
-	m_AllRItems.push_back(std::move(instancingObj));
 }

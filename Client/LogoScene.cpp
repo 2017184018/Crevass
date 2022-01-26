@@ -5,7 +5,6 @@
 #include "MaterialReference.h"
 
 #include "GameObject.h"
-#include "SkyCube.h"
 
 LogoScene::LogoScene()
 {

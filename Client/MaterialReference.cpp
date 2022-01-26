@@ -28,6 +28,6 @@ void MaterialReference::BuildMaterials()
 	ice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	ice->Roughness = 1.0f;
 
-	m_Materials["desertcube1024"] = std::move(sky);
+	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 }

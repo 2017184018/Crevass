@@ -26,9 +26,12 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <iterator>
 #include <assert.h>
 #include <string>
 #include <cmath>
+#include <map>
+#include <set>
 #include <unordered_map>
 #include <sstream>
 
