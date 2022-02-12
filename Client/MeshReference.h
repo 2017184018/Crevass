@@ -15,7 +15,7 @@ public:
 public:
 	void BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	void BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
-
+	void BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName);
 public:
 	std::unordered_map<std::string, std::unique_ptr<GeometryMesh>>	m_GeometryMesh;
 };

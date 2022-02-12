@@ -21,6 +21,8 @@ void CREVASS::Startup(void)
 	m_MaterialRef = new MaterialReference;
 
 	m_MeshRef->BuildSkullGeometry(g_Device.Get(), g_CommandList.Get());
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(),"./Models/ice_cube_2.mesh", "icecube");
+
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 
 	m_MaterialRef->BuildMaterials();
@@ -74,7 +76,7 @@ void CREVASS::Update(float deltaT)
 
 void CREVASS::RenderScene(void)
 {
-	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["skull"], m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecube"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
@@ -94,6 +96,18 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	if (GetAsyncKeyState('D') & 0x8000)
 		m_Camera.Strafe(20.0f * deltaT);
 
+	if (GetAsyncKeyState('Z') & 0x8000) {
+		auto tmp = m_Camera.GetPosition3f();
+		tmp.y += 20.0f * deltaT;
+		m_Camera.SetPosition(tmp);
+	}
+
+	if (GetAsyncKeyState('X') & 0x8000) {
+		auto tmp = m_Camera.GetPosition3f();
+		tmp.y -= 20.0f * deltaT;
+		m_Camera.SetPosition(tmp);
+	}
+
 	if (GetAsyncKeyState('Q') & 0x8000)
 		m_Camera.RotateY(0.005);
 
@@ -108,8 +122,6 @@ void CREVASS::BuildScene()
 	//layer ,mesh type , id 
 	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");
 	skyRitem->Geo = m_MeshRef->m_GeometryMesh["geo"].get();
-	//XMStoreFloat4x4(&skyRitem->World, XMMatrixScaling(5000.0f, 5000.0f, 5000.0f));
-	//skyRitem->Mat = m_MaterialRef->m_Materials["desertcube1024"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
 	skyRitem->StartIndexLocation = skyRitem->Geo->DrawArgs["sphere"].StartIndexLocation;
 	skyRitem->BaseVertexLocation = skyRitem->Geo->DrawArgs["sphere"].BaseVertexLocation;
@@ -120,41 +132,29 @@ void CREVASS::BuildScene()
 	skyRitem->TexTransform = MathHelper::Identity4x4();
 
 	// Instaincing Obj
-	GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "skull", "skull0");
-	instancingObj->Geo = m_MeshRef->m_GeometryMesh["skull"].get();
+	/*GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecube", "icebue0");
+	instancingObj->Geo = m_MeshRef->m_GeometryMesh["icecube"].get();
 	instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["skull"].IndexCount;
-	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["skull"].StartIndexLocation;
-	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["skull"].BaseVertexLocation;
+	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
+	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
+	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
 
-	instancingObj->m_MaterialIndex = 1;
-	// Generate instance data.
-	// 위치와 텍스처, 재질에만 자유로움
-	// 매쉬는 단 한개만 가능
-	//const int n = 1;
-	//instancingObj->InstanceCount = 1;
-	//instancingObj->Instances.resize(instancingObj->InstanceCount);
+	instancingObj->m_MaterialIndex = 1;*/
 
-	//float width = 200.0f;
-	//float height = 200.0f;
-	//float depth = 200.0f;
-
-	//float x = -0.5f * width;
-	//float y = -0.5f * height;
-	//float z = -0.5f * depth;
-	//float dx = width / (n - 1);
-	//float dy = height / (n - 1);
-	//float dz = depth / (n - 1);
-
-	//int index = 0;
-	//// Position instanced along a 3D grid.
-	//instancingObj->Instances[index].World = XMFLOAT4X4(
-	//	1.0f, 0.0f, 0.0f, 0.0f,
-	//	0.0f, 1.0f, 0.0f, 0.0f,
-	//	0.0f, 0.0f, 1.0f, 0.0f,
-	//	0, 0, 0, 1.0f);
-
-	//XMStoreFloat4x4(&instancingObj->Instances[index].TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
-	//instancingObj->Instances[index].MaterialIndex = 1;
+	for (int i = 0; i < 5; ++i) {
+		for (int j = 0; j < 5; ++j) {
+			GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecube", "icebue" + std::to_string(5 * i + j));
+			instancingObj->Geo = m_MeshRef->m_GeometryMesh["icecube"].get();
+			instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
+			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
+			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
+			instancingObj->m_MaterialIndex = 1;
+			instancingObj->World = MathHelper::Identity4x4();
+			instancingObj->World._41 = 200 * i;
+			instancingObj->World._43 = 200 * j;
+			instancingObj->TexTransform = MathHelper::Identity4x4();
+		}
+	}
 
 }

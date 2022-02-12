@@ -349,7 +349,7 @@ void FBXLoader::ExportMesh(std::vector<Vertex>& outVertexVector, std::vector<uin
 		{
 			fileOut << "Pos " << e.Pos.x << " " << e.Pos.y << " " << e.Pos.z << "\n";
 			fileOut << "Normal " << e.Normal.x << " " << e.Normal.y << " " << e.Normal.z << "\n";
-			fileOut << "TexC" << e.TexC.x << " " << e.TexC.y << "\n";
+			fileOut << "TexC " << e.TexC.x << " " << e.TexC.y << "\n";
 
 		}
 

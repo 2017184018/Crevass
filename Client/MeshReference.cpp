@@ -227,3 +227,95 @@ void MeshReference::BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsComm
 
 	m_GeometryMesh["skull"] = std::move(geo);
 }
+
+void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName)
+{
+	ifstream fin(path);
+
+	if (!fin)
+	{
+		cout << "the path not found" <<endl;
+		return;
+	}
+
+	UINT vertexSize, indexSize;
+	//uint32_t materialSize;
+	
+	string ignore;
+
+	fin >> ignore >> vertexSize;
+	fin >> ignore >> indexSize;
+	cout << vertexSize << endl;
+	cout << indexSize << endl;
+
+	std::vector<Vertex> vertices;
+	std::vector<int32_t> indices;
+
+	if (vertexSize == 0 || indexSize == 0)
+		return;
+
+	if (fin)
+	{
+		fin >> ignore;
+
+		//vertex data 
+		for (uint32_t i = 0; i < vertexSize; ++i)
+		{
+			Vertex vertex;
+			fin >> ignore >> vertex.Pos.x >> vertex.Pos.y >> vertex.Pos.z;
+			fin >> ignore >> vertex.Normal.x >> vertex.Normal.y >> vertex.Normal.z;
+			fin >> ignore >> vertex.TexC.x >> vertex.TexC.y;
+
+			vertices.push_back(vertex);
+		}
+		cout << "----"  << vertices[1].Normal.x << endl;
+
+		//index data
+		fin >> ignore;
+		for (uint32_t i = 0; i < indexSize; ++i)
+		{
+			uint32_t index;
+			fin >> index;
+			//cout << i << "--" << index << endl;
+			indices.push_back(index);
+			
+		}
+
+	}
+	fin.close();
+	
+	///////////////////////////////////////////////////////////////////////
+
+
+	const UINT vbByteSize = vertexSize * sizeof(Vertex);
+	const UINT ibByteSize = indexSize * sizeof(std::int32_t);
+
+	auto geo = std::make_unique<GeometryMesh>();
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
+
+	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+	geo->VertexByteStride = sizeof(Vertex);
+	geo->VertexBufferByteSize = vbByteSize;
+	geo->IndexFormat = DXGI_FORMAT_R32_UINT;
+	geo->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry submesh;
+	submesh.IndexCount = indices.size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+	// submesh.Bounds = bounds;
+
+	geo->DrawArgs[meshName] = submesh;
+	m_GeometryMesh[meshName] = std::move(geo);
+
+}
