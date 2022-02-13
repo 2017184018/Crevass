@@ -6,14 +6,18 @@
 #include "MeshReference.h"
 #include "MaterialReference.h"
 
+#include <random>
 using namespace Core;
 
+random_device rd;
+default_random_engine dre(rd());
+uniform_int_distribution<> uid{ 0,24 };
 
-
+#define SCALE 0.5
 
 void CREVASS::Startup(void)
 {
-	m_Camera.SetPosition(0.0f, 2.0f, -15.0f);
+	m_Camera.SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
 	m_Camera.SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 1000.0f);
 
 	// Build Mesh & Material & Texture
@@ -21,7 +25,8 @@ void CREVASS::Startup(void)
 	m_MaterialRef = new MaterialReference;
 
 	m_MeshRef->BuildSkullGeometry(g_Device.Get(), g_CommandList.Get());
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(),"./Models/ice_cube_2.mesh", "icecube");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 
@@ -77,6 +82,7 @@ void CREVASS::Update(float deltaT)
 void CREVASS::RenderScene(void)
 {
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecube"], m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowman"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
@@ -151,10 +157,48 @@ void CREVASS::BuildScene()
 			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
 			instancingObj->m_MaterialIndex = 1;
 			instancingObj->World = MathHelper::Identity4x4();
-			instancingObj->World._41 = 200 * i;
-			instancingObj->World._43 = 200 * j;
+			instancingObj->World._11 = SCALE;
+			instancingObj->World._22 = SCALE;
+			instancingObj->World._33 = SCALE;
+			int distance = SCALE * 200;
+			instancingObj->World._41 = distance * i;
+			instancingObj->World._43 = distance * j;
 			instancingObj->TexTransform = MathHelper::Identity4x4();
 		}
 	}
+	int RandomLocation[2] = { -1,-1 };
+	for (int i = 0; i < 2; ++i) {
+		GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "snowman", "snowman" + std::to_string(i));
+		instancingObj->Geo = m_MeshRef->m_GeometryMesh["snowman"].get();
+		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = 1;
+		instancingObj->World = MathHelper::Identity4x4();
+		instancingObj->World._11 = SCALE - 0.2f;
+		instancingObj->World._22 = SCALE - 0.2f;
+		instancingObj->World._33 = SCALE - 0.2f;
+		RandomLocation[i] = uid(dre);
+		while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
+			RandomLocation[i] = uid(dre);
+		}
+		if (RandomLocation[i] % 2) {
+			XMStoreFloat4x4(&instancingObj->World, XMLoadFloat4x4(&instancingObj->World) * XMMatrixRotationY(3.14 * 5 / 6));
+			int distance = SCALE * 200;
+			instancingObj->World._41 = RandomLocation[i] % 5 * distance - 15.0f;
+			instancingObj->World._42 = 10;
+			instancingObj->World._43 = RandomLocation[i] / 5 * distance + 15.0f;
+		}
+		else {
+			XMStoreFloat4x4(&instancingObj->World, XMLoadFloat4x4(&instancingObj->World) * XMMatrixRotationY(3.14 * 7 / 6));
+			int distance = SCALE * 200;
+			instancingObj->World._41 = RandomLocation[i] % 5 * distance + 15.0f;
+			instancingObj->World._42 = 10;
+			instancingObj->World._43 = RandomLocation[i] / 5 * distance; +15.0f;
+		}
+		instancingObj->TexTransform = MathHelper::Identity4x4();
+	}
+
 
 }
