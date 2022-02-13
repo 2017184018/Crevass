@@ -14,7 +14,6 @@ void ConvertFile(string FileName) {
 	std::vector<Material> outMaterial;
 
 	std::string filename = "../models/" + FileName;
-	filename = "../models/SM_Bld_Fence_01";
 	std::string filename2 = filename + ".fbx";
 	ifstream fin(filename2);
 
@@ -31,6 +30,6 @@ void ConvertFile(string FileName) {
 
 int main() {
 
-	ConvertFile("SM_Bld_Fence_01");
+	ConvertFile("snow_top");
 
 }

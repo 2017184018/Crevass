@@ -34,8 +34,14 @@ public:
 
 	void OnKeyboardInput(const float deltaT);
 
+	void shake(GameObject*,int);
+
 private:
 	void BuildScene();
+
+	bool IsShake[25] = { false };
+	bool IsRight[25] = { true };
+	UINT ShakeCnt[25] = { 0 };
 
 public:
 	template <class TObject>

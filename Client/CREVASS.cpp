@@ -43,6 +43,11 @@ void CREVASS::Startup(void)
 		GraphicsContext::GetApp()->BuildInstanceBuffer(p.second);
 	}
 
+	for (int i = 0; i < 25; ++i) {
+		IsShake[i] = false;
+		IsRight[i] = true;
+		ShakeCnt[i] = 0;
+	}
 }
 
 void CREVASS::Cleanup(void)
@@ -72,6 +77,12 @@ void CREVASS::Cleanup(void)
 void CREVASS::Update(float deltaT)
 {
 	OnKeyboardInput(deltaT);
+	for (int i = 0; i < 25; ++i) {
+		if (IsShake[i]) {
+			shake(m_RItemsVec[i+1], i);
+		}
+	}
+
 	//Map = object info
 	//Vec = game object
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap, m_RItemsVec);
@@ -88,8 +99,42 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
 }
 
+void CREVASS::shake(GameObject* object, int index) {
+	if (IsRight[index]) {
+		if (object->World._41 < 100 * (index / 5) + 3) {
+			object->World._41 += 0.05f;
+		}
+		else
+			IsRight[index] = false;
+	}
+	else {
+		if (object->World._41 > 100 * (index / 5) - 3) {
+			object->World._41 -= 0.05f;
+		}
+		else
+			IsRight[index] = true;
+	}
+	if (IsRight[index] && (object->World._41-0.001f <= 100 * (index / 5) && object->World._41 + 0.001f >= 100 * (index / 5)))
+		++ShakeCnt[index];
+	if (ShakeCnt[index] == 3) {
+		ShakeCnt[index] = 0;
+		IsShake[index] = false;
+	}
+}
+
 void CREVASS::OnKeyboardInput(const float deltaT)
 {
+	static bool pushone = false;
+	if (GetAsyncKeyState('1') & 0x8000) {
+		if (pushone) {
+			IsShake[uid(dre)] = true;
+			pushone = false;
+		}
+	}
+	else {
+		pushone = true;
+	}
+
 	if (GetAsyncKeyState('W') & 0x8000)
 		m_Camera.Walk(20.0f * deltaT);
 
