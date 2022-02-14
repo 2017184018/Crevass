@@ -49,6 +49,7 @@ void CREVASS::Startup(void)
 		IsShake[i] = false;
 		IsRight[i] = true;
 		ShakeCnt[i] = 0;
+		DestructionCnt[i] = 0;
 	}
 }
 
@@ -81,7 +82,8 @@ void CREVASS::Update(float deltaT)
 	OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i]) {
-			shake(m_RItemsVec[i+1], i);
+			shake(m_RItemsVec[2 * i + 1], i);
+			shake(m_RItemsVec[2 * (i + 1)], i);
 		}
 	}
 
@@ -105,23 +107,27 @@ void CREVASS::RenderScene(void)
 void CREVASS::shake(GameObject* object, int index) {
 	if (IsRight[index]) {
 		if (object->World._41 < 100 * (index / 5) + 3) {
-			object->World._41 += 0.05f;
+			object->World._41 += 0.07f;
 		}
 		else
 			IsRight[index] = false;
 	}
 	else {
 		if (object->World._41 > 100 * (index / 5) - 3) {
-			object->World._41 -= 0.05f;
+			object->World._41 -= 0.07f;
 		}
 		else
 			IsRight[index] = true;
 	}
-	if (IsRight[index] && (object->World._41-0.001f <= 100 * (index / 5) && object->World._41 + 0.001f >= 100 * (index / 5)))
+	if (IsRight[index] && (object->World._41 - 0.001f <= 100 * (index / 5) && object->World._41 + 0.001f >= 100 * (index / 5)))
 		++ShakeCnt[index];
 	if (ShakeCnt[index] == 3) {
 		ShakeCnt[index] = 0;
 		IsShake[index] = false;
+		++DestructionCnt[index];
+		m_RItemsVec[2 * (index + 1)]->World._11 = 0;
+		m_RItemsVec[2 * (index + 1)]->World._22 = 0;
+		m_RItemsVec[2 * (index + 1)]->World._33 = 0;
 	}
 }
 
@@ -259,7 +265,7 @@ void CREVASS::BuildScene()
 			XMStoreFloat4x4(&instancingObj->World, XMLoadFloat4x4(&instancingObj->World) * XMMatrixRotationY(3.14 * 7 / 6));
 			int distance = SCALE * 200;
 			instancingObj->World._41 = RandomLocation[i] % 5 * distance + 15.0f;
-			instancingObj->World._42 = 15;
+			instancingObj->World._42 = 10;
 			instancingObj->World._43 = RandomLocation[i] / 5 * distance; +15.0f;
 		}
 		instancingObj->TexTransform = MathHelper::Identity4x4();

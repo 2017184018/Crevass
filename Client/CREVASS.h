@@ -34,14 +34,15 @@ public:
 
 	void OnKeyboardInput(const float deltaT);
 
-	void shake(GameObject*,int);
+	void shake(GameObject*, int);
 
 private:
 	void BuildScene();
 
-	bool IsShake[25] = { false };
-	bool IsRight[25] = { true };
-	UINT ShakeCnt[25] = { 0 };
+	bool IsShake[25];		//흔들리는 상태인지
+	bool IsRight[25];		//오른쪽으로 흔들리는지
+	UINT ShakeCnt[25];		//좌우로 몇 번 움직였는지
+	UINT DestructionCnt[25];	//몇 번 파괴 됐는지
 
 public:
 	template <class TObject>
@@ -78,7 +79,7 @@ public:
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
 	std::vector<GameObject*> m_RItemsVec;
-	
+
 
 	std::vector<GameObject*>	m_AllRItems;
 	std::vector<GameObject*>	m_RitemLayer[static_cast<int>(RenderLayer::ID_COUNT)];
