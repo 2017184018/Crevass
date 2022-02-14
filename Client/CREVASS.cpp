@@ -11,7 +11,8 @@ using namespace Core;
 
 random_device rd;
 default_random_engine dre(rd());
-uniform_int_distribution<> uid{ 0,24 };
+uniform_int_distribution<> uid{ 0,24 }; //눈사람 위치
+uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
 
 #define SCALE 0.5
 
@@ -25,7 +26,8 @@ void CREVASS::Startup(void)
 	m_MaterialRef = new MaterialReference;
 
 	m_MeshRef->BuildSkullGeometry(g_Device.Get(), g_CommandList.Get());
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");    //fbx
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "snow_top");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
@@ -92,8 +94,9 @@ void CREVASS::Update(float deltaT)
 
 void CREVASS::RenderScene(void)
 {
-	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecube"], m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecube"], m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowman"], m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snow_top"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
@@ -209,6 +212,23 @@ void CREVASS::BuildScene()
 			instancingObj->World._41 = distance * i;
 			instancingObj->World._43 = distance * j;
 			instancingObj->TexTransform = MathHelper::Identity4x4();
+
+			GameObject* top = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "snow_top", "snow_top" + std::to_string(5 * i + j));
+			top->Geo = m_MeshRef->m_GeometryMesh["snow_top"].get();
+			top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			top->IndexCount = top->Geo->DrawArgs["snow_top"].IndexCount;
+			top->StartIndexLocation = top->Geo->DrawArgs["snow_top"].StartIndexLocation;
+			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
+			top->m_MaterialIndex = 1;
+			top->World = MathHelper::Identity4x4();
+			top->World._11 = SCALE;
+			top->World._22 = SCALE;
+			top->World._33 = SCALE;
+			XMStoreFloat4x4(&top->World, XMLoadFloat4x4(&top->World) * XMMatrixRotationY(3.141592 * uid2(dre)));
+			top->World._41 = distance * i;
+			top->World._42 = 0;
+			top->World._43 = distance * j;
+			top->TexTransform = MathHelper::Identity4x4();
 		}
 	}
 	int RandomLocation[2] = { -1,-1 };
@@ -239,7 +259,7 @@ void CREVASS::BuildScene()
 			XMStoreFloat4x4(&instancingObj->World, XMLoadFloat4x4(&instancingObj->World) * XMMatrixRotationY(3.14 * 7 / 6));
 			int distance = SCALE * 200;
 			instancingObj->World._41 = RandomLocation[i] % 5 * distance + 15.0f;
-			instancingObj->World._42 = 10;
+			instancingObj->World._42 = 15;
 			instancingObj->World._43 = RandomLocation[i] / 5 * distance; +15.0f;
 		}
 		instancingObj->TexTransform = MathHelper::Identity4x4();

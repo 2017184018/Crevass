@@ -317,7 +317,7 @@ void FBXLoader::ExportMesh(std::vector<Vertex>& outVertexVector, std::vector<uin
 		//제질은 일단 생략
 		uint32_t vertexSize = outVertexVector.size();
 		uint32_t indexSize = outIndexVector.size();
-		//uint32_t materialSize = outMaterial.size();
+		uint32_t materialSize = outMaterial.size();
 
 		fileOut << "VertexSize " << vertexSize << "\n";
 		fileOut << "IndexSize " << indexSize << "\n";

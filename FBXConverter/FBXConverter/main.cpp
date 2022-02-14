@@ -30,6 +30,6 @@ void ConvertFile(string FileName) {
 
 int main() {
 
-	ConvertFile("snow_top");
+	ConvertFile("snowman");
 
 }
