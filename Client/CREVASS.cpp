@@ -29,6 +29,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");    //fbx
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "snow_top");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/icicle_1.mesh", "icicle");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 
@@ -82,8 +83,29 @@ void CREVASS::Update(float deltaT)
 	OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i]) {
-			shake(m_RItemsVec[2 * i + 1], i);
-			shake(m_RItemsVec[2 * (i + 1)], i);
+			shake(m_RItemsVec[2 * i + 1], i);	//ºí·Ï
+			shake(m_RItemsVec[2 * (i + 1)], i);	//µ¤°³
+			shake(m_RItemsVec[51 + i], i);	//°íµå¸§
+		}
+		if (ShakeCnt[i] == 3) {
+			ShakeCnt[i] = 0;
+			IsShake[i] = false;
+			++DestructionCnt[i];
+			if (DestructionCnt[i] == 1) {
+				m_RItemsVec[2 * (i + 1)]->World._11 = 0;
+				m_RItemsVec[2 * (i + 1)]->World._22 = 0;
+				m_RItemsVec[2 * (i + 1)]->World._33 = 0;
+			}
+			else if (DestructionCnt[i] == 2) {
+				m_RItemsVec[2 * i + 1]->World._11 = 0;
+				m_RItemsVec[2 * i + 1]->World._22 = 0;
+				m_RItemsVec[2 * i + 1]->World._33 = 0;
+			}
+			else if (DestructionCnt[i] == 3) {
+				m_RItemsVec[i + 51]->World._11 = 0;
+				m_RItemsVec[i + 51]->World._22 = 0;
+				m_RItemsVec[i + 51]->World._33 = 0;
+			}
 		}
 	}
 
@@ -99,6 +121,7 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecube"], m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowman"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snow_top"], m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icicle"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
@@ -121,14 +144,7 @@ void CREVASS::shake(GameObject* object, int index) {
 	}
 	if (IsRight[index] && (object->World._41 - 0.001f <= 100 * (index / 5) && object->World._41 + 0.001f >= 100 * (index / 5)))
 		++ShakeCnt[index];
-	if (ShakeCnt[index] == 3) {
-		ShakeCnt[index] = 0;
-		IsShake[index] = false;
-		++DestructionCnt[index];
-		m_RItemsVec[2 * (index + 1)]->World._11 = 0;
-		m_RItemsVec[2 * (index + 1)]->World._22 = 0;
-		m_RItemsVec[2 * (index + 1)]->World._33 = 0;
-	}
+	
 }
 
 void CREVASS::OnKeyboardInput(const float deltaT)
@@ -179,6 +195,8 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 void CREVASS::BuildScene()
 {
+	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷
+
 	//layer ,mesh type , id 
 	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");
 	skyRitem->Geo = m_MeshRef->m_GeometryMesh["geo"].get();
@@ -237,6 +255,28 @@ void CREVASS::BuildScene()
 			top->TexTransform = MathHelper::Identity4x4();
 		}
 	}
+
+	for (int i = 0; i < 5; ++i) {
+		for (int j = 0; j < 5; ++j) {
+			GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icicle", "icicle" + std::to_string(5 * i + j));
+			instancingObj->Geo = m_MeshRef->m_GeometryMesh["icicle"].get();
+			instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icicle"].IndexCount;
+			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icicle"].StartIndexLocation;
+			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icicle"].BaseVertexLocation;
+			instancingObj->m_MaterialIndex = 1;
+			instancingObj->World = MathHelper::Identity4x4();
+			instancingObj->World._11 = 0.5;
+			instancingObj->World._22 = 0.4;
+			instancingObj->World._33 = 0.5;
+			int distance = SCALE * 200;
+			instancingObj->World._41 = distance * i;
+			instancingObj->World._42 = 20;
+			instancingObj->World._43 = distance * j;
+			instancingObj->TexTransform = MathHelper::Identity4x4();
+		}
+	}
+
 	int RandomLocation[2] = { -1,-1 };
 	for (int i = 0; i < 2; ++i) {
 		GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "snowman", "snowman" + std::to_string(i));
