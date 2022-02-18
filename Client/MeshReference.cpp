@@ -245,6 +245,8 @@ void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 
 	fin >> ignore >> vertexSize;
 	fin >> ignore >> indexSize;
+
+	cout << std::string(path) << endl;
 	cout << vertexSize << endl;
 	cout << indexSize << endl;
 

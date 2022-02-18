@@ -30,6 +30,6 @@ void ConvertFile(string FileName) {
 
 int main() {
 
-	ConvertFile("icicle_1");
+	ConvertFile("Penguin_LOD0");
 
 }

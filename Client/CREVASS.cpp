@@ -24,12 +24,13 @@ void CREVASS::Startup(void)
 	// Build Mesh & Material & Texture
 	m_MeshRef = new MeshReference;
 	m_MaterialRef = new MaterialReference;
-
+	//Penguin
 	m_MeshRef->BuildSkullGeometry(g_Device.Get(), g_CommandList.Get());
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");    //fbx
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "snow_top");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/icicle_1.mesh", "icicle");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/Penguin.mesh", "Penguin");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 
@@ -122,7 +123,8 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowman"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snow_top"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icicle"], m_RItemsVec);
-
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin"], m_RItemsVec);
+	
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
 }
@@ -195,7 +197,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 void CREVASS::BuildScene()
 {
-	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷
+	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷, 78: Æë±Ï
 
 	//layer ,mesh type , id 
 	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");
@@ -310,6 +312,26 @@ void CREVASS::BuildScene()
 		}
 		instancingObj->TexTransform = MathHelper::Identity4x4();
 	}
+	{
+		GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Penguin", "Penguin");
+		instancingObj->Geo = m_MeshRef->m_GeometryMesh["Penguin"].get();
+		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["Penguin"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["Penguin"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["Penguin"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = 1;
+		instancingObj->World = MathHelper::Identity4x4();
+		instancingObj->World._11 = 15;
+		instancingObj->World._22 = 15;
+		instancingObj->World._33 = 15;
 
+		XMStoreFloat4x4(&instancingObj->World, XMLoadFloat4x4(&instancingObj->World)* XMMatrixRotationY(3.14 ));
+		XMStoreFloat4x4(&instancingObj->World, XMLoadFloat4x4(&instancingObj->World)* XMMatrixRotationX(3.14/2));
+
+		instancingObj->World._41 = 200;
+		instancingObj->World._42 = 30;
+		instancingObj->World._43 = 80;
+		instancingObj->TexTransform = MathHelper::Identity4x4();
+	}
 
 }
