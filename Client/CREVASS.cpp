@@ -123,6 +123,7 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowman"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snow_top"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icicle"], m_RItemsVec);
+
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin"], m_RItemsVec);
 	
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
@@ -319,7 +320,7 @@ void CREVASS::BuildScene()
 		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["Penguin"].IndexCount;
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["Penguin"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["Penguin"].BaseVertexLocation;
-		instancingObj->m_MaterialIndex = 1;
+		instancingObj->m_MaterialIndex = 2;
 		instancingObj->World = MathHelper::Identity4x4();
 		instancingObj->World._11 = 15;
 		instancingObj->World._22 = 15;

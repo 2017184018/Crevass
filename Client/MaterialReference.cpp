@@ -28,6 +28,15 @@ void MaterialReference::BuildMaterials()
 	ice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	ice->Roughness = 1.0f;
 
+	auto Penguin = std::make_unique<Material>();
+	Penguin->MatCBIndex = 2;
+	Penguin->DiffuseSrvHeapIndex = 2;
+	Penguin->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	Penguin->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	Penguin->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
+	m_Materials["Penguin"] = std::move(Penguin);
+	
 }

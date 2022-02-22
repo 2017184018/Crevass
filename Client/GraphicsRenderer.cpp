@@ -61,13 +61,15 @@ void GraphicsRenderer::LoadTextures()
 	std::vector<std::string> texNames =
 	{
 		"snowcube1024",
-		"ice"
+		"ice",
+		"Penguin"
 	};
 
 	std::vector<std::wstring> texFilenames =
 	{
 			L"./Textures/snowcube1024.dds",
-		L"./Textures/ice.dds",
+		L"./Textures/cubeworld_tex.dds",
+		L"./Textures/Penguin.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -101,6 +103,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 
 	auto snowcube1024 = m_Textures["snowcube1024"]->Resource;
 	auto ice = m_Textures["ice"]->Resource;
+	auto Penguin = m_Textures["Penguin"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -122,6 +125,16 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.MipLevels = ice->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(ice.Get(), &srvDesc, hDescriptor);
+
+	// next descriptor
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = Penguin->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = Penguin->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(Penguin.Get(), &srvDesc, hDescriptor);
 
 	mSkyTexHeapIndex = 0;
 }
@@ -154,7 +167,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 1, 0);
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 3, 1, 0);		//텍스쳐 수
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[5];
 
@@ -230,6 +243,8 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.SampleDesc.Quality = g_4xMsaaState ? (g_4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
+
+
 
 	////
 	//// PSO for sky.
