@@ -883,7 +883,7 @@ BYTE ReadStringFromFile(FILE *pInFile, char *pstrToken)
 	nReads = (UINT)::fread(&nStrLength, sizeof(BYTE), 1, pInFile);
 	nReads = (UINT)::fread(pstrToken, sizeof(char), nStrLength, pInFile); 
 	pstrToken[nStrLength] = '\0';
-
+	
 	return(nStrLength);
 }
 
@@ -1183,7 +1183,7 @@ CLoadedModelInfo *CGameObject::LoadGeometryAndAnimationFromFile(ID3D12Device *pd
 			{
 				break;
 			}
-		}
+    		}
 		else
 		{
 			break;
