@@ -135,6 +135,9 @@
     <ClInclude Include="ObjectInfo.h">
       <Filter>02_App\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Waves.h">
+      <Filter>02_App\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -202,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="ObjectInfo.cpp">
       <Filter>02_App\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Waves.cpp">
+      <Filter>02_App\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

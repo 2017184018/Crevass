@@ -6,6 +6,7 @@ public:
 	explicit MaterialReference();
 	virtual ~MaterialReference();
 
+	void Update(float t);
 public:
 	void BuildMaterials();
 

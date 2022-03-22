@@ -2,6 +2,7 @@
 #include "CREVASS.h"
 #include "CommandContext.h"
 #include "GameObject.h"
+#include "Waves.h"
 
 #include "MeshReference.h"
 #include "MaterialReference.h"
@@ -38,6 +39,8 @@ void CREVASS::Startup(void)
 
 	// Build RenderItem
 	BuildScene();
+
+	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->materialCount = m_MaterialRef->m_Materials.size();
@@ -110,11 +113,17 @@ void CREVASS::Update(float deltaT)
 		}
 	}
 
+
+	m_MaterialRef->Update(deltaT);
+
+
 	//Map = object info
 	//Vec = game object
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap, m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(m_MaterialRef->m_Materials);
 	GraphicsContext::GetApp()->UpdateMainPassCB(m_Camera);
+
+
 }
 
 void CREVASS::RenderScene(void)
@@ -125,7 +134,9 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icicle"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin"], m_RItemsVec);
-	
+
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Sea"], m_RItemsVec);
+
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
 }
@@ -198,7 +209,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 void CREVASS::BuildScene()
 {
-	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷, 78: Æë±Ï
+	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷, 78: Æë±Ï, 79: ¹Ù´Ù
 
 	//layer ,mesh type , id 
 	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");
@@ -211,16 +222,6 @@ void CREVASS::BuildScene()
 
 	skyRitem->World = MathHelper::Identity4x4();
 	skyRitem->TexTransform = MathHelper::Identity4x4();
-
-	// Instaincing Obj
-	/*GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecube", "icebue0");
-	instancingObj->Geo = m_MeshRef->m_GeometryMesh["icecube"].get();
-	instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
-	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
-	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
-
-	instancingObj->m_MaterialIndex = 1;*/
 
 	for (int i = 0; i < 5; ++i) {
 		for (int j = 0; j < 5; ++j) {
@@ -335,4 +336,23 @@ void CREVASS::BuildScene()
 		instancingObj->TexTransform = MathHelper::Identity4x4();
 	}
 
+	GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
+	Sea->Geo = m_MeshRef->m_GeometryMesh["geo"].get();
+	Sea->IndexCount = Sea->Geo->DrawArgs["grid"].IndexCount;
+	Sea->StartIndexLocation = Sea->Geo->DrawArgs["grid"].StartIndexLocation;
+	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["grid"].BaseVertexLocation;
+	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	Sea->m_MaterialIndex = 3;
+
+	Sea->World = MathHelper::Identity4x4();
+
+	Sea->World._11 = 750;
+	Sea->World._22 = 750;
+	Sea->World._33 = 750;
+
+	Sea->World._41 = SCALE*400;
+	Sea->World._42 = -SCALE * 100;
+	Sea->World._43 = SCALE*400;
+	
+	Sea->TexTransform = MathHelper::Identity4x4();
 }

@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "ObjectInfo.h"
+#include "Waves.h"
 
 
 namespace Graphics
@@ -35,6 +36,8 @@ public:
 	void OnKeyboardInput(const float deltaT);
 
 	void shake(GameObject*, int);
+
+	std::unique_ptr<Waves> mWaves;
 
 private:
 	void BuildScene();

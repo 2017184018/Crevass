@@ -9,7 +9,24 @@ MaterialReference::~MaterialReference()
 {
 }
 
+void MaterialReference::Update(float t) {
+	auto waterMat = m_Materials["water"].get();
 
+	float& tu = waterMat->MatTransform(3, 0);
+	float& tv = waterMat->MatTransform(3, 1);
+
+	tu += 0.02f * t;
+	tv += 0.02f * t;
+
+	if (tu >= 1.0f)
+		tu -= 1.0f;
+
+	if (tv >= 1.0f)
+		tv -= 1.0f;
+
+	waterMat->MatTransform(3, 0) = tu;
+	waterMat->MatTransform(3, 1) = tv;
+}
 
 void MaterialReference::BuildMaterials()
 {
@@ -35,8 +52,16 @@ void MaterialReference::BuildMaterials()
 	Penguin->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Penguin->Roughness = 1.0f;
 
+	auto water = std::make_unique<Material>();
+	water->MatCBIndex = 3;
+	water->DiffuseSrvHeapIndex = 3;
+	water->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	water->FresnelR0 = XMFLOAT3(0.2f, 0.2f, 0.2f);
+	water->Roughness = 0.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
+	m_Materials["water"] = std::move(water);
 	
 }
