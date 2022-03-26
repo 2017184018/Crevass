@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "GeometryMesh.h"
+#include "Waves.h"
 
 // 같은 종류의 메쉬는 딱 한번만 생성되야한다.
 // 메쉬들 포인터만 갖고있어서 오브젝트에서 포인터만 가져다 쓴다.
@@ -16,6 +17,7 @@ public:
 	void BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	void BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	void BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName);
+	void BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves *wave);
 public:
 	std::unordered_map<std::string, std::unique_ptr<GeometryMesh>>	m_GeometryMesh;
 };

@@ -2,7 +2,6 @@
 #include "CREVASS.h"
 #include "CommandContext.h"
 #include "GameObject.h"
-#include "Waves.h"
 
 #include "MeshReference.h"
 #include "MaterialReference.h"
@@ -35,13 +34,16 @@ void CREVASS::Startup(void)
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 
+	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
+
+	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
+
 	m_MaterialRef->BuildMaterials();
 
 	// Build RenderItem
 	BuildScene();
 
-	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
-
+	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->materialCount = m_MaterialRef->m_Materials.size();
 
@@ -116,12 +118,20 @@ void CREVASS::Update(float deltaT)
 
 	m_MaterialRef->Update(deltaT);
 
+	int i = MathHelper::Rand(4, mWaves->RowCount() - 5);
+	int j = MathHelper::Rand(4, mWaves->ColumnCount() - 5);
+
+	float r = MathHelper::RandF(0.2f, 0.5f);
+	mWaves->Disturb(i, j, r);
+	// Update the wave simulation.
+	mWaves->Update(deltaT);
 
 	//Map = object info
 	//Vec = game object
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap, m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(m_MaterialRef->m_Materials);
 	GraphicsContext::GetApp()->UpdateMainPassCB(m_Camera);
+	GraphicsContext::GetApp()->UpdateWave(mWaves.get(),wave);
 
 
 }
@@ -337,22 +347,22 @@ void CREVASS::BuildScene()
 	}
 
 	GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
-	Sea->Geo = m_MeshRef->m_GeometryMesh["geo"].get();
-	Sea->IndexCount = Sea->Geo->DrawArgs["grid"].IndexCount;
-	Sea->StartIndexLocation = Sea->Geo->DrawArgs["grid"].StartIndexLocation;
-	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["grid"].BaseVertexLocation;
+	Sea->Geo = m_MeshRef->m_GeometryMesh["wave"].get();
+	Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
+	Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
+	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
 	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	Sea->m_MaterialIndex = 3;
 
 	Sea->World = MathHelper::Identity4x4();
 
-	Sea->World._11 = 750;
-	Sea->World._22 = 750;
-	Sea->World._33 = 750;
+	Sea->World._11 = 7;\
+	Sea->World._33 = 7;
 
 	Sea->World._41 = SCALE*400;
 	Sea->World._42 = -SCALE * 100;
 	Sea->World._43 = SCALE*400;
 	
 	Sea->TexTransform = MathHelper::Identity4x4();
+	wave = Sea;
 }

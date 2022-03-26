@@ -15,8 +15,8 @@ void MaterialReference::Update(float t) {
 	float& tu = waterMat->MatTransform(3, 0);
 	float& tv = waterMat->MatTransform(3, 1);
 
-	tu += 0.02f * t;
-	tv += 0.02f * t;
+	tu += 0.04f * t;
+	tv += 0.04f * t;
 
 	if (tu >= 1.0f)
 		tu -= 1.0f;

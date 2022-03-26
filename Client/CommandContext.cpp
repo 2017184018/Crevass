@@ -11,6 +11,7 @@ void GraphicsContext::Initialize()
 	PassCB = std::make_unique<UploadBuffer<ShaderResource::PassConstants>>(Core::g_Device.Get(), passCount, true);
 	//InstanceBuffer = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), InstanceCount, false);
 	MaterialBuffer = std::make_unique<UploadBuffer<ShaderResource::MaterialData>>(Core::g_Device.Get(), materialCount, false);
+	WavesVB = std::make_unique<UploadBuffer<Vertex>>(Core::g_Device.Get(), VertexCount, false);
 }
 
 void GraphicsContext::Release()
@@ -48,6 +49,26 @@ void GraphicsContext::UpdateInstanceData(std::map<std::string, ObjectInfo*>& obj
 	}
 }
 
+void GraphicsContext::UpdateWave(Waves* wave, GameObject *waveobject) {
+	auto currWavesVB = WavesVB.get();
+	for (int i = 0; i < wave->VertexCount(); ++i)
+	{
+		Vertex v;
+
+		v.Pos = wave->Position(i);
+		v.Normal = wave->Normal(i);
+
+		// Derive tex-coords from position by 
+		// mapping [-w/2,w/2] --> [0,1]
+		v.TexC.x = 0.5f + v.Pos.x / wave->Width();
+		v.TexC.y = 0.5f - v.Pos.z / wave->Depth();
+
+		currWavesVB->CopyData(i, v);
+	}
+
+	// Set the dynamic VB of the wave renderitem to the current frame VB.
+	waveobject->Geo->VertexBufferGPU = currWavesVB->Resource();
+}
 
 void GraphicsContext::UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials)
 {

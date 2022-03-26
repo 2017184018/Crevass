@@ -37,7 +37,7 @@ public:
 
 	void shake(GameObject*, int);
 
-	std::unique_ptr<Waves> mWaves;
+	GameObject* wave;
 
 private:
 	void BuildScene();
@@ -47,6 +47,7 @@ private:
 	UINT ShakeCnt[25];		//좌우로 몇 번 움직였는지
 	UINT DestructionCnt[25];	//몇 번 파괴 됐는지
 
+	std::unique_ptr<Waves> mWaves;
 public:
 	template <class TObject>
 	TObject* CreateObject(RenderLayer layer, std::string type, std::string instID)
