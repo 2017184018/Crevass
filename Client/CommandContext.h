@@ -2,6 +2,8 @@
 #include "Singleton.h"
 #include "UploadBuffer.h"
 
+
+class SkinnedModelInstance;
 class GameObject;
 class ObjectInfo;
 class Camera;
@@ -41,9 +43,13 @@ public:
 public:
 	void BuildInstanceBuffer(ObjectInfo* objInfo);
 
-	void UpdateInstanceData(std::map<std::string, ObjectInfo*>& objInfos,std::vector<GameObject*>& rItems);
+	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
+	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems);
+	
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera);
+
+	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
 	void DrawRenderItems(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems);
 
@@ -56,7 +62,8 @@ public:
 	ShaderResource::PassConstants mMainPassCB;
 	std::unique_ptr<UploadBuffer<ShaderResource::PassConstants>>	PassCB = nullptr;
 	std::map<string, std::unique_ptr<UploadBuffer<ShaderResource::InstanceData>>> m_InstanceBuffers;
+	std::array< std::unique_ptr<UploadBuffer<ShaderResource::SkinnedConstants>>, TOTAL_USER_COUNT> m_SkinnedCBs;
 	std::unique_ptr<UploadBuffer<ShaderResource::MaterialData>>		MaterialBuffer = nullptr;
 
-	UINT passCount; UINT materialCount;
+	UINT passCount; UINT materialCount; UINT skinnedObjectCount;
 };

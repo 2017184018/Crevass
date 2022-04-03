@@ -88,6 +88,8 @@ public:
 	static DirectX::XMVECTOR RandUnitVec3();
 	static DirectX::XMVECTOR RandHemisphereUnitVec3(DirectX::XMVECTOR n);
 
+	static XM_CONSTEXPR float XMConvertToRadians(float fDegrees) { return fDegrees * (XM_PI / 180.0f); }
+
 	static const float Infinity;
 	static const float Pi;
 

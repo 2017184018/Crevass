@@ -135,6 +135,15 @@
     <ClInclude Include="ObjectInfo.h">
       <Filter>02_App\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="LoadM3d.h" />
+    <ClInclude Include="SkinnedData.h" />
+    <ClInclude Include="SkinnedModelinstance.h" />
+    <ClInclude Include="CharacterParts.h">
+      <Filter>02_App\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>02_App\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -201,6 +210,15 @@
       <Filter>02_App\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ObjectInfo.cpp">
+      <Filter>02_App\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadM3d.cpp" />
+    <ClCompile Include="SkinnedData.cpp" />
+    <ClCompile Include="SkinnedModelinstance.cpp" />
+    <ClCompile Include="CharacterParts.cpp">
+      <Filter>02_App\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
       <Filter>02_App\GameObject</Filter>
     </ClCompile>
   </ItemGroup>

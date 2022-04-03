@@ -70,7 +70,7 @@ void LogoScene::ReleaseScene()
 //					0.0f, 0.0f, 1.0f, 0.0f,
 //					x + j * dx, y + i * dy, z + k * dz, 1.0f);
 //
-//				XMStoreFloat4x4(&instancingObj->Instances[index].TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
+//				XMStoreFloat4x4(&instancingObj->Instances[index].m_TexTransform, XMMatrixScaling(2.0f, 2.0f, 1.0f));
 //					instancingObj->Instances[index].MaterialIndex = MaterialReference::MATERIALID::ID_GRASS;
 //
 //				//instancingObj->Instances[index].MaterialIndex = index % ObjectManager::GetApp()->m_MaterialRef->m_Materials.size();

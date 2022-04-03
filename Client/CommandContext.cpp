@@ -5,9 +5,13 @@
 #include "GameTimer.h"
 #include "Camera.h"
 #include "GeometryMesh.h"
-
+#include "SkinnedModelInstance.h"
 void GraphicsContext::Initialize()
 {
+	for (int i = 0; i < skinnedObjectCount; ++i)
+	{
+		m_SkinnedCBs[i] = std::make_unique<UploadBuffer<ShaderResource::SkinnedConstants>>(Core::g_Device.Get(), 1, true);
+	}
 	PassCB = std::make_unique<UploadBuffer<ShaderResource::PassConstants>>(Core::g_Device.Get(), passCount, true);
 	//InstanceBuffer = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), InstanceCount, false);
 	MaterialBuffer = std::make_unique<UploadBuffer<ShaderResource::MaterialData>>(Core::g_Device.Get(), materialCount, false);
@@ -22,28 +26,50 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
 
-void GraphicsContext::UpdateInstanceData(std::map<std::string, ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems)
+void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
 {
-	for (auto& objinfo : objInfos)
-	{
-		//const auto& instanceData = e->Instances;
-		const std::map<std::string, UINT>& info = objinfo.second->GetinstanceKeymap();
+
+	const std::map<std::string, UINT>& info = objInfo->GetinstanceKeymap();
 
 		int visibleInstanceCount = 0;
 
 		for (auto& i : info)
 		{
-			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->World);
-			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->TexTransform);
+			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
+			XMMATRIX TexTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
 			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 
 			ShaderResource::InstanceData data;
 			XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
-			XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
+			XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(TexTransform));
 			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
 
 			// Write the instance data to structured buffer for the visible objects.
-			m_InstanceBuffers[objinfo.first]->CopyData(visibleInstanceCount++, data);
+			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
+		}
+	
+}
+
+void GraphicsContext::UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems)
+{
+	for (auto& objinfo : objInfos) {
+		const std::map<std::string, UINT>& info = objinfo->GetinstanceKeymap();
+
+		int visibleInstanceCount = 0;
+
+		for (auto& i : info)
+		{
+			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
+			XMMATRIX TexTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
+			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+
+			ShaderResource::InstanceData data;
+			XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
+			XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(TexTransform));
+			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+
+			// Write the instance data to structured buffer for the visible objects.
+			m_InstanceBuffers[objinfo->m_Type]->CopyData(visibleInstanceCount++, data);
 		}
 	}
 }
@@ -106,6 +132,19 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 	currPassCB->CopyData(0, mMainPassCB);
 }
 
+void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance)
+{
+	skinmodelInstance->UpdateSkinnedAnimation(Core::g_GameTimer->DeltaTime());
+
+	ShaderResource::SkinnedConstants skinnedConstants;
+	std::copy(
+		std::begin(skinmodelInstance->FinalTransforms),
+		std::end(skinmodelInstance->FinalTransforms),
+		&skinnedConstants.BoneTransforms[0]);
+
+	m_SkinnedCBs[skinnedCBIndex]->CopyData(0, skinnedConstants);
+}
+
 void GraphicsContext::DrawRenderItems(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems)
 {
 	const std::map<std::string, UINT>& info = objInfo->GetinstanceKeymap();
@@ -120,6 +159,16 @@ void GraphicsContext::DrawRenderItems(ObjectInfo* objInfo, const std::vector<Gam
 
 		auto instanceBuffer = m_InstanceBuffers[ri->GetType()]->Resource();
 		Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
+
+		if (ri->m_SkinnedModelInst != nullptr)
+		{
+			D3D12_GPU_VIRTUAL_ADDRESS skinnedCBAddress = m_SkinnedCBs[ri->m_SkinnedCBIndex]->Resource()->GetGPUVirtualAddress();
+			Core::g_CommandList->SetGraphicsRootConstantBufferView(5, skinnedCBAddress);
+		}
+		else
+		{
+			Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
+		}
 
 		Core::g_CommandList->DrawIndexedInstanced(ri->IndexCount, info.size(), ri->StartIndexLocation, ri->BaseVertexLocation, 0);
 	}

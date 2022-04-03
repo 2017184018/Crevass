@@ -1523,6 +1523,26 @@ inline ID3D12CommandList* const* CommandListCast(ID3D12GraphicsCommandList* cons
 	return reinterpret_cast<ID3D12CommandList * const*>(pp);
 }
 
+//------------------------------------------------------------------------------------------------
+// Custom
+struct CD3D12_SHADER_RESOURCE_VIEW_DESC : public D3D12_SHADER_RESOURCE_VIEW_DESC
+{
+	CD3D12_SHADER_RESOURCE_VIEW_DESC(
+		UINT shader4ComponentMapping,
+		DXGI_FORMAT format,
+		D3D12_SRV_DIMENSION srvDimension,
+		UINT mostDetailedMip,
+		UINT mipLevels,
+		FLOAT resourceMinLODClamp)
+	{
+		Shader4ComponentMapping = shader4ComponentMapping;
+		Format = format;
+		ViewDimension = srvDimension;
+		TextureCube.MostDetailedMip = mostDetailedMip;
+		TextureCube.MipLevels = mipLevels;
+		TextureCube.ResourceMinLODClamp = resourceMinLODClamp;
+	};
+};
 
 #endif // defined( __cplusplus )
 

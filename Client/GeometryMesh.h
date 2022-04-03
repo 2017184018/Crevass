@@ -12,6 +12,9 @@ public:
 	void DisposeUploaders();
 		
 public:
+
+	std::string Name;
+
 	Microsoft::WRL::ComPtr<ID3DBlob> VertexBufferCPU = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> IndexBufferCPU = nullptr;
 

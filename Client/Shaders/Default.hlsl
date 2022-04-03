@@ -23,6 +23,14 @@ struct VertexIn
 	float3 PosL    : POSITION;
     float3 NormalL : NORMAL;
 	float2 TexC    : TEXCOORD;
+	//float3 TangentL : TANGENT;
+   //float3 BinormalL : BINORMAL;
+
+#ifdef SKINNED
+	float3 BoneWeights : WEIGHTS;
+	uint4 BoneIndices : BONEINDICES;
+#endif
+
 };
 
 struct VertexOut
@@ -31,7 +39,10 @@ struct VertexOut
     float3 PosW    : POSITION;
     float3 NormalW : NORMAL;
 	float2 TexC    : TEXCOORD;
-	
+	//float3 TangentL : TANGENT;
+   //float3 BinormalL : BINORMAL;
+   
+
 	// nointerpolation is used so the index is not interpolated 
 	// across the triangle.
 	nointerpolation uint MatIndex  : MATINDEX;
@@ -44,7 +55,7 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 	// 인스턴스 자료를 갖고온다.
 	InstanceData instData = gInstanceData[instanceID];
 	float4x4 world = instData.World;
-	float4x4 texTransform = instData.TexTransform;
+	float4x4 TexTransform = instData.TexTransform;
 	uint matIndex = instData.MaterialIndex;
 
 	
@@ -52,18 +63,41 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 	MaterialData matData = gMaterialData[matIndex];
 	vout.MatIndex = matIndex;
 
+#ifdef SKINNED
+   
+    float weights[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	weights[0] = vin.BoneWeights.x;
+	weights[1] = vin.BoneWeights.y;
+	weights[2] = vin.BoneWeights.z;
+	weights[3] = 1.0f - weights[0] - weights[1] - weights[2];
+
+	float3 posL = float3(0.0f, 0.0f, 0.0f);
+	float3 normalL = float3(0.0f, 0.0f, 0.0f);
+
+	for (int i = 0; i < 4; i++)
+	{
+		posL += weights[i] * mul(float4(vin.PosL, 1.0f), gBoneTransforms[vin.BoneIndices[i]]).xyz;
+		normalL += weights[i] * mul(vin.NormalL, (float3x3)gBoneTransforms[vin.BoneIndices[i]]);
+	
+	}
+
+	vin.PosL = posL;
+	vin.NormalL = normalL; 
+
+#endif
+
     // Transform to world space.
-    float4 posW = mul(float4(vin.PosL, 1.0f), world);
-    vout.PosW = posW.xyz;
+	float4 posW = mul(float4(vin.PosL, 1.0f), world);
+	vout.PosW = posW.xyz;
 
     // Assumes nonuniform scaling; otherwise, need to use inverse-transpose of world matrix.
-    vout.NormalW = mul(vin.NormalL, (float3x3)world);
+	vout.NormalW = mul(vin.NormalL, (float3x3)world);
 
     // Transform to homogeneous clip space.
-    vout.PosH = mul(posW, gViewProj);
+	vout.PosH = mul(posW, gViewProj);
 	
 	// Output vertex attributes for interpolation across triangle.
-	float4 texC = mul(float4(vin.TexC, 0.0f, 1.0f), texTransform);
+	float4 texC = mul(float4(vin.TexC, 0.0f, 1.0f), TexTransform);
 	vout.TexC = mul(texC, matData.MatTransform).xy;
 	
     return vout;

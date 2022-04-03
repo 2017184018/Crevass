@@ -28,16 +28,6 @@ struct InstanceData
 	uint     InstPad2;
 };
 
-// Constant data that varies per frame.
-cbuffer cbPerObject : register(b1)
-{
-	float4x4 gWorld;
-	float4x4 gTexTransform;
-	uint gMaterialIndex;
-	uint gObjPad0;
-	uint gObjPad1;
-	uint gObjPad2;
-};
 
 struct MaterialData
 {
@@ -92,4 +82,10 @@ cbuffer cbPass : register(b0)
 	// [0, NUM_DIR_LIGHTS]구간의 색인들은 지향광들이고
 	// [NUM_DIR_LIGHTS, NUM_DIR_LIGHTS + NUM_POINT_L
 	Light gLights[MaxLights];
+};
+
+cbuffer cbSkinned : register(b1)
+{
+	// 캐릭터당 최대 96개의 뼈대를 지원한다.
+	float4x4 gBoneTransforms[96];
 };

@@ -10,6 +10,65 @@ MeshReference::~MeshReference()
 {
 }
 
+//void MeshReference::BuildGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName)
+//{
+//	std::vector<M3DLoader::SkinnedVertex> vertices;
+//	std::vector<std::uint16_t> indices;
+//
+//	std::unique_ptr<SkinnedModelInstance> skinnedModelInst = std::make_unique<SkinnedModelInstance>();
+//	std::unique_ptr<SkinnedData> skinnedInfo = std::make_unique<SkinnedData>();
+//	std::vector<M3DLoader::Subset> skinnedSubsets;
+//
+//	// LoadM3d에서 여러 Clip을 받아오도록 세팅해야함
+//	// 이때 ClipName도 받아와 입력해줌.
+//	M3DLoader m3dLoader;
+//	m3dLoader.LoadM3d(path, vertices, indices,
+//		skinnedSubsets, mSkinnedMats, *skinnedInfo);
+//
+//	skinnedModelInst->SkinnedInfo = std::move(skinnedInfo);
+//	skinnedModelInst->FinalTransforms.resize(skinnedModelInst->SkinnedInfo->BoneCount());
+//	skinnedModelInst->ClipName = "Take1";
+//	skinnedModelInst->TimePos = 0.0f;
+//	m_SkinnedModelInsts[meshName] = std::move(skinnedModelInst);
+//
+//	const UINT vbByteSize = (UINT)vertices.size() * sizeof(M3DLoader::SkinnedVertex);
+//	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+//
+//	auto geo = std::make_unique<GeometryMesh>();
+//	geo->Name = meshName;
+//
+//	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+//	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+//
+//	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+//	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+//
+//	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+//		pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
+//
+//	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+//		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+//
+//	geo->VertexByteStride = sizeof(M3DLoader::SkinnedVertex);
+//	geo->VertexBufferByteSize = vbByteSize;
+//	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
+//	geo->IndexBufferByteSize = ibByteSize;
+//
+//	for (UINT i = 0; i < (UINT)skinnedSubsets.size(); ++i)
+//	{
+//		SubmeshGeometry submesh;
+//		std::string name = "sm_" + std::to_string(i);
+//
+//		submesh.IndexCount = (UINT)skinnedSubsets[i].FaceCount * 3;
+//		submesh.StartIndexLocation = skinnedSubsets[i].FaceStart * 3;
+//		submesh.BaseVertexLocation = 0;
+//
+//		geo->DrawArgs[name] = submesh;
+//	}
+//
+//	m_GeometryMesh[meshName] = std::move(geo);
+//}
+
 void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
 {
 	GeometryGenerator geoGen;
@@ -121,178 +180,128 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 	m_GeometryMesh["geo"] = std::move(geo);
 }
 
-void MeshReference::BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
-{
-	std::ifstream fin("./Models/skull.txt");
-
-	if (!fin)
-	{
-		MessageBox(0, L"Models/skull.txt not found.", 0, 0);
-		return;
-	}
-
-	UINT vcount = 0;
-	UINT tcount = 0;
-	std::string ignore;
-
-	fin >> ignore >> vcount;
-	fin >> ignore >> tcount;
-	fin >> ignore >> ignore >> ignore >> ignore;
-
-	XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
-	XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
-
-	XMVECTOR vMin = XMLoadFloat3(&vMinf3);
-	XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
-
-	std::vector<Vertex> vertices(vcount);
-	for (UINT i = 0; i < vcount; ++i)
-	{
-		fin >> vertices[i].Pos.x >> vertices[i].Pos.y >> vertices[i].Pos.z;
-		fin >> vertices[i].Normal.x >> vertices[i].Normal.y >> vertices[i].Normal.z;
-
-		XMVECTOR P = XMLoadFloat3(&vertices[i].Pos);
-
-		// Project point onto unit sphere and generate spherical texture coordinates.
-		XMFLOAT3 spherePos;
-		XMStoreFloat3(&spherePos, XMVector3Normalize(P));
-
-		float theta = atan2f(spherePos.z, spherePos.x);
-
-		// Put in [0, 2pi].
-		if (theta < 0.0f)
-			theta += XM_2PI;
-
-		float phi = acosf(spherePos.y);
-
-		float u = theta / (2.0f * XM_PI);
-		float v = phi / XM_PI;
-
-		vertices[i].TexC = { u, v };
-
-		vMin = XMVectorMin(vMin, P);
-		vMax = XMVectorMax(vMax, P);
-	}
-
-	BoundingBox bounds;
-	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
-	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
-
-	fin >> ignore;
-	fin >> ignore;
-	fin >> ignore;
-
-	std::vector<std::int32_t> indices(3 * tcount);
-	for (UINT i = 0; i < tcount; ++i)
-	{
-		fin >> indices[i * 3 + 0] >> indices[i * 3 + 1] >> indices[i * 3 + 2];
-	}
-
-	fin.close();
-
-	//
-	// Pack the indices of all the meshes into one index buffer.
-	//
-
-	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
-
-	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::int32_t);
-
-	auto geo = std::make_unique<GeometryMesh>();
-
-	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
-	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
-
-	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
-	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
-
-	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-		pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
-
-	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
-
-	geo->VertexByteStride = sizeof(Vertex);
-	geo->VertexBufferByteSize = vbByteSize;
-	geo->IndexFormat = DXGI_FORMAT_R32_UINT;
-	geo->IndexBufferByteSize = ibByteSize;
-
-	SubmeshGeometry submesh;
-	submesh.IndexCount = (UINT)indices.size();
-	submesh.StartIndexLocation = 0;
-	submesh.BaseVertexLocation = 0;
-	submesh.Bounds = bounds;
-
-	geo->DrawArgs["skull"] = submesh;
-
-	m_GeometryMesh["skull"] = std::move(geo);
-}
+//void MeshReference::BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
+//{
+//	std::ifstream fin("./Models/skull.txt");
+//
+//	if (!fin)
+//	{
+//		MessageBox(0, L"Models/skull.txt not found.", 0, 0);
+//		return;
+//	}
+//
+//	UINT vcount = 0;
+//	UINT tcount = 0;
+//	std::string ignore;
+//
+//	fin >> ignore >> vcount;
+//	fin >> ignore >> tcount;
+//	fin >> ignore >> ignore >> ignore >> ignore;
+//
+//	XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+//	XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+//
+//	XMVECTOR vMin = XMLoadFloat3(&vMinf3);
+//	XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
+//
+//	std::vector<Vertex> vertices(vcount);
+//	for (UINT i = 0; i < vcount; ++i)
+//	{
+//		fin >> vertices[i].Pos.x >> vertices[i].Pos.y >> vertices[i].Pos.z;
+//		fin >> vertices[i].Normal.x >> vertices[i].Normal.y >> vertices[i].Normal.z;
+//
+//		XMVECTOR P = XMLoadFloat3(&vertices[i].Pos);
+//
+//		// Project point onto unit sphere and generate spherical texture coordinates.
+//		XMFLOAT3 spherePos;
+//		XMStoreFloat3(&spherePos, XMVector3Normalize(P));
+//
+//		float theta = atan2f(spherePos.z, spherePos.x);
+//
+//		// Put in [0, 2pi].
+//		if (theta < 0.0f)
+//			theta += XM_2PI;
+//
+//		float phi = acosf(spherePos.y);
+//
+//		float u = theta / (2.0f * XM_PI);
+//		float v = phi / XM_PI;
+//
+//		vertices[i].TexC = { u, v };
+//
+//		vMin = XMVectorMin(vMin, P);
+//		vMax = XMVectorMax(vMax, P);
+//	}
+//
+//	BoundingBox bounds;
+//	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+//	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+//
+//	fin >> ignore;
+//	fin >> ignore;
+//	fin >> ignore;
+//
+//	std::vector<std::int32_t> indices(3 * tcount);
+//	for (UINT i = 0; i < tcount; ++i)
+//	{
+//		fin >> indices[i * 3 + 0] >> indices[i * 3 + 1] >> indices[i * 3 + 2];
+//	}
+//
+//	fin.close();
+//
+//	//
+//	// Pack the indices of all the meshes into one index buffer.
+//	//
+//
+//	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+//
+//	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::int32_t);
+//
+//	auto geo = std::make_unique<GeometryMesh>();
+//
+//	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+//	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+//
+//	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+//	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+//
+//	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+//		pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
+//
+//	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+//		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+//
+//	geo->VertexByteStride = sizeof(Vertex);
+//	geo->VertexBufferByteSize = vbByteSize;
+//	geo->IndexFormat = DXGI_FORMAT_R32_UINT;
+//	geo->IndexBufferByteSize = ibByteSize;
+//
+//	SubmeshGeometry submesh;
+//	submesh.IndexCount = (UINT)indices.size();
+//	submesh.StartIndexLocation = 0;
+//	submesh.BaseVertexLocation = 0;
+//	submesh.Bounds = bounds;
+//
+//	geo->DrawArgs["skull"] = submesh;
+//
+//	m_GeometryMesh["skull"] = std::move(geo);
+//}
 
 void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName)
 {
-	ifstream fin(path);
-
-	if (!fin)
-	{
-		cout << "the path not found" <<endl;
-		return;
-	}
-
-	UINT vertexSize, indexSize;
-	//uint32_t materialSize;
-	
-	string ignore;
-
-	fin >> ignore >> vertexSize;
-	fin >> ignore >> indexSize;
-
-	cout << std::string(path) << endl;
-	cout << vertexSize << endl;
-	cout << indexSize << endl;
+	//string path2 = "Models\\" + meshName;
 
 	std::vector<Vertex> vertices;
-	std::vector<int32_t> indices;
+	std::vector<std::uint32_t> indices;
+	std::vector<Material> materials;
 
-	if (vertexSize == 0 || indexSize == 0)
-		return;
+	LoadMeshFile(vertices, indices, &materials, path);
 
-	if (fin)
-	{
-		fin >> ignore;
-
-		//vertex data 
-		for (uint32_t i = 0; i < vertexSize; ++i)
-		{
-			Vertex vertex;
-			fin >> ignore >> vertex.Pos.x >> vertex.Pos.y >> vertex.Pos.z;
-			fin >> ignore >> vertex.Normal.x >> vertex.Normal.y >> vertex.Normal.z;
-			fin >> ignore >> vertex.TexC.x >> vertex.TexC.y;
-
-			vertices.push_back(vertex);
-		}
-		cout << "----"  << vertices[1].Normal.x << endl;
-
-		//index data
-		fin >> ignore;
-		for (uint32_t i = 0; i < indexSize; ++i)
-		{
-			uint32_t index;
-			fin >> index;
-			//cout << i << "--" << index << endl;
-			indices.push_back(index);
-			
-		}
-
-	}
-	fin.close();
-	
-	///////////////////////////////////////////////////////////////////////
-
-
-	const UINT vbByteSize = vertexSize * sizeof(Vertex);
-	const UINT ibByteSize = indexSize * sizeof(std::int32_t);
+	const UINT vbByteSize = vertices.size() * sizeof(Vertex);
+	const UINT ibByteSize = indices.size() * sizeof(std::int32_t);
 
 	auto geo = std::make_unique<GeometryMesh>();
+	geo->Name = meshName;
 
 	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
 	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
@@ -320,4 +329,330 @@ void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 	geo->DrawArgs[meshName] = submesh;
 	m_GeometryMesh[meshName] = std::move(geo);
 
+}
+
+void MeshReference::BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName)
+{
+	string path = "Models\\Character\\" + meshName;
+
+	std::vector<CharacterVertex> CVertex;
+	std::vector<std::uint32_t> indices;
+	std::vector<Material> materials;
+	std::unique_ptr<SkinnedData> skinnedInfo = make_unique<SkinnedData>();
+
+	LoadMeshFile(CVertex, indices, &materials, path);
+	LoadSkeletonFile(*skinnedInfo, path);
+
+	// Geo CreateDefaultBuffer
+	std::unique_ptr<SkinnedModelInstance> skinnedModelInst = std::make_unique<SkinnedModelInstance>();
+	skinnedModelInst->SkinnedInfo = std::move(skinnedInfo);
+	skinnedModelInst->FinalTransforms.resize(skinnedModelInst->SkinnedInfo->BoneCount());
+	skinnedModelInst->ClipName = "Idle";
+	skinnedModelInst->TimePos = 0.0f;
+	m_SkinnedModelInsts[meshName] = std::move(skinnedModelInst);
+
+	const UINT vbByteSize = (UINT)CVertex.size() * sizeof(CharacterVertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint32_t);
+
+	auto geo = std::make_unique<GeometryMesh>();
+	geo->Name = meshName;
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), CVertex.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, CVertex.data(), vbByteSize, geo->VertexBufferUploader);
+
+	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+	geo->VertexByteStride = sizeof(CharacterVertex);
+	geo->VertexBufferByteSize = vbByteSize;
+	geo->IndexFormat = DXGI_FORMAT_R32_UINT;
+	geo->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry submesh;
+	submesh.IndexCount = indices.size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+
+
+	geo->DrawArgs[meshName] = submesh;
+	m_GeometryMesh[meshName] = std::move(geo);
+}
+
+void MeshReference::BuildSkinnedModelAnimation(std::string meshName, const std::string clipName)
+{
+	if (!m_SkinnedModelInsts.count(meshName))
+	{
+		cout << "LoadModelAnimation: None MeshName" << endl;
+	}
+	else
+	{
+		string path = "Models\\Character\\" + meshName;
+		LoadAnimationFile(*m_SkinnedModelInsts[meshName]->SkinnedInfo, path, clipName);
+	}
+}
+
+bool MeshReference::LoadMeshFile(std::vector<Vertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>* outMaterial, std::string path)
+{
+	//path += ".mesh";
+	std::ifstream fileIn(path);
+
+	uint32_t vertexSize, indexSize;
+	uint32_t materialSize;
+
+	std::string ignore;
+	if (fileIn)
+	{
+		cout << "왔음" << endl;
+		fileIn >> ignore >> vertexSize;
+		fileIn >> ignore >> indexSize;
+		fileIn >> ignore >> materialSize;
+
+		if (vertexSize == 0 || indexSize == 0)
+			return false;
+
+		// Material Data
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < materialSize; ++i)
+		{
+			Material tempMaterial;
+
+			fileIn >> ignore >> tempMaterial.Name;
+			fileIn >> ignore >> tempMaterial.Ambient.x >> tempMaterial.Ambient.y >> tempMaterial.Ambient.z;
+			fileIn >> ignore >> tempMaterial.DiffuseAlbedo.x >> tempMaterial.DiffuseAlbedo.y >> tempMaterial.DiffuseAlbedo.z >> tempMaterial.DiffuseAlbedo.w;
+			fileIn >> ignore >> tempMaterial.FresnelR0.x >> tempMaterial.FresnelR0.y >> tempMaterial.FresnelR0.z;
+			fileIn >> ignore >> tempMaterial.Specular.x >> tempMaterial.Specular.y >> tempMaterial.Specular.z;
+			fileIn >> ignore >> tempMaterial.Emissive.x >> tempMaterial.Emissive.y >> tempMaterial.Emissive.z;
+			fileIn >> ignore >> tempMaterial.Roughness;
+			fileIn >> ignore;
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					fileIn >> tempMaterial.MatTransform.m[i][j];
+				}
+			}
+			(*outMaterial).push_back(tempMaterial);
+		}
+
+		// Vertex Data
+		for (uint32_t i = 0; i < vertexSize; ++i)
+		{
+			Vertex vertex;
+			fileIn >> ignore >> vertex.Pos.x >> vertex.Pos.y >> vertex.Pos.z;
+			fileIn >> ignore >> vertex.Normal.x >> vertex.Normal.y >> vertex.Normal.z;
+			fileIn >> ignore >> vertex.TexC.x >> vertex.TexC.y;
+			fileIn >> ignore >> vertex.Tangent.x >> vertex.Tangent.y >> vertex.Tangent.z;
+			fileIn >> ignore >> vertex.Binormal.x >> vertex.Binormal.y >> vertex.Binormal.z;
+
+			// push_back
+			outVertexVector.push_back(vertex);
+		}
+
+		// Index Data
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < indexSize; ++i)
+		{
+			uint32_t index;
+			fileIn >> index;
+			outIndexVector.push_back(index);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+
+bool MeshReference::LoadMeshFile(std::vector<CharacterVertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>* outMaterial, std::string path)
+{
+	path += ".cmesh";
+	std::ifstream fileIn(path);
+
+	uint32_t vertexSize, indexSize;
+	uint32_t materialSize;
+
+	std::string ignore;
+	if (fileIn)
+	{
+		fileIn >> ignore >> vertexSize;
+		fileIn >> ignore >> indexSize;
+		fileIn >> ignore >> materialSize;
+
+		if (vertexSize == 0 || indexSize == 0)
+			return false;
+
+		if (outMaterial != nullptr)
+		{
+			// Material Data
+			fileIn >> ignore;
+			for (uint32_t i = 0; i < materialSize; ++i)
+			{
+				Material tempMaterial;
+
+				fileIn >> ignore >> tempMaterial.Name;
+				fileIn >> ignore >> tempMaterial.Ambient.x >> tempMaterial.Ambient.y >> tempMaterial.Ambient.z;
+				fileIn >> ignore >> tempMaterial.DiffuseAlbedo.x >> tempMaterial.DiffuseAlbedo.y >> tempMaterial.DiffuseAlbedo.z >> tempMaterial.DiffuseAlbedo.w;
+				fileIn >> ignore >> tempMaterial.FresnelR0.x >> tempMaterial.FresnelR0.y >> tempMaterial.FresnelR0.z;
+				fileIn >> ignore >> static_cast<float>(tempMaterial.Specular.x) >> tempMaterial.Specular.y >> tempMaterial.Specular.z;
+				fileIn >> ignore >> tempMaterial.Emissive.x >> tempMaterial.Emissive.y >> tempMaterial.Emissive.z;
+				fileIn >> ignore >> tempMaterial.Roughness;
+				fileIn >> ignore;
+				for (int i = 0; i < 4; ++i)
+				{
+					for (int j = 0; j < 4; ++j)
+					{
+						fileIn >> tempMaterial.MatTransform.m[i][j];
+					}
+				}
+				(*outMaterial).push_back(tempMaterial);
+			}
+		}
+
+		// Vertex Data
+		for (uint32_t i = 0; i < vertexSize; ++i)
+		{
+			CharacterVertex vertex;
+			int temp[4];
+			fileIn >> ignore >> vertex.Pos.x >> vertex.Pos.y >> vertex.Pos.z;
+			fileIn >> ignore >> vertex.Normal.x >> vertex.Normal.y >> vertex.Normal.z;
+			fileIn >> ignore >> vertex.TexC.x >> vertex.TexC.y;
+			fileIn >> ignore >> vertex.Tangent.x >> vertex.Tangent.y >> vertex.Tangent.z;
+			fileIn >> ignore >> vertex.Binormal.x >> vertex.Binormal.y >> vertex.Binormal.z;
+			fileIn >> ignore >> vertex.BoneWeights.x >> vertex.BoneWeights.y >> vertex.BoneWeights.z;
+			fileIn >> ignore >> temp[0] >> temp[1] >> temp[2] >> temp[3];
+
+			for (int j = 0; j < 4; ++j)
+			{
+				vertex.BoneIndices[j] = temp[j];
+			}
+			// push_back
+			outVertexVector.push_back(vertex);
+		}
+
+		// Index Data
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < indexSize; ++i)
+		{
+			uint32_t index;
+			fileIn >> index;
+			outIndexVector.push_back(index);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool MeshReference::LoadSkeletonFile(SkinnedData& outSkinnedData, std::string path)
+{
+	path += ".skeleton";
+	std::ifstream fileIn(path);
+
+	uint32_t boneSize;
+
+	std::string ignore;
+	if (fileIn)
+	{
+		fileIn >> ignore >> boneSize;
+
+		if (boneSize == 0)
+			return false;
+
+		// Bone Data
+		// Bone Hierarchy
+		fileIn >> ignore;
+		std::vector<int> boneHierarchy;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			int tempBoneHierarchy;
+			fileIn >> tempBoneHierarchy;
+			boneHierarchy.push_back(tempBoneHierarchy);
+		}
+
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			std::string tempBoneName;
+			fileIn >> tempBoneName;
+			outSkinnedData.SetBoneName(tempBoneName);
+		}
+		// Bone Offset
+		fileIn >> ignore;
+		std::vector<DirectX::XMFLOAT4X4> boneOffsets;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			DirectX::XMFLOAT4X4 tempBoneOffset;
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					fileIn >> tempBoneOffset.m[i][j];
+				}
+			}
+			boneOffsets.push_back(tempBoneOffset);
+		}
+		// Bone Submesh Offset
+		fileIn >> ignore;
+		std::vector<int> boneSubmeshOffset;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			int tempBoneSubmeshOffset;
+			fileIn >> tempBoneSubmeshOffset;
+			outSkinnedData.SetSubmeshOffset(tempBoneSubmeshOffset);
+		}
+
+		outSkinnedData.Set(
+			boneHierarchy,
+			boneOffsets);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool MeshReference::LoadAnimationFile(SkinnedData& outSkinnedData, std::string& path, const std::string clipName)
+{
+	path = path + "_" + clipName + ".anim";
+	std::ifstream fileIn(path);
+
+	AnimationClip animation;
+	uint32_t boneAnimationSize, keyframeSize;
+
+	std::string ignore;
+	if (fileIn)
+	{
+		fileIn >> ignore >> boneAnimationSize;
+		fileIn >> ignore >> keyframeSize;
+
+		for (uint32_t i = 0; i < boneAnimationSize; ++i)
+		{
+			BoneAnimation boneAnim;
+			for (uint32_t j = 0; j < keyframeSize; ++j)
+			{
+				Keyframe key;
+				fileIn >> key.TimePos;
+				fileIn >> key.Translation.x >> key.Translation.y >> key.Translation.z;
+				fileIn >> key.Scale.x >> key.Scale.y >> key.Scale.z;
+				fileIn >> key.RotationQuat.x >> key.RotationQuat.y >> key.RotationQuat.z >> key.RotationQuat.w;
+				boneAnim.Keyframes.push_back(key);
+			}
+			animation.BoneAnimations.push_back(boneAnim);
+		}
+		outSkinnedData.SetAnimation(animation, clipName);
+		return true;
+	}
+	else {
+		cout << "file none" << endl;
+	}
+
+	return false;
 }

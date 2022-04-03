@@ -6,11 +6,36 @@
 
 #pragma once
 
+
 struct Vertex
 {
 	DirectX::XMFLOAT3 Pos;
 	DirectX::XMFLOAT3 Normal;
 	DirectX::XMFLOAT2 TexC;
+	DirectX::XMFLOAT3 Tangent;
+	DirectX::XMFLOAT3 Binormal;
+
+	bool operator==(const Vertex& other) const
+	{
+		if (Pos.x != other.Pos.x || Pos.y != other.Pos.y || Pos.z != other.Pos.z)
+			return false;
+
+		if (Normal.x != other.Normal.x || Normal.y != other.Normal.y || Normal.z != other.Normal.z)
+			return false;
+
+		if (TexC.x != other.TexC.x || TexC.y != other.TexC.y)
+			return false;
+
+		return true;
+	}
+};
+
+struct CharacterVertex : Vertex
+{
+	DirectX::XMFLOAT3 BoneWeights;
+	int BoneIndices[4];
+
+	uint16_t MaterialIndex;
 };
 
 struct SubmeshGeometry
@@ -49,8 +74,12 @@ struct Material
 	int DiffuseSrvHeapIndex = -1;
 	int NormalSrvHeapIndex = -1;
 
+	DirectX::XMFLOAT3 Ambient = { 0.0f, 0.0f, 0.0f };
 	DirectX::XMFLOAT4 DiffuseAlbedo = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DirectX::XMFLOAT3 FresnelR0 = { 0.01f, 0.01f, 0.01f };
+	DirectX::XMFLOAT3 Specular = { 0.01f, 0.01f, 0.01f };
+	DirectX::XMFLOAT3 Emissive = { 0.01f, 0.01f, 0.01f };
+
 	float Roughness = .25f;
 	DirectX::XMFLOAT4X4 MatTransform = MathHelper::Identity4x4();
 };
@@ -112,6 +141,11 @@ namespace ShaderResource
 		UINT MaterialPad0;
 		UINT MaterialPad1;
 		UINT MaterialPad2;
+	};
+
+	struct SkinnedConstants
+	{
+		DirectX::XMFLOAT4X4 BoneTransforms[96];
 	};
 }
 
