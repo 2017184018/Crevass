@@ -42,12 +42,17 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
 
 
+	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
+
+	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
+
 	m_MaterialRef->BuildMaterials();
 
 
 	// Build RenderItem
 	BuildScene();
-	
+
+	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = TOTAL_USER_COUNT;
 	GraphicsContext::GetApp()->materialCount = m_MaterialRef->m_Materials.size();
@@ -120,6 +125,17 @@ void CREVASS::Update(float deltaT)
 		}
 	}
 
+
+	m_MaterialRef->Update(deltaT);
+
+	int i = MathHelper::Rand(4, mWaves->RowCount() - 5);
+	int j = MathHelper::Rand(4, mWaves->ColumnCount() - 5);
+
+	float r = MathHelper::RandF(0.2f, 0.5f);
+	mWaves->Disturb(i, j, r);
+	// Update the wave simulation.
+	mWaves->Update(deltaT);
+
 	//Map = object info
 	//Vec = game object
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["icecube"], m_RItemsVec);
@@ -127,19 +143,16 @@ void CREVASS::Update(float deltaT)
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["snow_top"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["icicle"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Sea"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["sky"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(m_MaterialRef->m_Materials);
 	GraphicsContext::GetApp()->UpdateMainPassCB(m_Camera);
 
-	/*Characters*/
-	//for (int i = 0; i < m_MeshRef->mSkinnedMats.size(); ++i) {
-	//	std::string submeshName = "sm_" + std::to_string(i);
-	//	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Models\\soldier.m3d" + submeshName], m_RItemsVec);
-	//}
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
-	
+	GraphicsContext::GetApp()->UpdateWave(mWaves.get(),wave);
+
 }
 
 void CREVASS::RenderScene(void)
@@ -149,8 +162,11 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowman"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snow_top"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icicle"], m_RItemsVec);
+
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin"], m_RItemsVec);
-	
+
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Sea"], m_RItemsVec);
+
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
 
@@ -239,7 +255,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 void CREVASS::BuildScene()
 {
-	//0: Skybox,  1~50: 홀수는 블록, 짝수는 덮개, 51~75: 고드름, 76~77: 눈사람, 78: 펭귄
+	//0: Skybox,  1~50: 홀수는 블록, 짝수는 덮개, 51~75: 고드름, 76~77: 눈사람, 78: 펭귄, 79: 바다
 
 	//layer ,mesh type , id 
 	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");
@@ -252,16 +268,6 @@ void CREVASS::BuildScene()
 
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
-
-	// Instaincing Obj
-	/*GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecube", "icebue0");
-	instancingObj->Geo = m_MeshRef->m_GeometryMesh["icecube"].get();
-	instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
-	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
-	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
-
-	instancingObj->m_MaterialIndex = 1;*/
 
 	for (int i = 0; i < 5; ++i) {
 		for (int j = 0; j < 5; ++j) {
@@ -362,7 +368,7 @@ void CREVASS::BuildScene()
 		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["Penguin"].IndexCount;
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["Penguin"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["Penguin"].BaseVertexLocation;
-		instancingObj->m_MaterialIndex = 1;
+		instancingObj->m_MaterialIndex = 2;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		instancingObj->m_World._11 = 15;
 		instancingObj->m_World._22 = 15;
@@ -381,7 +387,7 @@ void CREVASS::BuildScene()
 	// student
 	Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin", "Penguin_LOD0skin0");
 	character1->m_TexTransform = MathHelper::Identity4x4();
-	character1->m_MaterialIndex = 1;
+	character1->m_MaterialIndex = 2;
 	character1->Geo = m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get();
 	character1->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	character1->IndexCount = character1->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
@@ -396,43 +402,24 @@ void CREVASS::BuildScene()
 	character1->Rotate(-90.0f, 180.0f, 0);
 	character1->SetPosition(250, 20, 0);
 	
-	// Parts 생성
-	//for (UINT i = 0; i < m_MeshRef->mSkinnedMats.size(); ++i)
-	//{
-	//	std::string submeshName = "sm_" + std::to_string(i);
 
-	//	// TypeKey(GeoKey)는 동일해야하고 Instance Key는 달라져야한다.
-	//	CharacterParts* cParts = CreateObject<CharacterParts>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin","Penguin_LOD0skin0" );
-	//	cParts->m_PartsName = "Models\\soldier.m3d" + submeshName;
-	//	cParts->m_World._11 *= 1.5f;
-	//	cParts->m_World._22 *= 1.5f;
-	//	cParts->m_World._33 *= -1.5f;
- //       cParts->m_TexTransform = MathHelper::Identity4x4();
-	//	cParts->m_MaterialIndex = 1;
-	//	cParts->Geo = m_MeshRef->m_GeometryMesh["Models\\soldier.m3d"].get();
-	//	cParts->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	//	cParts->IndexCount = cParts->Geo->DrawArgs[submeshName].IndexCount;
-	//	cParts->StartIndexLocation = cParts->Geo->DrawArgs[submeshName].StartIndexLocation;
-	//	cParts->BaseVertexLocation = cParts->Geo->DrawArgs[submeshName].BaseVertexLocation;
+	GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
+	Sea->Geo = m_MeshRef->m_GeometryMesh["wave"].get();
+	Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
+	Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
+	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
+	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	Sea->m_MaterialIndex = 3;
 
-	//	// All render items for this solider.m3d instance share
-	//	// the same skinned model instance.
-	//	// 이 파라미터들은 CharacterParts 클래스로 이동될 계획
-	//	cParts->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Models\\soldier.m3d"].get();
-	//	cParts->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
-	//	character1->SetParts(cParts);
+	Sea->m_World = MathHelper::Identity4x4();
 
-	//}
+	Sea->m_World._11 = 7;\
+	Sea->m_World._33 = 7;
 
-	// SetPosition
-	//character1->Scale(2.5f, 2.5f, 2.5f);
+	Sea->m_World._41 = SCALE*400;
+	Sea->m_World._42 = -SCALE * 100;
+	Sea->m_World._43 = SCALE*400;
 	
-	//character1->SetPosition(250,0,0);
-	/*m_Player->Rotate({0.f,1.f,0.f},180.f);
-	m_Player->SetPosition(0.f, 0.f, 0.f);
-	character1->SetPosition(originMap->playerVector[0].position.x, originMap->playerVector[0].position.y, originMap->playerVector[0].position.z);*/
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+	Sea->m_TexTransform = MathHelper::Identity4x4();
+	wave = Sea;
 }

@@ -85,7 +85,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -100,7 +100,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -185,6 +185,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="UploadBuffer.h" />
+    <ClInclude Include="Waves.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelinstance.cpp" />
+    <ClCompile Include="Waves.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

@@ -73,7 +73,7 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 {
 	GeometryGenerator geoGen;
 	GeometryGenerator::MeshData box = geoGen.CreateBox(1.0f, 1.0f, 1.0f, 3);
-	GeometryGenerator::MeshData grid = geoGen.CreateGrid(20.0f, 30.0f, 60, 40);
+	GeometryGenerator::MeshData grid = geoGen.CreateGrid(1.0f, 1.0f, 128, 128);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 20);
 	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(0.5f, 0.3f, 3.0f, 20, 20);
 
@@ -180,112 +180,70 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 	m_GeometryMesh["geo"] = std::move(geo);
 }
 
-//void MeshReference::BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
-//{
-//	std::ifstream fin("./Models/skull.txt");
-//
-//	if (!fin)
-//	{
-//		MessageBox(0, L"Models/skull.txt not found.", 0, 0);
-//		return;
-//	}
-//
-//	UINT vcount = 0;
-//	UINT tcount = 0;
-//	std::string ignore;
-//
-//	fin >> ignore >> vcount;
-//	fin >> ignore >> tcount;
-//	fin >> ignore >> ignore >> ignore >> ignore;
-//
-//	XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
-//	XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
-//
-//	XMVECTOR vMin = XMLoadFloat3(&vMinf3);
-//	XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
-//
-//	std::vector<Vertex> vertices(vcount);
-//	for (UINT i = 0; i < vcount; ++i)
-//	{
-//		fin >> vertices[i].Pos.x >> vertices[i].Pos.y >> vertices[i].Pos.z;
-//		fin >> vertices[i].Normal.x >> vertices[i].Normal.y >> vertices[i].Normal.z;
-//
-//		XMVECTOR P = XMLoadFloat3(&vertices[i].Pos);
-//
-//		// Project point onto unit sphere and generate spherical texture coordinates.
-//		XMFLOAT3 spherePos;
-//		XMStoreFloat3(&spherePos, XMVector3Normalize(P));
-//
-//		float theta = atan2f(spherePos.z, spherePos.x);
-//
-//		// Put in [0, 2pi].
-//		if (theta < 0.0f)
-//			theta += XM_2PI;
-//
-//		float phi = acosf(spherePos.y);
-//
-//		float u = theta / (2.0f * XM_PI);
-//		float v = phi / XM_PI;
-//
-//		vertices[i].TexC = { u, v };
-//
-//		vMin = XMVectorMin(vMin, P);
-//		vMax = XMVectorMax(vMax, P);
-//	}
-//
-//	BoundingBox bounds;
-//	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
-//	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
-//
-//	fin >> ignore;
-//	fin >> ignore;
-//	fin >> ignore;
-//
-//	std::vector<std::int32_t> indices(3 * tcount);
-//	for (UINT i = 0; i < tcount; ++i)
-//	{
-//		fin >> indices[i * 3 + 0] >> indices[i * 3 + 1] >> indices[i * 3 + 2];
-//	}
-//
-//	fin.close();
-//
-//	//
-//	// Pack the indices of all the meshes into one index buffer.
-//	//
-//
-//	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
-//
-//	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::int32_t);
-//
-//	auto geo = std::make_unique<GeometryMesh>();
-//
-//	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
-//	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
-//
-//	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
-//	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
-//
-//	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-//		pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
-//
-//	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-//		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
-//
-//	geo->VertexByteStride = sizeof(Vertex);
-//	geo->VertexBufferByteSize = vbByteSize;
-//	geo->IndexFormat = DXGI_FORMAT_R32_UINT;
-//	geo->IndexBufferByteSize = ibByteSize;
-//
-//	SubmeshGeometry submesh;
-//	submesh.IndexCount = (UINT)indices.size();
-//	submesh.StartIndexLocation = 0;
-//	submesh.BaseVertexLocation = 0;
-//	submesh.Bounds = bounds;
-//
-//	geo->DrawArgs["skull"] = submesh;
-//
-//	m_GeometryMesh["skull"] = std::move(geo);
-//}
+void MeshReference::BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves *wave)
+{
+	std::vector<std::uint16_t> indices(3 * wave->TriangleCount()); // 3 indices per face
+	assert(wave->VertexCount() < 0x0000ffff);
+
+	// Iterate over each quad.
+	int m = wave->RowCount();
+	int n = wave->ColumnCount();
+	int k = 0;
+
+	float width = 1;
+	float depth = 1;
+
+	float halfWidth = 0.5f * width;
+	float halfDepth = 0.5f * depth;
+
+	float dx = width / (n - 1);
+	float dz = depth / (m - 1);
+
+	float du = 1.0f / (n - 1);
+	float dv = 1.0f / (m - 1);
+
+	for (int i = 0; i < m - 1; ++i)
+	{
+		for (int j = 0; j < n - 1; ++j)
+		{
+			indices[k] = i * n + j;
+			indices[k + 1] = i * n + j + 1;
+			indices[k + 2] = (i + 1) * n + j;
+
+			indices[k + 3] = (i + 1) * n + j;
+			indices[k + 4] = i * n + j + 1;
+			indices[k + 5] = (i + 1) * n + j + 1;
+
+			k += 6; // next quad
+		}
+	}
+
+	UINT vbByteSize = (*wave).VertexCount() * sizeof(Vertex);
+	UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	auto geo = std::make_unique<GeometryMesh>();
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+	geo->VertexByteStride = sizeof(Vertex);
+	geo->VertexBufferByteSize = vbByteSize;
+	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
+	geo->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry submesh;
+	submesh.IndexCount = (UINT)indices.size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+
+	geo->DrawArgs["wave"] = submesh;
+
+	m_GeometryMesh["wave"] = std::move(geo);
+}
+
 
 void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName)
 {

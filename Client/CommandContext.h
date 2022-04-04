@@ -1,6 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "UploadBuffer.h"
+#include "Waves.h"
 
 
 class SkinnedModelInstance;
@@ -48,6 +49,7 @@ public:
 	
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera);
+	void UpdateWave(Waves* wave, GameObject *waveobject);
 
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
@@ -66,4 +68,6 @@ public:
 	std::unique_ptr<UploadBuffer<ShaderResource::MaterialData>>		MaterialBuffer = nullptr;
 
 	UINT passCount; UINT materialCount; UINT skinnedObjectCount;
+	std::unique_ptr<UploadBuffer<Vertex>> WavesVB = nullptr;
+	UINT VertexCount;
 };

@@ -1,253 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="01_Core">
-      <UniqueIdentifier>{23a1c317-32d4-45a7-871e-b0eef6d4eded}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01_Core\Graphics">
-      <UniqueIdentifier>{20f147cc-0eae-4a03-8e74-0bc14b3eab68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00_Base">
-      <UniqueIdentifier>{cefde031-0b0b-48d0-a786-e193fa7efe54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02_App">
-      <UniqueIdentifier>{e08392d5-f5ca-41ff-9298-8846c5d2ef3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04_Resource">
-      <UniqueIdentifier>{9f61a007-4ee4-444d-a317-116822e23880}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02_App\Scene">
-      <UniqueIdentifier>{320801b4-4d35-419a-80b6-c0f803a7c957}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02_App\GameObject">
-      <UniqueIdentifier>{a858426b-2f57-490d-8487-e638efccf869}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02_App\Component">
-      <UniqueIdentifier>{12698a8c-01a1-45ae-83d0-f3b5b838262a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="headers">
-      <UniqueIdentifier>{bb8eaa02-5261-4579-b342-027114e9f6c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="default">
-      <UniqueIdentifier>{7f72fb8f-742c-4d0b-9dd2-df2e46d4334c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="default\00_sources">
-      <UniqueIdentifier>{2e24bc64-12f7-40c5-8c6b-0c3dc594c113}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="default\01_headers">
-      <UniqueIdentifier>{aea0ccb5-a16a-4b7b-b673-2948495b379b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="default\02_resources">
-      <UniqueIdentifier>{3778881b-4078-457c-b340-a6081e3efcd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="default\03_shaders">
-      <UniqueIdentifier>{5df3f669-fa2a-4de9-b49b-081a9cd01a9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="utilities">
-      <UniqueIdentifier>{ee00ccb2-0857-4da1-93e8-95c428c1ddbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03_Context">
-      <UniqueIdentifier>{414ae405-c082-4552-81b8-2e41ef57438d}</UniqueIdentifier>
-    </Filter>
+    <FxCompile Include="Shaders\Common.hlsl" />
+    <FxCompile Include="Shaders\Default.hlsl" />
+    <FxCompile Include="Shaders\LightingUtil.hlsl" />
+    <FxCompile Include="Shaders\Sky.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>default\01_headers</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dUtil.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="MathHelper.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="UploadBuffer.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>default\01_headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>default\01_headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="IGameApp.h">
-      <Filter>00_Base</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsRenderer.h">
-      <Filter>01_Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GameCore.h">
-      <Filter>01_Core</Filter>
-    </ClInclude>
-    <ClInclude Include="CREVASS.h">
-      <Filter>02_App</Filter>
-    </ClInclude>
-    <ClInclude Include="GameTimer.h">
-      <Filter>01_Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>00_Base</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>02_App\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="LogoScene.h">
-      <Filter>02_App\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandContext.h">
-      <Filter>03_Context</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>02_App\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialReference.h">
-      <Filter>02_App\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshReference.h">
-      <Filter>02_App\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="GeometryMesh.h">
-      <Filter>04_Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="GeometryGenerator.h">
-      <Filter>04_Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>00_Base</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>02_App\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectInfo.h">
-      <Filter>02_App\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadM3d.h" />
-    <ClInclude Include="SkinnedData.h" />
-    <ClInclude Include="SkinnedModelinstance.h" />
-    <ClInclude Include="CharacterParts.h">
-      <Filter>02_App\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>02_App\GameObject</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>headers</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>default\00_sources</Filter>
-    </ClCompile>
-    <ClCompile Include="d3dUtil.cpp">
-      <Filter>utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="MathHelper.cpp">
-      <Filter>utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="IGameApp.cpp">
-      <Filter>00_Base</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsRenderer.cpp">
-      <Filter>01_Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="GameCore.cpp">
-      <Filter>01_Core</Filter>
-    </ClCompile>
-    <ClCompile Include="CREVASS.cpp">
-      <Filter>02_App</Filter>
-    </ClCompile>
-    <ClCompile Include="GameTimer.cpp">
-      <Filter>01_Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>00_Base</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>02_App\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="LogoScene.cpp">
-      <Filter>02_App\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandContext.cpp">
-      <Filter>03_Context</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>02_App\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialReference.cpp">
-      <Filter>02_App\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshReference.cpp">
-      <Filter>02_App\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="GeometryMesh.cpp">
-      <Filter>04_Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="GeometryGenerator.cpp">
-      <Filter>04_Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>00_Base</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>02_App\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectInfo.cpp">
-      <Filter>02_App\GameObject</Filter>
-    </ClCompile>
+    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CharacterParts.cpp" />
+    <ClCompile Include="CREVASS.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CommandContext.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="d3dUtil.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="GeometryGenerator.cpp" />
+    <ClCompile Include="GeometryMesh.cpp" />
+    <ClCompile Include="GraphicsRenderer.cpp" />
+    <ClCompile Include="IGameApp.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
+    <ClCompile Include="LogoScene.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MaterialReference.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="MeshReference.cpp" />
+    <ClCompile Include="ObjectInfo.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelinstance.cpp" />
-    <ClCompile Include="CharacterParts.cpp">
-      <Filter>02_App\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>02_App\GameObject</Filter>
-    </ClCompile>
+    <ClCompile Include="Waves.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>default\02_resources</Filter>
-    </Image>
-    <Image Include="Crevass.ico">
-      <Filter>default\02_resources</Filter>
-    </Image>
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterParts.h" />
+    <ClInclude Include="CREVASS.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CommandContext.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="d3dUtil.h" />
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="GeometryGenerator.h" />
+    <ClInclude Include="GeometryMesh.h" />
+    <ClInclude Include="GraphicsRenderer.h" />
+    <ClInclude Include="IGameApp.h" />
+    <ClInclude Include="LoadM3d.h" />
+    <ClInclude Include="LogoScene.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="MaterialReference.h" />
+    <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="MeshReference.h" />
+    <ClInclude Include="ObjectInfo.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SkinnedData.h" />
+    <ClInclude Include="SkinnedModelinstance.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="GameCore.h" />
+    <ClInclude Include="UploadBuffer.h" />
+    <ClInclude Include="Waves.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Crevass.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Crevass.ico" />
     <Image Include="icon1.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Crevass.rc">
-      <Filter>default\02_resources</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shaders\Default.hlsl">
-      <Filter>default\03_shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\LightingUtil.hlsl">
-      <Filter>default\03_shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\Common.hlsl">
-      <Filter>default\03_shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\Sky.hlsl">
-      <Filter>default\03_shaders</Filter>
-    </FxCompile>
+    <Image Include="small.ico" />
   </ItemGroup>
 </Project>
