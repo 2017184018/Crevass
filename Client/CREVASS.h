@@ -36,7 +36,6 @@ public:
 
 	void OnKeyboardInput(const float deltaT);
 
-	void shake(GameObject*, int);
 
 	GameObject* wave;
 
@@ -47,6 +46,11 @@ private:
 	bool IsRight[25];		//오른쪽으로 흔들리는지
 	UINT ShakeCnt[25];		//좌우로 몇 번 움직였는지
 	UINT DestructionCnt[25];	//몇 번 파괴 됐는지
+	void shake(GameObject*, int);
+
+	bool BlockCheck(int);		//부숴지는 블록인지 아닌지 체크
+
+	bool IsDown[25];		//내려가는 중인지
 
 	std::unique_ptr<Waves> mWaves;
 public:

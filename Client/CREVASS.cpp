@@ -35,7 +35,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/Penguin.mesh", "Penguin");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
-	
+
 	//animation
 	//m_MeshRef->BuildGeometry(g_Device.Get(), g_CommandList.Get(), "./Models/soldier.m3d", "Models\\soldier.m3d");
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
@@ -67,6 +67,7 @@ void CREVASS::Startup(void)
 		IsRight[i] = true;
 		ShakeCnt[i] = 0;
 		DestructionCnt[i] = 0;
+		IsDown[i] = true;
 	}
 }
 
@@ -92,6 +93,12 @@ void CREVASS::Cleanup(void)
 	/* Release References */
 	SAFE_DELETE_PTR(m_MeshRef);
 	SAFE_DELETE_PTR(m_MaterialRef);
+}
+
+bool CREVASS::BlockCheck(int idx) {
+	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
+		return false;
+	return true;
 }
 
 void CREVASS::Update(float deltaT)
@@ -151,7 +158,7 @@ void CREVASS::Update(float deltaT)
 
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
-	GraphicsContext::GetApp()->UpdateWave(mWaves.get(),wave);
+	GraphicsContext::GetApp()->UpdateWave(mWaves.get(), wave);
 
 }
 
@@ -182,23 +189,42 @@ void CREVASS::RenderScene(void)
 }
 
 void CREVASS::shake(GameObject* object, int index) {
-	if (IsRight[index]) {
-		if (object->m_World._41 < 100 * (index / 5) + 3) {
-			object->m_World._41 += 0.07f;
+	if (BlockCheck(index)) {		//ºÎ½¤Áü
+		if (IsRight[index]) {
+			if (object->m_World._41 < 100 * (index / 5) + 3) {
+				object->m_World._41 += 0.07f;
+			}
+			else
+				IsRight[index] = false;
 		}
-		else
-			IsRight[index] = false;
-	}
-	else {
-		if (object->m_World._41 > 100 * (index / 5) - 3) {
-			object->m_World._41 -= 0.07f;
+		else {
+			if (object->m_World._41 > 100 * (index / 5) - 3) {
+				object->m_World._41 -= 0.07f;
+			}
+			else
+				IsRight[index] = true;
 		}
-		else
-			IsRight[index] = true;
+		if (IsRight[index] && (object->m_World._41 - 0.001f <= 100 * (index / 5) && object->m_World._41 + 0.001f >= 100 * (index / 5)))
+			++ShakeCnt[index];
 	}
-	if (IsRight[index] && (object->m_World._41 - 0.001f <= 100 * (index / 5) && object->m_World._41 + 0.001f >= 100 * (index / 5)))
-		++ShakeCnt[index];
-	
+	else {		//³»·Á°¨
+		if (IsDown[index]) {
+			if (object->m_World._42 > -15) {
+				object->m_World._42 -= 0.09f;
+			}
+			else
+				IsDown[index] = false;
+		}
+		else {
+			if (object->m_World._42 <= 0) {
+				object->m_World._42 += 0.07f;
+			}
+			else {
+				IsDown[index] = true;
+				IsShake[index] = false;
+			}
+		}
+	}
 }
 
 void CREVASS::OnKeyboardInput(const float deltaT)
@@ -321,7 +347,7 @@ void CREVASS::BuildScene()
 			instancingObj->m_World._33 = 0.5;
 			int distance = SCALE * 200;
 			instancingObj->m_World._41 = distance * i;
-			instancingObj->m_World._42 = 20;
+			instancingObj->m_World._42 = 220;
 			instancingObj->m_World._43 = distance * j;
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -374,8 +400,8 @@ void CREVASS::BuildScene()
 		instancingObj->m_World._22 = 15;
 		instancingObj->m_World._33 = 15;
 
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationY(3.14 ));
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationX(3.14/2));
+		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14));
+		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.14 / 2));
 
 		instancingObj->m_World._41 = 200;
 		instancingObj->m_World._42 = 30;
@@ -383,43 +409,45 @@ void CREVASS::BuildScene()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	/*Characters*/
-	// student
-	Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin", "Penguin_LOD0skin0");
-	character1->m_TexTransform = MathHelper::Identity4x4();
-	character1->m_MaterialIndex = 2;
-	character1->Geo = m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get();
-	character1->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	character1->IndexCount = character1->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
-	character1->StartIndexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].StartIndexLocation;
-	character1->BaseVertexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
-	character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
-	character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
+	{
+		/*Characters*/
+		// student
+		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin", "Penguin_LOD0skin0");
+		character1->m_TexTransform = MathHelper::Identity4x4();
+		character1->m_MaterialIndex = 2;
+		character1->Geo = m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get();
+		character1->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		character1->IndexCount = character1->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
+		character1->StartIndexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].StartIndexLocation;
+		character1->BaseVertexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
+		character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
+		character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
 
+		//character1->Scale(100, 100, 100);
+		character1->Scale(60, 60, 60);
+		character1->Rotate(-90.0f, 180.0f, 0);
+		character1->SetPosition(250, 20, 0);
+	}
 
-	//character1->Scale(100, 100, 100);
-	character1->Scale(60, 60, 60);
-	character1->Rotate(-90.0f, 180.0f, 0);
-	character1->SetPosition(250, 20, 0);
-	
+	{
+		GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
+		Sea->Geo = m_MeshRef->m_GeometryMesh["wave"].get();
+		Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
+		Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
+		Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
+		Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		Sea->m_MaterialIndex = 3;
 
-	GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
-	Sea->Geo = m_MeshRef->m_GeometryMesh["wave"].get();
-	Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
-	Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
-	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
-	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	Sea->m_MaterialIndex = 3;
+		Sea->m_World = MathHelper::Identity4x4();
 
-	Sea->m_World = MathHelper::Identity4x4();
+		Sea->m_World._11 = 7;
+		Sea->m_World._33 = 7;
 
-	Sea->m_World._11 = 7;\
-	Sea->m_World._33 = 7;
+		Sea->m_World._41 = SCALE * 400;
+		Sea->m_World._42 = -SCALE * 100;
+		Sea->m_World._43 = SCALE * 400;
 
-	Sea->m_World._41 = SCALE*400;
-	Sea->m_World._42 = -SCALE * 100;
-	Sea->m_World._43 = SCALE*400;
-	
-	Sea->m_TexTransform = MathHelper::Identity4x4();
-	wave = Sea;
+		Sea->m_TexTransform = MathHelper::Identity4x4();
+		wave = Sea;
+	}
 }
