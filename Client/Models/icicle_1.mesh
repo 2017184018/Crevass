@@ -2,7 +2,8 @@ VertexSize 520
 IndexSize 2064
 MaterialSize 3
 Material 
-Name C:\Users\오성훈\Desktop\성훈이 자료\졸작\에셋\Assets\Bitgem\Cube_World\Snow_Cubes\Textures\cubeworld_tex.tga
+Name
+/Volumes/Vault/Dropbox/BITGEM_Products/_proto_series/cube_world/block_ice1/textures/cubeworld_tex.tga
 Ambient 0 0 0
 Diffuse 1 1 1 1
 Fresnel 0.01 0.01 0.01
@@ -10,7 +11,7 @@ Specular 0.01 0.01 0.01
 Emissive 0 0 0
 Roughness 0.25
 MatTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
-Name C:\Users\오성훈\Desktop\성훈이 자료\졸작\에셋\Assets\Bitgem\Cube_World\Snow_Cubes\Textures\cubeworld_tex.tga
+Name /Volumes/Vault/Dropbox/BITGEM_Products/_proto_series/cube_world/block_ice1/textures/cubeworld_tex.tga
 Ambient 0 0 0
 Diffuse 1 1 1 1
 Fresnel 0.01 0.01 0.01
@@ -18,7 +19,7 @@ Specular 0.01 0.01 0.01
 Emissive 0 0 0
 Roughness 0.25
 MatTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
-Name C:\Users\오성훈\Desktop\성훈이 자료\졸작\에셋\Assets\Bitgem\Cube_World\Snow_Cubes\Textures\cubeworld_tex.tga
+Name /Volumes/Vault/Dropbox/BITGEM_Products/_proto_series/cube_world/block_ice1/textures/cubeworld_tex.tga
 Ambient 0 0 0
 Diffuse 1 1 1 1
 Fresnel 0.01 0.01 0.01

@@ -105,7 +105,7 @@ void CREVASS::Update(float deltaT)
 {
 	OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
-		if (IsShake[i]) {
+		if (IsShake[i] || !IsDown[i]) {
 			shake(m_RItemsVec[2 * i + 1], i);	//블록
 			shake(m_RItemsVec[2 * (i + 1)], i);	//덮개
 			shake(m_RItemsVec[51 + i], i);	//고드름
@@ -130,8 +130,30 @@ void CREVASS::Update(float deltaT)
 				m_RItemsVec[i + 51]->m_World._33 = 0;
 			}
 		}
-	}
+		//블록 위치조정
+		m_RItemsVec[2 * i + 1]->m_World._41 = m_RItemsVec[2 * (i + 1)]->m_World._41 = m_RItemsVec[51 + i]->m_World._41;
+		m_RItemsVec[2 * i + 1]->m_World._42 = m_RItemsVec[2 * (i + 1)]->m_World._42 = m_RItemsVec[51 + i]->m_World._42;
+		m_RItemsVec[2 * i + 1]->m_World._43 = m_RItemsVec[2 * (i + 1)]->m_World._43 = m_RItemsVec[51 + i]->m_World._43;
 
+		//눈사람 위치조정
+		if (SnowmanIndex[0] % 2) {
+			m_RItemsVec[76]->m_World._41 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 15;
+		}
+		else {
+			m_RItemsVec[76]->m_World._41 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 15;
+		}
+		m_RItemsVec[76]->m_World._42 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 10;
+		m_RItemsVec[76]->m_World._43 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 15;
+		if (SnowmanIndex[1] % 2) {
+			m_RItemsVec[77]->m_World._41 = m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 15;
+		}
+		else {
+			m_RItemsVec[77]->m_World._41 = m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 15;
+		}
+		m_RItemsVec[77]->m_World._42 = m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 10;
+		m_RItemsVec[77]->m_World._43 = m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 15;
+
+	}
 
 	m_MaterialRef->Update(deltaT);
 
@@ -192,14 +214,14 @@ void CREVASS::shake(GameObject* object, int index) {
 	if (BlockCheck(index)) {		//부숴짐
 		if (IsRight[index]) {
 			if (object->m_World._41 < 100 * (index / 5) + 3) {
-				object->m_World._41 += 0.07f;
+				object->m_World._41 += 0.14f;
 			}
 			else
 				IsRight[index] = false;
 		}
 		else {
 			if (object->m_World._41 > 100 * (index / 5) - 3) {
-				object->m_World._41 -= 0.07f;
+				object->m_World._41 -= 0.14f;
 			}
 			else
 				IsRight[index] = true;
@@ -209,11 +231,20 @@ void CREVASS::shake(GameObject* object, int index) {
 	}
 	else {		//내려감
 		if (IsDown[index]) {
-			if (object->m_World._42 > -15) {
-				object->m_World._42 -= 0.09f;
-			}
-			else
+			/*	if (object->m_World._42 > -10) {
+					object->m_World._42 -= 0.1f;
+				}
+				else if (object->m_World._42 > -40) {
+					object->m_World._42 -= 0.3f;
+				}
+				else if (object->m_World._42 > -70) {
+					object->m_World._42 -= 0.5f;
+				}*/
+			if (object->m_World._42 <= -70)
 				IsDown[index] = false;
+			else {
+				object->m_World._42 -= (-object->m_World._42 / 150 + 1.0 / 30.0);
+			}
 		}
 		else {
 			if (object->m_World._42 <= 0) {
@@ -221,8 +252,8 @@ void CREVASS::shake(GameObject* object, int index) {
 			}
 			else {
 				IsDown[index] = true;
-				IsShake[index] = false;
 			}
+			IsShake[index] = false;
 		}
 	}
 }
@@ -232,7 +263,9 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	static bool pushone = false;
 	if (GetAsyncKeyState('1') & 0x8000) {
 		if (pushone) {
-			IsShake[uid(dre)] = true;
+			int tmp = uid(dre);
+			IsShake[tmp] = true;
+			IsDown[tmp] = true;
 			pushone = false;
 		}
 	}
@@ -347,7 +380,7 @@ void CREVASS::BuildScene()
 			instancingObj->m_World._33 = 0.5;
 			int distance = SCALE * 200;
 			instancingObj->m_World._41 = distance * i;
-			instancingObj->m_World._42 = 220;
+			instancingObj->m_World._42 = 0;
 			instancingObj->m_World._43 = distance * j;
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -370,19 +403,20 @@ void CREVASS::BuildScene()
 		while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
 			RandomLocation[i] = uid(dre);
 		}
+		SnowmanIndex[i] = RandomLocation[i];
 		if (RandomLocation[i] % 2) {
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
 			int distance = SCALE * 200;
-			instancingObj->m_World._41 = RandomLocation[i] % 5 * distance - 15.0f;
+			instancingObj->m_World._41 = RandomLocation[i] / 5 * distance - 15.0f;
 			instancingObj->m_World._42 = 10;
-			instancingObj->m_World._43 = RandomLocation[i] / 5 * distance + 15.0f;
+			instancingObj->m_World._43 = RandomLocation[i] % 5 * distance + 15.0f;
 		}
 		else {
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
 			int distance = SCALE * 200;
-			instancingObj->m_World._41 = RandomLocation[i] % 5 * distance + 15.0f;
+			instancingObj->m_World._41 = RandomLocation[i] / 5 * distance + 15.0f;
 			instancingObj->m_World._42 = 10;
-			instancingObj->m_World._43 = RandomLocation[i] / 5 * distance; +15.0f;
+			instancingObj->m_World._43 = RandomLocation[i] % 5 * distance; +15.0f;
 		}
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
@@ -410,26 +444,6 @@ void CREVASS::BuildScene()
 	}
 
 	{
-		/*Characters*/
-		// student
-		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin", "Penguin_LOD0skin0");
-		character1->m_TexTransform = MathHelper::Identity4x4();
-		character1->m_MaterialIndex = 2;
-		character1->Geo = m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get();
-		character1->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		character1->IndexCount = character1->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
-		character1->StartIndexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].StartIndexLocation;
-		character1->BaseVertexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
-		character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
-		character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
-
-		//character1->Scale(100, 100, 100);
-		character1->Scale(60, 60, 60);
-		character1->Rotate(-90.0f, 180.0f, 0);
-		character1->SetPosition(250, 20, 0);
-	}
-
-	{
 		GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
 		Sea->Geo = m_MeshRef->m_GeometryMesh["wave"].get();
 		Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
@@ -449,5 +463,25 @@ void CREVASS::BuildScene()
 
 		Sea->m_TexTransform = MathHelper::Identity4x4();
 		wave = Sea;
+	}
+
+	{
+		/*Characters*/
+		// student
+		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin", "Penguin_LOD0skin0");
+		character1->m_TexTransform = MathHelper::Identity4x4();
+		character1->m_MaterialIndex = 2;
+		character1->Geo = m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get();
+		character1->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		character1->IndexCount = character1->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
+		character1->StartIndexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].StartIndexLocation;
+		character1->BaseVertexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
+		character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
+		character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
+
+		//character1->Scale(100, 100, 100);
+		character1->Scale(60, 60, 60);
+		character1->Rotate(-90.0f, 180.0f, 0);
+		character1->SetPosition(250, 20, 0);
 	}
 }

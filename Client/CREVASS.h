@@ -52,6 +52,8 @@ private:
 
 	bool IsDown[25];		//내려가는 중인지
 
+	UINT SnowmanIndex[2];
+
 	std::unique_ptr<Waves> mWaves;
 public:
 	template <class TObject>
