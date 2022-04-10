@@ -106,6 +106,11 @@ public:
 	
 	void GetMaterialTexture(fbxsdk::FbxSurfaceMaterial * pMaterial, Material & Mat);
 
+
+	int GetAnimationLayerCurveNodes(FbxAnimLayer* pfbxAnimationLayer, FbxNode* pfbxNode);
+	int GetAnimationCurves(FbxAnimLayer* pfbxAnimationLayer, FbxNode* pfbxNode);
+
+
 	FbxAMatrix GetGeometryTransformation(fbxsdk::FbxNode * pNode);
 
 

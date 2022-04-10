@@ -4,6 +4,7 @@
 #include "GameTimer.h"
 #include "GraphicsRenderer.h"
 #include "CommandContext.h"
+#include "CREVASS.h"
 
 using namespace Core;
 
@@ -571,6 +572,9 @@ void GameCore::OnResize()
 	mScreenViewport.MaxDepth = 1.0f;
 
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
+
+	if (CREVASS::GetApp()->m_Camera)
+		CREVASS::GetApp()->m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
 }
 
 void GameCore::CreateCommandObjects()

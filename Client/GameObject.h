@@ -25,6 +25,19 @@ public:
 
 	virtual void Scale(float x, float y, float z);
 	virtual void SetPosition(float posX, float posY, float posZ);
+	virtual void SetPosition(DirectX::XMFLOAT3 xmPos);
+
+	XMFLOAT3 GetPosition() const;
+	XMFLOAT3 GetLook() const;
+	XMFLOAT3 GetUp() const;
+	XMFLOAT3 GetRight() const;
+
+	virtual void MoveStrafe(float fDistance = 1.0f);
+	virtual void MoveUp(float fDistance = 1.0f);
+	virtual void MoveForward(float fDistance = 1.0f);
+
+	virtual void Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity);
+	virtual void Move(const XMFLOAT3& xmf3Shift, bool bVelocity = false);
 
 	virtual void Rotate(const DirectX::XMFLOAT3& axis, float angle);
 	virtual void Rotate(const DirectX::XMFLOAT4& quaternion);

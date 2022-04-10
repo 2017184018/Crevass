@@ -20,8 +20,10 @@ uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
 
 void CREVASS::Startup(void)
 {
-	m_Camera.SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
-	m_Camera.SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 1000.0f);
+
+	m_Camera = new Camera;
+	m_Camera->SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
+	m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 1000.0f);
 
 	// Build Mesh & Material & Texture
 	m_MeshRef = new MeshReference;
@@ -39,8 +41,9 @@ void CREVASS::Startup(void)
 	//animation
 	//m_MeshRef->BuildGeometry(g_Device.Get(), g_CommandList.Get(), "./Models/soldier.m3d", "Models\\soldier.m3d");
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
-
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
 
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
@@ -52,6 +55,7 @@ void CREVASS::Startup(void)
 	// Build RenderItem
 	BuildScene();
 
+	
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = TOTAL_USER_COUNT;
@@ -61,6 +65,13 @@ void CREVASS::Startup(void)
 	{
 		GraphicsContext::GetApp()->BuildInstanceBuffer(p.second);
 	}
+
+	m_PlayerID = 0;
+	m_Users[m_PlayerID] = FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+
+	//// Player type, id 등등 세팅
+	m_Users[m_PlayerID]->SetCamera(m_Camera, CameraType::Third);
+	m_Users[m_PlayerID]->SetController();
 
 	for (int i = 0; i < 25; ++i) {
 		IsShake[i] = false;
@@ -96,6 +107,10 @@ void CREVASS::Cleanup(void)
 
 void CREVASS::Update(float deltaT)
 {
+	//이거 풀면 플레이어 3인칭 기준 카메라 적용
+	//if (m_Users[m_PlayerID])
+	//	m_Users[m_PlayerID]->Update(deltaT);
+
 	OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i]) {
@@ -147,7 +162,8 @@ void CREVASS::Update(float deltaT)
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["sky"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(m_MaterialRef->m_Materials);
-	GraphicsContext::GetApp()->UpdateMainPassCB(m_Camera);
+	m_Camera->UpdateViewMatrix();
+	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
 
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
@@ -213,44 +229,48 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	else {
 		pushone = true;
 	}
-
+	float speed = 20 * deltaT;
 	if (GetAsyncKeyState('W') & 0x8000)
-		m_Camera.Walk(20.0f * deltaT);
-
+		m_Camera->Walk(20.0f * deltaT);
+	if (GetAsyncKeyState('G') & 0x8000) {
+		m_Users[m_PlayerID]->Move(DIR_FORWARD, speed, true);
+		m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"]->ClipName = "Run";
+	}
+	if (GetAsyncKeyState('H') & 0x8000)
+		m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"]->ClipName = "Idle";
 	if (GetAsyncKeyState('S') & 0x8000)
-		m_Camera.Walk(-20.0f * deltaT);
+		m_Camera->Walk(-20.0f * deltaT);
 
 	if (GetAsyncKeyState('A') & 0x8000)
-		m_Camera.Strafe(-20.0f * deltaT);
+		m_Camera->Strafe(-20.0f * deltaT);
 
 	if (GetAsyncKeyState('D') & 0x8000)
-		m_Camera.Strafe(20.0f * deltaT);
+		m_Camera->Strafe(20.0f * deltaT);
 
 	if (GetAsyncKeyState('Z') & 0x8000) {
-		auto tmp = m_Camera.GetPosition3f();
+		auto tmp = m_Camera->GetPosition3f();
 		tmp.y += 20.0f * deltaT;
-		m_Camera.SetPosition(tmp);
+		m_Camera->SetPosition(tmp);
 	}
 
 	if (GetAsyncKeyState('X') & 0x8000) {
-		auto tmp = m_Camera.GetPosition3f();
+		auto tmp = m_Camera->GetPosition3f();
 		tmp.y -= 20.0f * deltaT;
-		m_Camera.SetPosition(tmp);
+		m_Camera->SetPosition(tmp);
 	}
 
 	if (GetAsyncKeyState('Q') & 0x8000)
-		m_Camera.RotateY(0.005);
+		m_Camera->RotateY(0.005);
 
 	if (GetAsyncKeyState('E') & 0x8000)
-		m_Camera.RotateY(-0.005);
+		m_Camera->RotateY(-0.005);
 
 	if (GetAsyncKeyState('R') & 0x8000)
-		m_Camera.RotateX(0.005);
+		m_Camera->RotateX(0.005);
 
 	if (GetAsyncKeyState('T') & 0x8000)
-		m_Camera.RotateX(-0.005);
+		m_Camera->RotateX(-0.005);
 
-	m_Camera.UpdateViewMatrix();
 }
 
 void CREVASS::BuildScene()
@@ -396,10 +416,10 @@ void CREVASS::BuildScene()
 	character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
 	character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
 
-
+	
 	//character1->Scale(100, 100, 100);
 	character1->Scale(60, 60, 60);
-	character1->Rotate(-90.0f, 180.0f, 0);
+	//character1->Rotate(-90.0f, 180.0f, 0);
 	character1->SetPosition(250, 20, 0);
 	
 
