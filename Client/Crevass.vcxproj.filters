@@ -5,6 +5,7 @@
     <FxCompile Include="Shaders\Default.hlsl" />
     <FxCompile Include="Shaders\LightingUtil.hlsl" />
     <FxCompile Include="Shaders\Sky.hlsl" />
+    <FxCompile Include="Shaders\Blur.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelinstance.cpp" />
     <ClCompile Include="Waves.cpp" />
+    <ClCompile Include="BlurFilter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
@@ -71,6 +73,7 @@
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="Waves.h" />
+    <ClInclude Include="BlurFilter.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

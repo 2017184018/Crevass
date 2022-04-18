@@ -2,6 +2,7 @@
 #include "Singleton.h"
 #include "Camera.h"
 #include "UploadBuffer.h"
+#include "BlurFilter.h"
 
 class GameObject;
 class GameTimer;
@@ -22,6 +23,11 @@ namespace Core
 
 	extern bool      g_4xMsaaState;			// 4X MSAA enabled
 	extern UINT      g_4xMsaaQuality;      // quality level of 4X MSAA
+
+	extern std::unique_ptr<BlurFilter> mBlurFilter;
+	extern ID3D12Resource* BackBuffer;
+		extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
+
 }
 
 class GraphicsRenderer : public TemplateSingleton<GraphicsRenderer>
@@ -39,6 +45,8 @@ private:
 	void BuildShaderAndInputLayout();
 	void BuildRootSignatures();
 	void BuildPipelineStateObjects();
+
+	void BuildPostProcessRootSignature();
 
 	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
 

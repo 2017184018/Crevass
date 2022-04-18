@@ -1,5 +1,6 @@
 #pragma once
 #include "Singleton.h"
+#include "BlurFilter.h"
 
 class IGameApp;
 class GraphicsRenderer;
@@ -93,5 +94,7 @@ private:
 
 private:
 	POINT										mLastMousePos;
+
+
 };
 

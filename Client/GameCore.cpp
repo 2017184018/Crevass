@@ -29,6 +29,11 @@ namespace Core
 	DXGI_FORMAT g_DepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	bool      g_4xMsaaState = false;    // 4X MSAA enabled
 	UINT      g_4xMsaaQuality = 0;		// quality level of 4X MSAA
+
+	std::unique_ptr<BlurFilter> mBlurFilter;
+
+	ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
+	ID3D12Resource* BackBuffer;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)
@@ -120,6 +125,8 @@ void GameCore::InitializeCore(IGameApp& game)
 	InitMainWindow();
 	InitDirect3D();
 	OnResize();
+
+	BackBuffer = CurrentBackBuffer();
 
 	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), nullptr));
 
@@ -342,6 +349,7 @@ void GameCore::ExecuteCommandLists()
 	ThrowIfFailed(mSwapChain->Present(0, 0));
 	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
 
+	Core::BackBuffer = CurrentBackBuffer();
 	FlushCommandQueue();
 }
 
@@ -571,6 +579,11 @@ void GameCore::OnResize()
 	mScreenViewport.MaxDepth = 1.0f;
 
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
+
+	if (mBlurFilter != nullptr)
+	{
+		mBlurFilter->OnResize(g_DisplayWidth, g_DisplayHeight);
+	}
 }
 
 void GameCore::CreateCommandObjects()

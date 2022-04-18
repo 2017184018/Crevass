@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BlurFilter.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterParts.h" />
     <ClInclude Include="CREVASS.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Waves.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlurFilter.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterParts.cpp" />
     <ClCompile Include="CREVASS.cpp" />
@@ -231,6 +233,9 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\Blur.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shaders\Common.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

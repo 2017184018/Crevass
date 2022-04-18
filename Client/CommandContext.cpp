@@ -215,3 +215,4 @@ void GraphicsContext::SetGraphicsRootSignature(ID3D12RootSignature* RootSignatur
 		m_CurGraphicsRootSignature = RootSignature;
 	}
 }
+

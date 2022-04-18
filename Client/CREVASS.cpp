@@ -18,6 +18,8 @@ uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
 
 #define SCALE 0.5
 
+int cnt = 0;
+
 void CREVASS::Startup(void)
 {
 	m_Camera.SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
@@ -47,7 +49,6 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
 
 	m_MaterialRef->BuildMaterials();
-
 
 	// Build RenderItem
 	BuildScene();
@@ -208,6 +209,18 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
 
+	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
+		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, cnt);
+
+	// Prepare to copy blurred output to the back buffer.
+	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+		D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+
+	g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
+
+	// Transition to PRESENT state.
+	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
 }
 
 void CREVASS::shake(GameObject* object, int index) {
@@ -271,6 +284,17 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	}
 	else {
 		pushone = true;
+	}
+
+	static bool pushtwo = false;
+	if (GetAsyncKeyState('2') & 0x8000) {
+		if (pushtwo) {
+			pushtwo = false;
+			++cnt;
+		}
+	}
+	else {
+		pushtwo = true;
 	}
 
 	if (GetAsyncKeyState('W') & 0x8000)

@@ -15,6 +15,9 @@ namespace Graphics
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
 }
 
 using namespace Core;
@@ -23,13 +26,18 @@ using namespace Graphics;
 void GraphicsRenderer::Initialize()
 {
 	m_CbvSrvDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	LoadTextures();
-	BuildDescriptorHeaps();
 
-	// Renderer
-	BuildShaderAndInputLayout();
+	Core::mBlurFilter = std::make_unique<BlurFilter>(g_Device.Get(),
+		g_DisplayWidth, g_DisplayHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
+
+	LoadTextures();
 	BuildRootSignatures();
+	BuildPostProcessRootSignature();
+	BuildDescriptorHeaps();
+	BuildShaderAndInputLayout();
 	BuildPipelineStateObjects();
+
+
 }
 
 void GraphicsRenderer::Shutdown()
@@ -90,11 +98,13 @@ void GraphicsRenderer::LoadTextures()
 
 void GraphicsRenderer::BuildDescriptorHeaps()
 {
+
+	const int blurDescriptorCount = 4;
 	//
 		// Create the SRV heap.
 		//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = m_Textures.size();
+	srvHeapDesc.NumDescriptors = m_Textures.size() + blurDescriptorCount;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
@@ -150,6 +160,11 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	g_Device->CreateShaderResourceView(water.Get(), &srvDesc, hDescriptor);
 
 	mSkyTexHeapIndex = 0;
+
+	Core::mBlurFilter->BuildDescriptors(
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), 4, m_CbvSrvDescriptorSize),
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), 4, m_CbvSrvDescriptorSize),
+		m_CbvSrvDescriptorSize);
 }
 
 void GraphicsRenderer::BuildShaderAndInputLayout()
@@ -158,7 +173,7 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	{
 		"ALPHA_TEST", "1",
 		NULL, NULL
-	}; 
+	};
 	const D3D_SHADER_MACRO skinnedDefines[] =
 	{
 		"SKINNED", "1",
@@ -171,6 +186,9 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 
 	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
+
+	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_0");
+	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_0");
 
 	m_Instancing_InputLayout =
 	{
@@ -312,6 +330,72 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 		m_Shaders["skyPS"]->GetBufferSize()
 	};
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO)));
+
+	//
+	// PSO for horizontal blur
+	//
+	D3D12_COMPUTE_PIPELINE_STATE_DESC horzBlurPSO = {};
+	horzBlurPSO.pRootSignature = mPostProcessRootSignature.Get();
+	horzBlurPSO.CS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["horzBlurCS"]->GetBufferPointer()),
+		m_Shaders["horzBlurCS"]->GetBufferSize()
+	};
+	horzBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(g_Device->CreateComputePipelineState(&horzBlurPSO, IID_PPV_ARGS(&HorBlur)));
+
+	//
+	// PSO for vertical blur
+	//
+	D3D12_COMPUTE_PIPELINE_STATE_DESC vertBlurPSO = {};
+	vertBlurPSO.pRootSignature = mPostProcessRootSignature.Get();
+	vertBlurPSO.CS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["vertBlurCS"]->GetBufferPointer()),
+		m_Shaders["vertBlurCS"]->GetBufferSize()
+	};
+	vertBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(g_Device->CreateComputePipelineState(&vertBlurPSO, IID_PPV_ARGS(&VerBlur)));
+}
+
+void GraphicsRenderer::BuildPostProcessRootSignature()
+{
+	CD3DX12_DESCRIPTOR_RANGE srvTable;
+	srvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+
+	CD3DX12_DESCRIPTOR_RANGE uavTable;
+	uavTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
+
+	// Root parameter can be a table, root descriptor or root constants.
+	CD3DX12_ROOT_PARAMETER slotRootParameter[3];
+
+	// Perfomance TIP: Order from most frequent to least frequent.
+	slotRootParameter[0].InitAsConstants(12, 0);
+	slotRootParameter[1].InitAsDescriptorTable(1, &srvTable);
+	slotRootParameter[2].InitAsDescriptorTable(1, &uavTable);
+
+	// A root signature is an array of root parameters.
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(3, slotRootParameter,
+		0, nullptr,
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+	// create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
+	ComPtr<ID3DBlob> serializedRootSig = nullptr;
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
+		serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
+
+	if (errorBlob != nullptr)
+	{
+		::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+	}
+	ThrowIfFailed(hr);
+
+	ThrowIfFailed(g_Device->CreateRootSignature(
+		0,
+		serializedRootSig->GetBufferPointer(),
+		serializedRootSig->GetBufferSize(),
+		IID_PPV_ARGS(mPostProcessRootSignature.GetAddressOf())));
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GraphicsRenderer::GetStaticSamplers()

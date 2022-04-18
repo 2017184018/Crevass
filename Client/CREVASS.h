@@ -5,12 +5,16 @@
 #include "GameObject.h"
 #include "ObjectInfo.h"
 #include "Waves.h"
+#include "BlurFilter.h"
 
 
 namespace Graphics
 {
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
 }
 
 namespace Core
@@ -20,6 +24,10 @@ namespace Core
 
 	extern int g_DisplayWidth;
 	extern int g_DisplayHeight;
+
+	extern std::unique_ptr<BlurFilter> mBlurFilter;
+	extern ID3D12Resource* BackBuffer;
+	extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 }
 
 class MeshReference;
