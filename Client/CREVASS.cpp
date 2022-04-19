@@ -13,8 +13,9 @@ using namespace Core;
 
 random_device rd;
 default_random_engine dre(rd());
-uniform_int_distribution<> uid{ 0,24 }; //눈사람 위치
+uniform_int_distribution<> uid{ 0,8 }; //눈사람 위치
 uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
+uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
 
 #define SCALE 0.5
 
@@ -137,7 +138,7 @@ void CREVASS::Update(float deltaT)
 		m_RItemsVec[2 * i + 1]->m_World._43 = m_RItemsVec[2 * (i + 1)]->m_World._43 = m_RItemsVec[51 + i]->m_World._43;
 
 		//눈사람 위치조정
-		if (SnowmanIndex[0] % 2) {
+		if (SnowmanIndex[0] % 4) {
 			m_RItemsVec[76]->m_World._41 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 15;
 		}
 		else {
@@ -145,7 +146,7 @@ void CREVASS::Update(float deltaT)
 		}
 		m_RItemsVec[76]->m_World._42 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 10;
 		m_RItemsVec[76]->m_World._43 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 15;
-		if (SnowmanIndex[1] % 2) {
+		if (SnowmanIndex[1] % 4) {
 			m_RItemsVec[77]->m_World._41 = m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 15;
 		}
 		else {
@@ -244,15 +245,6 @@ void CREVASS::shake(GameObject* object, int index) {
 	}
 	else {		//내려감
 		if (IsDown[index]) {
-			/*	if (object->m_World._42 > -10) {
-					object->m_World._42 -= 0.1f;
-				}
-				else if (object->m_World._42 > -40) {
-					object->m_World._42 -= 0.3f;
-				}
-				else if (object->m_World._42 > -70) {
-					object->m_World._42 -= 0.5f;
-				}*/
 			if (object->m_World._42 <= -70)
 				IsDown[index] = false;
 			else {
@@ -276,7 +268,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	static bool pushone = false;
 	if (GetAsyncKeyState('1') & 0x8000) {
 		if (pushone) {
-			int tmp = uid(dre);
+			int tmp = uid3(dre);
 			IsShake[tmp] = true;
 			IsDown[tmp] = true;
 			pushone = false;
@@ -295,7 +287,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	}
 	else {
 		pushtwo = true;
-	}
+	} 
 
 	if (GetAsyncKeyState('W') & 0x8000)
 		m_Camera.Walk(20.0f * deltaT);
@@ -427,20 +419,20 @@ void CREVASS::BuildScene()
 		while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
 			RandomLocation[i] = uid(dre);
 		}
-		SnowmanIndex[i] = RandomLocation[i];
-		if (RandomLocation[i] % 2) {
+		SnowmanIndex[i] = SnowmanLocaArray[RandomLocation[i]];
+		if (SnowmanIndex[i] % 4) {
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
 			int distance = SCALE * 200;
-			instancingObj->m_World._41 = RandomLocation[i] / 5 * distance - 15.0f;
+			instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance - 15.0f;
 			instancingObj->m_World._42 = 10;
-			instancingObj->m_World._43 = RandomLocation[i] % 5 * distance + 15.0f;
+			instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance + 15.0f;
 		}
 		else {
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
 			int distance = SCALE * 200;
-			instancingObj->m_World._41 = RandomLocation[i] / 5 * distance + 15.0f;
+			instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance + 15.0f;
 			instancingObj->m_World._42 = 10;
-			instancingObj->m_World._43 = RandomLocation[i] % 5 * distance; +15.0f;
+			instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance; +15.0f;
 		}
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}

@@ -63,6 +63,8 @@ private:
 	UINT SnowmanIndex[2];
 
 	std::unique_ptr<Waves> mWaves;
+
+	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 public:
 	template <class TObject>
 	TObject* CreateObject(RenderLayer layer, std::string type, std::string instID)
