@@ -56,7 +56,7 @@ HRESULT FbxLoader::LoadFBX(
 	// Convert quad to triangle
 	FbxGeometryConverter geometryConverter(gFbxManager);
 	geometryConverter.Triangulate(pFbxScene, true);
-
+	
 	// Start to RootNode
 	FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
 
@@ -104,12 +104,12 @@ HRESULT FbxLoader::LoadFBX(
 
 	pImporter->Destroy();
 
-	//fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
-	//fbxsdk::FbxAxisSystem::DirectX.ConvertScene(pFbxScene); // Delete?
+	fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
+	fbxsdk::FbxAxisSystem::DirectX.ConvertScene(pFbxScene); // Delete?
 
-	//												// Convert quad to triangle
-	//FbxGeometryConverter geometryConverter(gFbxManager);
-	//geometryConverter.Triangulate(pFbxScene, true);
+													// Convert quad to triangle
+	FbxGeometryConverter geometryConverter(gFbxManager);
+	geometryConverter.Triangulate(pFbxScene, true);
 
 	// Start to RootNode
 	FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
@@ -186,7 +186,6 @@ HRESULT FbxLoader::LoadFBX(
 void FbxLoader::LoadNode(FbxNode* node, std::vector<Vertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>& outMaterial)
 {
 	const int childCount = node->GetChildCount();
-	std::cout << "카운링 == " << childCount << std::endl;
 
 	if (node)
 	{
@@ -195,7 +194,6 @@ void FbxLoader::LoadNode(FbxNode* node, std::vector<Vertex>& outVertexVector, st
 			FbxMesh* pMesh = (FbxMesh*)node->GetNodeAttribute();
 
 			FbxNodeAttribute::EType AttributeType = pMesh->GetAttributeType();
-			std::cout << "타입 == " << pMesh->GetAttributeType() << std::endl;
 			if (AttributeType == FbxNodeAttribute::eMesh)
 			{
 				GetControlPoints(node);
@@ -682,7 +680,7 @@ void FbxLoader::GetAnimation(
 	
 			// TRqS transformation and Time per frame
 			FbxLongLong index;
-			for (index = start.GetFrameCount(FbxTime::eFrames24); index <=end.GetFrameCount(FbxTime::eFrames24); ++index)
+			for (index = start.GetFrameCount(FbxTime::eFrames24); index <11; ++index)
 			{
 				FbxTime currTime;
 				currTime.SetFrame(index, FbxTime::eFrames24);
@@ -711,8 +709,8 @@ void FbxLoader::GetAnimation(
 					static_cast<float>(Q.mData[3]) };
 
 				// Frame does not exist
-				if (index != 0 && boneAnim.Keyframes.back() == key)
-					break;
+			/*	if (index != 0 && boneAnim.Keyframes.back() == key)
+					break;*/
 
 				boneAnim.Keyframes.push_back(key);
 			}

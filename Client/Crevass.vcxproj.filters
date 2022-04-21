@@ -35,6 +35,7 @@
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelinstance.cpp" />
     <ClCompile Include="Waves.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="Waves.h" />
+    <ClInclude Include="InputHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

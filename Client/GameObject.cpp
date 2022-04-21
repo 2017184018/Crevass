@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GameObject.h"
-
+#include "MeshReference.h"
 static unsigned int s_currentIndex = 0;
 
 GameObject::GameObject(RenderLayer layer, std::string type, std::string id):
@@ -12,12 +12,11 @@ GameObject::GameObject(RenderLayer layer, std::string type, std::string id):
 {
 	m_World = MathHelper::Identity4x4();
 	m_TexTransform = MathHelper::Identity4x4();
-
+	
 }
 
 GameObject::~GameObject()
 {
-
 }
 
 void GameObject::Rotate(const DirectX::XMFLOAT3& axis, float angle)
@@ -25,6 +24,7 @@ void GameObject::Rotate(const DirectX::XMFLOAT3& axis, float angle)
 	XMMATRIX RotMat = XMMatrixRotationAxis(XMLoadFloat3(&axis), XMConvertToRadians(angle));
 	XMMATRIX World = RotMat * XMLoadFloat4x4(&m_World);
 	XMStoreFloat4x4(&m_World, World);
+	
 }
 
 void GameObject::Rotate(const DirectX::XMFLOAT4& quaternion)
@@ -55,6 +55,7 @@ void GameObject::SetPosition(float posX, float posY, float posZ)
 	m_World._41 = posX;
 	m_World._42 = posY;
 	m_World._43 = posZ;
+
 }
 
 void GameObject::SetPosition(DirectX::XMFLOAT3 xmPos)
@@ -62,6 +63,27 @@ void GameObject::SetPosition(DirectX::XMFLOAT3 xmPos)
 	m_World._41 = xmPos.x;
 	m_World._42 = xmPos.y;
 	m_World._43 = xmPos.z;
+}
+
+void GameObject::SetRight(const DirectX::XMFLOAT3& Right)
+{
+	m_World._11 = Right.x;
+	m_World._12 = Right.y;
+	m_World._13 = Right.z;
+}
+
+void GameObject::SetUp(const DirectX::XMFLOAT3& Up)
+{
+	m_World._21 = Up.x;
+	m_World._22 = Up.y;
+	m_World._23 = Up.z;
+}
+
+void GameObject::SetLook(const DirectX::XMFLOAT3& Look)
+{
+	m_World._31 = Look.x;
+	m_World._32 = Look.y;
+	m_World._33 = Look.z;
 }
 
 XMFLOAT3 GameObject::GetPosition() const
@@ -113,9 +135,13 @@ void GameObject::MoveForward(float fDistance)
 
 void GameObject::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 {
-	XMFLOAT3 look = GetLook();
+	/*XMFLOAT3 look = GetLook();
 	XMFLOAT3 right = GetRight();
-	XMFLOAT3 up = GetUp();
+	XMFLOAT3 up = GetUp();*/
+
+	XMFLOAT3 look = { 0,0,1 };
+	XMFLOAT3 right = { 1,0,0 };
+	XMFLOAT3 up = { 0,1,0 };
 
 	if (dwDirection)
 	{

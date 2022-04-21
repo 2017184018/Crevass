@@ -214,7 +214,11 @@ void SkinnedData::clear()
 
 void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos, std::vector<DirectX::XMFLOAT4X4>& finalTransforms) const
 {
+	if (!mAnimations.count(clipName)) return;
+
 	UINT numBones = mBoneOffsets.size();
+	finalTransforms.resize(numBones);
+
 	std::vector<XMFLOAT4X4> toParentTransforms(numBones);
 
 	//이 클립의 모든 뼈대를 시간에 맞게 보간함
@@ -247,5 +251,47 @@ void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos,
 		XMMATRIX finalTransform = XMMatrixMultiply(offset, toRoot);
 		
 		XMStoreFloat4x4(&finalTransforms[i], XMMatrixTranspose(finalTransform));
+	}
+}
+
+void SkinnedData::GetBlendedAnimationData(const std::string& clipName1, float timePos1, const std::string& clipName2, float timePos2, float factor, std::vector<DirectX::XMFLOAT4X4>& finalTransform)
+{
+	std::vector< DirectX::XMFLOAT4X4> bones1;
+	std::vector< DirectX::XMFLOAT4X4> bones2;
+
+	// 현재시간 / timepos2 = 0.0f
+	GetFinalTransforms(clipName1, timePos1, bones1);
+	GetFinalTransforms(clipName2, timePos2, bones2);
+
+	finalTransform.resize(bones1.size());
+
+	if (factor < 0.0f) factor = 0.0f;
+	if (factor > 1.0f) factor = 1.0f;
+
+	XMFLOAT4X4 temp;
+
+	for (unsigned int boneIndex = 0; boneIndex < finalTransform.size(); ++boneIndex)
+	{
+		temp._11 = (bones1[boneIndex]._11 * (1.0f - factor)) + (bones2[boneIndex]._11 * factor);
+		temp._12 = (bones1[boneIndex]._12 * (1.0f - factor)) + (bones2[boneIndex]._12 * factor);
+		temp._13 = (bones1[boneIndex]._13 * (1.0f - factor)) + (bones2[boneIndex]._13 * factor);
+		temp._14 = (bones1[boneIndex]._14 * (1.0f - factor)) + (bones2[boneIndex]._14 * factor);
+
+		temp._21 = (bones1[boneIndex]._21 * (1.0f - factor)) + (bones2[boneIndex]._21 * factor);
+		temp._22 = (bones1[boneIndex]._22 * (1.0f - factor)) + (bones2[boneIndex]._22 * factor);
+		temp._23 = (bones1[boneIndex]._23 * (1.0f - factor)) + (bones2[boneIndex]._23 * factor);
+		temp._24 = (bones1[boneIndex]._24 * (1.0f - factor)) + (bones2[boneIndex]._24 * factor);
+
+		temp._31 = (bones1[boneIndex]._31 * (1.0f - factor)) + (bones2[boneIndex]._31 * factor);
+		temp._32 = (bones1[boneIndex]._32 * (1.0f - factor)) + (bones2[boneIndex]._32 * factor);
+		temp._33 = (bones1[boneIndex]._33 * (1.0f - factor)) + (bones2[boneIndex]._33 * factor);
+		temp._34 = (bones1[boneIndex]._34 * (1.0f - factor)) + (bones2[boneIndex]._34 * factor);
+
+		temp._41 = (bones1[boneIndex]._41 * (1.0f - factor)) + (bones2[boneIndex]._41 * factor);
+		temp._42 = (bones1[boneIndex]._42 * (1.0f - factor)) + (bones2[boneIndex]._42 * factor);
+		temp._43 = (bones1[boneIndex]._43 * (1.0f - factor)) + (bones2[boneIndex]._43 * factor);
+		temp._44 = (bones1[boneIndex]._44 * (1.0f - factor)) + (bones2[boneIndex]._44 * factor);
+
+		finalTransform[boneIndex] = temp;
 	}
 }

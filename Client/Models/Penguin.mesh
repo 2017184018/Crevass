@@ -1,7 +1,15 @@
 VertexSize 2079
 IndexSize 9828
-MaterialSize 0
+MaterialSize 1
 Material 
+Name /Volumes/Vault/Dropbox/BITGEM_Products/_proto_series/cube_world/block_ice1/textures/cubeworld_tex.tga
+Ambient 0 0 0
+Diffuse 1 1 1 1
+Fresnel 0.01 0.01 0.01
+Specular 0.01 0.01 0.01
+Emissive 0 0 0
+Roughness 0.25
+MatTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
 Pos 0.46512 0.113053 0.400005
 Normal -0.94082 0.31612 -0.122169
 TexC 0.316753 0.553329

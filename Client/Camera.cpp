@@ -64,17 +64,16 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 		if (!m_Owner) return;
 
 		XMFLOAT4X4 xmf4x4Rotate = MathHelper::Identity4x4();
-		XMFLOAT3 xmf3Right = m_Owner->GetRight();
-		XMFLOAT3 xmf3Up = m_Owner->GetUp();
-		XMFLOAT3 xmf3Look = m_Owner->GetLook();
+		XMFLOAT3 xmf3Right = { 1,0,0 };
+		XMFLOAT3 xmf3Up = { 0,1,0 };
+		XMFLOAT3 xmf3Look = { 0,0,1 };
 		xmf4x4Rotate._11 = xmf3Right.x; xmf4x4Rotate._21 = xmf3Up.x; xmf4x4Rotate._31 = xmf3Look.x;
 		xmf4x4Rotate._12 = xmf3Right.y; xmf4x4Rotate._22 = xmf3Up.y; xmf4x4Rotate._32 = xmf3Look.y;
 		xmf4x4Rotate._13 = xmf3Right.z; xmf4x4Rotate._23 = xmf3Up.z; xmf4x4Rotate._33 = xmf3Look.z;
-
+	
 		XMFLOAT3 xmf3Offset = MathHelper::TransformCoord(mOffset, xmf4x4Rotate);
 		XMFLOAT3 xmf3Position = MathHelper::Add(m_Owner->GetPosition(), xmf3Offset);
 		XMFLOAT3 xmf3Direction = MathHelper::Subtract(xmf3Position, mPosition);
-
 		float fLength = MathHelper::Length(xmf3Direction);
 		xmf3Direction = MathHelper::Normalize(xmf3Direction);
 		float fTimeLagScale = (mTimeLag) ? deltaT * (1.0f / mTimeLag) : 1.0f;
@@ -257,6 +256,7 @@ void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
 	case CameraType::Free:
 	{
 		XMVECTOR Up = { 0.f,1.f,0.f };
+		
 		Up = XMVector3Transform(Up, XMMatrixRotationQuaternion(XMLoadFloat4(&mRotation)));
 
 		XMFLOAT4X4 LookAtMat;

@@ -2,6 +2,7 @@
 #include "CREVASS.h"
 #include "CommandContext.h"
 #include "GameObject.h"
+#include "InputHandler.h"
 
 #include "MeshReference.h"
 #include "MaterialReference.h"
@@ -44,7 +45,8 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
-
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Peck");
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
@@ -105,11 +107,34 @@ void CREVASS::Cleanup(void)
 	SAFE_DELETE_PTR(m_MaterialRef);
 }
 
+BOOL B = true;
+
 void CREVASS::Update(float deltaT)
 {
 	//이거 풀면 플레이어 3인칭 기준 카메라 적용
-	//if (m_Users[m_PlayerID])
-	//	m_Users[m_PlayerID]->Update(deltaT);
+	float speed = 100 * deltaT;
+	if (m_Users[m_PlayerID]) {
+		if (m_Users[m_PlayerID]->bJump == true && B == true) {
+			m_Users[m_PlayerID]->Move(DIR_UP, speed*2, true);
+		}
+
+		if (m_Users[m_PlayerID]->GetPosition().y > 70) {
+			B = false;
+
+		}
+
+		if (m_Users[m_PlayerID]->GetPosition().y > 30) {
+			m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
+		}
+
+		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump==true){
+			m_Users[m_PlayerID]->bJump = false;
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+		}
+
+		m_Users[m_PlayerID]->Update(deltaT);
+	}
+
 
 	OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
@@ -229,15 +254,13 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	else {
 		pushone = true;
 	}
-	float speed = 20 * deltaT;
+	float speed = 100 * deltaT;
 	if (GetAsyncKeyState('W') & 0x8000)
 		m_Camera->Walk(20.0f * deltaT);
 	if (GetAsyncKeyState('G') & 0x8000) {
-		m_Users[m_PlayerID]->Move(DIR_FORWARD, speed, true);
-		m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"]->ClipName = "Run";
+		m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"]->ClipName = "Peck";
 	}
-	if (GetAsyncKeyState('H') & 0x8000)
-		m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"]->ClipName = "Idle";
+
 	if (GetAsyncKeyState('S') & 0x8000)
 		m_Camera->Walk(-20.0f * deltaT);
 
@@ -270,6 +293,94 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 	if (GetAsyncKeyState('T') & 0x8000)
 		m_Camera->RotateX(-0.005);
+
+
+	if (GetAsyncKeyState('I') & 0x8000) {
+		m_Users[m_PlayerID]->Move(DIR_FORWARD, speed, true);
+		if (!m_Users[m_PlayerID]->bJump) {
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+		}
+		m_Users[m_PlayerID]->SetDir(0);
+	}
+
+    if(GetAsyncKeyState('J') & 0x8000) {
+		m_Users[m_PlayerID]->Move(DIR_LEFT, speed, true);
+		if (!m_Users[m_PlayerID]->bJump)
+		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+		m_Users[m_PlayerID]->SetDir(270);
+	}
+
+	if (GetAsyncKeyState('K') & 0x8000) {
+		m_Users[m_PlayerID]->Move(DIR_BACKWARD, speed, true);
+		if (!m_Users[m_PlayerID]->bJump)
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+		m_Users[m_PlayerID]->SetDir(180);
+	}
+
+	if (GetAsyncKeyState('L') & 0x8000) {
+		m_Users[m_PlayerID]->Move(DIR_RIGHT, speed, true);
+		if (!m_Users[m_PlayerID]->bJump)
+		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+		m_Users[m_PlayerID]->SetDir(90);
+	}
+	
+	if (GetAsyncKeyState('H') & 0x8000 && m_Users[m_PlayerID]->bJump == false ) {
+		m_Users[m_PlayerID]->bJump = true;
+		B = true;
+		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_JUMP;
+		
+	}
+
+	if (GetAsyncKeyState('I') & 0x8000 && GetAsyncKeyState('L') & 0x8000) {
+		if (!m_Users[m_PlayerID]->bJump) {
+			
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+		}
+		m_Users[m_PlayerID]->SetDir(45);
+	}
+
+	if (GetAsyncKeyState('K') & 0x8000 && GetAsyncKeyState('L') & 0x8000) {
+		if (!m_Users[m_PlayerID]->bJump)
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+		m_Users[m_PlayerID]->SetDir(135);
+	}
+
+	if (GetAsyncKeyState('K') & 0x8000 && GetAsyncKeyState('J') & 0x8000) {
+		if (!m_Users[m_PlayerID]->bJump)
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+		m_Users[m_PlayerID]->SetDir(225);
+	}
+
+	if (GetAsyncKeyState('J') & 0x8000 && GetAsyncKeyState('I') & 0x8000) {
+		if (!m_Users[m_PlayerID]->bJump)
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+
+		m_Users[m_PlayerID]->SetDir(315);
+	}
+
+	if (InputHandler::IsKeyUp('I'))
+	{
+		if (!m_Users[m_PlayerID]->bJump) {
+			
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+		}
+	}
+	if (InputHandler::IsKeyUp('J'))
+	{
+		if (!m_Users[m_PlayerID]->bJump)
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+	}
+	if (InputHandler::IsKeyUp('K'))
+	{
+		if (!m_Users[m_PlayerID]->bJump)
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+	}
+	if (InputHandler::IsKeyUp('L'))
+	{
+		if (!m_Users[m_PlayerID]->bJump)
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+	}
+
 
 }
 
@@ -394,9 +505,7 @@ void CREVASS::BuildScene()
 		instancingObj->m_World._22 = 15;
 		instancingObj->m_World._33 = 15;
 
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationY(3.14 ));
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationX(3.14/2));
-
+	
 		instancingObj->m_World._41 = 200;
 		instancingObj->m_World._42 = 30;
 		instancingObj->m_World._43 = 80;
@@ -416,11 +525,11 @@ void CREVASS::BuildScene()
 	character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
 	character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
 
-	
+
 	//character1->Scale(100, 100, 100);
-	character1->Scale(60, 60, 60);
+	character1->Scale(20, 20, 20);
 	//character1->Rotate(-90.0f, 180.0f, 0);
-	character1->SetPosition(250, 20, 0);
+	character1->SetPosition(250, 30, 0);
 	
 
 	GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
@@ -433,7 +542,7 @@ void CREVASS::BuildScene()
 
 	Sea->m_World = MathHelper::Identity4x4();
 
-	Sea->m_World._11 = 7;\
+	Sea->m_World._11 = 7;
 	Sea->m_World._33 = 7;
 
 	Sea->m_World._41 = SCALE*400;

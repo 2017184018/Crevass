@@ -4,7 +4,6 @@ class SkinnedModelInstance;
 class GeometryMesh;
 class GameObject
 {
-
 protected:
 	
 	//메쉬 타입
@@ -26,6 +25,10 @@ public:
 	virtual void Scale(float x, float y, float z);
 	virtual void SetPosition(float posX, float posY, float posZ);
 	virtual void SetPosition(DirectX::XMFLOAT3 xmPos);
+
+	virtual void SetRight(const DirectX::XMFLOAT3& Right);
+	virtual void SetUp(const DirectX::XMFLOAT3& Up);
+	virtual void SetLook(const DirectX::XMFLOAT3& Look);
 
 	XMFLOAT3 GetPosition() const;
 	XMFLOAT3 GetLook() const;
@@ -70,6 +73,8 @@ public:
 public:
 	// Animation
 	SkinnedModelInstance* m_SkinnedModelInst;
+
+
 	// 뼈대 변환 상수 버퍼 인덱스
 	// 스키닝용 렌더 항목에만 쓰인다
 	UINT m_SkinnedCBIndex = -1;
