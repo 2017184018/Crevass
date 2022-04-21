@@ -19,8 +19,6 @@ uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
 
 #define SCALE 0.5
 
-int cnt = 0;
-
 void CREVASS::Startup(void)
 {
 	m_Camera.SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
@@ -105,6 +103,7 @@ bool CREVASS::BlockCheck(int idx) {
 
 void CREVASS::Update(float deltaT)
 {
+
 	OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i] || !IsDown[i]) {
@@ -164,6 +163,21 @@ void CREVASS::Update(float deltaT)
 
 	float r = MathHelper::RandF(0.2f, 0.5f);
 	mWaves->Disturb(i, j, r);
+	if (IsFall) {
+		static float time = 0;
+		time += deltaT;
+		BlurCnt = 3;
+		if (time >= 4) {
+			time = 0;
+			IsFall = false;
+			BlurCnt = 0;
+		}
+		else if (time < 0.03) {
+			mWaves->Disturb(50, 57, 2);
+		}
+	}
+
+
 	// Update the wave simulation.
 	mWaves->Update(deltaT);
 
@@ -211,7 +225,7 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
 
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
-		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, cnt);
+		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 
 	// Prepare to copy blurred output to the back buffer.
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
@@ -282,12 +296,12 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	if (GetAsyncKeyState('2') & 0x8000) {
 		if (pushtwo) {
 			pushtwo = false;
-			++cnt;
+			IsFall = true;
 		}
 	}
 	else {
 		pushtwo = true;
-	} 
+	}
 
 	if (GetAsyncKeyState('W') & 0x8000)
 		m_Camera.Walk(20.0f * deltaT);
