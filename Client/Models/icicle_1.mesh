@@ -2,8 +2,12 @@ VertexSize 520
 IndexSize 2064
 MaterialSize 3
 Material 
+<<<<<<< HEAD
 Name
 /Volumes/Vault/Dropbox/BITGEM_Products/_proto_series/cube_world/block_ice1/textures/cubeworld_tex.tga
+=======
+Name /Volumes/Vault/Dropbox/BITGEM_Products/_proto_series/cube_world/block_ice1/textures/cubeworld_tex.tga
+>>>>>>> JH6
 Ambient 0 0 0
 Diffuse 1 1 1 1
 Fresnel 0.01 0.01 0.01

@@ -11,10 +11,20 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+class Character;
 class Camera
 {
+private:
+	CameraType m_CameraType;
+
 public:
-	explicit Camera();
+	void SetCamera(CameraType cameraType, Character* owner);
+	CameraType GetCameraType();
+
+	void Update(const DirectX::XMFLOAT3& lookAt, float deltaT);
+
+public:
+	explicit Camera(CameraType cameraType = CameraType::Free);
 	virtual ~Camera();
 
 	// Get/Set world camera position.
@@ -31,6 +41,12 @@ public:
 	DirectX::XMVECTOR GetLook()const;
 	DirectX::XMFLOAT3 GetLook3f()const;
 
+	void SetOffset(DirectX::XMFLOAT3 offset);
+	DirectX::XMFLOAT3& GetOffset();
+
+	void SetTimeLag(float fTimeLag);
+	float GetTimeLag() { return(mTimeLag); }
+
 	// Get frustum properties.
 	float GetNearZ()const;
 	float GetFarZ()const;
@@ -46,6 +62,9 @@ public:
 
 	// Set frustum.
 	void SetLens(float fovY, float aspect, float zn, float zf);
+
+	// Set Target
+	void SetTarget(const DirectX::XMFLOAT3& lookAt);
 
 	// Define camera space via LookAt parameters.
 	void LookAt(DirectX::FXMVECTOR pos, DirectX::FXMVECTOR target, DirectX::FXMVECTOR worldUp);
@@ -70,10 +89,17 @@ public:
 	void UpdateViewMatrix();
 
 private:
+	Character* m_Owner = nullptr;
+
 	DirectX::XMFLOAT3 mPosition = { 0.0f, 0.0f, 0.0f };
 	DirectX::XMFLOAT3 mRight = { 1.0f, 0.0f, 0.0f };
 	DirectX::XMFLOAT3 mUp = { 0.0f, 1.0f, 0.0f };
 	DirectX::XMFLOAT3 mLook = { 0.0f, 0.0f, 1.0f };
+
+	DirectX::XMFLOAT3	mTarget = { 0.f,0.f,0.f };
+	DirectX::XMFLOAT3	mOffset = { 0.f,0.f,0.f };
+	DirectX::XMFLOAT4	mRotation = { 0.f,0.f,0.f,0.f };
+	float				mTimeLag = 0.f;
 
 	// Cache frustum properties.
 	float mNearZ = 0.0f;

@@ -36,7 +36,11 @@
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelinstance.cpp" />
     <ClCompile Include="Waves.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="BlurFilter.cpp" />
+=======
+    <ClCompile Include="InputHandler.cpp" />
+>>>>>>> JH6
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
@@ -73,7 +77,11 @@
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="Waves.h" />
+<<<<<<< HEAD
     <ClInclude Include="BlurFilter.h" />
+=======
+    <ClInclude Include="InputHandler.h" />
+>>>>>>> JH6
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

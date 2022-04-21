@@ -32,6 +32,7 @@ namespace Core
 
 class MeshReference;
 class MaterialReference;
+class Character;
 class GameObject;
 class CREVASS : public IGameApp, public TemplateSingleton<CREVASS>
 {
@@ -94,8 +95,21 @@ public:
 		return dynamic_cast<TObject*>(obj);
 
 	}
-private:
-	Camera m_Camera;
+	template <class TObject>
+	TObject* FindObject(std::string type, std::string instID)
+	{
+		if (!m_RItemsMap.count(type)) {
+			cout << "Error! None Type" << endl;
+			return nullptr;
+		}
+
+		if (m_RItemsMap[type]->GetInstanceIndex(instID) == -1)
+			return nullptr;
+		return dynamic_cast<TObject*>(m_RItemsVec[m_RItemsMap[type]->GetInstanceIndex(instID)]);
+	}
+
+public:
+	Camera* m_Camera;
 
 public:
 	MeshReference* m_MeshRef;
@@ -105,9 +119,13 @@ public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
 	std::vector<GameObject*> m_RItemsVec;
 
-
 	std::vector<GameObject*>	m_AllRItems;
 	std::vector<GameObject*>	m_RitemLayer[static_cast<int>(RenderLayer::ID_COUNT)];
 	UINT						m_InstanceCount = 0;
+	
+private:
+	/* ID: battleID */
+	std::map<int, Character*> m_Users;
+	int m_PlayerID;
 };
 

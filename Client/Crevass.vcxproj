@@ -168,6 +168,7 @@
     <ClInclude Include="GeometryMesh.h" />
     <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="IGameApp.h" />
+    <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LoadM3d.h" />
     <ClInclude Include="LogoScene.h" />
     <ClInclude Include="main.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="GeometryMesh.cpp" />
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="IGameApp.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
     <ClCompile Include="LogoScene.cpp" />
     <ClCompile Include="main.cpp" />

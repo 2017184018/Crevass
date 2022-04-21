@@ -74,6 +74,9 @@ public:
 	void GetFinalTransforms(const std::string& clipName, float timePos,
 		std::vector<DirectX::XMFLOAT4X4>& finalTransforms)const;
 
+	void GetBlendedAnimationData(const std::string& clipName1, float timePos1, const std::string& clipName2, float timePos2, float factor, std::vector<DirectX::XMFLOAT4X4>& finalTransform);
+
+
 public:
 	std::vector<std::string> mBoneName;
 

@@ -66,3 +66,15 @@ using namespace DirectX::PackedVector;
 #define TOTAL_USER_COUNT 4
 #define CHARACTER_INDEX_MASTER 0 
 enum class RenderLayer { ID_OPAQUE, ID_SKY, ID_COUNT, ID_SkinnedOpaque };
+enum class CameraType { First, Third, Free };
+
+// Move & Rotate
+#define DIR_FORWARD					0x01
+#define DIR_BACKWARD				0x02
+#define DIR_LEFT					0x04
+#define DIR_RIGHT					0x08
+#define DIR_UP						0x10
+#define DIR_DOWN					0x20
+
+#define CAMERA_ZNEAR 1.f
+#define CAMERA_ZFAR 10000.f

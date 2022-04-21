@@ -4,6 +4,7 @@
 #include "GameTimer.h"
 #include "GraphicsRenderer.h"
 #include "CommandContext.h"
+#include "CREVASS.h"
 
 using namespace Core;
 
@@ -583,7 +584,11 @@ void GameCore::OnResize()
 	if (mBlurFilter != nullptr)
 	{
 		mBlurFilter->OnResize(g_DisplayWidth, g_DisplayHeight);
+		BackBuffer = CurrentBackBuffer();
 	}
+
+	if (CREVASS::GetApp()->m_Camera)
+		CREVASS::GetApp()->m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
 }
 
 void GameCore::CreateCommandObjects()

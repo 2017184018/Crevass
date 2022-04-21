@@ -6,7 +6,7 @@
 #include "vertexHash.h"
 #include "FbxLoader.h"
 
-using namespace fbxsdk;
+//using namespace fbxsdk;
 using namespace DirectX;
 
 FbxLoader::FbxLoader()
@@ -48,16 +48,15 @@ HRESULT FbxLoader::LoadFBX(
 	FbxScene* pFbxScene = FbxScene::Create(gFbxManager, "");
 	bSuccess = pImporter->Import(pFbxScene);
 	if (!bSuccess) return E_FAIL;
-
 	pImporter->Destroy();
-
+	
 	fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
 	fbxsdk::FbxAxisSystem::DirectX.ConvertScene(pFbxScene); // Delete?
 
 	// Convert quad to triangle
 	FbxGeometryConverter geometryConverter(gFbxManager);
 	geometryConverter.Triangulate(pFbxScene, true);
-
+	
 	// Start to RootNode
 	FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
 
@@ -105,12 +104,12 @@ HRESULT FbxLoader::LoadFBX(
 
 	pImporter->Destroy();
 
-	//fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
-	//fbxsdk::FbxAxisSystem::DirectX.ConvertScene(pFbxScene); // Delete?
+	fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
+	fbxsdk::FbxAxisSystem::DirectX.ConvertScene(pFbxScene); // Delete?
 
-	//												// Convert quad to triangle
-	//FbxGeometryConverter geometryConverter(gFbxManager);
-	//geometryConverter.Triangulate(pFbxScene, true);
+													// Convert quad to triangle
+	FbxGeometryConverter geometryConverter(gFbxManager);
+	geometryConverter.Triangulate(pFbxScene, true);
 
 	// Start to RootNode
 	FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
@@ -187,7 +186,6 @@ HRESULT FbxLoader::LoadFBX(
 void FbxLoader::LoadNode(FbxNode* node, std::vector<Vertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>& outMaterial)
 {
 	const int childCount = node->GetChildCount();
-	std::cout << "카운링 == " << childCount << std::endl;
 
 	if (node)
 	{
@@ -196,7 +194,6 @@ void FbxLoader::LoadNode(FbxNode* node, std::vector<Vertex>& outVertexVector, st
 			FbxMesh* pMesh = (FbxMesh*)node->GetNodeAttribute();
 
 			FbxNodeAttribute::EType AttributeType = pMesh->GetAttributeType();
-			std::cout << "타입 == " << pMesh->GetAttributeType() << std::endl;
 			if (AttributeType == FbxNodeAttribute::eMesh)
 			{
 				GetControlPoints(node);
@@ -269,10 +266,7 @@ void FbxLoader::LoadNode_AnimationAndMesh(FbxNode* node, std::vector<CharacterVe
 
 				// Get Animation Clip
 				GetAnimation(&pFbxScene, node, outSkinnedData, clipName, false);
-				/*std::string outAnimationName;
-				GetAnimation(pFbxScene, pFbxChildNode, outAnimationName, clipName);
-				outSkinnedData.SetAnimationName(clipName);*/
-				//outSkinnedData.SetAnimationName(outAnimationName);
+			
 
 				// Get Vertices and indices info
 				GetVerticesAndIndice(pMesh, outVertexVector, outIndexVector, &outSkinnedData);
@@ -603,8 +597,10 @@ void FbxLoader::GetAnimation(
 	const std::string& ClipName,
 	bool isGetOnlyAnim)
 {
+
 	FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
 	FbxAMatrix geometryTransform = GetGeometryTransformation(pFbxChildNode);
+
 
 	// Animation Data
 	AnimationClip animation;
@@ -667,18 +663,27 @@ void FbxLoader::GetAnimation(
 				}
 			}
 
-
+			
 			// Set the Bone Animation Matrix
 			BoneAnimation boneAnim;
-			FbxAnimStack* pCurrAnimStack = pFbxScene->GetSrcObject<FbxAnimStack>(3);
+			//0: Idle_A 1: Clicked 2: Bounce 3: Idle_B 4: Idle_C 5: Walk 6:Run 7:Fly 8: Peck 9:Roll 10: Spin 11:Death 12:Fear 13:Jump
+			FbxAnimStack* pCurrAnimStack = pFbxScene->GetSrcObject<FbxAnimStack>(0);
+			FbxString animStackName = pCurrAnimStack->GetName();
+			FbxTakeInfo* takeInfo = pFbxScene->GetTakeInfo(animStackName);
+			FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
+			FbxTime end = takeInfo->mLocalTimeSpan.GetStop();
+			pFbxScene->SetCurrentAnimationStack(pCurrAnimStack);
+			FbxAnimStack* pCurrAnimStack2 = pFbxScene->GetCurrentAnimationStack();
+			FbxString animStackName2 = pCurrAnimStack2->GetName();
+			std::cout << "현재 animation name == " << animStackName2 << std::endl;
 			FbxAnimEvaluator* pSceneEvaluator = pFbxScene->GetAnimationEvaluator();
-		
+	
 			// TRqS transformation and Time per frame
 			FbxLongLong index;
-			for (index = 0; index < 100; ++index)
+			for (index = start.GetFrameCount(FbxTime::eFrames24); index <11; ++index)
 			{
 				FbxTime currTime;
-				currTime.SetFrame(index, FbxTime::eCustom);
+				currTime.SetFrame(index, FbxTime::eFrames24);
 
 				Keyframe key;
 				key.TimePos = static_cast<float>(index) / 8.0f;
@@ -704,8 +709,8 @@ void FbxLoader::GetAnimation(
 					static_cast<float>(Q.mData[3]) };
 
 				// Frame does not exist
-				if (index != 0 && boneAnim.Keyframes.back() == key)
-					break;
+			/*	if (index != 0 && boneAnim.Keyframes.back() == key)
+					break;*/
 
 				boneAnim.Keyframes.push_back(key);
 			}
@@ -1206,6 +1211,37 @@ void FbxLoader::GetMaterialTexture(fbxsdk::FbxSurfaceMaterial * pMaterial, Mater
 	}
 }
 
+int FbxLoader::GetAnimationLayerCurveNodes(FbxAnimLayer* pfbxAnimationLayer, FbxNode* pfbxNode)
+{
+	int nAnimationCurveNodes = 0;
+	if (GetAnimationCurves(pfbxAnimationLayer, pfbxNode) > 0) nAnimationCurveNodes++;
+
+	for (int i = 0; i < pfbxNode->GetChildCount(); i++)
+	{
+		nAnimationCurveNodes += GetAnimationLayerCurveNodes(pfbxAnimationLayer, pfbxNode->GetChild(i));
+	}
+
+	return(nAnimationCurveNodes);
+}
+
+int FbxLoader::GetAnimationCurves(FbxAnimLayer* pfbxAnimationLayer, FbxNode* pfbxNode)
+{
+	int nAnimationCurves = 0;
+
+	FbxAnimCurve* pfbxAnimationCurve = NULL;
+	if (pfbxAnimationCurve = pfbxNode->LclTranslation.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_X)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclTranslation.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_Y)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclTranslation.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_Z)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclRotation.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_X)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclRotation.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_Y)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclRotation.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_Z)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclScaling.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_X)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclScaling.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_Y)) nAnimationCurves++;
+	if (pfbxAnimationCurve = pfbxNode->LclScaling.GetCurve(pfbxAnimationLayer, FBXSDK_CURVENODE_COMPONENT_Z)) nAnimationCurves++;
+
+	return(nAnimationCurves);
+}
+
 FbxAMatrix FbxLoader::GetGeometryTransformation(FbxNode* pNode)
 {
 	if (!pNode)
@@ -1231,6 +1267,8 @@ void FbxLoader::ExportAnimation(
 	
 	if (animation.BoneAnimations[1].Keyframes.size() == 0)
 		return;
+	int keyframessize = animation.BoneAnimations[1].Keyframes.size();
+	
 	for (int i = 0; i < animation.BoneAnimations.size(); i++) {
 		std::cout << "키프레임 사이즈 =" << animation.BoneAnimations[i].Keyframes.size() << std::endl;
 	}
@@ -1243,13 +1281,28 @@ void FbxLoader::ExportAnimation(
 		fileOut << "KeframeSize " << keyframeSize << "\n";
 		for (auto& e : animation.BoneAnimations)
 		{
-			for (auto& o : e.Keyframes)
-			{
+			if (e.Keyframes.size() == 1) {
+				for (int i=0; i< keyframessize;i++)
+				{
+					for (auto& o : e.Keyframes)
+					{
 
-				fileOut << o.TimePos << "\n";
-				fileOut << o.Translation.x << " " << o.Translation.y << " " << o.Translation.z << "\n";
-				fileOut << o.Scale.x << " " << o.Scale.y << " " << o.Scale.z << "\n";
-				fileOut << o.RotationQuat.x << " " << o.RotationQuat.y << " " << o.RotationQuat.z << " " << o.RotationQuat.w << "\n";
+						fileOut << o.TimePos +i*0.125 << "\n";
+						fileOut << o.Translation.x << " " << o.Translation.y << " " << o.Translation.z << "\n";
+						fileOut << o.Scale.x << " " << o.Scale.y << " " << o.Scale.z << "\n";
+						fileOut << o.RotationQuat.x << " " << o.RotationQuat.y << " " << o.RotationQuat.z << " " << o.RotationQuat.w << "\n";
+					}
+				}
+			}
+			else {
+				for (auto& o : e.Keyframes)
+				{
+
+					fileOut << o.TimePos << "\n";
+					fileOut << o.Translation.x << " " << o.Translation.y << " " << o.Translation.z << "\n";
+					fileOut << o.Scale.x << " " << o.Scale.y << " " << o.Scale.z << "\n";
+					fileOut << o.RotationQuat.x << " " << o.RotationQuat.y << " " << o.RotationQuat.z << " " << o.RotationQuat.w << "\n";
+				}
 			}
 		}
 	}
