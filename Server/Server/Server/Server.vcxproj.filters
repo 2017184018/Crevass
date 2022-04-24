@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Thread">
+      <UniqueIdentifier>{60db9e99-ea87-465b-8938-a890ceeac795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{64405572-fb07-49de-b76e-fdfe47e488f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Player">
+      <UniqueIdentifier>{5a62a0ef-de8e-4f17-b33d-03422bec632a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Interface">
+      <UniqueIdentifier>{602ddab9-6c6a-48d8-9ebf-7441d736a38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SendFunc">
+      <UniqueIdentifier>{a2ddeb1d-d75e-485d-aa06-78ac54f92748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UtilFunc">
+      <UniqueIdentifier>{250c0119-02d8-4948-9820-e6e28a0b0556}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ServerMain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="RecvThread.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface.h">
+      <Filter>Object\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="SendFunc.h">
+      <Filter>SendFunc</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilFunc.h">
+      <Filter>UtilFunc</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsThread.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

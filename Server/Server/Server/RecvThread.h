@@ -1,0 +1,97 @@
+#pragma once
+#include "pch.h"
+#include "Global.h"
+#include "SendFunc.h"
+#include "UtilFunc.h"
+
+void Receiver(char id)
+{
+	// RecvThread 스레드 함수
+
+	// RecvThread의 thread 함수 입니다.
+	// 클라이언트로 부터 받은 패킷의 타입을 구분합니다.
+	// cs_packet_ready은 함수 내부에서 처리합니다.
+	// 그외의 cs 패킷은 Message 변수에 값을 넣어 MsgQueue에 push 합니다.
+	// sc_gamestart_packet을 보내면 PhysicThread를 만듭니다.
+
+	std::cout << "RecvThread is operating!" << std::endl;
+
+	Message msg{};
+
+	g_socketLock.lock();
+	SOCKET sock = g_clients[id];
+	g_socketLock.unlock();
+
+	while (true)
+	{
+		// ID는 0부터 시작이므로 -1로 초기화 합니다.
+		msg.id = -1;
+		char buf[BUFSIZE];
+		char retval = recv(sock, buf, 1, 0);
+
+		// 클라이언트 접속 종료, recv 에러 처리
+		if (retval == 0 || retval == SOCKET_ERROR)
+		{
+			closesocket(sock);
+
+			g_socketLock.lock();
+			g_clients.erase(id);
+			g_socketLock.unlock();
+
+			for (auto& cl : g_clients)
+				SendRemovePlayerPacket(cl.first, id);
+
+			g_connectedClsLock.lock();
+			g_connectedCls[id].is_connected = false;
+			g_connectedClsLock.unlock();
+			--numOfCls;
+
+			cout << "======================================================" << endl;
+			cout << "ID " << (int)id << " is out. And this Id slot is empty" << endl;
+			cout << "======================================================" << endl;
+
+			if (retval == SOCKET_ERROR)
+				ErrDisplay("RecvThread occured Error!");
+			return;
+
+		}
+		// Message 재사용을 위한 초기화
+		ZeroMemory(&msg, sizeof(Message));
+		msg.id = -1;
+
+		switch ((int)buf[0])
+		{
+		case CS_READY:
+		{
+			g_playerReadyInfoLock.lock();
+			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			g_playerReadyInfoLock.unlock();
+
+			for (auto& cl : g_clients)
+				SendReadyPacket(cl.first, id, ready);
+
+			if (CheckGameStart())
+			{
+				SendGameStartPacket();
+				g_isPlaying = true;
+
+				// Physics Thread 생성
+				std::cout << "physics thread 생성!" << std::endl;
+				thread PhysicsThread(ProcessClients);
+				PhysicsThread.detach();
+			}
+			break;
+		}
+		default:
+			cout << "Packet Type Error! - " << buf[0] << endl;
+			while (true);
+		}
+
+		if (msg.id != -1)
+		{
+			g_MsgQueueLock.lock();
+			g_MsgQueue.emplace(msg);
+			g_MsgQueueLock.unlock();
+		}
+	}
+}
