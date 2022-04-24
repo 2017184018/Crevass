@@ -6,6 +6,8 @@
 #include "CommandContext.h"
 #include "CREVASS.h"
 
+//#define _WITH_SWAPCHAIN_FULLSCREEN_STATE		//전체화면
+
 using namespace Core;
 
 namespace Core
@@ -122,9 +124,9 @@ void GameCore::InitializeCore(IGameApp& game)
 	// Create Renderer
 	m_GraphicsContext = GraphicsContext::GetApp();
 	m_GraphicsRenderer = GraphicsRenderer::GetApp();
-
+	
 	InitMainWindow();
-	InitDirect3D();
+	//InitDirect3D();
 	OnResize();
 
 	BackBuffer = CurrentBackBuffer();
@@ -308,7 +310,6 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			PostQuitMessage(0);
 		}
-
 		return 0;
 	}
 
@@ -419,6 +420,46 @@ void GameCore::InitMainWindow()
 
 	ShowWindow(g_hMainWnd, SW_SHOW);
 	UpdateWindow(g_hMainWnd);
+	InitDirect3D();
+#ifdef _WITH_SWAPCHAIN_FULLSCREEN_STATE
+	{
+		FlushCommandQueue();
+		BOOL bFullScreenState = FALSE;
+		mSwapChain->GetFullscreenState(&bFullScreenState, NULL);
+		mSwapChain->SetFullscreenState(!bFullScreenState, NULL);
+
+		DXGI_MODE_DESC dxgiTargetParameters;
+		dxgiTargetParameters.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		dxgiTargetParameters.Width = g_DisplayWidth;
+		dxgiTargetParameters.Height = g_DisplayHeight;
+		dxgiTargetParameters.RefreshRate.Numerator = 60;
+		dxgiTargetParameters.RefreshRate.Denominator = 1;
+		dxgiTargetParameters.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		dxgiTargetParameters.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		mSwapChain->ResizeTarget(&dxgiTargetParameters);
+
+		for (int i = 0; i < SwapChainBufferCount; i++)
+			if (mSwapChainBuffer[i])
+				mSwapChainBuffer[i]->Release();
+
+		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
+		mSwapChain->GetDesc(&dxgiSwapChainDesc);
+		mSwapChain->ResizeBuffers(SwapChainBufferCount, g_DisplayWidth,
+			g_DisplayHeight, dxgiSwapChainDesc.BufferDesc.Format, dxgiSwapChainDesc.Flags);
+
+		mCurrBackBuffer = 0;
+
+		D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle =
+			mRtvHeap->GetCPUDescriptorHandleForHeapStart();
+		for (UINT i = 0; i < SwapChainBufferCount; i++)
+		{
+			mSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&mSwapChainBuffer[i]);
+			g_Device->CreateRenderTargetView(mSwapChainBuffer[i].Get(), NULL,
+				d3dRtvCPUDescriptorHandle);
+			d3dRtvCPUDescriptorHandle.ptr += mRtvDescriptorSize;
+		}
+	}
+#endif
 }
 
 void GameCore::InitDirect3D()
@@ -481,8 +522,8 @@ void GameCore::InitDirect3D()
 #endif
 
 	CreateCommandObjects();
-	CreateSwapChain();
 	CreateRtvAndDsvDescriptorHeaps();
+	CreateSwapChain();
 }
 
 void GameCore::OnResize()
@@ -637,11 +678,25 @@ void GameCore::CreateSwapChain()
 	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
+
 	// Note: Swap chain uses queue to perform flush.
 	ThrowIfFailed(mdxgiFactory->CreateSwapChain(
 		g_CommandQueue.Get(),
 		&sd,
 		mSwapChain.GetAddressOf()));
+
+	mdxgiFactory->MakeWindowAssociation(g_hMainWnd, DXGI_MWA_NO_ALT_ENTER);
+#ifndef _WITH_SWAPCHAIN_FULLSCREEN_STATE
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle =
+		mRtvHeap->GetCPUDescriptorHandleForHeapStart();
+	for (UINT i = 0; i < SwapChainBufferCount; i++)
+	{
+		mSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&mSwapChainBuffer[i]);
+		g_Device->CreateRenderTargetView(mSwapChainBuffer[i].Get(), NULL,
+			d3dRtvCPUDescriptorHandle);
+		d3dRtvCPUDescriptorHandle.ptr += mRtvDescriptorSize;
+	}
+#endif
 }
 
 void GameCore::CreateRtvAndDsvDescriptorHeaps()
