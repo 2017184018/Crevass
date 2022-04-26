@@ -9,6 +9,11 @@
 #include "Character.h"
 #include "CharacterParts.h"
 
+#include "Network.h"
+#include "MainFramework.h"
+
+#include "../protocol.h"
+
 #include <random>
 using namespace Core;
 
@@ -17,6 +22,8 @@ default_random_engine dre(rd());
 uniform_int_distribution<> uid{ 0,8 }; //눈사람 위치
 uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
 uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
+
+
 
 #define SCALE 0.5
 
@@ -465,6 +472,11 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	{
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+	}
+	
+	if (InputHandler::IsKeyUp('B'))
+	{
+		g_pFramework->m_pNetwork->Send(CS_READY);
 	}
 
 

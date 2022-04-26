@@ -29,5 +29,5 @@
 #define STD std::
 
 // 사용자 정의 헤더 파일입니다.
-#include "../../protocol.h"
+#include "../protocol.h"
 #include "define.h"

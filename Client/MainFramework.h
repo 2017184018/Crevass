@@ -10,7 +10,7 @@ public:
 public:
 	void Initialize();
 
-private:
+public:
 	Network* m_pNetwork;
 	
 };

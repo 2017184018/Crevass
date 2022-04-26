@@ -6,6 +6,9 @@
 #include "CommandContext.h"
 #include "CREVASS.h"
 
+#include "MainFramework.h"
+#include "Network.h"
+
 //#define _WITH_SWAPCHAIN_FULLSCREEN_STATE		//전체화면
 
 using namespace Core;
@@ -33,6 +36,8 @@ namespace Core
 	bool      g_4xMsaaState = false;    // 4X MSAA enabled
 	UINT      g_4xMsaaQuality = 0;		// quality level of 4X MSAA
 
+	MainFramework* g_pFramework;
+
 	std::unique_ptr<BlurFilter> mBlurFilter;
 
 	ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
@@ -47,10 +52,14 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 	g_Core = GameCore::GetApp();
 	g_GameTimer = GameTimer::GetApp();
 
+
 	MSG msg = {};
 
 	g_Core->InitializeCore(app);
 	g_GameTimer->Reset();
+
+	g_pFramework = new MainFramework;
+	g_pFramework->Initialize();
 
 	while (msg.message != WM_QUIT)
 	{

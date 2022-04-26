@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <FxCompile Include="Shaders\Blur.hlsl" />
     <FxCompile Include="Shaders\Common.hlsl" />
     <FxCompile Include="Shaders\Default.hlsl" />
     <FxCompile Include="Shaders\LightingUtil.hlsl" />
     <FxCompile Include="Shaders\Sky.hlsl" />
-    <FxCompile Include="Shaders\Blur.hlsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlurFilter.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterParts.cpp" />
     <ClCompile Include="CREVASS.cpp" />
@@ -22,6 +23,7 @@
     <ClCompile Include="GeometryMesh.cpp" />
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="IGameApp.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
     <ClCompile Include="LogoScene.cpp" />
     <ClCompile Include="main.cpp" />
@@ -36,13 +38,21 @@
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelinstance.cpp" />
     <ClCompile Include="Waves.cpp" />
-<<<<<<< HEAD
-    <ClCompile Include="BlurFilter.cpp" />
-=======
-    <ClCompile Include="InputHandler.cpp" />
->>>>>>> JH6
+    <ClCompile Include="Network.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInfo.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerInfo.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFramework.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlurFilter.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterParts.h" />
     <ClInclude Include="CREVASS.h" />
@@ -58,6 +68,7 @@
     <ClInclude Include="GeometryMesh.h" />
     <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="IGameApp.h" />
+    <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LoadM3d.h" />
     <ClInclude Include="LogoScene.h" />
     <ClInclude Include="main.h" />
@@ -77,11 +88,24 @@
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="Waves.h" />
-<<<<<<< HEAD
-    <ClInclude Include="BlurFilter.h" />
-=======
-    <ClInclude Include="InputHandler.h" />
->>>>>>> JH6
+    <ClInclude Include="headers.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerInfo.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInfo.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFramework.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />
@@ -90,5 +114,10 @@
     <Image Include="Crevass.ico" />
     <Image Include="icon1.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Network">
+      <UniqueIdentifier>{38a7624c-4a00-4067-b7c4-d52736c99d8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
