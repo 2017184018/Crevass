@@ -85,7 +85,7 @@ int main()
 				SendReadyPacket(user_id, i, g_playerReadyInfo[i].ready);	//mutex 필요
 				g_playerReadyInfoLock.unlock();
 				SendReadyPacket(i, user_id, 0);	//0넣은 이유 mutex안쓰려고
-				g_connectedClsLock.lock();
+				g_connectedClsLock.lock();				
 			}
 			g_connectedClsLock.unlock();
 		}

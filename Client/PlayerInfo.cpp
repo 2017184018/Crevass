@@ -28,6 +28,16 @@ int PlayerInfo::GetID() const
 	return m_ID;
 }
 
+void PlayerInfo::SetPosition(DirectX::XMFLOAT3 PlayerPos)
+{
+	m_Pos = PlayerPos;
+}
+
+DirectX::XMFLOAT3 PlayerInfo::GetPosition()
+{
+	return m_Pos;
+}
+
 void PlayerInfo::SetReadyState(bool readyState)
 {
 	m_ReadyState = readyState;

@@ -61,6 +61,73 @@ void Receiver(char id)
 
 		switch ((int)buf[0])
 		{
+		case CS_PLAYER_UP_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP;
+			msg.isPushed = true;
+			break;
+		}
+		case CS_PLAYER_DOWN_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN;
+			msg.isPushed = true;
+			break;
+		}
+		case CS_PLAYER_LEFT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_LEFT;
+			msg.isPushed = true;
+			break;
+		}
+		case CS_PLAYER_RIGHT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_RIGHT;
+			msg.isPushed = true;
+			break;
+		}
+		case CS_PLAYER_UP_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP;
+			msg.isPushed = false;
+			break;
+		}
+		case CS_PLAYER_DOWN_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN;
+			msg.isPushed = false;
+			break;
+		}
+		case CS_PLAYER_LEFT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_LEFT;
+			msg.isPushed = false;
+			break;
+		}
+		case CS_PLAYER_RIGHT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_RIGHT;
+			msg.isPushed = false;
+			break;
+		}
+
+
+
 		case CS_READY:
 		{
 			g_playerReadyInfoLock.lock();

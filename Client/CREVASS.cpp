@@ -123,6 +123,9 @@ BOOL B = true;
 
 void CREVASS::Update(float deltaT)
 {
+	g_pFramework->m_pNetwork->Recv();
+
+
 	//이거 풀면 플레이어 3인칭 기준 카메라 적용
 	float speed = 100 * deltaT;
 	if (m_Users[m_PlayerID]) {
@@ -251,13 +254,13 @@ void CREVASS::Update(float deltaT)
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
 				if (FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					cout << 5 * i + j << "하고 충돌" << endl;
+					//cout << 5 * i + j << "하고 충돌" << endl;
 
 				}
 			}
 			else {
 				if (FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					cout << 5 * i + j << "하고 충돌" << endl;
+					//cout << 5 * i + j << "하고 충돌" << endl;
 
 				}
 			}
@@ -379,6 +382,8 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		}
 		m_Users[m_PlayerID]->SetDir(0);
+
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 	}
 
 
@@ -387,6 +392,8 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(270);
+		
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
 	}
 
 	if (GetAsyncKeyState('S') & 0x8000) {
@@ -394,6 +401,8 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(180);
+
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
 	}
 
 	if (GetAsyncKeyState('D') & 0x8000) {
@@ -401,6 +410,8 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(90);
+
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
 	}
 
 	if (GetAsyncKeyState('F') & 0x8000 && m_Users[m_PlayerID]->bJump == false) {
@@ -439,25 +450,44 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 	if (InputHandler::IsKeyUp('W'))
 	{
-		if (!m_Users[m_PlayerID]->bJump) {
+		if (!m_Users[m_PlayerID]->bJump)
+		{
 
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+
 		}
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
+
 	}
 	if (InputHandler::IsKeyUp('A'))
 	{
 		if (!m_Users[m_PlayerID]->bJump)
+		{
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+
+		}			
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
+
 	}
 	if (InputHandler::IsKeyUp('S'))
 	{
 		if (!m_Users[m_PlayerID]->bJump)
+		{
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+
+		}
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
+
 	}
 	if (InputHandler::IsKeyUp('D'))
 	{
 		if (!m_Users[m_PlayerID]->bJump)
+		{
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+
+		}
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
+
 	}
 
 	if (InputHandler::IsKeyUp('B'))

@@ -138,10 +138,12 @@ void Network::ProcessPacket(char* packet_buffer)
 
 			}
 		}
+
 		break;
 	}
 	case SC_GAMESTART:
 	{
+
 		std::cout << "game start" << std::endl;
 		sc_packet_game_start packet;
 		memcpy(&packet, ptr, sizeof(packet));
@@ -159,27 +161,29 @@ void Network::ProcessPacket(char* packet_buffer)
 		//		}
 		//	}
 		//}
+
+		printf("x=%f\n",packet.players[1].pos.x);
 		break;
 	}
-	//case SC_POS:
-	//{
-	//	sc_packet_pos packet;
-	//	memcpy(&packet, ptr, sizeof(packet));
-	//	for (int i = 0; i < 3; ++i)
-	//	{
-	//		if (packet.players[i].id != -1)
-	//		{
-	//			if (Info::GetInstance()->m_PlayersInfo[i] != nullptr)
-	//			{
-	//				if (packet.players[i].posX != NULL && packet.players[i].posY != NULL)
-	//				{
-	//					Info::GetInstance()->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players[i].posX, packet.players[i].posY);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	break;
-	//}
+	case SC_POS:
+	{
+		sc_packet_pos packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		//for (int i = 0; i < 3; ++i)
+		//{
+		//	if (packet.players[i].id != -1)
+		//	{
+		//		if (Info::GetInstance()->m_PlayersInfo[i] != nullptr)
+		//		{
+		//			if (packet.players[i].posX != NULL && packet.players[i].posY != NULL)
+		//			{
+		//				Info::GetInstance()->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players[i].posX, packet.players[i].posY);
+		//			}
+		//		}
+		//	}
+		//}
+		break;
+	}
 	case SC_REMOVE_PLAYER:
 	{
 		std::cout << "remove player" << std::endl;

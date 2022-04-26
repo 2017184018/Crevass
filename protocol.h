@@ -1,5 +1,5 @@
 #pragma once
-
+#include <DirectXMath.h>
 #define SERVER_PORT			3500
 ///////////////////////////////
 #define SC_LOGIN_OK			1
@@ -38,8 +38,7 @@
 
 struct Pro_Player {
 	char id;
-	float posX;
-	float posY;
+	DirectX::XMFLOAT3 pos;
 };
 
 /* Server to Client */
