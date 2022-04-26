@@ -24,8 +24,6 @@
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="IGameApp.cpp" />
     <ClCompile Include="InputHandler.cpp" />
-    <ClCompile Include="LoadM3d.cpp" />
-    <ClCompile Include="LogoScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MaterialReference.cpp" />
     <ClCompile Include="MathHelper.cpp" />
@@ -50,6 +48,10 @@
     <ClCompile Include="MainFramework.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="LobbyScene.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="GameplayScene.cpp" />
+    <ClCompile Include="GameresultScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlurFilter.h" />
@@ -69,8 +71,6 @@
     <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="IGameApp.h" />
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="LoadM3d.h" />
-    <ClInclude Include="LogoScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MaterialReference.h" />
@@ -106,6 +106,10 @@
     <ClInclude Include="MainFramework.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="LobbyScene.h" />
+    <ClInclude Include="Controller.h" />
+    <ClInclude Include="GameplayScene.h" />
+    <ClInclude Include="GameresultScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

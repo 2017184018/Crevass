@@ -34,10 +34,10 @@ namespace Core
 	extern MainFramework* g_pFramework;
 }
 
+class SceneManager;
 class MeshReference;
 class MaterialReference;
 class Character;
-class GameObject;
 class CREVASS : public IGameApp, public TemplateSingleton<CREVASS>
 {
 
@@ -118,6 +118,7 @@ public:
 public:
 	MeshReference* m_MeshRef;
 	MaterialReference* m_MaterialRef;
+	SceneManager* m_SceneManager;
 
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
@@ -128,6 +129,10 @@ public:
 	UINT						m_InstanceCount = 0;
 	
 private:
+
+	
+
+
 	/* ID: battleID */
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;

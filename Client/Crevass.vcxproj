@@ -155,6 +155,7 @@
     <ClInclude Include="BlurFilter.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterParts.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="CREVASS.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandContext.h" />
@@ -165,6 +166,8 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameplayScene.h" />
+    <ClInclude Include="GameresultScene.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GeometryMesh.h" />
@@ -172,8 +175,7 @@
     <ClInclude Include="headers.h" />
     <ClInclude Include="IGameApp.h" />
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="LoadM3d.h" />
-    <ClInclude Include="LogoScene.h" />
+    <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFramework.h" />
@@ -199,6 +201,7 @@
     <ClCompile Include="BlurFilter.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterParts.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="CREVASS.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandContext.cpp" />
@@ -207,14 +210,15 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="GameInfo.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameplayScene.cpp" />
+    <ClCompile Include="GameresultScene.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="GeometryMesh.cpp" />
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="IGameApp.cpp" />
     <ClCompile Include="InputHandler.cpp" />
-    <ClCompile Include="LoadM3d.cpp" />
-    <ClCompile Include="LogoScene.cpp" />
+    <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainFramework.cpp" />
     <ClCompile Include="MaterialReference.cpp" />

@@ -2,38 +2,82 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
-SceneManager::SceneManager() : m_pCurScene(nullptr)
+#include "LobbyScene.h"
+#include "GameplayScene.h"
+#include "GameresultScene.h"
+
+SceneManager::SceneManager() :
+	m_CurScene(0)
 {
 }
 
 SceneManager::~SceneManager()
 {
-	m_pCurScene->ReleaseScene();
-	SAFE_DELETE_PTR(m_pCurScene);
-}
-
-bool SceneManager::ChangeScene(Scene* pNewScene)
-{
-	// 인자로 들어온 pNewScene 객체를 현재 씬으로 할당합니다.
-	if (m_pCurScene == nullptr)
-		m_pCurScene = pNewScene;
-
-	else
-	{
-		SAFE_DELETE_PTR(m_pCurScene);
-		m_pCurScene = pNewScene;
+	for (auto& s : m_Scenes) {
+		s->Exit();
+		SAFE_DELETE_PTR(s);
 	}
-
-	return true;
+	m_CurScene = -1;
 }
 
-void SceneManager::UpdateScene(const float& fTimeDelta)
+void SceneManager::InitializeScenes()
 {
-	if (m_pCurScene != nullptr)
-		m_pCurScene->UpdateScene(fTimeDelta);
+	CreateScene<LobbyScene>(SceneType::Lobby);
+	CreateScene<GamePlayScene>(SceneType::GamePlay);
+	CreateScene<GameresultScene>(SceneType::GameResult);
+}
+
+void SceneManager::ChangeScene(SceneType sceneType)
+{
+	if (m_CurScene == -1)
+		cout << "NullScene" << endl;
+
+	m_Scenes[m_CurScene]->Exit();
+
+	m_CurScene = static_cast<int>(sceneType);
+	m_Scenes[m_CurScene]->Enter();
+}
+
+
+void SceneManager::EnterScene(SceneType sceneType)
+{
+	m_CurScene = static_cast<UINT>(sceneType);
+	m_Scenes[m_CurScene]->Enter();
+
+}
+
+void SceneManager::ExitScene()
+{
+	m_Scenes[m_CurScene]->Exit();
+}
+
+void SceneManager::ChangeScene()
+{
+	if (m_CurScene == -1)
+		cout << "NullScene" << endl;
+
+	m_Scenes[m_CurScene]->Exit();
+
+	m_CurScene += 1;
+
+	if (m_CurScene >= static_cast<int>(SceneType::Count))
+		m_CurScene = 1;
+
+	m_Scenes[m_CurScene]->Enter();
+}
+
+
+void SceneManager::UpdateScene(const float& deltaT)
+{
+	m_Scenes[m_CurScene]->Update(deltaT);
+}
+
+void SceneManager::RenderScene()
+{
+	m_Scenes[m_CurScene]->Render();
 }
 
 Scene* SceneManager::GetCurScene() const
 {
-	return m_pCurScene;
+	return m_Scenes[m_CurScene];
 }

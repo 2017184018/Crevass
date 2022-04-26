@@ -65,6 +65,8 @@ using namespace DirectX::PackedVector;
 
 #define TOTAL_USER_COUNT 4
 #define CHARACTER_INDEX_MASTER 0 
+
+enum class SceneType { /*Title*/ Lobby, GamePlay, GameResult, Count};
 enum class RenderLayer { ID_OPAQUE, ID_SKY, ID_COUNT, ID_SkinnedOpaque };
 enum class CameraType { First, Third, Free };
 

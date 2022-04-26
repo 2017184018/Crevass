@@ -641,11 +641,9 @@ bool MeshReference::LoadAnimationFile(SkinnedData& outSkinnedData, std::string& 
 			}
 			animation.BoneAnimations.push_back(boneAnim);
 		}
+
 		outSkinnedData.SetAnimation(animation, clipName);
 		return true;
-	}
-	else {
-		cout << "file none" << endl;
 	}
 
 	return false;
