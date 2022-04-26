@@ -36,7 +36,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "snow_top");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/icicle_1.mesh", "icicle");
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/Penguin.mesh", "Penguin");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_cube.mesh", "snowcube");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 
@@ -57,7 +57,7 @@ void CREVASS::Startup(void)
 	// Build RenderItem
 	BuildScene();
 
-	
+
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = TOTAL_USER_COUNT;
@@ -122,7 +122,7 @@ void CREVASS::Update(float deltaT)
 	float speed = 100 * deltaT;
 	if (m_Users[m_PlayerID]) {
 		if (m_Users[m_PlayerID]->bJump == true && B == true) {
-			m_Users[m_PlayerID]->Move(DIR_UP, speed*2, true);
+			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
 		}
 
 		if (m_Users[m_PlayerID]->GetPosition().y > 70) {
@@ -134,7 +134,7 @@ void CREVASS::Update(float deltaT)
 			m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
 		}
 
-		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump==true){
+		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
 			m_Users[m_PlayerID]->bJump = false;
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
@@ -222,10 +222,10 @@ void CREVASS::Update(float deltaT)
 	//Map = object info
 	//Vec = game object
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["icecube"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["snowcube"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["snowman"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["snow_top"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["icicle"], m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Sea"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["sky"], m_RItemsVec);
 
@@ -246,9 +246,7 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowman"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snow_top"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icicle"], m_RItemsVec);
-
-	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin"], m_RItemsVec);
-
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["snowcube"], m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Sea"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
@@ -391,10 +389,10 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		m_Users[m_PlayerID]->SetDir(0);
 	}
 
-    if(GetAsyncKeyState('J') & 0x8000) {
+	if (GetAsyncKeyState('J') & 0x8000) {
 		m_Users[m_PlayerID]->Move(DIR_LEFT, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
-		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(270);
 	}
 
@@ -408,20 +406,20 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	if (GetAsyncKeyState('L') & 0x8000) {
 		m_Users[m_PlayerID]->Move(DIR_RIGHT, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
-		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(90);
 	}
-	
-	if (GetAsyncKeyState('H') & 0x8000 && m_Users[m_PlayerID]->bJump == false ) {
+
+	if (GetAsyncKeyState('H') & 0x8000 && m_Users[m_PlayerID]->bJump == false) {
 		m_Users[m_PlayerID]->bJump = true;
 		B = true;
 		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_JUMP;
-		
+
 	}
 
 	if (GetAsyncKeyState('I') & 0x8000 && GetAsyncKeyState('L') & 0x8000) {
 		if (!m_Users[m_PlayerID]->bJump) {
-			
+
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		}
 		m_Users[m_PlayerID]->SetDir(45);
@@ -449,7 +447,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	if (InputHandler::IsKeyUp('I'))
 	{
 		if (!m_Users[m_PlayerID]->bJump) {
-			
+
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
 	}
@@ -474,10 +472,10 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 void CREVASS::BuildScene()
 {
-	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷, 78: Æë±Ï, 79: ¹Ù´Ù
+	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷, 78: ¹Ù´Ù, 79:Æë±Ï
 
-	//layer ,mesh type , id 
-	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");
+	//layer ,mesh type , id		
+	GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");		//0
 	skyRitem->Geo = m_MeshRef->m_GeometryMesh["geo"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
 	skyRitem->StartIndexLocation = skyRitem->Geo->DrawArgs["sphere"].StartIndexLocation;
@@ -488,14 +486,25 @@ void CREVASS::BuildScene()
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 5; ++i) {//1~50
 		for (int j = 0; j < 5; ++j) {
-			GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecube", "icebue" + std::to_string(5 * i + j));
-			instancingObj->Geo = m_MeshRef->m_GeometryMesh["icecube"].get();
-			instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
-			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
-			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
+			GameObject* instancingObj;
+			if (BlockCheck(5 * i + j)) {
+				instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecube", "icebue" + std::to_string(5 * i + j));
+				instancingObj->Geo = m_MeshRef->m_GeometryMesh["icecube"].get();
+				instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+				instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
+				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
+				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
+			}
+			else {
+				instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "snowcube", "snowcube" + std::to_string(5 * i + j));
+				instancingObj->Geo = m_MeshRef->m_GeometryMesh["snowcube"].get();
+				instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+				instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowcube"].IndexCount;
+				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowcube"].StartIndexLocation;
+				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowcube"].BaseVertexLocation;
+			}
 			instancingObj->m_MaterialIndex = 1;
 			instancingObj->m_World = MathHelper::Identity4x4();
 			instancingObj->m_World._11 = SCALE;
@@ -525,7 +534,7 @@ void CREVASS::BuildScene()
 		}
 	}
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 5; ++i) {	//51~75
 		for (int j = 0; j < 5; ++j) {
 			GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icicle", "icicle" + std::to_string(5 * i + j));
 			instancingObj->Geo = m_MeshRef->m_GeometryMesh["icicle"].get();
@@ -547,7 +556,7 @@ void CREVASS::BuildScene()
 	}
 
 	int RandomLocation[2] = { -1,-1 };
-	for (int i = 0; i < 2; ++i) {
+	for (int i = 0; i < 2; ++i) {		//76, 77
 		GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "snowman", "snowman" + std::to_string(i));
 		instancingObj->Geo = m_MeshRef->m_GeometryMesh["snowman"].get();
 		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -581,29 +590,7 @@ void CREVASS::BuildScene()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	{
-		GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Penguin", "Penguin");
-		instancingObj->Geo = m_MeshRef->m_GeometryMesh["Penguin"].get();
-		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["Penguin"].IndexCount;
-		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["Penguin"].StartIndexLocation;
-		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["Penguin"].BaseVertexLocation;
-		instancingObj->m_MaterialIndex = 2;
-		instancingObj->m_World = MathHelper::Identity4x4();
-		instancingObj->m_World._11 = 15;
-		instancingObj->m_World._22 = 15;
-		instancingObj->m_World._33 = 15;
-
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14));
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.14 / 2));
-
-		instancingObj->m_World._41 = 200;
-		instancingObj->m_World._42 = 30;
-		instancingObj->m_World._43 = 80;
-		instancingObj->m_TexTransform = MathHelper::Identity4x4();
-	}
-
-	{
+	{		//78
 		GameObject* Sea = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "Sea", "Sea0");
 		Sea->Geo = m_MeshRef->m_GeometryMesh["wave"].get();
 		Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
@@ -625,7 +612,7 @@ void CREVASS::BuildScene()
 		wave = Sea;
 	}
 
-	{
+	{//79
 		/*Characters*/
 		// student
 		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin", "Penguin_LOD0skin0");
