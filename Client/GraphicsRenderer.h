@@ -58,6 +58,8 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Billboard_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Skinned_InputLayout;
 
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_BB_InputLayout;
+
 public:
 	/* GpuResource */
 	std::unordered_map<std::string, std::unique_ptr<Texture>> m_Textures;

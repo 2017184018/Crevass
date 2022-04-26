@@ -181,7 +181,7 @@ Character::~Character()
 void Character::Update(const float deltaT)
 {
 	//m_PlayerController->Update(deltaT);
-
+	m_Bounds.Center = GetPosition();
 
 	SetState();
 	for (auto& p : m_MapAnimData)

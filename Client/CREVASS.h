@@ -12,6 +12,7 @@ namespace Graphics
 {
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
 
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;

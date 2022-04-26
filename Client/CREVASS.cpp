@@ -32,17 +32,19 @@ void CREVASS::Startup(void)
 	m_MaterialRef = new MaterialReference;
 
 	//Penguin
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");    //fbx
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_cube.mesh", "icecube");    //fbx
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "snow_top");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/icicle_1.mesh", "icicle");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/Penguin.mesh", "Penguin");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
+	m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "icecube", m_MeshRef->m_GeometryMesh["icecube"].get()->DrawArgs["icecube"].Bounds);
 
 	//animation
 	//m_MeshRef->BuildGeometry(g_Device.Get(), g_CommandList.Get(), "./Models/soldier.m3d", "Models\\soldier.m3d");
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
+	//m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin", m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get()->DrawArgs["Penguin_LOD0skin"].Bounds);
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
@@ -57,7 +59,7 @@ void CREVASS::Startup(void)
 	// Build RenderItem
 	BuildScene();
 
-	
+
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = TOTAL_USER_COUNT;
@@ -122,7 +124,7 @@ void CREVASS::Update(float deltaT)
 	float speed = 100 * deltaT;
 	if (m_Users[m_PlayerID]) {
 		if (m_Users[m_PlayerID]->bJump == true && B == true) {
-			m_Users[m_PlayerID]->Move(DIR_UP, speed*2, true);
+			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
 		}
 
 		if (m_Users[m_PlayerID]->GetPosition().y > 70) {
@@ -134,7 +136,7 @@ void CREVASS::Update(float deltaT)
 			m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
 		}
 
-		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump==true){
+		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
 			m_Users[m_PlayerID]->bJump = false;
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
@@ -229,14 +231,27 @@ void CREVASS::Update(float deltaT)
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Sea"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["sky"], m_RItemsVec);
 
+	/*GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["icecubeBB"], m_RItemsVec);*/
+
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(m_MaterialRef->m_Materials);
 	m_Camera->UpdateViewMatrix();
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
 
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
+	/*GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin_LOD0skinBB"], m_RItemsVec);*/
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
 	GraphicsContext::GetApp()->UpdateWave(mWaves.get(), wave);
 
+	//FindObject<GameObject>("Penguin_LOD0skinBB", "Penguin_LOD0skin0BB")->SetPosition(FindObject<GameObject>("Penguin_LOD0skin", "Penguin_LOD0skin0")->GetPosition());
+
+	for (int i = 0; i < 25; i++) {
+		if (FindObject<GameObject>("icecube", "icebue" + std::to_string(i))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+			cout << i << "하고 충돌" << endl;
+
+		}
+	}
+
+	//cout << " x = " << m_Users[m_PlayerID]->m_Bounds.Center.x<< " y = " << m_Users[m_PlayerID]->m_Bounds.Center.y << "z = " << m_Users[m_PlayerID]->m_Bounds.Center.z << endl;
 }
 
 void CREVASS::RenderScene(void)
@@ -250,7 +265,11 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Sea"], m_RItemsVec);
-
+	
+	//디버그 주석
+	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
+	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecubeBB"], m_RItemsVec);
+	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin_LOD0skinBB"], m_RItemsVec);
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
 
@@ -343,47 +362,13 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	}
 
 	float speed = 100 * deltaT;
-	if (GetAsyncKeyState('W') & 0x8000)
-		m_Camera->Walk(20.0f * deltaT);
+
 	if (GetAsyncKeyState('G') & 0x8000) {
 		m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"]->ClipName = "Peck";
 	}
 
-	if (GetAsyncKeyState('S') & 0x8000)
-		m_Camera->Walk(-20.0f * deltaT);
 
-	if (GetAsyncKeyState('A') & 0x8000)
-		m_Camera->Strafe(-20.0f * deltaT);
-
-	if (GetAsyncKeyState('D') & 0x8000)
-		m_Camera->Strafe(20.0f * deltaT);
-
-	if (GetAsyncKeyState('Z') & 0x8000) {
-		auto tmp = m_Camera->GetPosition3f();
-		tmp.y += 20.0f * deltaT;
-		m_Camera->SetPosition(tmp);
-	}
-
-	if (GetAsyncKeyState('X') & 0x8000) {
-		auto tmp = m_Camera->GetPosition3f();
-		tmp.y -= 20.0f * deltaT;
-		m_Camera->SetPosition(tmp);
-	}
-
-	if (GetAsyncKeyState('Q') & 0x8000)
-		m_Camera->RotateY(0.005);
-
-	if (GetAsyncKeyState('E') & 0x8000)
-		m_Camera->RotateY(-0.005);
-
-	if (GetAsyncKeyState('R') & 0x8000)
-		m_Camera->RotateX(0.005);
-
-	if (GetAsyncKeyState('T') & 0x8000)
-		m_Camera->RotateX(-0.005);
-
-
-	if (GetAsyncKeyState('I') & 0x8000) {
+	if (GetAsyncKeyState('W') & 0x8000) {
 		m_Users[m_PlayerID]->Move(DIR_FORWARD, speed, true);
 		if (!m_Users[m_PlayerID]->bJump) {
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
@@ -391,79 +376,79 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		m_Users[m_PlayerID]->SetDir(0);
 	}
 
-    if(GetAsyncKeyState('J') & 0x8000) {
+	if (GetAsyncKeyState('A') & 0x8000) {
 		m_Users[m_PlayerID]->Move(DIR_LEFT, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
-		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(270);
 	}
 
-	if (GetAsyncKeyState('K') & 0x8000) {
+	if (GetAsyncKeyState('S') & 0x8000) {
 		m_Users[m_PlayerID]->Move(DIR_BACKWARD, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(180);
 	}
 
-	if (GetAsyncKeyState('L') & 0x8000) {
+	if (GetAsyncKeyState('D') & 0x8000) {
 		m_Users[m_PlayerID]->Move(DIR_RIGHT, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
-		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
+			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(90);
 	}
-	
-	if (GetAsyncKeyState('H') & 0x8000 && m_Users[m_PlayerID]->bJump == false ) {
+
+	if (GetAsyncKeyState('F') & 0x8000 && m_Users[m_PlayerID]->bJump == false) {
 		m_Users[m_PlayerID]->bJump = true;
 		B = true;
 		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_JUMP;
-		
+
 	}
 
-	if (GetAsyncKeyState('I') & 0x8000 && GetAsyncKeyState('L') & 0x8000) {
+	if (GetAsyncKeyState('W') & 0x8000 && GetAsyncKeyState('D') & 0x8000) {
 		if (!m_Users[m_PlayerID]->bJump) {
-			
+
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		}
 		m_Users[m_PlayerID]->SetDir(45);
 	}
 
-	if (GetAsyncKeyState('K') & 0x8000 && GetAsyncKeyState('L') & 0x8000) {
+	if (GetAsyncKeyState('S') & 0x8000 && GetAsyncKeyState('D') & 0x8000) {
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(135);
 	}
 
-	if (GetAsyncKeyState('K') & 0x8000 && GetAsyncKeyState('J') & 0x8000) {
+	if (GetAsyncKeyState('S') & 0x8000 && GetAsyncKeyState('A') & 0x8000) {
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(225);
 	}
 
-	if (GetAsyncKeyState('J') & 0x8000 && GetAsyncKeyState('I') & 0x8000) {
+	if (GetAsyncKeyState('A') & 0x8000 && GetAsyncKeyState('W') & 0x8000) {
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 
 		m_Users[m_PlayerID]->SetDir(315);
 	}
 
-	if (InputHandler::IsKeyUp('I'))
+	if (InputHandler::IsKeyUp('W'))
 	{
 		if (!m_Users[m_PlayerID]->bJump) {
-			
+
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
 	}
-	if (InputHandler::IsKeyUp('J'))
+	if (InputHandler::IsKeyUp('A'))
 	{
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 	}
-	if (InputHandler::IsKeyUp('K'))
+	if (InputHandler::IsKeyUp('S'))
 	{
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 	}
-	if (InputHandler::IsKeyUp('L'))
+	if (InputHandler::IsKeyUp('D'))
 	{
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
@@ -488,20 +473,44 @@ void CREVASS::BuildScene()
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
 
+
+
 	for (int i = 0; i < 5; ++i) {
 		for (int j = 0; j < 5; ++j) {
+			//GameObject* instancingObjBB = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecubeBB", "icebueBB" + std::to_string(5 * i + j));
+			//instancingObjBB->Geo = m_MeshRef->m_GeometryMesh["icecubeBB"].get();
+			//instancingObjBB->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			//instancingObjBB->IndexCount = instancingObjBB->Geo->DrawArgs["icecubeBB"].IndexCount;
+			//instancingObjBB->StartIndexLocation = instancingObjBB->Geo->DrawArgs["icecubeBB"].StartIndexLocation;
+			//instancingObjBB->BaseVertexLocation = instancingObjBB->Geo->DrawArgs["icecubeBB"].BaseVertexLocation;
+
+
+			//instancingObjBB->m_MaterialIndex = 1;
+			//instancingObjBB->m_World = MathHelper::Identity4x4();
+			////	instancingObjBB->m_World._11 = SCALE;
+			////	instancingObjBB->m_World._22 = SCALE;
+			////	instancingObjBB->m_World._33 = SCALE;
+			//int distance = SCALE * 200;
+			////	instancingObjBB->m_World._41 = distance * i;
+			////	instancingObjBB->m_World._43 = distance * j;
+			//instancingObjBB->m_TexTransform = MathHelper::Identity4x4();
+
+			/// ///////////////////////////////////////////////////////////////////////////////////
+
 			GameObject* instancingObj = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "icecube", "icebue" + std::to_string(5 * i + j));
 			instancingObj->Geo = m_MeshRef->m_GeometryMesh["icecube"].get();
 			instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
 			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
 			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
+
+
 			instancingObj->m_MaterialIndex = 1;
 			instancingObj->m_World = MathHelper::Identity4x4();
 			instancingObj->m_World._11 = SCALE;
 			instancingObj->m_World._22 = SCALE;
 			instancingObj->m_World._33 = SCALE;
-			int distance = SCALE * 200;
+				int distance = SCALE * 200;
 			instancingObj->m_World._41 = distance * i;
 			instancingObj->m_World._43 = distance * j;
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
@@ -522,6 +531,11 @@ void CREVASS::BuildScene()
 			top->m_World._42 = 0;
 			top->m_World._43 = distance * j;
 			top->m_TexTransform = MathHelper::Identity4x4();
+
+			instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["icecube"].Bounds;
+			cout << instancingObj->m_Bounds.Center.x << endl;
+			instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["icecube"].Bounds.Center, instancingObj->GetPosition());
+			cout << instancingObj->m_Bounds.Center.x << endl;
 		}
 	}
 
@@ -638,11 +652,24 @@ void CREVASS::BuildScene()
 		character1->BaseVertexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
 		character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
 		character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
+		character1->m_Bounds = character1->Geo->DrawArgs["Penguin_LOD0skin"].Bounds;
 
-		//character1->Scale(100, 100, 100);
 		character1->Scale(20, 20, 20);
-		//character1->Rotate(-90.0f, 180.0f, 0);
 		character1->SetPosition(250, 30, 0);
+		//디버그
+	/*	Character* character1BB = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skinBB", "Penguin_LOD0skin0BB");
+		character1BB->m_TexTransform = MathHelper::Identity4x4();
+		character1BB->m_MaterialIndex = 2;
+		character1BB->Geo = m_MeshRef->m_GeometryMesh["Penguin_LOD0skinBB"].get();
+		character1BB->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		character1BB->IndexCount = character1BB->Geo->DrawArgs["Penguin_LOD0skinBB"].IndexCount;
+		character1BB->StartIndexLocation = character1BB->Geo->DrawArgs["Penguin_LOD0skinBB"].StartIndexLocation;
+		character1BB->BaseVertexLocation = character1BB->Geo->DrawArgs["Penguin_LOD0skinBB"].BaseVertexLocation;
+		character1BB->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
+		character1BB->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skinBB"].get();
+		character1BB->m_Bounds = character1BB->Geo->DrawArgs["Penguin_LOD0skinBB"].Bounds;*/
+
+
 	}
 }
 

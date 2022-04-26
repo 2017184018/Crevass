@@ -57,7 +57,7 @@ public:
 //public:
 //	std::vector<ShaderResource::InstanceData> Instances;
 //	UINT InstanceCount;
-//	DirectX::BoundingBox Bounds;
+	
 
 public:
 	//Material* Mat;
@@ -67,9 +67,8 @@ public:
 	UINT IndexCount;
 	UINT StartIndexLocation;
 	int BaseVertexLocation;
-
 	UINT m_MaterialIndex;
-
+	BoundingBox m_Bounds;
 public:
 	// Animation
 	SkinnedModelInstance* m_SkinnedModelInst;

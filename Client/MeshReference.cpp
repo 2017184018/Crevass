@@ -10,65 +10,6 @@ MeshReference::~MeshReference()
 {
 }
 
-//void MeshReference::BuildGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName)
-//{
-//	std::vector<M3DLoader::SkinnedVertex> vertices;
-//	std::vector<std::uint16_t> indices;
-//
-//	std::unique_ptr<SkinnedModelInstance> skinnedModelInst = std::make_unique<SkinnedModelInstance>();
-//	std::unique_ptr<SkinnedData> skinnedInfo = std::make_unique<SkinnedData>();
-//	std::vector<M3DLoader::Subset> skinnedSubsets;
-//
-//	// LoadM3d에서 여러 Clip을 받아오도록 세팅해야함
-//	// 이때 ClipName도 받아와 입력해줌.
-//	M3DLoader m3dLoader;
-//	m3dLoader.LoadM3d(path, vertices, indices,
-//		skinnedSubsets, mSkinnedMats, *skinnedInfo);
-//
-//	skinnedModelInst->SkinnedInfo = std::move(skinnedInfo);
-//	skinnedModelInst->FinalTransforms.resize(skinnedModelInst->SkinnedInfo->BoneCount());
-//	skinnedModelInst->ClipName = "Take1";
-//	skinnedModelInst->TimePos = 0.0f;
-//	m_SkinnedModelInsts[meshName] = std::move(skinnedModelInst);
-//
-//	const UINT vbByteSize = (UINT)vertices.size() * sizeof(M3DLoader::SkinnedVertex);
-//	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
-//
-//	auto geo = std::make_unique<GeometryMesh>();
-//	geo->Name = meshName;
-//
-//	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
-//	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
-//
-//	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
-//	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
-//
-//	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-//		pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
-//
-//	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-//		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
-//
-//	geo->VertexByteStride = sizeof(M3DLoader::SkinnedVertex);
-//	geo->VertexBufferByteSize = vbByteSize;
-//	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
-//	geo->IndexBufferByteSize = ibByteSize;
-//
-//	for (UINT i = 0; i < (UINT)skinnedSubsets.size(); ++i)
-//	{
-//		SubmeshGeometry submesh;
-//		std::string name = "sm_" + std::to_string(i);
-//
-//		submesh.IndexCount = (UINT)skinnedSubsets[i].FaceCount * 3;
-//		submesh.StartIndexLocation = skinnedSubsets[i].FaceStart * 3;
-//		submesh.BaseVertexLocation = 0;
-//
-//		geo->DrawArgs[name] = submesh;
-//	}
-//
-//	m_GeometryMesh[meshName] = std::move(geo);
-//}
-
 void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
 {
 	GeometryGenerator geoGen;
@@ -180,6 +121,62 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 	m_GeometryMesh["geo"] = std::move(geo);
 }
 
+void MeshReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName,BoundingBox BB)
+{
+	GeometryGenerator geoGen;
+	GeometryGenerator::MeshData box = geoGen.CreateBox(BB, 3);
+	UINT boxVertexOffset = 0;
+
+	UINT boxIndexOffset = 0;
+
+	SubmeshGeometry boxSubmesh;
+	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
+	boxSubmesh.StartIndexLocation = boxIndexOffset;
+	boxSubmesh.BaseVertexLocation = boxVertexOffset;
+
+	auto totalVertexCount =
+		box.Vertices.size();
+
+	std::vector<Vertex> vertices(totalVertexCount);
+
+	UINT k = 0;
+	for (size_t i = 0; i < box.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = box.Vertices[i].Position;
+		vertices[k].Normal = box.Vertices[i].Normal;
+		vertices[k].TexC = box.Vertices[i].TexC;
+	}
+
+	std::vector<std::uint16_t> indices;
+	indices.insert(indices.end(), std::begin(box.GetIndices16()), std::end(box.GetIndices16()));
+
+	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	auto geo = std::make_unique<GeometryMesh>();
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
+
+	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+	geo->VertexByteStride = sizeof(Vertex);
+	geo->VertexBufferByteSize = vbByteSize;
+	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
+	geo->IndexBufferByteSize = ibByteSize;
+
+	geo->DrawArgs[meshName +"BB"] = boxSubmesh;
+
+	m_GeometryMesh[meshName + "BB"] = std::move(geo);
+}
+
 void MeshReference::BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves *wave)
 {
 	std::vector<std::uint16_t> indices(3 * wave->TriangleCount()); // 3 indices per face
@@ -278,11 +275,31 @@ void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 	geo->IndexFormat = DXGI_FORMAT_R32_UINT;
 	geo->IndexBufferByteSize = ibByteSize;
 
+	BoundingBox bounds;
+
+
+		XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+		XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+		XMVECTOR vMin = XMLoadFloat3(&vMinf3);
+		XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
+
+		for (auto& p : vertices)
+		{
+			XMVECTOR P = XMLoadFloat3(&p.Pos);
+
+			vMin = XMVectorMin(vMin, P);
+			vMax = XMVectorMax(vMax, P);
+		}
+
+		XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+		XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+	
+
 	SubmeshGeometry submesh;
 	submesh.IndexCount = indices.size();
 	submesh.StartIndexLocation = 0;
 	submesh.BaseVertexLocation = 0;
-	// submesh.Bounds = bounds;
+    submesh.Bounds = bounds;
 
 	geo->DrawArgs[meshName] = submesh;
 	m_GeometryMesh[meshName] = std::move(geo);
@@ -332,13 +349,32 @@ void MeshReference::BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsComma
 	geo->IndexFormat = DXGI_FORMAT_R32_UINT;
 	geo->IndexBufferByteSize = ibByteSize;
 
+	// Bounds
+	XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+	XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+	XMVECTOR vMin = XMLoadFloat3(&vMinf3);
+	XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
+
+	for (auto& p : CVertex)
+	{
+		XMVECTOR P = XMLoadFloat3(&p.Pos);
+
+		vMin = XMVectorMin(vMin, P);
+		vMax = XMVectorMax(vMax, P);
+
+	}
+
+	BoundingBox bounds;
+	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+
 	SubmeshGeometry submesh;
 	submesh.IndexCount = indices.size();
 	submesh.StartIndexLocation = 0;
 	submesh.BaseVertexLocation = 0;
-
-
+	submesh.Bounds = bounds;
 	geo->DrawArgs[meshName] = submesh;
+
 	m_GeometryMesh[meshName] = std::move(geo);
 }
 

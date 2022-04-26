@@ -42,6 +42,15 @@ public:
 			Normal(nx, ny, nz),
 			TangentU(tx, ty, tz),
 			TexC(u, v) {}
+		Vertex(
+			DirectX::XMFLOAT3 p3,
+			float nx, float ny, float nz,
+			float tx, float ty, float tz,
+			float u, float v) :
+			Position(p3),
+			Normal(nx, ny, nz),
+			TangentU(tx, ty, tz),
+			TexC(u, v) {}
 
 		DirectX::XMFLOAT3 Position;
 		DirectX::XMFLOAT3 Normal;
@@ -75,7 +84,7 @@ public:
 	/// face has m rows and n columns of vertices.
 	///</summary>
 	MeshData CreateBox(float width, float height, float depth, uint32 numSubdivisions);
-
+	MeshData CreateBox(BoundingBox BB, uint32 numSubdivisions);
 	///<summary>
 	/// Creates a sphere centered at the origin with the given radius.  The
 	/// slices and stacks parameters control the degree of tessellation.

@@ -16,9 +16,8 @@ public:
 
 public:
 	void BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
-	//void BuildSkullGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
+	void BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName, BoundingBox BB);
 	void BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName);
-	//void BuildGeometry(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName);
 	void BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName);
 	void BuildSkinnedModelAnimation(std::string meshName, const std::string clipName);
 	void BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves* wave);
