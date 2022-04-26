@@ -24,12 +24,12 @@ int main(void)
 
 	// 하나의 메쉬만 바꾸고 싶을 때
 
-	//LoadFileFbx(".//Ani//Penguin_LOD0skin_idle");
+	//LoadFileFbx(".//Ani//snow_cube");
 	 //폴더안에 모든 메쉬 fbx만 바꾸고 싶을 때
 	 //LoadFolderFbx("..//..//..//Resource//fbx//*.fbx", "..//..//..//Resource//convert");
 
 	// 파일안에 모든 애니메이션 FBX 파일 변환을 원할 때
-	LoadFolderAnimationFbx(".//Ani//Penguin_LOD0skin_peck.fbx", "./Ani/");
+	LoadFolderAnimationFbx(".//Ani//husky_run.fbx", "./Ani/");
 	// 특정 애니메이션 파일 하나만 변환을 원할 때
 	// .FBX는 제외한 이름만 넣어주어야함
 	// LoadFileAnimationFbx("Idle", "./Ani/");

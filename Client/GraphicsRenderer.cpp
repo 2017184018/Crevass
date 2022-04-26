@@ -15,6 +15,7 @@ namespace Graphics
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
 
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
@@ -296,6 +297,25 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
 	//
+	// PSO for BB pass.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC OpaquePsoBBDesc = opaquePsoDesc;
+	OpaquePsoBBDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["standardVS"]->GetBufferPointer()),
+		m_Shaders["standardVS"]->GetBufferSize()
+	};
+	OpaquePsoBBDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["opaquePS"]->GetBufferPointer()),
+		m_Shaders["opaquePS"]->GetBufferSize()
+	};
+	OpaquePsoBBDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&OpaquePsoBBDesc, IID_PPV_ARGS(&g_BB)));
+
+
+	//
 	// PSO for skinned pass.
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC skinnedOpaquePsoDesc = opaquePsoDesc;
@@ -304,12 +324,13 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["skinnedVS"]->GetBufferPointer()),
 		m_Shaders["skinnedVS"]->GetBufferSize()
-	};
+	}; 
 	skinnedOpaquePsoDesc.PS =
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["opaquePS"]->GetBufferPointer()),
 		m_Shaders["opaquePS"]->GetBufferSize()
 	};
+
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedOpaquePsoDesc, IID_PPV_ARGS(&g_SkinnedPSO)));
 
 	////
