@@ -72,8 +72,9 @@ private:
 	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
 	bool IsFall = false;		//빠졌는지
-
+	bool BlockIn = false;		//깨지는 블록에 닿았을때 한번만 밟게
 	UINT BlurCnt = 0;
+
 public:
 	template <class TObject>
 	TObject* CreateObject(RenderLayer layer, std::string type, std::string instID)

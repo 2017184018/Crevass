@@ -2,28 +2,27 @@
 #include "pch.h"
 #include "Global.h"
 
-void Update(vector<Player>& player)
+void Update(vector<Player>& player, float deltaT)
 {
+	float speed = 100 * deltaT;
 	for (int i = 0; i < numOfCls; ++i)
 	{
-		if(player[i].GetKeyW())
+		if (player[i].GetKeyW())
 		{
-			player[i].m_pos.y += 1.0f;
-			printf("%f\n", player[i].m_pos.y);
+			player[i].m_pos.y += speed;
 		}
 		if (player[i].GetKeyS())
 		{
-			player[i].m_pos.y -= 1.0f;
+			player[i].m_pos.y -= speed;
 		}
 		if (player[i].GetKeyA())
 		{
-			player[i].m_pos.x -= 1.0f;
+			player[i].m_pos.x -= speed;
 		}
 		if (player[i].GetKeyD())
 		{
-			player[i].m_pos.x += 1.0f;
+			player[i].m_pos.x += speed;
 		}
-
 	}
 }
 
@@ -52,11 +51,14 @@ void ProcessClients()
 	using FpFloatMilliseconds = duration<float, milliseconds::period>;
 	auto prev_Time = chrono::high_resolution_clock::now();
 	float elapsedTime{};
-
+	float deltaT;
 	while (true)
 	{
 		auto cur_Time = chrono::high_resolution_clock::now();
 		elapsedTime += FpFloatMilliseconds(cur_Time - prev_Time).count();
+
+		deltaT = FpFloatMilliseconds(cur_Time - prev_Time).count();
+
 		prev_Time = cur_Time;
 
 		if (elapsedTime > 17)
@@ -93,11 +95,11 @@ void ProcessClients()
 						break;
 					}
 				}
-				Update(phyPlayers);
+				Update(phyPlayers, deltaT);
 
 				printf("%f\n", phyPlayers[0].m_pos.y);
 
-				
+
 				for (int i = 0; i < numOfCls; ++i)
 				{
 					players[i].id = i;
@@ -112,5 +114,5 @@ void ProcessClients()
 
 		}
 	}
-	
+
 }

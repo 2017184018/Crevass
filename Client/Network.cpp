@@ -55,6 +55,7 @@ void Network::Recv()
 	}
 	else
 		ProcessData(buf, retval);
+
 }
 
 void Network::Send(char buf)
@@ -107,7 +108,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		m_pGameInfo->m_IsConnect = true;
 		m_pGameInfo->m_ClientID = static_cast<int>(packet.id);
 		m_pGameInfo->m_ClientsNum += 1;
-		m_pGameInfo->CreatePlayerInfo(packet.id,true);
+		m_pGameInfo->CreatePlayerInfo(packet.id, true);
 
 		break;
 	}
@@ -162,7 +163,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		//	}
 		//}
 
-		printf("x=%f\n",packet.players[1].pos.x);
+		printf("x=%f\n", packet.players[1].pos.x);
 		break;
 	}
 	case SC_POS:

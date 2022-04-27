@@ -50,9 +50,9 @@ void CREVASS::Startup(void)
 	//m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin", m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get()->DrawArgs["Penguin_LOD0skin"].Bounds);
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Idle");
-//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Walk");
+	//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Jump");
-//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Peck");
+	//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Peck");
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
@@ -120,6 +120,7 @@ bool CREVASS::BlockCheck(int idx) {
 }
 
 BOOL B = true;
+int tmp = -1;
 
 void CREVASS::Update(float deltaT)
 {
@@ -253,9 +254,17 @@ void CREVASS::Update(float deltaT)
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
-				if (FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					IsShake[5 * i + j] = true;
-					IsDown[5 * i + j] = true;
+				if (tmp==-1 && FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+					tmp = 5 * i + j;
+					if (!BlockIn) {
+						IsShake[5 * i + j] = true;
+						IsDown[5 * i + j] = true;
+						BlockIn = true;
+					}
+				}
+				if (tmp != -1 && !(FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds))) {
+					BlockIn = false;
+					tmp = -1;
 				}
 			}
 			else {
@@ -392,7 +401,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(270);
-		
+
 		g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
 	}
 
@@ -465,7 +474,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		{
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 
-		}			
+		}
 		g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 
 	}
@@ -533,7 +542,7 @@ void CREVASS::BuildScene()
 				instancingObj->m_World._11 = SCALE;
 				instancingObj->m_World._22 = SCALE;
 				instancingObj->m_World._33 = SCALE;
-				
+
 				instancingObj->m_World._41 = distance * i;
 				instancingObj->m_World._43 = distance * j;
 				instancingObj->m_TexTransform = MathHelper::Identity4x4();
@@ -555,7 +564,7 @@ void CREVASS::BuildScene()
 				instancingObj->m_World._11 = SCALE;
 				instancingObj->m_World._22 = SCALE;
 				instancingObj->m_World._33 = SCALE;
-				
+
 				instancingObj->m_World._41 = distance * i;
 				instancingObj->m_World._43 = distance * j;
 				instancingObj->m_TexTransform = MathHelper::Identity4x4();
@@ -564,7 +573,7 @@ void CREVASS::BuildScene()
 
 			}
 
-			
+
 
 			GameObject* top = CreateObject<GameObject>(RenderLayer::ID_OPAQUE, "snow_top", "snow_top" + std::to_string(5 * i + j));
 			top->Geo = m_MeshRef->m_GeometryMesh["snow_top"].get();
