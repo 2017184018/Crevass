@@ -18,28 +18,10 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
-	// F1: Auto / F2: Manual
-	//if (InputHandler::IsKeyUp(VK_F1))
-	//{
-	//	Service::GetApp()->Notify(EVENT_LOBBY_AUTOMATCH_REQUEST);
-	//}
-	//if (InputHandler::IsKeyUp(VK_F2))
-	//{
-	//	Service::GetApp()->Notify(EVENT_LOBBY_MANUALMATCH_REQUEST);
-	//}
-
-	//// F3: 방만들기 / F4: 방참여
-	//if (InputHandler::IsKeyUp(VK_F3))
-	//{
-	//	Service::GetApp()->Notify(EVENT_LOBBY_MANUALMATCH_ROOM_MAKE);
-	//}
-	//if (InputHandler::IsKeyUp(VK_F4))
-	//{
-	//	int tempEnterRoomNumber = 0;
-	//	cout << "Input Room-Number: ";
-	//	cin >> tempEnterRoomNumber;
-	//	Service::GetApp()->Notify(EVENT_LOBBY_MANUALMATCH_ROOM_JOIN, 1, tempEnterRoomNumber);
-	//}
+	if (InputHandler::IsKeyUp(VK_F1))
+	{
+		SceneManager::GetApp()->ChangeScene();
+	}
 
 
 }

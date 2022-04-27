@@ -32,7 +32,7 @@ namespace Core
 	//extern ID3D12Resource* BackBuffer;
 	//extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 
-	extern MainFramework* g_pFramework;
+	//extern MainFramework* g_pFramework;
 
 	extern bool Inactive;
 }

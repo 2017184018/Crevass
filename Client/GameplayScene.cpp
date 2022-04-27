@@ -197,6 +197,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//FindObject<GameObject>("huskyBB", "husky0BB")->SetPosition(FindObject<GameObject>("husky", "husky0")->GetPosition());
+
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
@@ -222,8 +223,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 	}
-
-
 }
 
 void GameplayScene::Render()
