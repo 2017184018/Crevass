@@ -4,16 +4,16 @@
 
 void Update(vector<Player>& player, float deltaT)
 {
-	float speed = 100 * deltaT;
+	float speed = 1.0f; 30 * deltaT;
 	for (int i = 0; i < numOfCls; ++i)
 	{
 		if (player[i].GetKeyW())
 		{
-			player[i].m_pos.y += speed;
+			player[i].m_pos.z += speed;
 		}
 		if (player[i].GetKeyS())
 		{
-			player[i].m_pos.y -= speed;
+			player[i].m_pos.z -= speed;
 		}
 		if (player[i].GetKeyA())
 		{
@@ -33,12 +33,10 @@ void ProcessClients()
 	Pro_Player players[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} };
 	player_lock.unlock();
 
-
 	std::cout << "make Physics thread!" << std::endl;
 	std::queue <Message> phyMsgQueue;
 	Message phyMsg;
 	DirectX::XMFLOAT3 temp;
-
 
 	for (int i = 0; i < numOfCls; ++i)
 	{
@@ -97,9 +95,6 @@ void ProcessClients()
 				}
 				Update(phyPlayers, deltaT);
 
-				printf("%f\n", phyPlayers[0].m_pos.y);
-
-
 				for (int i = 0; i < numOfCls; ++i)
 				{
 					players[i].id = i;
@@ -107,12 +102,8 @@ void ProcessClients()
 					players[i].pos.y = phyPlayers[i].m_pos.y;
 					players[i].pos.z = phyPlayers[i].m_pos.z;
 				}
-
-
 				SendPos(*players);
 			}
-
 		}
 	}
-
 }

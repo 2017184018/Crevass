@@ -55,11 +55,12 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 
 	MSG msg = {};
 
+	g_pFramework = new MainFramework;
+	g_pFramework->Initialize();
+
 	g_Core->InitializeCore(app);
 	g_GameTimer->Reset();
 
-	g_pFramework = new MainFramework;
-	g_pFramework->Initialize();
 
 	while (msg.message != WM_QUIT)
 	{

@@ -1,6 +1,12 @@
 #include "Network.h"
 #include "GameInfo.h"
 #include "PlayerInfo.h"
+#include "CREVASS.h"
+
+namespace Core
+{
+	extern std::map<int, Character*> m_Users;
+}
 
 void Network::InitSocket()
 {
@@ -107,7 +113,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		//Info::GetInstance()->CreatePlayerInfo(packet.id, true);
 		m_pGameInfo->m_IsConnect = true;
 		m_pGameInfo->m_ClientID = static_cast<int>(packet.id);
-		m_pGameInfo->m_ClientsNum += 1;
+		//	m_pGameInfo->m_ClientsNum += 1;
 		m_pGameInfo->CreatePlayerInfo(packet.id, true);
 
 		break;
@@ -162,14 +168,15 @@ void Network::ProcessPacket(char* packet_buffer)
 		//		}
 		//	}
 		//}
-
-		printf("x=%f\n", packet.players[1].pos.x);
+		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
+		printf("x=%f, y=%f, z=%f\n", packet.players[0].pos.x, packet.players[0].pos.y, packet.players[0].pos.z);
 		break;
 	}
 	case SC_POS:
 	{
 		sc_packet_pos packet;
 		memcpy(&packet, ptr, sizeof(packet));
+		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
 		//for (int i = 0; i < 3; ++i)
 		//{
 		//	if (packet.players[i].id != -1)
@@ -236,4 +243,9 @@ void Network::ErrorDisplay(const char* msg)
 		(LPWSTR)&lpMsgBuf, 0, NULL);
 
 	std::cout << "Error! - " << msg << "descripton: " << lpMsgBuf << std::endl;
+}
+
+DirectX::XMFLOAT3 Network::GetPlayerPos()
+{
+	return PlayerPos;
 }

@@ -26,7 +26,8 @@ uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
 
 void CREVASS::Startup(void)
 {
-
+	g_pFramework->m_pNetwork->Send(CS_READY);
+	g_pFramework->m_pNetwork->Recv();
 	m_Camera = new Camera;
 	m_Camera->SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
 	m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 1000.0f);
@@ -74,7 +75,15 @@ void CREVASS::Startup(void)
 	}
 
 	m_PlayerID = 0;
-	m_Users[m_PlayerID] = FindObject<Character>("husky", "husky");
+	//m_Users[m_PlayerID] = FindObject<Character>("husky", "husky0");
+
+	int ClientNum = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum;
+	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
+//	if (ClientNum == 0) ClientNum = 1;
+	for (int i = 0; i < ClientNum; ++i) {
+		m_Users[i] = FindObject<Character>("husky", "husky" + std::to_string(i));
+
+	}
 
 	//// Player type, id 등등 세팅
 	m_Users[m_PlayerID]->SetCamera(m_Camera, CameraType::Third);
@@ -125,7 +134,7 @@ int tmp = -1;
 void CREVASS::Update(float deltaT)
 {
 	g_pFramework->m_pNetwork->Recv();
-
+	m_Users[m_PlayerID]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos());
 
 	//이거 풀면 플레이어 3인칭 기준 카메라 적용
 	float speed = 100 * deltaT;
@@ -254,7 +263,7 @@ void CREVASS::Update(float deltaT)
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
-				if (tmp==-1 && FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+				if (tmp == -1 && FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
 					tmp = 5 * i + j;
 					if (!BlockIn) {
 						IsShake[5 * i + j] = true;
@@ -386,7 +395,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 
 	if (GetAsyncKeyState('W') & 0x8000) {
-		m_Users[m_PlayerID]->Move(DIR_FORWARD, speed, true);
+		///	m_Users[m_PlayerID]->Move(DIR_FORWARD, speed, true);
 		if (!m_Users[m_PlayerID]->bJump) {
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		}
@@ -397,7 +406,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 
 	if (GetAsyncKeyState('A') & 0x8000) {
-		m_Users[m_PlayerID]->Move(DIR_LEFT, speed, true);
+		//	m_Users[m_PlayerID]->Move(DIR_LEFT, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(270);
@@ -406,7 +415,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	}
 
 	if (GetAsyncKeyState('S') & 0x8000) {
-		m_Users[m_PlayerID]->Move(DIR_BACKWARD, speed, true);
+		//	m_Users[m_PlayerID]->Move(DIR_BACKWARD, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(180);
@@ -415,7 +424,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	}
 
 	if (GetAsyncKeyState('D') & 0x8000) {
-		m_Users[m_PlayerID]->Move(DIR_RIGHT, speed, true);
+		//	m_Users[m_PlayerID]->Move(DIR_RIGHT, speed, true);
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		m_Users[m_PlayerID]->SetDir(90);
@@ -676,7 +685,7 @@ void CREVASS::BuildScene()
 	{//79
 		/*Characters*/
 		// student
-		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "husky", "husky");
+		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "husky", "husky0");
 		character1->m_TexTransform = MathHelper::Identity4x4();
 		character1->m_MaterialIndex = 4;
 		character1->Geo = m_MeshRef->m_GeometryMesh["husky"].get();
@@ -689,7 +698,22 @@ void CREVASS::BuildScene()
 		character1->m_Bounds = character1->Geo->DrawArgs["husky"].Bounds;
 
 		character1->Scale(20, 20, 20);
-		character1->SetPosition(250, 30, 0);
+		character1->SetPosition(200, 30, 0);
+
+		Character* character2 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "husky", "husky1");
+		character2->m_TexTransform = MathHelper::Identity4x4();
+		character2->m_MaterialIndex = 4;
+		character2->Geo = m_MeshRef->m_GeometryMesh["husky"].get();
+		character2->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		character2->IndexCount = character2->Geo->DrawArgs["husky"].IndexCount;
+		character2->StartIndexLocation = character2->Geo->DrawArgs["husky"].StartIndexLocation;
+		character2->BaseVertexLocation = character2->Geo->DrawArgs["husky"].BaseVertexLocation;
+		character2->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
+		character2->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["husky"].get();
+		character2->m_Bounds = character2->Geo->DrawArgs["husky"].Bounds;
+
+		character2->Scale(20, 20, 20);
+		character2->SetPosition(300, 30, 0);
 		//디버그
 	/*	Character* character1BB = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skinBB", "Penguin_LOD0skin0BB");
 		character1BB->m_TexTransform = MathHelper::Identity4x4();

@@ -25,7 +25,7 @@ public:
 	PlayerState m_KeyState;
 	void SetState();
 	void UpdateBoneTransforms();
-	
+
 public:
 	class AnimData
 	{
@@ -52,8 +52,9 @@ public:
 	void SetParts(CharacterParts* parts);
 	void SetDir(float angle);
 
-	
-		virtual void SetPosition(float posX, float posY, float posZ);
+
+	virtual void SetPosition(float posX, float posY, float posZ);
+	virtual void SetPosition(DirectX::XMFLOAT3 xmPos);
 
 	virtual void SetRight(const DirectX::XMFLOAT3& Right);
 	virtual void SetUp(const DirectX::XMFLOAT3& Up);
@@ -88,5 +89,5 @@ private:
 	float m_Yaw;
 	float m_Roll;
 
-	float m_CurrentAngle=0.0f;
+	float m_CurrentAngle = 0.0f;
 };

@@ -32,6 +32,7 @@ namespace Core
 	extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 
 	extern MainFramework* g_pFramework;
+
 }
 
 class MeshReference;
@@ -127,7 +128,7 @@ public:
 	std::vector<GameObject*>	m_AllRItems;
 	std::vector<GameObject*>	m_RitemLayer[static_cast<int>(RenderLayer::ID_COUNT)];
 	UINT						m_InstanceCount = 0;
-	
+
 private:
 	/* ID: battleID */
 	std::map<int, Character*> m_Users;
