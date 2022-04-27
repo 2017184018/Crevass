@@ -21,11 +21,14 @@ public:
 	void SetCamera(CameraType cameraType, Character* owner);
 	CameraType GetCameraType();
 
+	virtual void Initialize();
 	void Update(const DirectX::XMFLOAT3& lookAt, float deltaT);
 
 public:
 	explicit Camera(CameraType cameraType = CameraType::Free);
 	virtual ~Camera();
+
+	void OnResize();
 
 	// Get/Set world camera position.
 	DirectX::XMVECTOR GetPosition()const;

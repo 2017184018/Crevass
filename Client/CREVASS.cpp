@@ -28,6 +28,7 @@ void CREVASS::Startup(void)
 {
 
 	m_Camera = new Camera;
+
 	m_Camera->SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
 	m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 1000.0f);
 
@@ -59,20 +60,20 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
-	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
+	//mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
-	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
+//m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
 
 	m_MaterialRef->BuildMaterials();
 
 	// Build RenderItem
-	//BuildScene();
+	BuildCharacters();
 
 
 	SceneManager::GetApp()->InitializeScenes();
 	SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 
-	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
+	//GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = TOTAL_USER_COUNT;
 	GraphicsContext::GetApp()->materialCount = m_MaterialRef->m_Materials.size();
@@ -396,8 +397,9 @@ void CREVASS::RenderScene(void)
 //}
 
 
-void CREVASS::BuildScene()
+void CREVASS::BuildCharacters()
 {
+	AppContext->CreateCharacter("husky", "husky0", "None", 0);
 
 
 

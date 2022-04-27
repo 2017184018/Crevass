@@ -154,9 +154,9 @@ void Character::UpdateBoneTransforms()
 Character::Character( std::string type, std::string id) :
 	GameObject(type, id),
 	m_PlayerController(nullptr),
+	m_MyCamera(nullptr),
 	m_PlayerState(PlayerState::STATE_IDLE),
-	m_KeyState(PlayerState::STATE_IDLE),
-	m_MyCamera(nullptr)
+	m_KeyState(PlayerState::STATE_IDLE)
 {
 	m_Position = { 0,0,0 };
 	m_Right = { 1,0,0 };
@@ -238,6 +238,7 @@ void Character::SetCamera(CameraType cameraType)
 
 void Character::SetController()
 {
+	m_PlayerController = make_unique<PlayerController>(this);
 }
 
 void Character::SetParts(CharacterParts* parts)

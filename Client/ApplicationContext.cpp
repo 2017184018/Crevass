@@ -7,11 +7,9 @@
 
 #include <random>
 
-random_device rd;
-default_random_engine dre(rd());
-uniform_int_distribution<> uid{ 0,8 }; //눈사람 위치
-uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
-uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
+random_device rd1;
+default_random_engine dre2(rd1());
+uniform_int_distribution<> uid4{ 0,3 }; //블록 덮개 회전
 
 #define SCALE 0.5
 
@@ -54,9 +52,10 @@ void ApplicationContext::CreateSkycube(std::string skycubeName, std::string inst
 	skyRitem->BaseVertexLocation = skyRitem->Geo->DrawArgs["sphere"].BaseVertexLocation;
 	skyRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	skyRitem->m_MaterialIndex = 0;
-
+	//skyRitem->m_MaterialIndex = MeshReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
+	skyRitem->Scale(3000, 3000, 3000);
 }
 
 bool BlockCheck(int idx) {
@@ -130,7 +129,7 @@ void ApplicationContext::CreateBlocks()
 			top->m_World._11 = SCALE;
 			top->m_World._22 = SCALE;
 			top->m_World._33 = SCALE;
-			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid2(dre)));
+			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			top->m_World._41 = distance * i;
 			top->m_World._42 = 0;
 			top->m_World._43 = distance * j;
@@ -159,6 +158,51 @@ void ApplicationContext::CreateBlocks()
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		}
 	}
+}
+
+void ApplicationContext::CreateSnowmans()
+{
+	random_device rd;
+	default_random_engine dre(rd());
+	uniform_int_distribution<> uid{ 0,8 }; //눈사람 위치
+	uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
+	uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
+
+	int RandomLocation[2] = { -1,-1 };
+for (int i = 0; i < 2; ++i) {		//76, 77
+	GameObject* instancingObj = CreateObject<GameObject>("snowman", "snowman" + std::to_string(i));
+	instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["snowman"].get();
+	instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
+	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
+	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
+	instancingObj->m_MaterialIndex = 1;
+	instancingObj->m_World = MathHelper::Identity4x4();
+	instancingObj->m_World._11 = SCALE - 0.2f;
+	instancingObj->m_World._22 = SCALE - 0.2f;
+	instancingObj->m_World._33 = SCALE - 0.2f;
+	RandomLocation[i] = uid(dre);
+	while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
+		RandomLocation[i] = uid(dre);
+	}
+	SnowmanIndex[i] = SnowmanLocaArray[RandomLocation[i]];
+	if (SnowmanIndex[i] % 4) {
+		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
+		int distance = SCALE * 200;
+		instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance - 15.0f;
+		instancingObj->m_World._42 = 10;
+		instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance + 15.0f;
+	}
+	else {
+		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
+		int distance = SCALE * 200;
+		instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance + 15.0f;
+		instancingObj->m_World._42 = 10;
+		instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance; +15.0f;
+	}
+	instancingObj->m_TexTransform = MathHelper::Identity4x4();
+}
+
 }
 
 void ApplicationContext::CreateWave()

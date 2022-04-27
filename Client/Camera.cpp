@@ -35,6 +35,23 @@ CameraType Camera::GetCameraType()
 	return m_CameraType;
 }
 
+void Camera::Initialize()
+{
+	m_Owner = nullptr;
+
+	mPosition = { 0.0f, 0.0f, 0.0f };
+	mRight = { 1.0f, 0.0f, 0.0f };
+	mUp = { 0.0f, 1.0f, 0.0f };
+	mLook = { 0.0f, 0.0f, 1.0f };
+
+	mTarget = { 0.f,0.f,0.f };
+	mOffset = { 0.f,0.f,0.f };
+	mRotation = { 0.f,0.f,0.f,0.f };
+	mTimeLag = 0.f;
+
+	mViewDirty = true;
+}
+
 void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 {
 	switch (m_CameraType)
@@ -98,11 +115,17 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 Camera::Camera(CameraType cameraType) :
 	m_CameraType(cameraType)
 {
-	SetLens(0.25f * MathHelper::Pi, 1.0f, 1.0f, 1000.0f);
+	Initialize();
+	OnResize();
 }
 
 Camera::~Camera()
 {
+}
+
+void Camera::OnResize()
+{
+	SetLens(0.25f * MathHelper::Pi, 1.0f, 1.0f, 1000.0f);
 }
 
 XMVECTOR Camera::GetPosition()const

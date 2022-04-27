@@ -49,7 +49,7 @@ public:
 
 
 private:
-	void BuildScene();
+	void BuildCharacters();
 
 	//bool IsShake[25];		//흔들리는 상태인지
 	//bool IsRight[25];		//오른쪽으로 흔들리는지
@@ -63,7 +63,7 @@ private:
 
 	//UINT SnowmanIndex[2];
 
-	std::unique_ptr<Waves> mWaves;
+	//std::unique_ptr<Waves> mWaves;
 
 	//UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
