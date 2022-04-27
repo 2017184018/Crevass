@@ -3,6 +3,10 @@
 #include "GameObject.h"
 #include "ObjectInfo.h"
 
+namespace Core {
+	extern GameObject* wave;
+}
+
 class Character;
 class ApplicationContext : public TemplateSingleton<ApplicationContext>
 {
@@ -50,7 +54,7 @@ public:
 
 public:
 	std::string FindAnimName(int animCode) const;
-	
+
 	void CreateSkycube(std::string skycubeName, std::string instID, std::string matName);
 	void CreateBlocks();
 	void CreateSnowmans();

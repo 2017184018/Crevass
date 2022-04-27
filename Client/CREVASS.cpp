@@ -60,9 +60,10 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
-	//mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
-//m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
+	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
+
+	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
 
 	m_MaterialRef->BuildMaterials();
 
@@ -73,7 +74,7 @@ void CREVASS::Startup(void)
 	SceneManager::GetApp()->InitializeScenes();
 	SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 
-	//GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
+	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = TOTAL_USER_COUNT;
 	GraphicsContext::GetApp()->materialCount = m_MaterialRef->m_Materials.size();

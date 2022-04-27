@@ -28,13 +28,14 @@ void GameplayScene::Initialize()
 	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
 	AppContext->CreateBlocks();
 	AppContext->CreateSnowmans();
+	AppContext->CreateWave();
+
 	for (int i = 0; i < 25; ++i) {
 		IsShake[i] = false;
 		IsRight[i] = true;
 		ShakeCnt[i] = 0;
 		DestructionCnt[i] = 0;
 		IsDown[i] = true;
-
 	}
 }
 
@@ -163,11 +164,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 	
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
-	//int i = MathHelper::Rand(4, mWaves->RowCount() - 5);
-	//int j = MathHelper::Rand(4, mWaves->ColumnCount() - 5);
+	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);
+	int j = MathHelper::Rand(4, Core::mWaves->ColumnCount() - 5);
 
 	float r = MathHelper::RandF(0.2f, 0.5f);
-	//mWaves->Disturb(i, j, r);
+	Core::mWaves->Disturb(i, j, r);
 	if (IsFall) {
 		static float time = 0;
 		time += fDeltaTime;
@@ -178,13 +179,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 			BlurCnt = 0;
 		}
 		else if (time < 0.03) {
-			//mWaves->Disturb(50, 57, 2);
+			Core::mWaves->Disturb(50, 57, 2);
 		}
 	}
 
 
 	// Update the wave simulation.
-//	mWaves->Update(fDeltaTime);
+	Core::mWaves->Update(fDeltaTime);
 
 	//블록
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);
@@ -192,7 +193,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
-	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 
 	//meterial
@@ -202,7 +203,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
-	//GraphicsContext::GetApp()->UpdateWave(mWaves.get(), wave);
+	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//FindObject<GameObject>("huskyBB", "husky0BB")->SetPosition(FindObject<GameObject>("husky", "husky0")->GetPosition());
 
@@ -233,7 +234,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
-	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 
 	//디버그 주석
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());

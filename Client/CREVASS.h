@@ -27,6 +27,7 @@ namespace Core
 	extern int g_DisplayWidth;
 	extern int g_DisplayHeight;
 
+	extern std::unique_ptr<Waves> mWaves;
 	//extern std::unique_ptr<BlurFilter> mBlurFilter;
 	//extern ID3D12Resource* BackBuffer;
 	//extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;

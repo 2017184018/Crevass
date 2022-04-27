@@ -42,6 +42,9 @@ namespace Core
 
 	ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 	ID3D12Resource* BackBuffer;
+
+	std::unique_ptr<Waves> mWaves;
+	GameObject* wave;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)

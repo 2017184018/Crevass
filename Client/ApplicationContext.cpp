@@ -7,6 +7,8 @@
 
 #include <random>
 
+
+
 random_device rd1;
 default_random_engine dre2(rd1());
 uniform_int_distribution<> uid4{ 0,3 }; //블록 덮개 회전
@@ -225,7 +227,7 @@ void ApplicationContext::CreateWave()
 	Sea->m_World._43 = SCALE * 400;
 
 	Sea->m_TexTransform = MathHelper::Identity4x4();
-	//wave = Sea;
+	Core::wave = Sea;
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)

@@ -15,7 +15,7 @@ void GraphicsContext::Initialize()
 	PassCB = std::make_unique<UploadBuffer<ShaderResource::PassConstants>>(Core::g_Device.Get(), passCount, true);
 	//InstanceBuffer = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), InstanceCount, false);
 	MaterialBuffer = std::make_unique<UploadBuffer<ShaderResource::MaterialData>>(Core::g_Device.Get(), materialCount, false);
-	//WavesVB = std::make_unique<UploadBuffer<Vertex>>(Core::g_Device.Get(), VertexCount, false);
+	WavesVB = std::make_unique<UploadBuffer<Vertex>>(Core::g_Device.Get(), VertexCount, false);
 }
 
 void GraphicsContext::Release()

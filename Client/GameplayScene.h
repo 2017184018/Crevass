@@ -26,6 +26,8 @@ namespace Core
 	extern ID3D12Resource* BackBuffer;
 	extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 
+	extern std::unique_ptr<Waves> mWaves;
+	extern GameObject* wave;
 	//extern MainFramework* g_pFramework;
 }
 
@@ -54,7 +56,6 @@ public:
 
 	bool IsDown[25];		//내려가는 중인지
 
-	//std::unique_ptr<Waves> mWaves;
 
 	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
@@ -66,6 +67,5 @@ public:
 
 	bool BlockCheck(int);		//부숴지는 블록인지 아닌지 체크
 
-	GameObject* wave;
 };
 
