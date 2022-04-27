@@ -1,7 +1,7 @@
 #pragma once
 #include "Player.h"
-
-struct Message 
+#include <DirectXMath.h>
+struct Message
 {
 	char id;
 	char type;
@@ -31,7 +31,7 @@ std::vector <Player> phyPlayers;
 
 // 플레이어들의 초기 위치
 
-Pro_Player g_initialPos[3] = { {0, 30, 60}, {1, 460, 60}, {2, 200, 450} };
+Pro_Player g_initialPos[3] = { {0,DirectX::XMFLOAT3(200.0f,30.0f,0.0f)},{1,DirectX::XMFLOAT3(300.0f,30.0f,0.0f)},{2,DirectX::XMFLOAT3(200.0f,200.0f,0.0f)} };
 
 PlayerReadyInfo g_playerReadyInfo[3]{ {-1, 0}, {-1, 0}, {-1, 0} };
 

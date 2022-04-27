@@ -1,10 +1,11 @@
 #pragma once
-
+#include <DirectXMath.h>
 class Interface
 {
 public:
-	//Interface();
-	//~Interface();
-	//void InitPlayer();
+	void SetPos(DirectX::XMFLOAT3 pos);
+	DirectX::XMFLOAT3 GetPos();
 
+public:
+	DirectX::XMFLOAT3 m_pos;
 };

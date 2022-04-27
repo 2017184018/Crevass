@@ -126,7 +126,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-	// ÀÔ¹æÃ¼´Â TECTURECUBE
+	// ï¿½Ô¹ï¿½Ã¼ï¿½ï¿½ TECTURECUBE
 	srvDesc.Format = snowcube1024->GetDesc().Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.TextureCube.MostDetailedMip = 0;
@@ -231,15 +231,15 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, m_Textures.size(), 1, 0);		//ÅØ½ºÃÄ ¼ö
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, m_Textures.size(), 1, 0);		//ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
 
-	// ¼º´É ÆÁ : »ç¿ëºóµµ°¡ ³ôÀº°Í¿¡¼­ ³·Àº °ÍÀÇ ¼ø¼­·Î ³ª¿­ÇÑ´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ : ï¿½ï¿½ï¿½óµµ°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	/* Shader Register*/
 	// Space 0
 	// Texture(t1~8), passCB(b0), passCB(b1)
-	// Space 1(±¸Á¶Ã¼)
+	// Space 1(ï¿½ï¿½ï¿½ï¿½Ã¼)
 	// Instancing(t0), Material(t1)
 
 	/* RootParameter slot*/

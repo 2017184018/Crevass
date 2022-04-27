@@ -259,11 +259,20 @@ void Character::SetDir(float angle)
 	m_CurrentAngle = angle;
 }
 
-
-
-
 void Character::SetPosition(float posX, float posY, float posZ)
 {
+	GameObject::SetPosition(posX, posY, posZ);
+	for (auto& p : m_Parts)
+	{
+		p.second->SetPosition(posX, posY, posZ);
+	}
+}
+
+void Character::SetPosition(DirectX::XMFLOAT3 xmPos)
+{
+	float posX = xmPos.x;
+	float posY = xmPos.y;
+	float posZ = xmPos.z;
 	GameObject::SetPosition(posX, posY, posZ);
 	for (auto& p : m_Parts)
 	{

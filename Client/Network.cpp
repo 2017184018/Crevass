@@ -1,6 +1,12 @@
 #include "Network.h"
 #include "GameInfo.h"
 #include "PlayerInfo.h"
+#include "CREVASS.h"
+
+namespace Core
+{
+	extern std::map<int, Character*> m_Users;
+}
 
 void Network::InitSocket()
 {
@@ -55,6 +61,7 @@ void Network::Recv()
 	}
 	else
 		ProcessData(buf, retval);
+
 }
 
 void Network::Send(char buf)
@@ -106,8 +113,8 @@ void Network::ProcessPacket(char* packet_buffer)
 		//Info::GetInstance()->CreatePlayerInfo(packet.id, true);
 		m_pGameInfo->m_IsConnect = true;
 		m_pGameInfo->m_ClientID = static_cast<int>(packet.id);
-		m_pGameInfo->m_ClientsNum += 1;
-		m_pGameInfo->CreatePlayerInfo(packet.id,true);
+		//	m_pGameInfo->m_ClientsNum += 1;
+		m_pGameInfo->CreatePlayerInfo(packet.id, true);
 
 		break;
 	}
@@ -138,10 +145,12 @@ void Network::ProcessPacket(char* packet_buffer)
 
 			}
 		}
+
 		break;
 	}
 	case SC_GAMESTART:
 	{
+
 		std::cout << "game start" << std::endl;
 		sc_packet_game_start packet;
 		memcpy(&packet, ptr, sizeof(packet));
@@ -159,27 +168,37 @@ void Network::ProcessPacket(char* packet_buffer)
 		//		}
 		//	}
 		//}
+		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
+		if (m_pGameInfo->m_ClientID == 0)
+			OtherPlayerPos = packet.players[1].pos;
+		else
+			OtherPlayerPos = packet.players[0].pos;
 		break;
 	}
-	//case SC_POS:
-	//{
-	//	sc_packet_pos packet;
-	//	memcpy(&packet, ptr, sizeof(packet));
-	//	for (int i = 0; i < 3; ++i)
-	//	{
-	//		if (packet.players[i].id != -1)
-	//		{
-	//			if (Info::GetInstance()->m_PlayersInfo[i] != nullptr)
-	//			{
-	//				if (packet.players[i].posX != NULL && packet.players[i].posY != NULL)
-	//				{
-	//					Info::GetInstance()->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players[i].posX, packet.players[i].posY);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	break;
-	//}
+	case SC_POS:
+	{
+		sc_packet_pos packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
+		if (m_pGameInfo->m_ClientID == 0)
+			OtherPlayerPos = packet.players[1].pos;
+		else
+			OtherPlayerPos = packet.players[0].pos;
+		//for (int i = 0; i < 3; ++i)
+		//{
+		//	if (packet.players[i].id != -1)
+		//	{
+		//		if (Info::GetInstance()->m_PlayersInfo[i] != nullptr)
+		//		{
+		//			if (packet.players[i].posX != NULL && packet.players[i].posY != NULL)
+		//			{
+		//				Info::GetInstance()->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players[i].posX, packet.players[i].posY);
+		//			}
+		//		}
+		//	}
+		//}
+		break;
+	}
 	case SC_REMOVE_PLAYER:
 	{
 		std::cout << "remove player" << std::endl;
@@ -231,4 +250,14 @@ void Network::ErrorDisplay(const char* msg)
 		(LPWSTR)&lpMsgBuf, 0, NULL);
 
 	std::cout << "Error! - " << msg << "descripton: " << lpMsgBuf << std::endl;
+}
+
+DirectX::XMFLOAT3 Network::GetPlayerPos()
+{
+	return PlayerPos;
+}
+
+DirectX::XMFLOAT3 Network::GetOhterPlayerPos()
+{
+	return OtherPlayerPos;
 }

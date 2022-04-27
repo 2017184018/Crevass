@@ -9,7 +9,7 @@
 #include "MainFramework.h"
 #include "Network.h"
 
-//#define _WITH_SWAPCHAIN_FULLSCREEN_STATE		//ÀüÃ¼È­¸é
+//#define _WITH_SWAPCHAIN_FULLSCREEN_STATE		//ï¿½ï¿½Ã¼È­ï¿½ï¿½
 
 using namespace Core;
 
@@ -46,6 +46,7 @@ namespace Core
 	std::unique_ptr<Waves> mWaves;
 	GameObject* wave;
 	UINT SnowmanIndex[2];
+	bool Inactive = false;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)
@@ -59,11 +60,12 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 
 	MSG msg = {};
 
+	g_pFramework = new MainFramework;
+	g_pFramework->Initialize();
+
 	g_Core->InitializeCore(app);
 	g_GameTimer->Reset();
 
-	g_pFramework = new MainFramework;
-	g_pFramework->Initialize();
 
 	while (msg.message != WM_QUIT)
 	{
@@ -205,13 +207,15 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
-			mAppPaused = true;
-			g_GameTimer->Stop();
+			Inactive = true;
+			/*mAppPaused = true;
+			g_GameTimer->Stop();*/
 		}
 		else
 		{
-			mAppPaused = false;
-			g_GameTimer->Start();
+			Inactive = false;
+		/*	mAppPaused = false;
+			g_GameTimer->Start();*/
 		}
 		return 0;
 

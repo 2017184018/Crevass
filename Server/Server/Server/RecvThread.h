@@ -58,9 +58,88 @@ void Receiver(char id)
 		// Message 재사용을 위한 초기화
 		ZeroMemory(&msg, sizeof(Message));
 		msg.id = -1;
-
 		switch ((int)buf[0])
 		{
+
+		case CS_PLAYER_UP_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP;
+			msg.isPushed = true;
+			//printf("%d updown\n", msg.id);
+			break;
+		}
+		case CS_PLAYER_DOWN_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN;
+			msg.isPushed = true;
+			//printf("%d downdown\n",msg.id);
+
+			break;
+		}
+		case CS_PLAYER_LEFT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_LEFT;
+			msg.isPushed = true;
+			//printf("%d leftdown\n",msg.id);
+
+			break;
+		}
+		case CS_PLAYER_RIGHT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_RIGHT;
+			msg.isPushed = true;
+			//printf("%d rightdown\n",msg.id);
+			break;
+		}
+		case CS_PLAYER_UP_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP;
+			msg.isPushed = false;
+			//printf("%d upup\n",msg.id);
+
+			break;
+		}
+		case CS_PLAYER_DOWN_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN;
+			msg.isPushed = false;
+			//printf("%d downup\n",msg.id);
+
+			break;
+		}
+		case CS_PLAYER_LEFT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_LEFT;
+			msg.isPushed = false;
+			//printf("%d leftup\n",msg.id);
+
+			break;
+		}
+		case CS_PLAYER_RIGHT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_RIGHT;
+			msg.isPushed = false;
+			break;
+		}
+
+
+
 		case CS_READY:
 		{
 			g_playerReadyInfoLock.lock();

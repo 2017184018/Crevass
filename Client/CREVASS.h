@@ -32,7 +32,9 @@ namespace Core
 	//extern ID3D12Resource* BackBuffer;
 	//extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 
-	//extern MainFramework* g_pFramework;
+	extern MainFramework* g_pFramework;
+
+	extern bool Inactive;
 }
 
 class SceneManager;
@@ -52,15 +54,15 @@ public:
 private:
 	void BuildCharacters();
 
-	//bool IsShake[25];		//Èçµé¸®´Â »óÅÂÀÎÁö
-	//bool IsRight[25];		//¿À¸¥ÂÊÀ¸·Î Èçµé¸®´ÂÁö
-	//UINT ShakeCnt[25];		//ÁÂ¿ì·Î ¸î ¹ø ¿òÁ÷¿´´ÂÁö
-	//UINT DestructionCnt[25];	//¸î ¹ø ÆÄ±« µÆ´ÂÁö
+	//bool IsShake[25];		//ï¿½ï¿½é¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//bool IsRight[25];		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½é¸®ï¿½ï¿½ï¿½ï¿½
+	//UINT ShakeCnt[25];		//ï¿½Â¿ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//UINT DestructionCnt[25];	//ï¿½ï¿½ ï¿½ï¿½ ï¿½Ä±ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½
 	//void shake(GameObject*, int);
 
-	//bool BlockCheck(int);		//ºÎ½¤Áö´Â ºí·ÏÀÎÁö ¾Æ´ÑÁö Ã¼Å©
+	//bool BlockCheck(int);		//ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½ Ã¼Å©
 
-	//bool IsDown[25];		//³»·Á°¡´Â ÁßÀÎÁö
+	//bool IsDown[25];		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	//UINT SnowmanIndex[2];
 
@@ -68,7 +70,7 @@ private:
 
 	//UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
-	//bool IsFall = false;		//ºüÁ³´ÂÁö
+	//bool IsFall = false;		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	//UINT BlurCnt = 0;
 public:

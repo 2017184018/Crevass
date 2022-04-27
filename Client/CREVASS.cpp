@@ -19,14 +19,15 @@ using namespace Core;
 
 //random_device rd;
 //default_random_engine dre(rd());
-//uniform_int_distribution<> uid{ 0,8 }; //´«»ç¶÷ À§Ä¡
-//uniform_int_distribution<> uid2{ 0,3 }; //ºí·Ï µ¤°³ È¸Àü
-//uniform_int_distribution<> uid3{ 0,24 }; //ºí·Ï ¼±ÅÃ
+//uniform_int_distribution<> uid{ 0,8 }; //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+//uniform_int_distribution<> uid2{ 0,3 }; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
+//uniform_int_distribution<> uid3{ 0,24 }; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 
 void CREVASS::Startup(void)
 {
-
+	g_pFramework->m_pNetwork->Send(CS_READY);
+	//g_pFramework->m_pNetwork->Recv();
 	m_Camera = new Camera;
 
 	m_Camera->SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
@@ -120,7 +121,7 @@ void CREVASS::Update(float deltaT)
 
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
 
-	//ÀÌ°Å Ç®¸é ÇÃ·¹ÀÌ¾î 3ÀÎÄª ±âÁØ Ä«¸Þ¶ó Àû¿ë
+	//ï¿½Ì°ï¿½ Ç®ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ 3ï¿½ï¿½Äª ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	//float speed = 100 * deltaT;
 	//if (m_Users[m_PlayerID]) {
@@ -148,9 +149,9 @@ void CREVASS::Update(float deltaT)
 	//OnKeyboardInput(deltaT);
 	//for (int i = 0; i < 25; ++i) {
 	//	if (IsShake[i] || !IsDown[i]) {
-	//		shake(m_RItemsVec[2 * i + 1], i);	//ºí·Ï
-	//		shake(m_RItemsVec[2 * (i + 1)], i);	//µ¤°³
-	//		shake(m_RItemsVec[51 + i], i);	//°íµå¸§
+	//		shake(m_RItemsVec[2 * i + 1], i);	//ï¿½ï¿½ï¿½ï¿½
+	//		shake(m_RItemsVec[2 * (i + 1)], i);	//ï¿½ï¿½ï¿½ï¿½
+	//		shake(m_RItemsVec[51 + i], i);	//ï¿½ï¿½ï¿½å¸§
 	//	}
 	//	if (ShakeCnt[i] == 3) {
 	//		ShakeCnt[i] = 0;
@@ -172,12 +173,12 @@ void CREVASS::Update(float deltaT)
 	//			m_RItemsVec[i + 51]->m_World._33 = 0;
 	//		}
 	//	}
-	//	//ºí·Ï À§Ä¡Á¶Á¤
+	//	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½
 	//	m_RItemsVec[2 * i + 1]->m_World._41 = m_RItemsVec[2 * (i + 1)]->m_World._41 = m_RItemsVec[51 + i]->m_World._41;
 	//	m_RItemsVec[2 * i + 1]->m_World._42 = m_RItemsVec[2 * (i + 1)]->m_World._42 = m_RItemsVec[51 + i]->m_World._42;
 	//	m_RItemsVec[2 * i + 1]->m_World._43 = m_RItemsVec[2 * (i + 1)]->m_World._43 = m_RItemsVec[51 + i]->m_World._43;
 
-	//	//´«»ç¶÷ À§Ä¡Á¶Á¤
+	//	//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½
 	//	if (SnowmanIndex[0] % 4) {
 	//		m_RItemsVec[76]->m_World._41 = m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 15;
 	//	}
@@ -247,13 +248,13 @@ void CREVASS::Update(float deltaT)
 	//	for (int j = 0; j < 5; j++) {
 	//		if (BlockCheck(5 * i + j)) {
 	//			if (FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-	//				cout << 5 * i + j << "ÇÏ°í Ãæµ¹" << endl;
+	//				cout << 5 * i + j << "ï¿½Ï°ï¿½ ï¿½æµ¹" << endl;
 
 	//			}
 	//		}
 	//		else {
 	//			if (FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-	//				cout << 5 * i + j << "ÇÏ°í Ãæµ¹" << endl;
+	//				cout << 5 * i + j << "ï¿½Ï°ï¿½ ï¿½æµ¹" << endl;
 
 	//			}
 	//		}
@@ -404,7 +405,7 @@ void CREVASS::BuildCharacters()
 
 
 
-	//0: Skybox,  1~50: È¦¼ö´Â ºí·Ï, Â¦¼ö´Â µ¤°³, 51~75: °íµå¸§, 76~77: ´«»ç¶÷, 78: ¹Ù´Ù, 79:Æë±Ï
+	//0: Skybox,  1~50: È¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, Â¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, 51~75: ï¿½ï¿½ï¿½å¸§, 76~77: ï¿½ï¿½ï¿½ï¿½ï¿½, 78: ï¿½Ù´ï¿½, 79:ï¿½ï¿½ï¿½
 
 	//layer ,mesh type , id		
 	//GameObject* skyRitem = CreateObject<GameObject>(RenderLayer::ID_SKY, "sky", "sky0");		//0
@@ -585,7 +586,7 @@ void CREVASS::BuildCharacters()
 
 	//	character1->Scale(20, 20, 20);
 	//	character1->SetPosition(250, 30, 0);
-	//	//µð¹ö±×
+	//	//ï¿½ï¿½ï¿½ï¿½ï¿½
 	///*	Character* character1BB = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "huskyBB", "husky0BB");
 	//	character1BB->m_TexTransform = MathHelper::Identity4x4();
 	//	character1BB->m_MaterialIndex = 2;

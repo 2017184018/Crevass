@@ -6,6 +6,7 @@ void SendPacket(void* buff)
 {
 	char* packet = reinterpret_cast<char*> (buff);
 	int packet_size = MAKEWORD(packet[0], packet[1]);
+	//int packet_size = packet[0];
 
 	for (auto& cl : g_clients)
 		int retval = send(cl.second, packet, packet_size, 0);
@@ -38,7 +39,7 @@ void SendReadyPacket(char id, char other, char ready)
 
 void SendGameStartPacket()
 {
-	std::cout << "Send Game STart!" << std::endl;
+	std::cout << "Send Game Start!" << std::endl;
 	// player에 초기화 좌표를 다 넣어줘야한다
 	// 현재 들어온 클라이언트 정보만 넣어서 보내주기.
 	g_initialPosLock.lock();
@@ -61,6 +62,8 @@ void SendGameStartPacket()
 	packet.type = SC_GAMESTART;
 	memcpy(&packet.players, &tempPlayer, sizeof(tempPlayer));
 	SendPacket(&packet);
+
+	printf("client 0 x=%f\n", packet.players[1].pos.x);
 }
 
 void SendGameOverPacket(char id)
