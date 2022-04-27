@@ -69,7 +69,7 @@ void PlayerController::HandleInput(const float deltaT)
 
 		if (GetAsyncKeyState('F') & 0x8000 && m_Owner->bJump == false) {
 			m_Owner->bJump = true;
-			//B = true;
+			m_Owner->is_Inair = true;
 			m_Owner->m_KeyState = Character::PlayerState::STATE_JUMP;
 
 		}

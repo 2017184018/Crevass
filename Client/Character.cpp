@@ -49,8 +49,14 @@ void Character::SetState()
 			m_MapAnimData["Idle"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
+		case STATE_FORWARD:
+			m_PlayerState = STATE_JUMP_TO_FORWARD;
+			m_MapAnimData["Run"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
+	case STATE_JUMP_TO_FORWARD:
 	case STATE_IDLE_TO_FORWARD:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_FORWARD;
@@ -134,6 +140,16 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
+	case Character::STATE_JUMP_TO_FORWARD:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Jump"]->m_Name,
+			m_MapAnimData["Jump"]->m_Time,
+			m_MapAnimData["Run"]->m_Name,
+			m_MapAnimData["Run"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+
 	case Character::STATE_FORWARD_TO_JUMP:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Run"]->m_Name,

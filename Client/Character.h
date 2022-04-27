@@ -19,7 +19,8 @@ public:
 		STATE_FORWARD_TO_IDLE,
 		STATE_FORWARD_TO_JUMP,
 		STATE_JUMP,
-		STATE_JUMP_TO_IDLE
+		STATE_JUMP_TO_IDLE,
+		STATE_JUMP_TO_FORWARD
 	};
 
 	PlayerState m_PlayerState;
@@ -81,6 +82,7 @@ public:
 	std::map<std::string, CharacterParts*> m_Parts;
 	int Dir = DIR_FORWARD;
 	BOOL bJump = false;
+	BOOL is_Inair = false;
 private:
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Right;

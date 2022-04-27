@@ -71,20 +71,19 @@ void GameplayScene::Exit()
 	cout << "===========================================" << endl << endl;
 
 }
-BOOL B = true;
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
 	if (m_Users[m_PlayerID])
 		m_Users[m_PlayerID]->Update(fDeltaTime);
-	float speed = 100 * fDeltaTime;
+	float speed = 200 * fDeltaTime;
 	if (m_Users[m_PlayerID]) {
-		if (m_Users[m_PlayerID]->bJump == true && B == true) {
+		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
 			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
 		}
 
 		if (m_Users[m_PlayerID]->GetPosition().y > 70) {
-			B = false;
+			m_Users[m_PlayerID]->is_Inair = false;
 
 		}
 
