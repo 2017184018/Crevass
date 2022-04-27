@@ -68,10 +68,10 @@ void CREVASS::Startup(void)
 	m_MaterialRef->BuildMaterials();
 
 	// Build RenderItem
-	BuildCharacters();
 
 
 	SceneManager::GetApp()->InitializeScenes();
+	BuildCharacters();
 	SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();

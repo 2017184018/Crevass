@@ -21,6 +21,8 @@ uniform_int_distribution<> uid{ 0,8 }; //눈사람 위치
 uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
 uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
 
+using namespace Core;
+
 void GameplayScene::Initialize()
 {
 	m_SceneController = new GameplayController(this);
@@ -42,16 +44,16 @@ void GameplayScene::Initialize()
 bool GameplayScene::Enter()
 {
 	cout << "GamePlay Scene" << endl;
-	
+
 	m_PlayerID = 0;
 
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>("husky", "husky0");
-	
+
 	//m_Users[m_PlayerID]->m_PlayerRole = ROLE_MASTER;
 	//m_Users[1] = AppContext->FindObject<Character>(CHARACTER_DRUID, CHARACTER_DRUID);
 	//m_Users[2] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
 	//m_Users[3] = AppContext->FindObject<Character>(CHARACTER_SORCERER, CHARACTER_SORCERER);
-	
+
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
 	m_Users[m_PlayerID]->SetController();
 
@@ -124,44 +126,33 @@ void GameplayScene::Update(const float& fDeltaTime)
 				AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
 			}
 		}
-
 		//블록 위치조정
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
 	}
+	//눈사람 위치조정
+	if (SnowmanIndex[0] % 4) {
+		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 15;
+	}
+	else {
+		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 15;
+	}
+	AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 10;
+	AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 15;
 
-		//눈사람 위치조정
-		//int RandomLocation[2] = { -1,-1 };
-		//for (int i = 0; i < 2; i++) {
-		//	RandomLocation[i] = uid(dre);
-		//	while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
-		//		RandomLocation[i] = uid(dre);
-		//	}
-		//
-		//	SnowmanIndex[i] = SnowmanLocaArray[RandomLocation[i]];
-		//	cout << "하이4" << endl;
-		//	if (SnowmanIndex[0] % 4) {
-		//		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 15;
-		//	}
-		//	else {
-		//		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 15;
-		//	}
-		//	AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 10;
-		//	AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 15;
+	if (SnowmanIndex[1] % 4) {
+		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 15;
+	}
+	else {
+		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 15;
+	}
 
-		//	if (SnowmanIndex[1] % 4) {
-		//		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 15;
-		//	}
-		//	else {
-		//		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 15;
-		//	}
+	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 10;
+	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 15;
 
-		//	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 10;
-		//	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 15;
-		//}
-		
-	
+
+
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
 	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);
@@ -197,34 +188,42 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 
 	//meterial
-	
+
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
-	
+
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//FindObject<GameObject>("huskyBB", "husky0BB")->SetPosition(FindObject<GameObject>("husky", "husky0")->GetPosition());
-
-	/*for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
-				if (AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					cout << 5 * i + j << "하고 충돌" << endl;
-
+				if (tmp==-1 && AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+					tmp = 5 * i + j;
+					if (!BlockIn) {
+						IsShake[5 * i + j] = true;
+						IsDown[5 * i + j] = true;
+						BlockIn = true;
+					}
+				}
+				 if (tmp!=-1 && !AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+					BlockIn = false;
+					tmp = -1;
 				}
 			}
 			else {
 				if (AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					cout << 5 * i + j << "하고 충돌" << endl;
-
+					IsShake[5 * i + j] = true;
+					IsDown[5 * i + j] = true;
+					cout << 5 * i + j << endl;
 				}
 			}
 		}
-	}*/
+	}
 
-	
+
 }
 
 void GameplayScene::Render()

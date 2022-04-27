@@ -5,6 +5,7 @@
 
 namespace Core {
 	extern GameObject* wave;
+	extern UINT SnowmanIndex[2];
 }
 
 class Character;
@@ -75,7 +76,6 @@ public:
 public:
 	//void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);
 
-	UINT SnowmanIndex[2];
 	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;

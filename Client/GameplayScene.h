@@ -28,6 +28,7 @@ namespace Core
 
 	extern std::unique_ptr<Waves> mWaves;
 	extern GameObject* wave;
+	extern UINT SnowmanIndex[2];
 	//extern MainFramework* g_pFramework;
 }
 
@@ -52,8 +53,6 @@ public:
 	UINT ShakeCnt[25];		//좌우로 몇 번 움직였는지
 	UINT DestructionCnt[25];	//몇 번 파괴 됐는지
 
-	UINT SnowmanIndex[2];
-
 	bool IsDown[25];		//내려가는 중인지
 
 
@@ -66,6 +65,9 @@ public:
 	void shake(GameObject* object, int index);
 
 	bool BlockCheck(int);		//부숴지는 블록인지 아닌지 체크
+
+	bool BlockIn = false;		//블록 한번만 밟게
+	int tmp = -1;
 
 };
 

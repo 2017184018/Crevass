@@ -11,7 +11,10 @@
 
 random_device rd1;
 default_random_engine dre2(rd1());
+uniform_int_distribution<> uid5{ 0,8 }; //눈사람 위치
 uniform_int_distribution<> uid4{ 0,3 }; //블록 덮개 회전
+
+using namespace Core;
 
 #define SCALE 0.5
 
@@ -88,7 +91,7 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->m_World._22 = SCALE;
 				instancingObj->m_World._33 = SCALE;
 
-				instancingObj->m_World._41 = distance * i;
+				instancingObj->m_World._41 = distance* i;
 				instancingObj->m_World._43 = distance * j;
 				instancingObj->m_TexTransform = MathHelper::Identity4x4();
 
@@ -164,11 +167,6 @@ void ApplicationContext::CreateBlocks()
 
 void ApplicationContext::CreateSnowmans()
 {
-	random_device rd;
-	default_random_engine dre(rd());
-	uniform_int_distribution<> uid{ 0,8 }; //눈사람 위치
-	uniform_int_distribution<> uid2{ 0,3 }; //블록 덮개 회전
-	uniform_int_distribution<> uid3{ 0,24 }; //블록 선택
 
 	int RandomLocation[2] = { -1,-1 };
 for (int i = 0; i < 2; ++i) {		//76, 77
@@ -183,9 +181,9 @@ for (int i = 0; i < 2; ++i) {		//76, 77
 	instancingObj->m_World._11 = SCALE - 0.2f;
 	instancingObj->m_World._22 = SCALE - 0.2f;
 	instancingObj->m_World._33 = SCALE - 0.2f;
-	RandomLocation[i] = uid(dre);
+	RandomLocation[i] = uid5(dre2);
 	while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
-		RandomLocation[i] = uid(dre);
+		RandomLocation[i] = uid5(dre2);
 	}
 	SnowmanIndex[i] = SnowmanLocaArray[RandomLocation[i]];
 	if (SnowmanIndex[i] % 4) {
