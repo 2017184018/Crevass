@@ -17,7 +17,7 @@
 
 void GamePlayScene::Initialize()
 {
-	/*m_SceneController = new GameplayController(this);
+	m_SceneController = new GameplayController(this);
 
 	AppContext->CreateSkycube("sky", "sky", "sky0");
 	AppContext->CreateBlocks();
@@ -29,7 +29,7 @@ void GamePlayScene::Initialize()
 		DestructionCnt[i] = 0;
 		IsDown[i] = true;
 
-	}*/
+	}
 }
 
 bool GamePlayScene::Enter()
