@@ -73,7 +73,7 @@ void CREVASS::Startup(void)
 
 	SceneManager::GetApp()->InitializeScenes();
 	BuildCharacters();
-	SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
+	SceneManager::GetApp()->EnterScene(SceneType::Lobby);
 
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
@@ -91,9 +91,6 @@ void CREVASS::Cleanup(void)
 {
 	/* Clear Cameras */
 	SAFE_DELETE_PTR(m_Camera);
-
-	SAFE_DELETE_PTR(m_MeshRef);
-	SAFE_DELETE_PTR(m_MaterialRef);
 
 	for (auto& p : AppContext->m_RItemsMap)
 	{

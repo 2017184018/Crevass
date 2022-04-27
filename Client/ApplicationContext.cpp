@@ -250,32 +250,44 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 
 void ApplicationContext::HiddenBlocks()
 {
+
 	for (int i = 0; i < 5; ++i) {//1~50
 		for (int j = 0; j < 5; ++j) {
 			
 			if (BlockCheck(5 * i + j)) {
 				GameObject* obj = FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j));
-				
+				if (!obj)
+					return;
+
 				ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 				ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 			}
 			else {
 				GameObject* obj = FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j));
+				if (!obj)
+					return;
+
 				ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 				ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 			}
 
 
 
-			GameObject* obj = CreateObject<GameObject>("snow_top", "snow_top" + std::to_string(5 * i + j));
+			GameObject* obj = FindObject<GameObject>("snow_top", "snow_top" + std::to_string(5 * i + j));
+			if (!obj)
+				return;
+
 			ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 			ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 
-			GameObject* obj0 = CreateObject<GameObject>("icicle", "icicle" + std::to_string(5 * i + j));
+			GameObject* obj0 = FindObject<GameObject>("icicle", "icicle" + std::to_string(5 * i + j));
+			if (!obj0)
+				return;
 			ZeroMemory(&obj0->m_World, sizeof(obj0->m_World));
 			ZeroMemory(&obj0->m_TexTransform, sizeof(obj0->m_TexTransform));
 		}
 	}
+
 	// Update InstanceData
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["icecube"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["snowcube"], m_RItemsVec);

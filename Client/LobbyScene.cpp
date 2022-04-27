@@ -14,6 +14,7 @@ bool LobbyScene::Enter()
 
 void LobbyScene::Exit()
 {
+	cout << "===========================================" << endl << endl;
 }
 
 void LobbyScene::Update(const float& fDeltaTime)
