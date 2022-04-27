@@ -46,13 +46,13 @@ void CREVASS::Startup(void)
 	//m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "icecube", m_MeshRef->m_GeometryMesh["icecube"].get()->DrawArgs["icecube"].Bounds);
 
 	//animation
-	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
+	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "husky");
 	//m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin", m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get()->DrawArgs["Penguin_LOD0skin"].Bounds);
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Peck");
+	m_MeshRef->BuildSkinnedModelAnimation("husky", "Run");
+	m_MeshRef->BuildSkinnedModelAnimation("husky", "Idle");
+//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Walk");
+	m_MeshRef->BuildSkinnedModelAnimation("husky", "Jump");
+//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Peck");
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
@@ -74,7 +74,7 @@ void CREVASS::Startup(void)
 	}
 
 	m_PlayerID = 0;
-	m_Users[m_PlayerID] = FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+	m_Users[m_PlayerID] = FindObject<Character>("husky", "husky");
 
 	//// Player type, id 등등 세팅
 	m_Users[m_PlayerID]->SetCamera(m_Camera, CameraType::Third);
@@ -243,9 +243,9 @@ void CREVASS::Update(float deltaT)
 	m_Camera->UpdateViewMatrix();
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
 
-	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["husky"], m_RItemsVec);
 	/*GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["Penguin_LOD0skinBB"], m_RItemsVec);*/
-	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, m_MeshRef->m_SkinnedModelInsts["husky"].get());
 	GraphicsContext::GetApp()->UpdateWave(mWaves.get(), wave);
 
 	//FindObject<GameObject>("Penguin_LOD0skinBB", "Penguin_LOD0skin0BB")->SetPosition(FindObject<GameObject>("Penguin_LOD0skin", "Penguin_LOD0skin0")->GetPosition());
@@ -254,14 +254,14 @@ void CREVASS::Update(float deltaT)
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
 				if (FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					//cout << 5 * i + j << "하고 충돌" << endl;
-
+					IsShake[5 * i + j] = true;
+					IsDown[5 * i + j] = true;
 				}
 			}
 			else {
 				if (FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					//cout << 5 * i + j << "하고 충돌" << endl;
-
+					IsShake[5 * i + j] = true;
+					IsDown[5 * i + j] = true;
 				}
 			}
 		}
@@ -288,7 +288,7 @@ void CREVASS::RenderScene(void)
 	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["sky"], m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["Penguin_LOD0skin"], m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["husky"], m_RItemsVec);
 
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
@@ -372,7 +372,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	float speed = 100 * deltaT;
 
 	if (GetAsyncKeyState('G') & 0x8000) {
-		m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"]->ClipName = "Peck";
+		m_MeshRef->m_SkinnedModelInsts["husky"]->ClipName = "Peck";
 	}
 
 
@@ -667,17 +667,17 @@ void CREVASS::BuildScene()
 	{//79
 		/*Characters*/
 		// student
-		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "Penguin_LOD0skin", "Penguin_LOD0skin0");
+		Character* character1 = CreateObject<Character>(RenderLayer::ID_SkinnedOpaque, "husky", "husky");
 		character1->m_TexTransform = MathHelper::Identity4x4();
-		character1->m_MaterialIndex = 2;
-		character1->Geo = m_MeshRef->m_GeometryMesh["Penguin_LOD0skin"].get();
+		character1->m_MaterialIndex = 4;
+		character1->Geo = m_MeshRef->m_GeometryMesh["husky"].get();
 		character1->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		character1->IndexCount = character1->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
-		character1->StartIndexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].StartIndexLocation;
-		character1->BaseVertexLocation = character1->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
+		character1->IndexCount = character1->Geo->DrawArgs["husky"].IndexCount;
+		character1->StartIndexLocation = character1->Geo->DrawArgs["husky"].StartIndexLocation;
+		character1->BaseVertexLocation = character1->Geo->DrawArgs["husky"].BaseVertexLocation;
 		character1->m_SkinnedCBIndex = CHARACTER_INDEX_MASTER;
-		character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
-		character1->m_Bounds = character1->Geo->DrawArgs["Penguin_LOD0skin"].Bounds;
+		character1->m_SkinnedModelInst = m_MeshRef->m_SkinnedModelInsts["husky"].get();
+		character1->m_Bounds = character1->Geo->DrawArgs["husky"].Bounds;
 
 		character1->Scale(20, 20, 20);
 		character1->SetPosition(250, 30, 0);

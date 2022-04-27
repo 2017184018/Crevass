@@ -33,7 +33,7 @@ struct Vertex
 struct CharacterVertex : Vertex
 {
 	DirectX::XMFLOAT3 BoneWeights;
-	int BoneIndices[4];
+	BYTE BoneIndices[4];
 
 	uint16_t MaterialIndex;
 };
