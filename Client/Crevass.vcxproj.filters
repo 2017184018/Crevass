@@ -14,7 +14,6 @@
     <ClCompile Include="CREVASS.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandContext.cpp" />
-    <ClCompile Include="Component.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -52,6 +51,9 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="GameplayScene.cpp" />
     <ClCompile Include="GameresultScene.cpp" />
+    <ClCompile Include="ApplicationContext.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="SceneController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlurFilter.h" />
@@ -60,7 +62,6 @@
     <ClInclude Include="CREVASS.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandContext.h" />
-    <ClInclude Include="Component.h" />
     <ClInclude Include="d3dUtil.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DDSTextureLoader.h" />
@@ -110,6 +111,9 @@
     <ClInclude Include="Controller.h" />
     <ClInclude Include="GameplayScene.h" />
     <ClInclude Include="GameresultScene.h" />
+    <ClInclude Include="ApplicationContext.h" />
+    <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="SceneController.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

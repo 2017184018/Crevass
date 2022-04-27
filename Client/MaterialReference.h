@@ -1,6 +1,6 @@
 #pragma once
-
-class MaterialReference final
+#include "Singleton.h"
+class MaterialReference final : public TemplateSingleton<MaterialReference>
 {
 public:
 	explicit MaterialReference();

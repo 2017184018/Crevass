@@ -3,8 +3,7 @@
 #include "MeshReference.h"
 static unsigned int s_currentIndex = 0;
 
-GameObject::GameObject(RenderLayer layer, std::string type, std::string id):
-	m_Layer(layer),
+GameObject::GameObject( std::string type, std::string id):
 	m_Type(type),
 	m_ID(id),
 	m_Index(s_currentIndex++),

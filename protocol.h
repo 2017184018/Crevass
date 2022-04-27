@@ -33,6 +33,19 @@
 
 #define CS_READY				17
 
+
+
+
+
+
+
+// ANIMATION TYPES
+#define	ANIM_IDLE			0
+#define ANIM_FORWARD		1
+#define ANIM_ATTACK			2
+#define ANIM_RUNNING		3
+#define ANIM_JUMP		    4
+
 #pragma pack(push ,1)
 
 

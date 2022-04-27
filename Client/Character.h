@@ -1,11 +1,12 @@
 #pragma once
 #include "GameObject.h"
-
+#include "PlayerController.h"
 class Camera;
 class CharacterParts;
 
 class Character : public GameObject
 {
+	friend class PlayerController;
 	friend class CharacterParts;
 
 public:
@@ -41,7 +42,7 @@ public:
 	float m_MaxBlendFrames;
 
 public:
-	explicit Character(RenderLayer layer, std::string type, std::string id);
+	explicit Character(std::string type, std::string id);
 	virtual ~Character();
 
 	void Update(const float deltaT);
@@ -75,6 +76,7 @@ public:
 
 public:
 	Camera* m_MyCamera;
+	std::unique_ptr<PlayerController> m_PlayerController;
 	std::map<std::string, CharacterParts*> m_Parts;
 	int Dir = DIR_FORWARD;
 	BOOL bJump = false;

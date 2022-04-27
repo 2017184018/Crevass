@@ -4,7 +4,7 @@
 class CharacterParts : public GameObject
 {
 public:
-	explicit CharacterParts(RenderLayer layer, std::string type, std::string id);
+	explicit CharacterParts(std::string type, std::string id);
 	virtual ~CharacterParts();
 
 public:

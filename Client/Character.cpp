@@ -151,8 +151,9 @@ void Character::UpdateBoneTransforms()
 	}
 
 }
-Character::Character(RenderLayer layer, std::string type, std::string id) :
-	GameObject(layer, type, id),
+Character::Character( std::string type, std::string id) :
+	GameObject(type, id),
+	m_PlayerController(nullptr),
 	m_PlayerState(PlayerState::STATE_IDLE),
 	m_KeyState(PlayerState::STATE_IDLE),
 	m_MyCamera(nullptr)
@@ -180,7 +181,10 @@ Character::~Character()
 
 void Character::Update(const float deltaT)
 {
-	//m_PlayerController->Update(deltaT);
+	if (!m_PlayerController) return;
+	if (!m_MyCamera) return;
+
+	m_PlayerController->Update(deltaT);
 	m_Bounds.Center = GetPosition();
 
 	SetState();

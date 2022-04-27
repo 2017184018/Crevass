@@ -3,7 +3,7 @@
 
 void LobbyScene::Initialize()
 {
-	m_SceneController = new LobbyController;
+	m_SceneController = new LobbyController(this);
 }
 
 bool LobbyScene::Enter()
@@ -18,7 +18,7 @@ void LobbyScene::Exit()
 
 void LobbyScene::Update(const float& fDeltaTime)
 {
-	m_SceneController->Update();
+	m_SceneController->Update(fDeltaTime);
 }
 
 void LobbyScene::Render()

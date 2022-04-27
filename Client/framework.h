@@ -54,6 +54,8 @@ using namespace DirectX;
 using Microsoft::WRL::ComPtr;
 using namespace DirectX::PackedVector;
 
+#define AppContext ApplicationContext::GetApp()
+
 #define SAFE_DELETE_PTR(ptr)	\
 {								\
 	if (ptr != nullptr)			\
@@ -67,7 +69,6 @@ using namespace DirectX::PackedVector;
 #define CHARACTER_INDEX_MASTER 0 
 
 enum class SceneType { /*Title*/ Lobby, GamePlay, GameResult, Count};
-enum class RenderLayer { ID_OPAQUE, ID_SKY, ID_COUNT, ID_SkinnedOpaque };
 enum class CameraType { First, Third, Free };
 
 // Move & Rotate

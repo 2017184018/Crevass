@@ -12,6 +12,8 @@
 #include "MathHelper.h"
 #include "d3dUtil.h"
 
+#include "../protocol.h"
+
 // 콘솔창 띄우기
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 

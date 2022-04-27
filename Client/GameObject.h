@@ -12,11 +12,9 @@ protected:
 	std::string m_ID;
 	//몇번째 오브젝트 
 	UINT m_Index;
-	//pso따라 구분
-	RenderLayer m_Layer;
 
 public:
-	explicit GameObject(RenderLayer layer, std::string type, std::string id);
+	explicit GameObject(std::string type, std::string id);
 	virtual ~GameObject();
 
 	std::string GetType() const { return m_Type; }
@@ -51,6 +49,8 @@ public:
 //	virtual void	Release() {};
 
 public:
+	bool m_IsVisible = false;
+
 	DirectX::XMFLOAT4X4 m_World;
 	DirectX::XMFLOAT4X4 m_TexTransform;
 

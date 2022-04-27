@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "Singleton.h"
 #include "GeometryMesh.h"
 #include "SkinnedModelInstance.h"
 #include "Waves.h"
@@ -7,7 +7,7 @@
 // 같은 종류의 메쉬는 딱 한번만 생성되야한다.
 // 메쉬들 포인터만 갖고있어서 오브젝트에서 포인터만 가져다 쓴다.
 // 메쉬 제작은 씬에서 제작한다.
-class MeshReference final 
+class MeshReference final : public TemplateSingleton<MeshReference>
 {
 
 public:

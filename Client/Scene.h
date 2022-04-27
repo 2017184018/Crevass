@@ -1,5 +1,5 @@
 #pragma once
-#include "Controller.h"
+#include "SceneController.h"
 
 namespace Core
 {
@@ -16,6 +16,8 @@ namespace Core
 */
 class Scene abstract
 {
+protected:
+	friend class SceneManager;
 public:
 	Scene();
 	virtual ~Scene();
