@@ -96,7 +96,7 @@ void ProcessClients()
 
 				if (phyMsg.type == TYPE_PLAYER)
 				{
-					/*	switch (phyMsg.dir)
+						switch (phyMsg.dir)
 						{
 						case DIR_UP:
 							phyPlayers[phyMsg.id].SetKeyW(phyMsg.isPushed);
@@ -110,7 +110,7 @@ void ProcessClients()
 						case DIR_RIGHT:
 							phyPlayers[phyMsg.id].SetKeyD(phyMsg.isPushed);
 							break;
-						}*/
+						}
 				}
 				Update(phyPlayers, deltaT);
 
