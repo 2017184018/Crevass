@@ -206,7 +206,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	//FindObject<GameObject>("huskyBB", "husky0BB")->SetPosition(FindObject<GameObject>("husky", "husky0")->GetPosition());
 
-	/*for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
 				if (AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
@@ -221,7 +221,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				}
 			}
 		}
-	}*/
+	}
 
 	
 }
