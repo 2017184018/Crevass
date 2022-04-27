@@ -237,7 +237,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->BaseVertexLocation = chr->Geo->DrawArgs[meshName].BaseVertexLocation;
 	chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	chr->m_Bounds = chr->Geo->DrawArgs["husky"].Bounds;
-	chr->m_MaterialIndex = 2;
+	chr->m_MaterialIndex = 4;
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
 	chr->m_IsVisible = false;

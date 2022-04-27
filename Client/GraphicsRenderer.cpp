@@ -73,7 +73,8 @@ void GraphicsRenderer::LoadTextures()
 		"snowcube1024",
 		"ice",
 		"Penguin",
-		"water"
+		"water",
+		"husky"
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -82,6 +83,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/cubeworld_tex.dds",
 		L"./Textures/Penguin.dds",
 		L"./Textures/water1.dds",
+		L"./Textures/Tex_Husky.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -119,6 +121,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	auto ice = m_Textures["ice"]->Resource;
 	auto Penguin = m_Textures["Penguin"]->Resource;
 	auto water = m_Textures["water"]->Resource;
+	auto husky = m_Textures["husky"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -160,11 +163,20 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(water.Get(), &srvDesc, hDescriptor);
 
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = husky->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = husky->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(husky.Get(), &srvDesc, hDescriptor);
+
 	mSkyTexHeapIndex = 0;
 
 	Core::mBlurFilter->BuildDescriptors(
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), 4, m_CbvSrvDescriptorSize),
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), 4, m_CbvSrvDescriptorSize),
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_Textures.size(), m_CbvSrvDescriptorSize),
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), m_Textures.size(), m_CbvSrvDescriptorSize),
 		m_CbvSrvDescriptorSize);
 }
 
@@ -219,7 +231,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 1, 0);		//텍스쳐 수
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, m_Textures.size(), 1, 0);		//텍스쳐 수
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
 

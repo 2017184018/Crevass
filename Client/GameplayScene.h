@@ -22,7 +22,7 @@ namespace Core
 	extern int g_DisplayWidth;
 	extern int g_DisplayHeight;
 
-	//extern std::unique_ptr<BlurFilter> mBlurFilter;
+	extern std::unique_ptr<BlurFilter> mBlurFilter;
 	extern ID3D12Resource* BackBuffer;
 	extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 
@@ -58,7 +58,7 @@ public:
 
 	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
-	bool IsFall = false;		//빠졌는지
+	bool IsFall = false;		// 블러링, 높은 물결
 
 	UINT BlurCnt = 0;
 

@@ -245,18 +245,18 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 
-	//mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
-	//	Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
+	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
+		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 
-	// Prepare to copy blurred output to the back buffer.
-	//g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-	//	D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+	 //Prepare to copy blurred output to the back buffer.
+	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+		D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
 
-	//g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
+	g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
 
-	//// Transition to PRESENT state.
-	//g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-	//	D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
+	// Transition to PRESENT state.
+	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
 }
 
 void GameplayScene::shake(GameObject* object, int index) {

@@ -59,9 +59,17 @@ void MaterialReference::BuildMaterials()
 	water->FresnelR0 = XMFLOAT3(0.2f, 0.2f, 0.2f);
 	water->Roughness = 0.0f;
 
+	auto husky = std::make_unique<Material>();
+	husky->MatCBIndex = 4;
+	husky->DiffuseSrvHeapIndex = 4;
+	husky->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	husky->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	husky->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
 	m_Materials["water"] = std::move(water);
+	m_Materials["husky"] = std::move(husky);
 	
 }
