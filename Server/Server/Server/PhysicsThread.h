@@ -122,7 +122,9 @@ void ProcessClients()
 					players[i].pos.z = phyPlayers[i].m_pos.z;
 				}
 				SendPos(*players);
+				elapsedTime = 0;
 			}
 		}
 	}
+	phyPlayers.clear();
 }

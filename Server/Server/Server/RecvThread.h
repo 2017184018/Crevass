@@ -67,7 +67,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = true;
-			phyPlayers[msg.id].SetKeyW(msg.isPushed);
+			//printf("%d updown\n", msg.id);
 			break;
 		}
 		case CS_PLAYER_DOWN_DOWN:
@@ -76,7 +76,8 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_DOWN;
 			msg.isPushed = true;
-			phyPlayers[msg.id].SetKeyS(msg.isPushed);
+			//printf("%d downdown\n",msg.id);
+
 			break;
 		}
 		case CS_PLAYER_LEFT_DOWN:
@@ -85,7 +86,8 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = true;
-			phyPlayers[msg.id].SetKeyA(msg.isPushed);
+			//printf("%d leftdown\n",msg.id);
+
 			break;
 		}
 		case CS_PLAYER_RIGHT_DOWN:
@@ -94,7 +96,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_RIGHT;
 			msg.isPushed = true;
-			phyPlayers[msg.id].SetKeyD(msg.isPushed);
+			//printf("%d rightdown\n",msg.id);
 			break;
 		}
 		case CS_PLAYER_UP_UP:
@@ -103,7 +105,8 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = false;
-			phyPlayers[msg.id].SetKeyW(msg.isPushed);
+			//printf("%d upup\n",msg.id);
+
 			break;
 		}
 		case CS_PLAYER_DOWN_UP:
@@ -112,7 +115,8 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_DOWN;
 			msg.isPushed = false;
-			phyPlayers[msg.id].SetKeyS(msg.isPushed);
+			//printf("%d downup\n",msg.id);
+
 			break;
 		}
 		case CS_PLAYER_LEFT_UP:
@@ -121,7 +125,8 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = false;
-			phyPlayers[msg.id].SetKeyA(msg.isPushed);
+			//printf("%d leftup\n",msg.id);
+
 			break;
 		}
 		case CS_PLAYER_RIGHT_UP:
@@ -130,7 +135,6 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_RIGHT;
 			msg.isPushed = false;
-			phyPlayers[msg.id].SetKeyD(msg.isPushed);
 			break;
 		}
 
