@@ -77,12 +77,10 @@ void CREVASS::Startup(void)
 	m_PlayerID = 0;
 	//m_Users[m_PlayerID] = FindObject<Character>("husky", "husky0");
 
-	int ClientNum = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum;
+	ClientNum = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum;
 	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
-//	if (ClientNum == 0) ClientNum = 1;
-	for (int i = 0; i < ClientNum; ++i) {
+	for (int i = 0; i < 2; ++i) {
 		m_Users[i] = FindObject<Character>("husky", "husky" + std::to_string(i));
-
 	}
 
 	//// Player type, id 등등 세팅
@@ -128,14 +126,18 @@ bool CREVASS::BlockCheck(int idx) {
 	return true;
 }
 
-BOOL B = true;
 int tmp = -1;
 
 void CREVASS::Update(float deltaT)
 {
 	g_pFramework->m_pNetwork->Recv();
 	m_Users[m_PlayerID]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos());
-
+	if (m_PlayerID == 0) {
+		//	if (ClientNum > 1)
+		m_Users[1]->SetPosition(g_pFramework->m_pNetwork->GetOhterPlayerPos());
+	}
+	else
+		m_Users[0]->SetPosition(g_pFramework->m_pNetwork->GetOhterPlayerPos());
 	//이거 풀면 플레이어 3인칭 기준 카메라 적용
 	float speed = 100 * deltaT;
 	if (m_Users[m_PlayerID]) {
@@ -145,7 +147,6 @@ void CREVASS::Update(float deltaT)
 
 		if (m_Users[m_PlayerID]->GetPosition().y > 70) {
 			B = false;
-
 		}
 
 		if (m_Users[m_PlayerID]->GetPosition().y > 30) {

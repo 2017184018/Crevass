@@ -169,7 +169,10 @@ void Network::ProcessPacket(char* packet_buffer)
 		//	}
 		//}
 		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
-		printf("x=%f, y=%f, z=%f\n", packet.players[0].pos.x, packet.players[0].pos.y, packet.players[0].pos.z);
+		if (m_pGameInfo->m_ClientID == 0)
+			OtherPlayerPos = packet.players[1].pos;
+		else
+			OtherPlayerPos = packet.players[0].pos;
 		break;
 	}
 	case SC_POS:
@@ -177,6 +180,10 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_pos packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
+		if (m_pGameInfo->m_ClientID == 0)
+			OtherPlayerPos = packet.players[1].pos;
+		else
+			OtherPlayerPos = packet.players[0].pos;
 		//for (int i = 0; i < 3; ++i)
 		//{
 		//	if (packet.players[i].id != -1)
@@ -248,4 +255,9 @@ void Network::ErrorDisplay(const char* msg)
 DirectX::XMFLOAT3 Network::GetPlayerPos()
 {
 	return PlayerPos;
+}
+
+DirectX::XMFLOAT3 Network::GetOhterPlayerPos()
+{
+	return OtherPlayerPos;
 }

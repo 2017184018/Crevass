@@ -75,7 +75,9 @@ private:
 	bool IsFall = false;		//빠졌는지
 	bool BlockIn = false;		//깨지는 블록에 닿았을때 한번만 밟게
 	UINT BlurCnt = 0;
+	BOOL B = true;		//점프 상승 중
 
+	int ClientNum = 0;
 public:
 	template <class TObject>
 	TObject* CreateObject(RenderLayer layer, std::string type, std::string instID)

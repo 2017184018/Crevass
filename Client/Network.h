@@ -32,9 +32,11 @@ public:
 	char* ptr;
 
 	DirectX::XMFLOAT3 GetPlayerPos();
+	DirectX::XMFLOAT3 GetOhterPlayerPos();
 
 private:
 	DirectX::XMFLOAT3 PlayerPos = { 0,0,0 };
+	DirectX::XMFLOAT3 OtherPlayerPos = { 0,0,0 };
 
 public:
 	GameInfo* m_pGameInfo;
