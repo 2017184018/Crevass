@@ -5,23 +5,42 @@
 void Update(vector<Player>& player, float deltaT)
 {
 	float speed = 1.0f; 30 * deltaT;
+	float crossspeed = sqrt(2)/2;
 	for (int i = 0; i < numOfCls; ++i)
 	{
-		if (player[i].GetKeyW())
-		{
-			player[i].m_pos.z += speed;
+		if (player[i].GetKeyW() && player[i].GetKeyA()) {
+			player[i].m_pos.z += crossspeed;
+			player[i].m_pos.x -= crossspeed;
 		}
-		if (player[i].GetKeyS())
-		{
-			player[i].m_pos.z -= speed;
+		else if (player[i].GetKeyW() && player[i].GetKeyD()) {
+			player[i].m_pos.z += crossspeed;
+			player[i].m_pos.x += crossspeed;
 		}
-		if (player[i].GetKeyA())
-		{
-			player[i].m_pos.x -= speed;
+		else if (player[i].GetKeyS() && player[i].GetKeyD()) {
+			player[i].m_pos.z -= crossspeed;
+			player[i].m_pos.x += crossspeed;
 		}
-		if (player[i].GetKeyD())
-		{
-			player[i].m_pos.x += speed;
+		else if (player[i].GetKeyS() && player[i].GetKeyA()) {
+			player[i].m_pos.z -= crossspeed;
+			player[i].m_pos.x -= crossspeed;
+		}
+		else {
+			if (player[i].GetKeyW())
+			{
+				player[i].m_pos.z += speed;
+			}
+			if (player[i].GetKeyS())
+			{
+				player[i].m_pos.z -= speed;
+			}
+			if (player[i].GetKeyA())
+			{
+				player[i].m_pos.x -= speed;
+			}
+			if (player[i].GetKeyD())
+			{
+				player[i].m_pos.x += speed;
+			}
 		}
 	}
 }
@@ -77,21 +96,21 @@ void ProcessClients()
 
 				if (phyMsg.type == TYPE_PLAYER)
 				{
-					switch (phyMsg.dir)
-					{
-					case DIR_UP:
-						phyPlayers[phyMsg.id].SetKeyW(phyMsg.isPushed);
-						break;
-					case DIR_DOWN:
-						phyPlayers[phyMsg.id].SetKeyS(phyMsg.isPushed);
-						break;
-					case DIR_LEFT:
-						phyPlayers[phyMsg.id].SetKeyA(phyMsg.isPushed);
-						break;
-					case DIR_RIGHT:
-						phyPlayers[phyMsg.id].SetKeyD(phyMsg.isPushed);
-						break;
-					}
+					/*	switch (phyMsg.dir)
+						{
+						case DIR_UP:
+							phyPlayers[phyMsg.id].SetKeyW(phyMsg.isPushed);
+							break;
+						case DIR_DOWN:
+							phyPlayers[phyMsg.id].SetKeyS(phyMsg.isPushed);
+							break;
+						case DIR_LEFT:
+							phyPlayers[phyMsg.id].SetKeyA(phyMsg.isPushed);
+							break;
+						case DIR_RIGHT:
+							phyPlayers[phyMsg.id].SetKeyD(phyMsg.isPushed);
+							break;
+						}*/
 				}
 				Update(phyPlayers, deltaT);
 

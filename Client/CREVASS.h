@@ -33,6 +33,7 @@ namespace Core
 
 	extern MainFramework* g_pFramework;
 
+	extern bool Inactive;
 }
 
 class MeshReference;

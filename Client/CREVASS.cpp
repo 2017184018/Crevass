@@ -54,6 +54,7 @@ void CREVASS::Startup(void)
 	//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Jump");
 	//	m_MeshRef->BuildSkinnedModelAnimation("husky", "Peck");
+
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
@@ -161,7 +162,8 @@ void CREVASS::Update(float deltaT)
 		m_Users[m_PlayerID]->Update(deltaT);
 	}
 
-	OnKeyboardInput(deltaT);
+	if (!Inactive)		//창이 내려가 있으면 키보드 입력 안 받게
+		OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i] || !IsDown[i]) {
 			shake(m_RItemsVec[2 * i + 1], i);	//블록
@@ -401,7 +403,6 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		}
 		m_Users[m_PlayerID]->SetDir(0);
-
 		g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 	}
 
@@ -442,7 +443,6 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 
 	if (GetAsyncKeyState('W') & 0x8000 && GetAsyncKeyState('D') & 0x8000) {
 		if (!m_Users[m_PlayerID]->bJump) {
-
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
 		}
 		m_Users[m_PlayerID]->SetDir(45);
@@ -463,7 +463,6 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	if (GetAsyncKeyState('A') & 0x8000 && GetAsyncKeyState('W') & 0x8000) {
 		if (!m_Users[m_PlayerID]->bJump)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_FORWARD;
-
 		m_Users[m_PlayerID]->SetDir(315);
 	}
 
@@ -471,9 +470,7 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 	{
 		if (!m_Users[m_PlayerID]->bJump)
 		{
-
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
-
 		}
 		g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 
@@ -483,7 +480,6 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		if (!m_Users[m_PlayerID]->bJump)
 		{
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
-
 		}
 		g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 
@@ -493,7 +489,6 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		if (!m_Users[m_PlayerID]->bJump)
 		{
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
-
 		}
 		g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
 
@@ -503,18 +498,10 @@ void CREVASS::OnKeyboardInput(const float deltaT)
 		if (!m_Users[m_PlayerID]->bJump)
 		{
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
-
 		}
 		g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 
 	}
-
-	if (InputHandler::IsKeyUp('B'))
-	{
-		g_pFramework->m_pNetwork->Send(CS_READY);
-	}
-
-
 }
 
 void CREVASS::BuildScene()

@@ -42,6 +42,8 @@ namespace Core
 
 	ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 	ID3D12Resource* BackBuffer;
+
+	bool Inactive = false;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)
@@ -202,13 +204,15 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
-			mAppPaused = true;
-			g_GameTimer->Stop();
+			Inactive = true;
+			/*mAppPaused = true;
+			g_GameTimer->Stop();*/
 		}
 		else
 		{
-			mAppPaused = false;
-			g_GameTimer->Start();
+			Inactive = false;
+		/*	mAppPaused = false;
+			g_GameTimer->Start();*/
 		}
 		return 0;
 

@@ -58,15 +58,16 @@ void Receiver(char id)
 		// Message 재사용을 위한 초기화
 		ZeroMemory(&msg, sizeof(Message));
 		msg.id = -1;
-
 		switch ((int)buf[0])
 		{
+
 		case CS_PLAYER_UP_DOWN:
 		{
 			msg.id = id;
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = true;
+			phyPlayers[msg.id].SetKeyW(msg.isPushed);
 			break;
 		}
 		case CS_PLAYER_DOWN_DOWN:
@@ -75,6 +76,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_DOWN;
 			msg.isPushed = true;
+			phyPlayers[msg.id].SetKeyS(msg.isPushed);
 			break;
 		}
 		case CS_PLAYER_LEFT_DOWN:
@@ -83,6 +85,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = true;
+			phyPlayers[msg.id].SetKeyA(msg.isPushed);
 			break;
 		}
 		case CS_PLAYER_RIGHT_DOWN:
@@ -91,6 +94,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_RIGHT;
 			msg.isPushed = true;
+			phyPlayers[msg.id].SetKeyD(msg.isPushed);
 			break;
 		}
 		case CS_PLAYER_UP_UP:
@@ -99,6 +103,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = false;
+			phyPlayers[msg.id].SetKeyW(msg.isPushed);
 			break;
 		}
 		case CS_PLAYER_DOWN_UP:
@@ -107,6 +112,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_DOWN;
 			msg.isPushed = false;
+			phyPlayers[msg.id].SetKeyS(msg.isPushed);
 			break;
 		}
 		case CS_PLAYER_LEFT_UP:
@@ -115,6 +121,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = false;
+			phyPlayers[msg.id].SetKeyA(msg.isPushed);
 			break;
 		}
 		case CS_PLAYER_RIGHT_UP:
@@ -123,6 +130,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_RIGHT;
 			msg.isPushed = false;
+			phyPlayers[msg.id].SetKeyD(msg.isPushed);
 			break;
 		}
 
