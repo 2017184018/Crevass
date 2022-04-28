@@ -31,6 +31,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateBlocks();
 	AppContext->CreateSnowmans();
 	AppContext->CreateWave();
+	AppContext->CreateBackground();
 
 	for (int i = 0; i < 25; ++i) {
 		IsShake[i] = false;

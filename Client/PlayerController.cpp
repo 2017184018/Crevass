@@ -20,6 +20,8 @@ void PlayerController::Update(const float deltaT)
 	OnKeyReleased();
 }
 
+static bool SpacePush = false;
+
 void PlayerController::HandleInput(const float deltaT)
 {
 	float speed = 100 * deltaT;
@@ -37,7 +39,7 @@ void PlayerController::HandleInput(const float deltaT)
 		//}
 
 
-		if (GetAsyncKeyState('W') & 0x8000) {
+		if (GetAsyncKeyState(VK_UP) & 0x8000) {
 			m_Owner->Move(DIR_FORWARD, speed, true);
 			if (!m_Owner->bJump) {
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
@@ -46,35 +48,42 @@ void PlayerController::HandleInput(const float deltaT)
 		}
 
 
-		if (GetAsyncKeyState('A') & 0x8000) {
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
 			m_Owner->Move(DIR_LEFT, speed, true);
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			m_Owner->SetDir(270);
 		}
 
-		if (GetAsyncKeyState('S') & 0x8000) {
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
 			m_Owner->Move(DIR_BACKWARD, speed, true);
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			m_Owner->SetDir(180);
 		}
 
-		if (GetAsyncKeyState('D') & 0x8000) {
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
 			m_Owner->Move(DIR_RIGHT, speed, true);
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			m_Owner->SetDir(90);
 		}
 
-		if (GetAsyncKeyState('F') & 0x8000 && m_Owner->bJump == false) {
-			m_Owner->bJump = true;
-			m_Owner->is_Inair = true;
-			m_Owner->m_KeyState = Character::PlayerState::STATE_JUMP;
-
+		if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
+			if (m_Owner->bJump == false) {
+				if (!SpacePush) {
+					m_Owner->bJump = true;
+					m_Owner->is_Inair = true;
+					m_Owner->m_KeyState = Character::PlayerState::STATE_JUMP;
+					SpacePush = true;
+				}
+			}
+		}
+		else {
+			SpacePush = false;
 		}
 
-		if (GetAsyncKeyState('W') & 0x8000 && GetAsyncKeyState('D') & 0x8000) {
+		if (GetAsyncKeyState(VK_UP) & 0x8000 && GetAsyncKeyState(VK_RIGHT) & 0x8000) {
 			if (!m_Owner->bJump) {
 
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
@@ -82,65 +91,65 @@ void PlayerController::HandleInput(const float deltaT)
 			m_Owner->SetDir(45);
 		}
 
-		if (GetAsyncKeyState('S') & 0x8000 && GetAsyncKeyState('D') & 0x8000) {
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000 && GetAsyncKeyState(VK_RIGHT) & 0x8000) {
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 
 			m_Owner->SetDir(135);
 		}
 
-		if (GetAsyncKeyState('S') & 0x8000 && GetAsyncKeyState('A') & 0x8000) {
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000 && GetAsyncKeyState(VK_LEFT) & 0x8000) {
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			m_Owner->SetDir(225);
 		}
 
-		if (GetAsyncKeyState('A') & 0x8000 && GetAsyncKeyState('W') & 0x8000) {
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000) {
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 
 			m_Owner->SetDir(315);
 		}
 
-		if (InputHandler::IsKeyUp('W'))
+		if (InputHandler::IsKeyUp(VK_UP))
 		{
 			if (!m_Owner->bJump) {
 
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
 			}
 		}
-		if (InputHandler::IsKeyUp('A'))
+		if (InputHandler::IsKeyUp(VK_LEFT))
 		{
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
-		if (InputHandler::IsKeyUp('S'))
+		if (InputHandler::IsKeyUp(VK_DOWN))
 		{
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
-		if (InputHandler::IsKeyUp('D'))
+		if (InputHandler::IsKeyUp(VK_RIGHT))
 		{
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
-	break;
+		break;
 	case CameraType::Free:
 	{
-		if (GetAsyncKeyState('W') & 0x8000) {
+		if (GetAsyncKeyState(VK_UP) & 0x8000) {
 			m_Owner->m_MyCamera->Walk(speed);
 		}
-		if (GetAsyncKeyState('S') & 0x8000) {
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
 			m_Owner->m_MyCamera->Walk(-speed);
 		}
-		if (GetAsyncKeyState('A') & 0x8000) {
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
 			m_Owner->m_MyCamera->Strafe(-speed);
 		}
-		if (GetAsyncKeyState('D') & 0x8000) {
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
 			m_Owner->m_MyCamera->Strafe(speed);
 		}
 		break;
-}
+	}
 	default:
 		break;
 	}
@@ -160,7 +169,7 @@ void PlayerController::HandleInput(const float deltaT)
 
 void PlayerController::MouseCallback()
 {
-	
+
 }
 
 void PlayerController::OnKeyPressed()

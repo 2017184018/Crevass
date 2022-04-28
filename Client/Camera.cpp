@@ -125,7 +125,7 @@ Camera::~Camera()
 
 void Camera::OnResize()
 {
-	SetLens(0.25f * MathHelper::Pi, 1.0f, 1.0f, 1000.0f);
+	SetLens(0.25f * MathHelper::Pi, 1.0f, 1.0f, 1500.0f);
 }
 
 XMVECTOR Camera::GetPosition()const
