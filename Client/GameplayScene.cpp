@@ -152,15 +152,26 @@ void GameplayScene::Update(const float& fDeltaTime)
 	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 10;
 	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 15;
 
-	static bool pushone = false;
-	if (GetAsyncKeyState('1') & 0x8000) {
-		if (!pushone) {
-			LoseLife();
-			pushone = true;
-		}
+	for (int i = 0; i < 5; ++i) {
+		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
+
+		AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
+		AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
+		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
+		AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
+		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.01;
 	}
-	else {
-		pushone = false;
+	{	//물에 빠질 때 임시
+		static bool pushone = false;
+		if (GetAsyncKeyState('1') & 0x8000) {
+			if (!pushone) {
+				Fall();
+				pushone = true;
+			}
+		}
+		else {
+			pushone = false;
+		}
 	}
 
 	MaterialReference::GetApp()->Update(fDeltaTime);
@@ -184,7 +195,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-
 	// Update the wave simulation.
 	Core::mWaves->Update(fDeltaTime);
 
@@ -197,6 +207,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
 
 	//meterial
 
@@ -212,7 +223,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
-				if (tmp==-1 && AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+				if (tmp == -1 && AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
 					tmp = 5 * i + j;
 					if (!BlockIn) {
 						IsShake[5 * i + j] = true;
@@ -220,7 +231,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 						BlockIn = true;
 					}
 				}
-				 if (tmp!=-1 && !AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+				if (tmp != -1 && !AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
 					BlockIn = false;
 					tmp = -1;
 				}
@@ -244,10 +255,11 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
-	
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
 	//디버그 주석
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecubeBB"], m_RItemsVec);
@@ -261,7 +273,7 @@ void GameplayScene::Render()
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 
-	 //Prepare to copy blurred output to the back buffer.
+	//Prepare to copy blurred output to the back buffer.
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
 		D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
 
@@ -317,8 +329,11 @@ bool GameplayScene::BlockCheck(int idx) {
 	return true;
 }
 
-void GameplayScene::LoseLife() {
-	if (Lifecnt > 0) {
-		AppContext->m_RItemsVec[133 + Lifecnt--]->m_MaterialIndex = 6;
+void GameplayScene::Fall() {
+	if (!IsFall) {
+		IsFall = true;
+		if (Lifecnt > 0) {
+			AppContext->m_RItemsVec[133 + Lifecnt--]->m_MaterialIndex = 6;
+		}
 	}
 }

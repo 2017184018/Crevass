@@ -309,12 +309,34 @@ void ApplicationContext::CreateBackground()
 		top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
 		top->m_MaterialIndex = 5;
 		top->m_World = MathHelper::Identity4x4();
-		top->m_World._11 = 50;
-		top->m_World._22 = 50;
-		top->m_World._33 = 50;
+		float size = 7;
+		top->m_World._11 = size;
+		top->m_World._22 = size;
+		top->m_World._33 = size;
 		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
-		top->m_World._41 = 55 * i;
+		top->m_World._41 = (size * 1.1) * i;
 		top->m_World._42 = 300;
+		top->m_World._43 = 400;
+		top->m_TexTransform = MathHelper::Identity4x4();
+	}
+
+	//139~144
+	for (int i = 0; i < 5; ++i) {
+		GameObject* top = CreateObject<GameObject>("lifeline", "lifeline" + std::to_string(i));
+		top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+		top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		top->IndexCount = top->Geo->DrawArgs["grid"].IndexCount;
+		top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
+		top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
+		top->m_MaterialIndex = 7;
+		top->m_World = MathHelper::Identity4x4();
+		float size = 15;
+		top->m_World._11 = size;
+		top->m_World._22 = size;
+		top->m_World._33 = size;
+		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+		top->m_World._41 = (size * 1.1) * i;
+		top->m_World._42 = 300.1;
 		top->m_World._43 = 400;
 		top->m_TexTransform = MathHelper::Identity4x4();
 	}
@@ -323,6 +345,7 @@ void ApplicationContext::CreateBackground()
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {
+	//139
 	Character* chr = CreateObject<Character>(meshName, instID);
 	chr->Geo = MeshReference::GetApp()->m_GeometryMesh[meshName].get();
 	chr->IndexCount = chr->Geo->DrawArgs[meshName].IndexCount;
