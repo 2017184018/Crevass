@@ -57,6 +57,7 @@ void ApplicationContext::CreateSkycube(std::string skycubeName, std::string inst
 	skyRitem->BaseVertexLocation = skyRitem->Geo->DrawArgs["sphere"].BaseVertexLocation;
 	skyRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	skyRitem->m_MaterialIndex = 0;
+	skyRitem->m_IsVisible = true;
 	//skyRitem->m_MaterialIndex = MeshReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
@@ -84,7 +85,7 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["icecube"].Bounds;
-
+				instancingObj->m_IsVisible = true;
 				instancingObj->m_MaterialIndex = 1;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
@@ -106,7 +107,7 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowcube"].StartIndexLocation;
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowcube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["snowcube"].Bounds;
-
+				instancingObj->m_IsVisible = true;
 				instancingObj->m_MaterialIndex = 1;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
@@ -129,6 +130,7 @@ void ApplicationContext::CreateBlocks()
 			top->IndexCount = top->Geo->DrawArgs["snow_top"].IndexCount;
 			top->StartIndexLocation = top->Geo->DrawArgs["snow_top"].StartIndexLocation;
 			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
+			top->m_IsVisible = true;
 			top->m_MaterialIndex = 1;
 			top->m_World = MathHelper::Identity4x4();
 			top->m_World._11 = SCALE;
@@ -152,6 +154,7 @@ void ApplicationContext::CreateBlocks()
 			instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icicle"].IndexCount;
 			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icicle"].StartIndexLocation;
 			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icicle"].BaseVertexLocation;
+			instancingObj->m_IsVisible = true;
 			instancingObj->m_MaterialIndex = 1;
 			instancingObj->m_World = MathHelper::Identity4x4();
 			instancingObj->m_World._11 = 0.5;
@@ -176,6 +179,7 @@ for (int i = 0; i < 2; ++i) {		//76, 77
 	instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
 	instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
 	instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
+	instancingObj->m_IsVisible = true;
 	instancingObj->m_MaterialIndex = 1;
 	instancingObj->m_World = MathHelper::Identity4x4();
 	instancingObj->m_World._11 = SCALE - 0.2f;
@@ -212,6 +216,7 @@ void ApplicationContext::CreateWave()
 	Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
 	Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
 	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
+	Sea->m_IsVisible = true;
 	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	Sea->m_MaterialIndex = 3;
 
@@ -236,7 +241,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->StartIndexLocation = chr->Geo->DrawArgs[meshName].StartIndexLocation;
 	chr->BaseVertexLocation = chr->Geo->DrawArgs[meshName].BaseVertexLocation;
 	chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	chr->m_Bounds = chr->Geo->DrawArgs["husky"].Bounds;
+	chr->m_Bounds = chr->Geo->DrawArgs[meshName].Bounds;
 	chr->m_MaterialIndex = 4;
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();

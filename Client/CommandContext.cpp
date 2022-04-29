@@ -36,17 +36,20 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 
 		for (auto& i : info)
 		{
-			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
-			XMMATRIX TexTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
-			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+			if (rItems[i.second]->m_IsVisible)
+			{
+				XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
+				XMMATRIX TexTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
+				XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 
-			ShaderResource::InstanceData data;
-			XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
-			XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(TexTransform));
-			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+				ShaderResource::InstanceData data;
+				XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
+				XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(TexTransform));
+				data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
 
-			// Write the instance data to structured buffer for the visible objects.
-			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
+				// Write the instance data to structured buffer for the visible objects.
+				m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
+			}
 		}
 	
 }
@@ -155,7 +158,7 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 
 void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance)
 {
-	skinmodelInstance->UpdateSkinnedAnimation(Core::g_GameTimer->DeltaTime());
+	//skinmodelInstance->UpdateSkinnedAnimation(Core::g_GameTimer->DeltaTime());
 
 	ShaderResource::SkinnedConstants skinnedConstants;
 	std::copy(

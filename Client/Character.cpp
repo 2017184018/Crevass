@@ -197,10 +197,12 @@ Character::~Character()
 
 void Character::Update(const float deltaT)
 {
-	if (!m_PlayerController) return;
-	if (!m_MyCamera) return;
 
-	m_PlayerController->Update(deltaT);
+	if (m_PlayerController)
+		m_PlayerController->Update(deltaT);
+
+	
+
 	m_Bounds.Center = GetPosition();
 
 	SetState();
@@ -209,17 +211,19 @@ void Character::Update(const float deltaT)
 		p.second->m_Time += deltaT;
 	}
 	UpdateBoneTransforms();
-
-	CameraType cType = m_MyCamera->GetCameraType();
-
-	if (cType == CameraType::Third)
-	{
-		XMFLOAT3 target = GetPosition();
-		target.y += 100;
-		m_MyCamera->Update(target, deltaT);
-		m_MyCamera->SetTarget(target);
-	}
+	if (m_MyCamera != NULL) {
 	
+
+		CameraType cType = m_MyCamera->GetCameraType();
+
+		if (cType == CameraType::Third)
+		{
+			XMFLOAT3 target = GetPosition();
+			target.y += 100;
+			m_MyCamera->Update(target, deltaT);
+			m_MyCamera->SetTarget(target);
+		}
+	}
 }
 
 void Character::SetCamera(Camera* myCamera, CameraType cameraType)

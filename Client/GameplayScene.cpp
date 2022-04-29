@@ -48,14 +48,16 @@ bool GameplayScene::Enter()
 	m_PlayerID = 0;
 
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>("husky", "husky0");
-
-	//m_Users[m_PlayerID]->m_PlayerRole = ROLE_MASTER;
-	//m_Users[1] = AppContext->FindObject<Character>(CHARACTER_DRUID, CHARACTER_DRUID);
-	//m_Users[2] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
-	//m_Users[3] = AppContext->FindObject<Character>(CHARACTER_SORCERER, CHARACTER_SORCERER);
-
+	m_Users[m_PlayerID]->m_IsVisible = true;
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
 	m_Users[m_PlayerID]->SetController();
+
+	m_Users[1] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+	m_Users[1]->m_IsVisible = true;
+	/*m_Users[2] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
+	m_Users[2]->m_IsVisible = true;
+	m_Users[3] = AppContext->FindObject<Character>(CHARACTER_SORCERER, CHARACTER_SORCERER);
+	m_Users[3]->m_IsVisible = true;*/
 
 	return false;
 }
@@ -74,8 +76,14 @@ void GameplayScene::Exit()
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
-	if (m_Users[m_PlayerID])
-		m_Users[m_PlayerID]->Update(fDeltaTime);
+
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+
+		p.second->Update(fDeltaTime);
+	}
+
 	float speed = 200 * fDeltaTime;
 	if (m_Users[m_PlayerID]) {
 		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
@@ -96,7 +104,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
 
-		m_Users[m_PlayerID]->Update(fDeltaTime);
+		//m_Users[m_PlayerID]->Update(fDeltaTime);
 	}
 	//OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
@@ -192,7 +200,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Penguin, MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Husky, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
+	
+	
+	
+	
+	
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//FindObject<GameObject>("huskyBB", "husky0BB")->SetPosition(FindObject<GameObject>("husky", "husky0")->GetPosition());
@@ -235,6 +251,7 @@ void GameplayScene::Render()
 	
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+	
 	//디버그 주석
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecubeBB"], m_RItemsVec);
@@ -244,7 +261,8 @@ void GameplayScene::Render()
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
-
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 

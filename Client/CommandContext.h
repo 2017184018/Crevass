@@ -64,7 +64,7 @@ public:
 	ShaderResource::PassConstants mMainPassCB;
 	std::unique_ptr<UploadBuffer<ShaderResource::PassConstants>>	PassCB = nullptr;
 	std::map<string, std::unique_ptr<UploadBuffer<ShaderResource::InstanceData>>> m_InstanceBuffers;
-	std::array< std::unique_ptr<UploadBuffer<ShaderResource::SkinnedConstants>>, TOTAL_USER_COUNT> m_SkinnedCBs;
+	std::array< std::unique_ptr<UploadBuffer<ShaderResource::SkinnedConstants>>, BoneIndex::Count> m_SkinnedCBs;
 	std::unique_ptr<UploadBuffer<ShaderResource::MaterialData>>		MaterialBuffer = nullptr;
 
 	UINT passCount; UINT materialCount; UINT skinnedObjectCount;
