@@ -254,7 +254,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowcube"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowcube"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["snowcube"].Bounds;
-
+		instancingObj->m_IsVisible = true;
 		instancingObj->m_MaterialIndex = 1;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		instancingObj->m_World._11 = size;
@@ -281,9 +281,9 @@ void ApplicationContext::CreateBackground()
 		chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		chr->m_Bounds = chr->Geo->DrawArgs["husky"].Bounds;
 		chr->m_MaterialIndex = 4;
-		chr->m_SkinnedCBIndex = 0;
+		chr->m_SkinnedCBIndex = BoneIndex::Husky;
 		chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
-		chr->m_IsVisible = false;
+		chr->m_IsVisible = true;
 		// 임시 스폰위치 지정
 		//chr->m_SpawnLoaction = skinnedCBIndex;
 		int XPos, ZPos;
@@ -312,6 +312,7 @@ void ApplicationContext::CreateBackground()
 		top->IndexCount = top->Geo->DrawArgs["grid"].IndexCount;
 		top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
 		top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
+		top->m_IsVisible = true;
 		top->m_MaterialIndex = 5;
 		top->m_World = MathHelper::Identity4x4();
 		top->m_World._11 = 50;

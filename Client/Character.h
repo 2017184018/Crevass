@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "PlayerController.h"
+
 class Camera;
 class CharacterParts;
 
@@ -15,12 +16,22 @@ public:
 		STATE_IDLE,
 		STATE_IDLE_TO_FORWARD,
 		STATE_IDLE_TO_JUMP,
+		STATE_IDLE_TO_ATTACK,
+
 		STATE_FORWARD,
 		STATE_FORWARD_TO_IDLE,
 		STATE_FORWARD_TO_JUMP,
+		STATE_FORWARD_TO_ATTACK,
+
 		STATE_JUMP,
 		STATE_JUMP_TO_IDLE,
-		STATE_JUMP_TO_FORWARD
+		STATE_JUMP_TO_FORWARD,
+		STATE_JUMP_TO_ATTACK,
+
+		STATE_ATTACK,
+		STATE_ATTACK_TO_JUMP,
+		STATE_ATTACK_TO_IDLE,
+		STATE_ATTACK_TO_FORWARD
 	};
 
 	PlayerState m_PlayerState;
@@ -76,6 +87,7 @@ public:
 
 	virtual void Scale(float x, float y, float z) override;
 
+	void SetAnimationKeyState(PlayerState keyState);
 public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;

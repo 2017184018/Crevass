@@ -8,6 +8,8 @@
 #include "MeshReference.h"
 #include "ApplicationContext.h"
 #include "MaterialReference.h"
+
+#include "CommandCenter.h"
 //#include "Character.h"
 //#include "CharacterParts.h"
 
@@ -34,6 +36,8 @@ void CREVASS::Startup(void)
 	m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 1500.0f);
 
 	m_SceneManager = SceneManager::GetApp();
+	m_CommandCenter = CommandCenter::GetApp();
+
 	// Build Mesh & Material & Texture
 	m_MeshRef = MeshReference::GetApp();
 	m_MaterialRef = MaterialReference::GetApp();
@@ -54,13 +58,14 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Jump");
-	//m_MeshRef->BuildSkinnedModelAnimation("husky", "Peck");
+	m_MeshRef->BuildSkinnedModelAnimation("husky", "Attack");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Attack");
 
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
@@ -103,9 +108,12 @@ void CREVASS::Cleanup(void)
 	AppContext->m_RItemsVec.clear();
 	AppContext->m_RItemsMap.clear();
 
+	/* Release Commands */
+	CommandCenter::GetApp()->Release();
 
 	/* Release References */
 	SceneManager::DestroyApp();
+	CommandCenter::DestroyApp();
 	MeshReference::DestroyApp();
 	MaterialReference::DestroyApp();
 	ApplicationContext::DestroyApp();
@@ -113,6 +121,9 @@ void CREVASS::Cleanup(void)
 
 void CREVASS::Update(float deltaT)
 {
+	/*CommandCenter*/
+	CommandCenter::GetApp()->Order(deltaT);
+
 	SceneManager::GetApp()->UpdateScene(deltaT);
 	m_Camera->UpdateViewMatrix();
 

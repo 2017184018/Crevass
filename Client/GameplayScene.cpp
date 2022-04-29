@@ -86,7 +86,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		p.second->Update(fDeltaTime);
 	}
 
-	float speed = 200 * fDeltaTime;
+	float speed = 100* fDeltaTime;
 	if (m_Users[m_PlayerID]) {
 		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
 			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
@@ -245,7 +245,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				if (AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
 					IsShake[5 * i + j] = true;
 					IsDown[5 * i + j] = true;
-					cout << 5 * i + j << endl;
+					//cout << 5 * i + j << endl;
 				}
 			}
 		}
@@ -254,7 +254,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 void GameplayScene::Render()
 {
-	cout << "¾È³ç" << endl;
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
