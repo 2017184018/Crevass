@@ -201,8 +201,6 @@ void Character::Update(const float deltaT)
 	if (m_PlayerController)
 		m_PlayerController->Update(deltaT);
 
-	
-
 	m_Bounds.Center = GetPosition();
 
 	SetState();

@@ -111,9 +111,10 @@ float4 PS(VertexOut pin) : SV_Target
     float3 fresnelR0 = matData.FresnelR0;
     float  roughness = matData.Roughness;
 	uint diffuseTexIndex = matData.DiffuseMapIndex;
-	
+
 	// Dynamically look up the texture in the array.
     diffuseAlbedo *= gDiffuseMap[diffuseTexIndex].Sample(gsamLinearWrap, pin.TexC);
+	clip(diffuseAlbedo.a - 0.1);
 	
     // Interpolating normal can unnormalize it, so renormalize it.
     pin.NormalW = normalize(pin.NormalW);
@@ -140,7 +141,6 @@ float4 PS(VertexOut pin) : SV_Target
 
     // Common convention to take alpha from diffuse albedo.
     litColor.a = diffuseAlbedo.a;
-
     return litColor;
 }
 
