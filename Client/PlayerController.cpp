@@ -38,7 +38,6 @@ void PlayerController::HandleInput(const float deltaT)
 		//	//m_Owner->m_SkinnedModelInsts["husky"]->ClipName = "Peck";
 		//}
 
-
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
 			m_Owner->Move(DIR_FORWARD, speed, true);
 			if (!m_Owner->bJump) {

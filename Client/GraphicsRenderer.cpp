@@ -74,7 +74,9 @@ void GraphicsRenderer::LoadTextures()
 		"ice",
 		"Penguin",
 		"water",
-		"husky"
+		"husky",
+		"heart",
+		"heartline",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -84,6 +86,8 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/Penguin.dds",
 		L"./Textures/water1.dds",
 		L"./Textures/Tex_Husky.dds",
+		L"./Textures/Heart.dds",
+		L"./Textures/HeartLine.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -122,6 +126,8 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	auto Penguin = m_Textures["Penguin"]->Resource;
 	auto water = m_Textures["water"]->Resource;
 	auto husky = m_Textures["husky"]->Resource;
+	auto heart = m_Textures["heart"]->Resource;
+	auto heartline = m_Textures["heartline"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -171,6 +177,24 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.MipLevels = husky->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(husky.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = heart->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = heart->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(heart.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = heartline->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = heartline->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(heartline.Get(), &srvDesc, hDescriptor);
 
 	mSkyTexHeapIndex = 0;
 

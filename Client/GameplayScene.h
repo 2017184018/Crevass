@@ -69,5 +69,7 @@ public:
 	bool BlockIn = false;		//블록 한번만 밟게
 	int tmp = -1;
 
+	void LoseLife();
+	UINT Lifecnt = 5;
 };
 

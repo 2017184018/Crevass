@@ -72,6 +72,7 @@ void GameplayScene::Exit()
 	cout << "===========================================" << endl << endl;
 
 }
+
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
@@ -151,7 +152,16 @@ void GameplayScene::Update(const float& fDeltaTime)
 	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 10;
 	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 15;
 
-
+	static bool pushone = false;
+	if (GetAsyncKeyState('1') & 0x8000) {
+		if (!pushone) {
+			LoseLife();
+			pushone = true;
+		}
+	}
+	else {
+		pushone = false;
+	}
 
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
@@ -186,6 +196,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 
 	//meterial
 
@@ -236,6 +247,7 @@ void GameplayScene::Render()
 	
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 	//디버그 주석
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecubeBB"], m_RItemsVec);
@@ -303,4 +315,10 @@ bool GameplayScene::BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
 		return false;
 	return true;
+}
+
+void GameplayScene::LoseLife() {
+	if (Lifecnt > 0) {
+		AppContext->m_RItemsVec[133 + Lifecnt--]->m_MaterialIndex = 6;
+	}
 }

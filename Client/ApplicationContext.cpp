@@ -233,34 +233,13 @@ void ApplicationContext::CreateWave()
 	Core::wave = Sea;
 }
 
-void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
-{
-	//79
-	Character* chr = CreateObject<Character>(meshName, instID);
-	chr->Geo = MeshReference::GetApp()->m_GeometryMesh[meshName].get();
-	chr->IndexCount = chr->Geo->DrawArgs[meshName].IndexCount;
-	chr->StartIndexLocation = chr->Geo->DrawArgs[meshName].StartIndexLocation;
-	chr->BaseVertexLocation = chr->Geo->DrawArgs[meshName].BaseVertexLocation;
-	chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	chr->m_Bounds = chr->Geo->DrawArgs["husky"].Bounds;
-	chr->m_MaterialIndex = 4;
-	chr->m_SkinnedCBIndex = skinnedCBIndex;
-	chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
-	chr->m_IsVisible = false;
-	// 임시 스폰위치 지정
-	//chr->m_SpawnLoaction = skinnedCBIndex;
-	chr->Scale(20, 20, 20);
-	chr->SetPosition(250, 30, 0);
-
-}
-
-float X[5] = { -650,200,1050,-650,1050 };		//배경 블록 위치
-float Z[5] = { 1050,1050,1050,200,200 };
 void ApplicationContext::CreateBackground()
 {
+	float X[5] = { -650,200,1050,-650,1050 };		//배경 블록 위치
+	float Z[5] = { 1050,1050,1050,200,200 };
 	float size = 8.5;
 
-	//80~
+	//79~83
 	for (int i = 0; i < 5; ++i) {
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("snowcube", "snowcube" + std::to_string(25 + i));
@@ -285,6 +264,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["snowcube"].Bounds.Center, instancingObj->GetPosition());
 	}
 
+	//84~133
 	for (int i = 0; i < 50; ++i) {
 		std::string meshName = "husky";
 		std::string instID = "husky" + std::to_string(i + 1);
@@ -318,6 +298,47 @@ void ApplicationContext::CreateBackground()
 		}
 		chr->SetPosition(XPos, 60, ZPos);
 	}
+
+	//134~138
+	for (int i = 0; i < 5; ++i) {
+		GameObject* top = CreateObject<GameObject>("life", "life" + std::to_string(i));
+		top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+		top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		top->IndexCount = top->Geo->DrawArgs["grid"].IndexCount;
+		top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
+		top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
+		top->m_MaterialIndex = 5;
+		top->m_World = MathHelper::Identity4x4();
+		top->m_World._11 = 50;
+		top->m_World._22 = 50;
+		top->m_World._33 = 50;
+		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+		top->m_World._41 = 55 * i;
+		top->m_World._42 = 300;
+		top->m_World._43 = 400;
+		top->m_TexTransform = MathHelper::Identity4x4();
+	}
+}
+
+
+void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
+{
+	Character* chr = CreateObject<Character>(meshName, instID);
+	chr->Geo = MeshReference::GetApp()->m_GeometryMesh[meshName].get();
+	chr->IndexCount = chr->Geo->DrawArgs[meshName].IndexCount;
+	chr->StartIndexLocation = chr->Geo->DrawArgs[meshName].StartIndexLocation;
+	chr->BaseVertexLocation = chr->Geo->DrawArgs[meshName].BaseVertexLocation;
+	chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	chr->m_Bounds = chr->Geo->DrawArgs["husky"].Bounds;
+	chr->m_MaterialIndex = 4;
+	chr->m_SkinnedCBIndex = skinnedCBIndex;
+	chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
+	chr->m_IsVisible = false;
+	// 임시 스폰위치 지정
+	//chr->m_SpawnLoaction = skinnedCBIndex;
+	chr->Scale(20, 20, 20);
+	chr->SetPosition(250, 30, 0);
+
 }
 
 void ApplicationContext::HiddenBlocks()

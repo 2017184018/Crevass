@@ -66,10 +66,26 @@ void MaterialReference::BuildMaterials()
 	husky->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	husky->Roughness = 1.0f;
 
+	auto heart = std::make_unique<Material>();
+	heart->MatCBIndex = 5;
+	heart->DiffuseSrvHeapIndex = 5;
+	heart->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	heart->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	heart->Roughness = 1.0f;
+
+	auto heartline = std::make_unique<Material>();
+	heartline->MatCBIndex = 6;
+	heartline->DiffuseSrvHeapIndex = 6;
+	heartline->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	heartline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	heartline->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
 	m_Materials["water"] = std::move(water);
 	m_Materials["husky"] = std::move(husky);
+	m_Materials["heart"] = std::move(heart);
+	m_Materials["heartline"] = std::move(heartline);
 	
 }
