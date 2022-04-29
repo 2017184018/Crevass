@@ -200,10 +200,10 @@ void Character::Update(const float deltaT)
 	if (!m_PlayerController) return;
 	if (!m_MyCamera) return;
 
+	SetState();
 	m_PlayerController->Update(deltaT);
 	m_Bounds.Center = GetPosition();
 
-	SetState();
 	for (auto& p : m_MapAnimData)
 	{
 		p.second->m_Time += deltaT;

@@ -69,8 +69,8 @@ void PlayerController::HandleInput(const float deltaT)
 		}
 
 		if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-			if (m_Owner->bJump == false) {
-				if (!SpacePush) {
+			if (!SpacePush) {
+				if (m_Owner->bJump == false) {
 					m_Owner->bJump = true;
 					m_Owner->is_Inair = true;
 					m_Owner->m_KeyState = Character::PlayerState::STATE_JUMP;
