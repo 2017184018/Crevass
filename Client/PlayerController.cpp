@@ -6,6 +6,12 @@
 #include "Character.h"
 #include "SkinnedModelInstance.h"
 
+#include "MainFramework.h"
+#include "Network.h"
+#include "CREVASS.h"
+
+using namespace Core;
+
 PlayerController::PlayerController(Character* player) :
 	m_Owner(player)
 {
@@ -35,7 +41,6 @@ void PlayerController::HandleInput(const float deltaT)
 		//if (GetAsyncKeyState('G') & 0x8000) {
 		//	//m_Owner->m_SkinnedModelInsts["husky"]->ClipName = "Peck";
 		//}
-
 
 		if (GetAsyncKeyState('W') & 0x8000) {
 			m_Owner->Move(DIR_FORWARD, speed, true);
@@ -123,6 +128,11 @@ void PlayerController::HandleInput(const float deltaT)
 		{
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
+		}
+
+		if (InputHandler::IsKeyUp('B'))
+		{
+			g_pFramework->m_pNetwork->Send(CS_READY);
 		}
 	break;
 	case CameraType::Free:

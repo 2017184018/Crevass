@@ -11,8 +11,8 @@
 #include "GameObject.h"
 #include "Character.h"
 #include "CharacterParts.h"
-//#include "Network.h"
-//#include "MainFramework.h"
+#include "Network.h"
+#include "MainFramework.h"
 #include <random>
 
 random_device rd;
@@ -217,7 +217,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				if (AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
 					IsShake[5 * i + j] = true;
 					IsDown[5 * i + j] = true;
-					cout << 5 * i + j << endl;
+					//cout << 5 * i + j << endl;
 				}
 			}
 		}

@@ -11,8 +11,8 @@
 //#include "Character.h"
 //#include "CharacterParts.h"
 
-//#include "Network.h"
-//#include "MainFramework.h"
+#include "Network.h"
+#include "MainFramework.h"
 
 #include <random>
 using namespace Core;
@@ -26,7 +26,7 @@ using namespace Core;
 
 void CREVASS::Startup(void)
 {
-	g_pFramework->m_pNetwork->Send(CS_READY);
+	//g_pFramework->m_pNetwork->Send(CS_READY);
 	//g_pFramework->m_pNetwork->Recv();
 	m_Camera = new Camera;
 
@@ -116,6 +116,7 @@ void CREVASS::Cleanup(void)
 
 void CREVASS::Update(float deltaT)
 {
+	g_pFramework->m_pNetwork->Recv();
 	SceneManager::GetApp()->UpdateScene(deltaT);
 	m_Camera->UpdateViewMatrix();
 

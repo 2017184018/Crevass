@@ -168,12 +168,33 @@ void Network::ProcessPacket(char* packet_buffer)
 		//		}
 		//	}
 		//}
-		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
-		if (m_pGameInfo->m_ClientID == 0)
-			OtherPlayerPos = packet.players[1].pos;
-		else
-			OtherPlayerPos = packet.players[0].pos;
-		break;
+		/*=====================================================*/
+		//PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
+		//if (m_pGameInfo->m_ClientID == 0)
+		//	OtherPlayerPos = packet.players[1].pos;
+		//else
+		//	OtherPlayerPos = packet.players[0].pos;
+		//break;
+		/*=====================================================*/
+		for (int i = 0; i < TOTAL_PLAYER_NUM; ++i)
+		{
+			if (packet.players[i].id != -1)
+			{
+				if (m_pGameInfo->m_PlayersInfo[i] != nullptr)
+				{
+					if (packet.players[i].pos.x != NULL && packet.players[i].pos.y != NULL && packet.players->pos.z != NULL)
+					{
+						m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players->pos);
+					}
+				}
+			}
+		}
+
+		float x = packet.players[0].pos.x;
+		std::cout << x << std::endl;
+		std::cout << m_pGameInfo->m_ClientsNum << std::endl;
+
+
 	}
 	case SC_POS:
 	{
