@@ -68,6 +68,8 @@ using namespace DirectX::PackedVector;
 #define TOTAL_USER_COUNT 4
 #define CHARACTER_INDEX_MASTER 0 
 
+enum BoneIndex { Husky = 0, Penguin, Seal, Fox, PolarBear, Count};
+
 enum class SceneType { /*Title*/ Lobby, GamePlay, GameResult, Count};
 enum class CameraType { First, Third, Free };
 

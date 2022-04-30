@@ -41,6 +41,7 @@ class SceneManager;
 class MeshReference;
 class MaterialReference;
 class Character;
+class CommandCenter;
 class CREVASS : public IGameApp, public TemplateSingleton<CREVASS>
 {
 
@@ -80,6 +81,6 @@ public:
 	MeshReference* m_MeshRef;
 	MaterialReference* m_MaterialRef;
 	SceneManager* m_SceneManager;
-
+	CommandCenter* m_CommandCenter;
 };
 

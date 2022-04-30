@@ -17,9 +17,9 @@
 
 random_device rd;
 default_random_engine dre(rd());
-uniform_int_distribution<> uid{ 0,8 }; //´«»ç¶÷ À§Ä¡
-uniform_int_distribution<> uid2{ 0,3 }; //ºí·Ï µ¤°³ È¸Àü
-uniform_int_distribution<> uid3{ 0,24 }; //ºí·Ï ¼±ÅÃ
+uniform_int_distribution<> uid{ 0,8 }; //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+uniform_int_distribution<> uid2{ 0,3 }; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
+uniform_int_distribution<> uid3{ 0,24 }; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 using namespace Core;
 
@@ -32,6 +32,8 @@ void GameplayScene::Initialize()
 	AppContext->CreateSnowmans();
 	AppContext->CreateWave();
 	AppContext->CreateBackground();
+	//AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
+	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
 
 	for (int i = 0; i < 25; ++i) {
 		IsShake[i] = false;
@@ -49,14 +51,16 @@ bool GameplayScene::Enter()
 	m_PlayerID = 0;
 
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>("husky", "husky0");
-
-	//m_Users[m_PlayerID]->m_PlayerRole = ROLE_MASTER;
-	//m_Users[1] = AppContext->FindObject<Character>(CHARACTER_DRUID, CHARACTER_DRUID);
-	//m_Users[2] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
-	//m_Users[3] = AppContext->FindObject<Character>(CHARACTER_SORCERER, CHARACTER_SORCERER);
-
+	m_Users[m_PlayerID]->m_IsVisible = true;
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
 	m_Users[m_PlayerID]->SetController();
+
+	m_Users[1] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+	m_Users[1]->m_IsVisible = true;
+	/*m_Users[2] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
+	m_Users[2]->m_IsVisible = true;
+	m_Users[3] = AppContext->FindObject<Character>(CHARACTER_SORCERER, CHARACTER_SORCERER);
+	m_Users[3]->m_IsVisible = true;*/
 
 	return false;
 }
@@ -76,9 +80,15 @@ void GameplayScene::Exit()
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
-	if (m_Users[m_PlayerID])
-		m_Users[m_PlayerID]->Update(fDeltaTime);
-	float speed = 100 * fDeltaTime;
+
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+
+		p.second->Update(fDeltaTime);
+	}
+
+	float speed = 100* fDeltaTime;
 	if (m_Users[m_PlayerID]) {
 		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
 			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
@@ -94,17 +104,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
 			m_Users[m_PlayerID]->bJump = false;
-			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
 
-	//	m_Users[m_PlayerID]->Update(fDeltaTime);
 	}
-	//OnKeyboardInput(deltaT);
+
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i] || !IsDown[i]) {
-			shake(AppContext->m_RItemsVec[2 * i + 1], i);	//ºí·Ï
-			shake(AppContext->m_RItemsVec[2 * (i + 1)], i);	//µ¤°³
-			shake(AppContext->m_RItemsVec[51 + i], i);	//°íµå¸§
+			shake(AppContext->m_RItemsVec[2 * i + 1], i);	//ï¿½ï¿½ï¿½ï¿½
+			shake(AppContext->m_RItemsVec[2 * (i + 1)], i);	//ï¿½ï¿½ï¿½ï¿½
+			shake(AppContext->m_RItemsVec[51 + i], i);	//ï¿½ï¿½ï¿½å¸§
 		}
 		if (ShakeCnt[i] == 3) {
 			ShakeCnt[i] = 0;
@@ -126,12 +134,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 				AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
 			}
 		}
-		//ºí·Ï À§Ä¡Á¶Á¤
+		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
 	}
-	//´«»ç¶÷ À§Ä¡Á¶Á¤
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½
 	if (SnowmanIndex[0] % 4) {
 		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 15;
 	}
@@ -160,7 +168,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.01;
 	}
-	{	//¹°¿¡ ºüÁú ¶§ ÀÓ½Ã
+	{	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ó½ï¿½
 		static bool pushone = false;
 		if (GetAsyncKeyState('1') & 0x8000) {
 			if (!pushone) {
@@ -197,7 +205,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	// Update the wave simulation.
 	Core::mWaves->Update(fDeltaTime);
 
-	//ºí·Ï
+	//ï¿½ï¿½ï¿½ï¿½
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
@@ -205,6 +213,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
 
@@ -214,11 +224,19 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateSkinnedCBs(CHARACTER_INDEX_MASTER, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Penguin, MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Husky, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
+	
+	
+	
+	
+	
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
-	//FindObject<GameObject>("huskyBB", "husky0BB")->SetPosition(FindObject<GameObject>("husky", "husky0")->GetPosition());
-
+	//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(AppContext->FindObject<GameObject>("husky", "husky0")->GetPosition());
+	//AppContext->FindObject<GameObject>("icecubeBB", "icecubeBB0")->SetPosition(AppContext->FindObject<GameObject>("snowcube", "snowcube0")->GetPosition());
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
@@ -257,16 +275,17 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
-	//µð¹ö±× ÁÖ¼®
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
-	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecubeBB"], m_RItemsVec);
-	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["huskyBB"], m_RItemsVec);
+//	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
-
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 
@@ -282,7 +301,7 @@ void GameplayScene::Render()
 }
 
 void GameplayScene::shake(GameObject* object, int index) {
-	if (BlockCheck(index)) {		//ºÎ½¤Áü
+	if (BlockCheck(index)) {		//ï¿½Î½ï¿½ï¿½ï¿½
 		if (IsRight[index]) {
 			if (object->m_World._41 < 100 * (index / 5) + 3) {
 				object->m_World._41 += 0.14f;
@@ -300,7 +319,7 @@ void GameplayScene::shake(GameObject* object, int index) {
 		if (IsRight[index] && (object->m_World._41 - 0.001f <= 100 * (index / 5) && object->m_World._41 + 0.001f >= 100 * (index / 5)))
 			++ShakeCnt[index];
 	}
-	else {		//³»·Á°¨
+	else {		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (IsDown[index]) {
 			if (object->m_World._42 <= -70)
 				IsDown[index] = false;
