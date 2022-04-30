@@ -19,7 +19,7 @@ void Character::SetState()
 
 		case STATE_JUMP:
 			m_PlayerState = STATE_IDLE_TO_JUMP;
-			m_MapAnimData["Jump"]->m_Time = 0.0f;
+			m_MapAnimData["Jump"]->m_Time = 0.2f;
 			m_BlendFrame = 1.0f;
 			break;
 
@@ -42,7 +42,7 @@ void Character::SetState()
 			break;
 		case STATE_JUMP:
 			m_PlayerState = STATE_FORWARD_TO_JUMP;
-			m_MapAnimData["Jump"]->m_Time = 0.0f;
+			m_MapAnimData["Jump"]->m_Time = 0.1f;
 			m_BlendFrame = 1.0f;
 			break;
 
