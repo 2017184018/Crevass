@@ -32,6 +32,8 @@ void GameplayScene::Initialize()
 	AppContext->CreateSnowmans();
 	AppContext->CreateWave();
 	AppContext->CreateBackground();
+	//AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
+	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
 
 	for (int i = 0; i < 25; ++i) {
 		IsShake[i] = false;
@@ -105,9 +107,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[m_PlayerID]->bJump = false;
 		}
 
-		//m_Users[m_PlayerID]->Update(fDeltaTime);
 	}
-	//OnKeyboardInput(deltaT);
+
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i] || !IsDown[i]) {
 			shake(AppContext->m_RItemsVec[2 * i + 1], i);	//블록
@@ -203,6 +204,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 
 	//meterial
@@ -222,8 +225,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
-	//FindObject<GameObject>("huskyBB", "husky0BB")->SetPosition(FindObject<GameObject>("husky", "husky0")->GetPosition());
-
+	//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(AppContext->FindObject<GameObject>("husky", "husky0")->GetPosition());
+	//AppContext->FindObject<GameObject>("icecubeBB", "icecubeBB0")->SetPosition(AppContext->FindObject<GameObject>("snowcube", "snowcube0")->GetPosition());
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (BlockCheck(5 * i + j)) {
@@ -265,8 +268,8 @@ void GameplayScene::Render()
 
 	//디버그 주석
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
-	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["icecubeBB"], m_RItemsVec);
-	//GraphicsContext::GetApp()->DrawRenderItems(m_RItemsMap["huskyBB"], m_RItemsVec);
+//	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 

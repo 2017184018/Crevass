@@ -92,7 +92,7 @@ public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;
 	std::map<std::string, CharacterParts*> m_Parts;
-	int Dir = DIR_FORWARD;
+	int m_Dir = 0;
 	BOOL bJump = false;
 	BOOL is_Inair = false;
 private:

@@ -49,11 +49,11 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_cube.mesh", "snowcube");
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
-	//m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "icecube", m_MeshRef->m_GeometryMesh["icecube"].get()->DrawArgs["icecube"].Bounds);
+	m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "icecube", m_MeshRef->m_GeometryMesh["icecube"].get()->DrawArgs["icecube"].Bounds);
 
 	//husky
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "husky");
-	//m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "husky", m_MeshRef->m_GeometryMesh["husky"].get()->DrawArgs["husky"].Bounds);
+	m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "husky", m_MeshRef->m_GeometryMesh["husky"].get()->DrawArgs["husky"].Bounds);
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Walk");

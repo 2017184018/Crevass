@@ -68,6 +68,18 @@ void ApplicationContext::CreateSkycube(std::string skycubeName, std::string inst
 	skyRitem->Scale(3000, 3000, 3000);
 }
 
+void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName)
+{
+	GameObject* item = CreateObject<GameObject>(boundsName, boundsInstName);
+	item->Geo = MeshReference::GetApp()->m_GeometryMesh[boundsName].get();
+	item->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	item->IndexCount = item->Geo->DrawArgs[boundsName].IndexCount;
+	item->StartIndexLocation = item->Geo->DrawArgs[boundsName].StartIndexLocation;
+	item->BaseVertexLocation = item->Geo->DrawArgs[boundsName].BaseVertexLocation;
+	item->m_IsVisible = true;
+	item->m_MaterialIndex = 1;
+}
+
 bool BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
 		return false;
