@@ -225,6 +225,9 @@ void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos,
 	if (clipName == "Attack")
 		timePos *= 2.0f;
 
+	if(clipName == "Jump")
+		timePos *= 1.5f;
+
 	//이 클립의 모든 뼈대를 시간에 맞게 보간함
 	auto clip = mAnimations.find(clipName);
 	clip->second.Interpolate(timePos, toParentTransforms);

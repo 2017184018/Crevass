@@ -13,13 +13,13 @@ void Character::SetState()
 		{
 		case STATE_FORWARD:
 			m_PlayerState = STATE_IDLE_TO_FORWARD;
-			m_MapAnimData["Run"]->m_Time = 0.4f;
+			m_MapAnimData["Run"]->m_Time = 0.0f;
 			m_BlendFrame = 1.f;
 			break;
 
 		case STATE_JUMP:
 			m_PlayerState = STATE_IDLE_TO_JUMP;
-			m_MapAnimData["Jump"]->m_Time = 0.4f;
+			m_MapAnimData["Jump"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 
@@ -42,13 +42,13 @@ void Character::SetState()
 			break;
 		case STATE_JUMP:
 			m_PlayerState = STATE_FORWARD_TO_JUMP;
-			m_MapAnimData["Jump"]->m_Time = 0.4f;
+			m_MapAnimData["Jump"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 
 		case STATE_ATTACK:
 			m_PlayerState = STATE_FORWARD_TO_ATTACK;
-			m_MapAnimData["Attack"]->m_Time = 0.4f;
+			m_MapAnimData["Attack"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 
@@ -70,7 +70,7 @@ void Character::SetState()
 
 		case STATE_ATTACK:
 			m_PlayerState = STATE_JUMP_TO_ATTACK;
-			m_MapAnimData["Attack"]->m_Time = 0.4f;
+			m_MapAnimData["Attack"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 
@@ -92,7 +92,7 @@ void Character::SetState()
 
 		case STATE_JUMP:
 			m_PlayerState = STATE_ATTACK_TO_JUMP;
-			m_MapAnimData["Jump"]->m_Time = 0.4f;
+			m_MapAnimData["Jump"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 

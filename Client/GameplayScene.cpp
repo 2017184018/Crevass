@@ -103,7 +103,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
 			m_Users[m_PlayerID]->bJump = false;
-			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
 
 		//m_Users[m_PlayerID]->Update(fDeltaTime);

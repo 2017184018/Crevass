@@ -229,8 +229,8 @@ void PlayerController::OnKeyPressed()
 		if (InputHandler::IsKeyDown(VK_SPACE)) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
-			cout << "È£ÃâµÊ¤·¤·"<< endl;
-			cout << CommandCenter::GetApp()->m_JumpDeltaT << endl;
+			m_Owner->is_Inair = true;
+			m_Owner->bJump = true;
 		}
 		else {
 			//SpacePush = false;
