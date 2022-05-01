@@ -2,6 +2,7 @@
 #include "GameInfo.h"
 #include "PlayerInfo.h"
 #include "CREVASS.h"
+#include "SceneManager.h"
 
 namespace Core
 {
@@ -189,35 +190,22 @@ void Network::ProcessPacket(char* packet_buffer)
 				}
 			}
 		}
-
-		float x = packet.players[0].pos.x;
-		std::cout << x << std::endl;
-		std::cout << m_pGameInfo->m_ClientsNum << std::endl;
-
-
+		SceneManager::GetApp()->ChangeScene(SceneType::GamePlay);
+		break;
 	}
 	case SC_POS:
 	{
 		sc_packet_pos packet;
 		memcpy(&packet, ptr, sizeof(packet));
-		PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
-		if (m_pGameInfo->m_ClientID == 0)
-			OtherPlayerPos = packet.players[1].pos;
-		else
-			OtherPlayerPos = packet.players[0].pos;
-		//for (int i = 0; i < 3; ++i)
-		//{
-		//	if (packet.players[i].id != -1)
-		//	{
-		//		if (Info::GetInstance()->m_PlayersInfo[i] != nullptr)
-		//		{
-		//			if (packet.players[i].posX != NULL && packet.players[i].posY != NULL)
-		//			{
-		//				Info::GetInstance()->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players[i].posX, packet.players[i].posY);
-		//			}
-		//		}
-		//	}
-		//}
+		for (int i = 0; i < TOTAL_PLAYER_NUM; ++i)
+		{
+			PlayerPos[i] = packet.players[i].pos;
+		}
+		//if (m_pGameInfo->m_ClientID == 0)
+		//	OtherPlayerPos = packet.players[1].pos;
+		//else
+		//	OtherPlayerPos = packet.players[0].pos;
+
 		break;
 	}
 	case SC_REMOVE_PLAYER:
@@ -273,12 +261,7 @@ void Network::ErrorDisplay(const char* msg)
 	std::cout << "Error! - " << msg << "descripton: " << lpMsgBuf << std::endl;
 }
 
-DirectX::XMFLOAT3 Network::GetPlayerPos()
+DirectX::XMFLOAT3 Network::GetPlayerPos(int num)
 {
-	return PlayerPos;
-}
-
-DirectX::XMFLOAT3 Network::GetOhterPlayerPos()
-{
-	return OtherPlayerPos;
+	return PlayerPos[num];
 }

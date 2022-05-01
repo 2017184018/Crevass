@@ -73,7 +73,7 @@ void CREVASS::Startup(void)
 
 	SceneManager::GetApp()->InitializeScenes();
 	BuildCharacters();
-	SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
+	SceneManager::GetApp()->EnterScene(SceneType::Lobby);
 
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;

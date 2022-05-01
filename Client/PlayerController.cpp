@@ -48,6 +48,7 @@ void PlayerController::HandleInput(const float deltaT)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			}
 			m_Owner->SetDir(0);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 		}
 
 
@@ -56,6 +57,8 @@ void PlayerController::HandleInput(const float deltaT)
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			m_Owner->SetDir(270);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
+
 		}
 
 		if (GetAsyncKeyState('S') & 0x8000) {
@@ -63,6 +66,8 @@ void PlayerController::HandleInput(const float deltaT)
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			m_Owner->SetDir(180);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
+
 		}
 
 		if (GetAsyncKeyState('D') & 0x8000) {
@@ -70,6 +75,8 @@ void PlayerController::HandleInput(const float deltaT)
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 			m_Owner->SetDir(90);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
+
 		}
 
 		if (GetAsyncKeyState('F') & 0x8000 && m_Owner->bJump == false) {
@@ -113,21 +120,29 @@ void PlayerController::HandleInput(const float deltaT)
 
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
 			}
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
+
 		}
 		if (InputHandler::IsKeyUp('A'))
 		{
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
+
 		}
 		if (InputHandler::IsKeyUp('S'))
 		{
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
+
 		}
 		if (InputHandler::IsKeyUp('D'))
 		{
 			if (!m_Owner->bJump)
 				m_Owner->m_KeyState = Character::PlayerState::STATE_IDLE;
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
+
 		}
 
 		if (InputHandler::IsKeyUp('B'))

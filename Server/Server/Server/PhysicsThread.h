@@ -123,6 +123,10 @@ void ProcessClients()
 				}
 				SendPos(*players);
 				elapsedTime = 0;
+				for (int i = 0; i < numOfCls; ++i)
+				{
+					std::cout << players[i].pos.x << std::endl;
+				}
 			}
 		}
 	}

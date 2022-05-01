@@ -96,8 +96,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[m_PlayerID]->bJump = false;
 			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
 		}
-
 		m_Users[m_PlayerID]->Update(fDeltaTime);
+
+
 	}
 	//OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
