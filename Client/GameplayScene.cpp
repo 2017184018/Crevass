@@ -279,6 +279,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					IsDown[5 * i + j] = true;
 				}
 				if (tmp2 != -1 && !AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+					IsDown[tmp2] = false;
 					tmp2 = -1;
 				}
 			}
@@ -344,7 +345,7 @@ void GameplayScene::shake(GameObject* object, int index) {
 	}
 	else {
 		cout << "tmp2: " << tmp2 << endl;
-		if (IsDown[index] || tmp2 != -1) {
+		if (IsDown[index] && tmp2 != -1) {
 			if (object->m_World._42 <= -170)
 				IsDown[index] = false;
 			else {
