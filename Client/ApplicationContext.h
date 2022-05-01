@@ -56,6 +56,8 @@ public:
 public:
 	std::string FindAnimName(int animCode) const;
 
+	void CreateLobby();
+
 	void CreateSkycube(std::string skycubeName, std::string instID, std::string matName);
 	void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);
 	void CreateBlocks();

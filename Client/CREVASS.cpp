@@ -37,7 +37,7 @@ void CREVASS::Startup(void)
 
 	m_SceneManager = SceneManager::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
-
+	
 	// Build Mesh & Material & Texture
 	m_MeshRef = MeshReference::GetApp();
 	m_MaterialRef = MaterialReference::GetApp();

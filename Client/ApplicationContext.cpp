@@ -52,8 +52,30 @@ std::string ApplicationContext::FindAnimName(int animCode) const
 	return animName;
 }
 
+void ApplicationContext::CreateLobby(){
+	GameObject* top = CreateObject<GameObject>("lobby", "lobby0");
+	top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+	top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	top->IndexCount = top->Geo->DrawArgs["grid"].IndexCount;
+	top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
+	top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
+	top->m_IsVisible = true;
+	top->m_MaterialIndex = 8;
+	top->m_World = MathHelper::Identity4x4();
+	top->m_World._11 = 300;
+	top->m_World._22 = 1;
+	top->m_World._33 = 200;
+	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+	top->m_World._41 = 180;
+	top->m_World._42 = 90;
+	top->m_World._43 = 100;
+	top->m_TexTransform = MathHelper::Identity4x4();
+}
+
 void ApplicationContext::CreateSkycube(std::string skycubeName, std::string instID, std::string matName)
 {
+//	m_RItemsVec.clear();
+//	m_RItemsMap.clear();
 	GameObject* skyRitem = CreateObject<GameObject>(skycubeName, instID);		//0
 	skyRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
@@ -254,7 +276,6 @@ void ApplicationContext::CreateBackground()
 {
 	float X[5] = { -650,200,1050,-650,1050 };		//배경 블록 위치
 	float Z[5] = { 1050,1050,1050,200,200 };
-	float size = 8.5;
 
 	//79~83
 	for (int i = 0; i < 5; ++i) {
@@ -269,6 +290,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_MaterialIndex = 1;
 		instancingObj->m_World = MathHelper::Identity4x4();
+		float size = 8.5;
 		instancingObj->m_World._11 = size;
 		instancingObj->m_World._22 = size;
 		instancingObj->m_World._33 = size;

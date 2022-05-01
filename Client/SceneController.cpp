@@ -2,6 +2,7 @@
 #include "SceneController.h"
 #include "InputHandler.h"
 #include "SceneManager.h"
+#include "ApplicationContext.h"
 
 #include "CREVASS.h"
 
@@ -22,8 +23,6 @@ void LobbyController::HandleInput(const float deltaT)
 	{
 		SceneManager::GetApp()->ChangeScene();
 	}
-
-
 }
 
 void LobbyController::MouseCallback()

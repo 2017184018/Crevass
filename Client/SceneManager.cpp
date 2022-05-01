@@ -22,8 +22,8 @@ SceneManager::~SceneManager()
 
 void SceneManager::InitializeScenes()
 {
-	CreateScene<LobbyScene>(SceneType::Lobby);
 	CreateScene<GameplayScene>(SceneType::GamePlay);
+	CreateScene<LobbyScene>(SceneType::Lobby);
 	CreateScene<GameresultScene>(SceneType::GameResult);
 }
 
