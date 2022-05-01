@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "CharacterParts.h"
 #include "MeshReference.h"
+#include "MaterialReference.h"
 
 #include <random>
 
@@ -396,7 +397,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->BaseVertexLocation = chr->Geo->DrawArgs[meshName].BaseVertexLocation;
 	chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	chr->m_Bounds = chr->Geo->DrawArgs[meshName].Bounds;
-	chr->m_MaterialIndex = 4;
+	chr->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
 	chr->m_IsVisible = false;

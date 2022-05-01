@@ -37,7 +37,7 @@ void CREVASS::Startup(void)
 
 	m_SceneManager = SceneManager::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
-	
+
 	// Build Mesh & Material & Texture
 	m_MeshRef = MeshReference::GetApp();
 	m_MaterialRef = MaterialReference::GetApp();
@@ -67,23 +67,45 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Attack");
 
+	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "ArcticFox");
+	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Run");
+	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Idle");
+	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Jump");
+	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Attack");
+
+	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "PolarBear");
+	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Run");
+	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Idle");
+	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Jump");
+	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Attack");
+
+	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Seal");
+	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Run");
+	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Idle");
+	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Jump");
+	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Attack");
+
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
 
-	m_MaterialRef->BuildMaterials();
+	MaterialReference::GetApp()->BuildMaterials();
 
 	// Build RenderItem
+	
 
+	
 
 	SceneManager::GetApp()->InitializeScenes();
+	// 위 아래 바꾸면 이상함 
 	BuildCharacters();
+
 	SceneManager::GetApp()->EnterScene(SceneType::Lobby);
 
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = BoneIndex::Count;
-	GraphicsContext::GetApp()->materialCount = m_MaterialRef->m_Materials.size();
+	GraphicsContext::GetApp()->materialCount = MaterialReference::GetApp()->m_Materials.size();
 
 
 	for (auto& p : AppContext->m_RItemsMap)
@@ -138,6 +160,10 @@ void CREVASS::RenderScene(void)
 
 void CREVASS::BuildCharacters()
 {
-	AppContext->CreateCharacter("husky", "husky0", "None", BoneIndex::Husky);
-	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "None", BoneIndex::Penguin);
+	AppContext->CreateCharacter("husky", "husky0", "husky", BoneIndex::Husky);
+	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "Penguin", BoneIndex::Penguin);
+	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
+	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
+	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
+
 }

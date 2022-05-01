@@ -6,11 +6,12 @@ class SceneManager : public TemplateSingleton<SceneManager>
 {
 private:
 	template<class NewScene>
-	void CreateScene(SceneType sceneType)
+	void CreateScene(SceneType sceneType, std::string sceneName)
 	{
 		Scene* scene = new NewScene;
-		m_Scenes[static_cast<int>(sceneType)] = scene;
+		scene->m_SceneName = sceneName;
 		scene->Initialize();
+		m_Scenes[static_cast<int>(sceneType)] = scene;
 	}
 
 public:

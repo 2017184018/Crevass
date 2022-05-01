@@ -49,17 +49,21 @@ bool GameplayScene::Enter()
 
 	m_PlayerID = 0;
 
+	//나 
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>("husky", "husky0");
+
 	m_Users[m_PlayerID]->m_IsVisible = true;
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
 	m_Users[m_PlayerID]->SetController();
 
 	m_Users[1] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
 	m_Users[1]->m_IsVisible = true;
-	/*m_Users[2] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
+	m_Users[2] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
 	m_Users[2]->m_IsVisible = true;
-	m_Users[3] = AppContext->FindObject<Character>(CHARACTER_SORCERER, CHARACTER_SORCERER);
-	m_Users[3]->m_IsVisible = true;*/
+	m_Users[3] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
+	m_Users[3]->m_IsVisible = true;
+	m_Users[4] = AppContext->FindObject<Character>("Seal", "Seal0");
+	m_Users[4]->m_IsVisible = true;
 
 	return false;
 }
@@ -80,10 +84,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
 
+	cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
-
+		
 		p.second->Update(fDeltaTime);
 	}
 
@@ -244,10 +249,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Penguin, MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Husky, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
-
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Fox, MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get());
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
 
 
 
@@ -309,6 +319,10 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+
 
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);

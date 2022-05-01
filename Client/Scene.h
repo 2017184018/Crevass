@@ -32,6 +32,7 @@ public:
 	virtual void	Render() = 0;
 
 protected:
+	std::string m_SceneName;
 	Controller* m_SceneController;
 };
 
