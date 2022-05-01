@@ -79,6 +79,7 @@ void GraphicsRenderer::LoadTextures()
 		"heartline",
 		"rope",
 		"lobby",
+		"arctic",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -92,6 +93,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/HeartLine_white.dds",
 		L"./Textures/rope.dds",
 		L"./Textures/LOBBY.dds",
+		L"./Textures/arctic_atlas01.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -134,6 +136,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	auto heartline = m_Textures["heartline"]->Resource;
 	auto rope = m_Textures["rope"]->Resource;
 	auto lobby = m_Textures["lobby"]->Resource;
+	auto arctic = m_Textures["arctic"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -219,6 +222,15 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.MipLevels = lobby->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(lobby.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = arctic->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = arctic->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(arctic.Get(), &srvDesc, hDescriptor);
 
 	mSkyTexHeapIndex = 0;
 

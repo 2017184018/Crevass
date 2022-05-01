@@ -37,16 +37,12 @@ void CREVASS::Startup(void)
 
 	m_SceneManager = SceneManager::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
-	
+
 	// Build Mesh & Material & Texture
 	m_MeshRef = MeshReference::GetApp();
 	m_MaterialRef = MaterialReference::GetApp();
 
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");    //fbx
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "snow_top");
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowbox_dest.mesh", "icicle");
-	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_cube.mesh", "snowcube");
+	BuildStream();
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 	m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "icecube", m_MeshRef->m_GeometryMesh["icecube"].get()->DrawArgs["icecube"].Bounds);
@@ -140,4 +136,25 @@ void CREVASS::BuildCharacters()
 {
 	AppContext->CreateCharacter("husky", "husky0", "None", BoneIndex::Husky);
 	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "None", BoneIndex::Penguin);
+}
+
+void CREVASS::BuildStream() {
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "icecube");    //fbx
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "snow_top");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "snowman");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowbox_dest.mesh", "icicle");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_cube.mesh", "snowcube");
+
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fish_m.mesh", "fish");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_kayak_m.mesh", "kayak");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_kayakPaddle_m.mesh", "kayakpaddle");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_rock00.mesh", "rock_0");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_rock01.mesh", "rock_1");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_tent01_m.mesh", "tent");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/mountains01_m.mesh", "mountain");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/igloo01_m.mesh", "igloo");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_sled_m.mesh", "sled");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fishrack01_m.mesh", "fishrack");
+	
+	
 }

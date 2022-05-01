@@ -54,26 +54,8 @@ public:
 
 private:
 	void BuildCharacters();
+	void BuildStream();
 
-	//bool IsShake[25];		//��鸮�� ��������
-	//bool IsRight[25];		//���������� ��鸮����
-	//UINT ShakeCnt[25];		//�¿�� �� �� ����������
-	//UINT DestructionCnt[25];	//�� �� �ı� �ƴ���
-	//void shake(GameObject*, int);
-
-	//bool BlockCheck(int);		//�ν����� �������� �ƴ��� üũ
-
-	//bool IsDown[25];		//�������� ������
-
-	//UINT SnowmanIndex[2];
-
-	//std::unique_ptr<Waves> mWaves;
-
-	//UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
-
-	//bool IsFall = false;		//��������
-
-	//UINT BlurCnt = 0;
 public:
 	Camera* m_Camera;
 

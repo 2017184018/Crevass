@@ -94,6 +94,13 @@ void MaterialReference::BuildMaterials()
 	lobby->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	lobby->Roughness = 1.0f;
 
+	auto arctic = std::make_unique<Material>();
+	arctic->MatCBIndex = 9;
+	arctic->DiffuseSrvHeapIndex = 9;
+	arctic->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	arctic->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	arctic->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -103,5 +110,6 @@ void MaterialReference::BuildMaterials()
 	m_Materials["heartline"] = std::move(heartline);
 	m_Materials["rope"] = std::move(rope);
 	m_Materials["lobby"] = std::move(lobby);
+	m_Materials["arctic"] = std::move(arctic);
 	
 }
