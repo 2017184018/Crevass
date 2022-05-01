@@ -291,8 +291,8 @@ void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 			vMax = XMVectorMax(vMax, P);
 		}
 
-		XMStoreFloat3(&bounds.Center, 0.25f * (vMin + vMax));
-		XMStoreFloat3(&bounds.Extents, 0.25f * (vMax - vMin));
+		XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+		XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
 	
 
 	SubmeshGeometry submesh;

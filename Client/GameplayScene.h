@@ -3,6 +3,8 @@
 #include "BlurFilter.h"
 #include "Waves.h"
 #include "GameObject.h"
+#include "MainFramework.h"
+#include "Network.h"
 
 namespace Graphics
 {
@@ -29,7 +31,7 @@ namespace Core
 	extern std::unique_ptr<Waves> mWaves;
 	extern GameObject* wave;
 	extern UINT SnowmanIndex[2];
-	//extern MainFramework* g_pFramework;
+	extern MainFramework* g_pFramework;
 }
 
 class Character;
@@ -68,6 +70,7 @@ public:
 
 	bool BlockIn = false;		//블록 한번만 밟게
 	int tmp = -1;
+	int tmp2 = -1;
 
 	void Fall();
 	UINT Lifecnt = 5;

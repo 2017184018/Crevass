@@ -33,7 +33,7 @@ void CREVASS::Startup(void)
 	m_Camera = new Camera;
 
 	m_Camera->SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
-	m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 1500.0f);
+	m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 2000.0f);
 
 	m_SceneManager = SceneManager::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();

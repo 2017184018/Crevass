@@ -34,7 +34,6 @@ void GameplayScene::Initialize()
 	AppContext->CreateBackground();
 	//AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
-
 	for (int i = 0; i < 25; ++i) {
 		IsShake[i] = false;
 		IsRight[i] = true;
@@ -141,23 +140,23 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 	//����� ��ġ����
 	if (SnowmanIndex[0] % 4) {
-		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 15;
+		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 20;
 	}
 	else {
-		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 15;
+		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 20;
 	}
-	AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 10;
-	AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 15;
+	AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 20;
+	AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 20;
 
 	if (SnowmanIndex[1] % 4) {
-		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 15;
+		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 20;
 	}
 	else {
-		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 15;
+		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 20;
 	}
 
-	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 10;
-	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 15;
+	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 20;
+	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 20;
 
 	for (int i = 0; i < 5; ++i) {
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
@@ -193,15 +192,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 	if (IsFall) {
 		static bool Isup = true;
 		cout << Lifecnt << endl;
-		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 <= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14+15) {
+		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 <= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
 			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 += 0.1f;
 			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 += 0.1f;
-			if (AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 >= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14+15) {
+			if (AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 >= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
 				AppContext->m_RItemsVec[133 + Lifecnt]->m_MaterialIndex = 6;
 				Isup = false;
 			}
 		}
-		else if(AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 > XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14) {
+		else if (AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 > XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14) {
 			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 -= 0.1f;
 			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 -= 0.1f;
 		}
@@ -274,9 +273,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 				}
 			}
 			else {
-				if (AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+				if (tmp2 == -1 && AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+					tmp2 = 5 * i + j;
 					IsShake[5 * i + j] = true;
 					IsDown[5 * i + j] = true;
+				}
+				if (tmp2 != -1 && !AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+					tmp2 = -1;
 				}
 			}
 		}
@@ -323,33 +326,34 @@ void GameplayScene::Render()
 void GameplayScene::shake(GameObject* object, int index) {
 	if (BlockCheck(index)) {		//�ν���
 		if (IsRight[index]) {
-			if (object->m_World._41 < 100 * (index / 5) + 3) {
-				object->m_World._41 += 0.14f;
+			if (object->m_World._41 < 200 * (index / 5) + 5) {
+				object->m_World._41 += 0.18f;
 			}
 			else
 				IsRight[index] = false;
 		}
 		else {
-			if (object->m_World._41 > 100 * (index / 5) - 3) {
-				object->m_World._41 -= 0.14f;
+			if (object->m_World._41 > 200 * (index / 5) - 5) {
+				object->m_World._41 -= 0.18f;
 			}
 			else
 				IsRight[index] = true;
 		}
-		if (IsRight[index] && (object->m_World._41 - 0.001f <= 100 * (index / 5) && object->m_World._41 + 0.001f >= 100 * (index / 5)))
+		if (IsRight[index] && (object->m_World._41 - 0.001f <= 200 * (index / 5) && object->m_World._41 + 0.001f >= 200 * (index / 5)))
 			++ShakeCnt[index];
 	}
-	else {		//������
-		if (IsDown[index]) {
-			if (object->m_World._42 <= -70)
+	else {
+		cout << "tmp2: " << tmp2 << endl;
+		if (IsDown[index] || tmp2 != -1) {
+			if (object->m_World._42 <= -170)
 				IsDown[index] = false;
 			else {
-				object->m_World._42 -= (-object->m_World._42 / 150 + 1.0 / 30.0);
+				object->m_World._42 -= (-object->m_World._42 / 140.0 - 4.0 / 35.0);
 			}
 		}
 		else {
-			if (object->m_World._42 <= 0) {
-				object->m_World._42 += 0.07f;
+			if (object->m_World._42 <= -30) {
+				object->m_World._42 += 0.2f;
 			}
 			else {
 				IsDown[index] = true;

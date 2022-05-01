@@ -31,7 +31,7 @@ void PlayerController::HandleInput(const float deltaT)
 	//���ݵ��� �������̰�
 	if ( CommandCenter::GetApp()->m_StartAttackAnim) return;
 
-	float speed = 100 * deltaT;
+	float speed = 200 * deltaT;
 	XMVECTOR direction = {};
 
 	DWORD dir = 0;

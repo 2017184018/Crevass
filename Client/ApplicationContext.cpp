@@ -16,11 +16,11 @@ uniform_int_distribution<> uid4{ 0,3 }; //블록 덮개 회전
 uniform_int_distribution<> uid6{ 15,25 }; //배경 캐릭터 크기
 uniform_int_distribution<> uid7{ -25,25 }; //배경 캐릭터 회전
 uniform_int_distribution<> uid8{ 0,4 }; //배경 캐릭터 위치
-uniform_int_distribution<> uid9{ -430,430 }; //배경 캐릭터 반경
+uniform_int_distribution<> uid9{ -640,640 }; //배경 캐릭터 반경
 
 using namespace Core;
 
-#define SCALE 0.5
+#define SCALE 1
 
 std::string ApplicationContext::FindAnimName(int animCode) const
 {
@@ -131,11 +131,11 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->m_World._33 = SCALE;
 
 				instancingObj->m_World._41 = distance * i;
+				instancingObj->m_World._42 = -30;
 				instancingObj->m_World._43 = distance * j;
 				instancingObj->m_TexTransform = MathHelper::Identity4x4();
 
 				instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["icecube"].Bounds.Center, instancingObj->GetPosition());
-
 			}
 			else {
 				instancingObj = CreateObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j));
@@ -153,11 +153,11 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->m_World._33 = SCALE;
 
 				instancingObj->m_World._41 = distance * i;
+				instancingObj->m_World._42 = -30;
 				instancingObj->m_World._43 = distance * j;
 				instancingObj->m_TexTransform = MathHelper::Identity4x4();
 
 				instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["snowcube"].Bounds.Center, instancingObj->GetPosition());
-
 			}
 
 
@@ -176,7 +176,7 @@ void ApplicationContext::CreateBlocks()
 			top->m_World._33 = SCALE;
 			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			top->m_World._41 = distance * i;
-			top->m_World._42 = 0;
+			top->m_World._42 = -30;
 			top->m_World._43 = distance * j;
 			top->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -195,12 +195,12 @@ void ApplicationContext::CreateBlocks()
 			instancingObj->m_IsVisible = true;
 			instancingObj->m_MaterialIndex = 1;
 			instancingObj->m_World = MathHelper::Identity4x4();
-			instancingObj->m_World._11 = SCALE - 0.05;
-			instancingObj->m_World._22 = SCALE - 0.05;
-			instancingObj->m_World._33 = SCALE - 0.05;
+			instancingObj->m_World._11 = SCALE * 7.5 / 10.0;
+			instancingObj->m_World._22 = SCALE;
+			instancingObj->m_World._33 = SCALE * 7.5/ 10.0;
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			instancingObj->m_World._41 = distance * i;
-			instancingObj->m_World._42 = 0;
+			instancingObj->m_World._42 = -30;
 			instancingObj->m_World._43 = distance * j;
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -222,9 +222,9 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->m_MaterialIndex = 1;
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		instancingObj->m_World._11 = SCALE - 0.2f;
-		instancingObj->m_World._22 = SCALE - 0.2f;
-		instancingObj->m_World._33 = SCALE - 0.2f;
+		instancingObj->m_World._11 = SCALE * 3 / 5.0;
+		instancingObj->m_World._22 = SCALE * 3 / 5.0;
+		instancingObj->m_World._33 = SCALE * 3 / 5.0;
 		RandomLocation[i] = uid5(dre2);
 		while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
 			RandomLocation[i] = uid5(dre2);
@@ -234,14 +234,14 @@ void ApplicationContext::CreateSnowmans()
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
 			int distance = SCALE * 200;
 			instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance - 15.0f;
-			instancingObj->m_World._42 = 10;
+			instancingObj->m_World._42 = 40;
 			instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance + 15.0f;
 		}
 		else {
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
 			int distance = SCALE * 200;
 			instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance + 15.0f;
-			instancingObj->m_World._42 = 10;
+			instancingObj->m_World._42 = 40;
 			instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance; +15.0f;
 		}
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
@@ -263,8 +263,8 @@ void ApplicationContext::CreateWave()
 
 	Sea->m_World = MathHelper::Identity4x4();
 
-	Sea->m_World._11 = 7;
-	Sea->m_World._33 = 7;
+	Sea->m_World._11 = 11;
+	Sea->m_World._33 = 11;
 
 	Sea->m_World._41 = SCALE * 400;
 	Sea->m_World._42 = -SCALE * 100;
@@ -276,8 +276,8 @@ void ApplicationContext::CreateWave()
 
 void ApplicationContext::CreateBackground()
 {
-	float X[5] = { -650,200,1050,-650,1050 };		//배경 블록 위치
-	float Z[5] = { 1050,1050,1050,200,200 };
+	float X[5] = { -950,400,1750,-950,1750 };		//배경 블록 위치
+	float Z[5] = { 1800,1800,1800,400,400 };
 
 	//79~83
 	for (int i = 0; i < 5; ++i) {
@@ -292,13 +292,13 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_MaterialIndex = 1;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		float size = 8.5;
+		float size = 13;
 		instancingObj->m_World._11 = size;
 		instancingObj->m_World._22 = size;
 		instancingObj->m_World._33 = size;
 
 		instancingObj->m_World._41 = X[i];
-		instancingObj->m_World._42 = -400;
+		instancingObj->m_World._42 = -640;
 		instancingObj->m_World._43 = Z[i];
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 
@@ -329,7 +329,7 @@ void ApplicationContext::CreateBackground()
 			tmp = uid8(dre2);
 			XPos = X[tmp] + uid9(dre2);
 			ZPos = Z[tmp] + uid9(dre2);
-		} while (XPos < -400 || XPos>800 || ZPos > 1100 || ZPos < 0);
+		} while (XPos < -900 || XPos>1700 || ZPos > 1700 || ZPos < 0);
 
 		if (XPos <= 200) {	//항상 중심 바라보게
 			chr->Rotate(0, 180 - ((200 - XPos) * 45 / 600 + (1100 - ZPos) * 45 / 1100), 0);
@@ -337,7 +337,7 @@ void ApplicationContext::CreateBackground()
 		else {
 			chr->Rotate(0, 180 + ((XPos - 200) * 45 / 600 + (1100 - ZPos) * 45 / 1100), 0);
 		}
-		chr->SetPosition(XPos, 60, ZPos);
+		chr->SetPosition(XPos, 55, ZPos);
 	}
 
 	//134~138
