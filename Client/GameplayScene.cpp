@@ -11,8 +11,8 @@
 #include "GameObject.h"
 #include "Character.h"
 #include "CharacterParts.h"
-//#include "Network.h"
-//#include "MainFramework.h"
+#include "Network.h"
+#include "MainFramework.h"
 #include <random>
 
 random_device rd;
@@ -101,9 +101,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[m_PlayerID]->is_Inair = false;
 		}
 
-		if (m_Users[m_PlayerID]->GetPosition().y > 30) {
-			m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-		}
+	//	}
 
 		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
 			m_Users[m_PlayerID]->bJump = false;

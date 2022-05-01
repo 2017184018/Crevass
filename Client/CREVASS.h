@@ -6,7 +6,7 @@
 //#include "ObjectInfo.h"
 #include "Waves.h"
 //#include "BlurFilter.h"
-//#include "MainFramework.h"
+#include "MainFramework.h"
 
 
 //namespace Graphics

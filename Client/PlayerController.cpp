@@ -8,6 +8,12 @@
 #include "CommandCenter.h"
 #include "MoveCommand.h"
 
+#include "MainFramework.h"
+#include "Network.h"
+#include "CREVASS.h"
+
+using namespace Core;
+
 PlayerController::PlayerController(Character* player) :
 	m_Owner(player)
 {
@@ -53,6 +59,7 @@ void PlayerController::HandleInput(const float deltaT)
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->Move(DIR_FORWARD, speed, true);
 			m_Owner->SetDir(0);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 		}
 
 
@@ -66,6 +73,8 @@ void PlayerController::HandleInput(const float deltaT)
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->Move(DIR_LEFT, speed, true);
 			m_Owner->SetDir(270);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
+
 		}
 
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
@@ -78,6 +87,8 @@ void PlayerController::HandleInput(const float deltaT)
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->Move(DIR_BACKWARD, speed, true);
 			m_Owner->SetDir(180);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
+
 		}
 
 		if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
@@ -90,6 +101,8 @@ void PlayerController::HandleInput(const float deltaT)
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->Move(DIR_RIGHT, speed, true);
 			m_Owner->SetDir(90);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
+
 		}
 
 		//if (GetAsyncKeyState(VK_SPACE) & 0x8000) {

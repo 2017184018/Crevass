@@ -6,6 +6,11 @@
 
 #include "CREVASS.h"
 
+#include "MainFramework.h"
+#include "Network.h"
+
+using namespace Core;
+
 LobbyController::LobbyController(LobbyScene* myScene) :
 	m_MyScene(myScene)
 {
@@ -23,6 +28,11 @@ void LobbyController::HandleInput(const float deltaT)
 	{
 		SceneManager::GetApp()->ChangeScene();
 	}
+		if (InputHandler::IsKeyUp('B'))
+	{
+		g_pFramework->m_pNetwork->Send(CS_READY);
+	}
+
 }
 
 void LobbyController::MouseCallback()

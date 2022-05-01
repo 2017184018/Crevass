@@ -13,8 +13,8 @@
 //#include "Character.h"
 //#include "CharacterParts.h"
 
-//#include "Network.h"
-//#include "MainFramework.h"
+#include "Network.h"
+#include "MainFramework.h"
 
 #include <random>
 using namespace Core;
@@ -95,7 +95,6 @@ void CREVASS::Startup(void)
 	SceneManager::GetApp()->InitializeScenes();
 	// 위 아래 바꾸면 이상함 
 	BuildCharacters();
-
 	SceneManager::GetApp()->EnterScene(SceneType::Lobby);
 
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
@@ -142,6 +141,7 @@ void CREVASS::Update(float deltaT)
 	/*CommandCenter*/
 	CommandCenter::GetApp()->Order(deltaT);
 
+	g_pFramework->m_pNetwork->Recv();
 	SceneManager::GetApp()->UpdateScene(deltaT);
 	m_Camera->UpdateViewMatrix();
 
