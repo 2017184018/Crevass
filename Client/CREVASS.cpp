@@ -161,6 +161,7 @@ void CREVASS::BuildCharacters()
 	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
 	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
 	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
+
 }
 
 void CREVASS::BuildStream() {

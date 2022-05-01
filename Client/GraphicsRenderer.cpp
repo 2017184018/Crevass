@@ -234,6 +234,15 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 
 	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
 
+	srvDesc.Format = arctic->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = arctic->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(arctic.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
 	srvDesc.Format = ArcticFox->GetDesc().Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
@@ -259,14 +268,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(Seal.Get(), &srvDesc, hDescriptor);
 
-	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-
-	srvDesc.Format = arctic->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = arctic->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(arctic.Get(), &srvDesc, hDescriptor);
+	
 
 	mSkyTexHeapIndex = 0;
 

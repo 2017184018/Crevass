@@ -400,7 +400,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["mountain"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["mountain"].Bounds;
 		instancingObj->m_IsVisible = true;
-		instancingObj->m_MaterialIndex = 9;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		float size = 0.8;
 		instancingObj->m_World._11 = size;
@@ -430,7 +430,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["tent"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["tent"].Bounds;
 		instancingObj->m_IsVisible = true;
-		instancingObj->m_MaterialIndex = 9;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		float size = 0.7;
 		instancingObj->m_World._11 = size;
@@ -454,7 +454,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["kayak"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["kayak"].Bounds;
 		instancingObj->m_IsVisible = true;
-		instancingObj->m_MaterialIndex = 9;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		float size = 0.7;
 		instancingObj->m_World._11 = size;
@@ -477,7 +477,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["kayakpaddle"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["kayakpaddle"].Bounds;
 		instancingObj->m_IsVisible = true;
-		instancingObj->m_MaterialIndex = 9;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		float size = 0.7;
 		instancingObj->m_World._11 = size;
@@ -500,7 +500,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["rock_0"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["rock_0"].Bounds;
 		instancingObj->m_IsVisible = true;
-		instancingObj->m_MaterialIndex = 9;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		float size = 2;
 		instancingObj->m_World._11 = size;
@@ -525,7 +525,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["rock_1"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["rock_1"].Bounds;
 		instancingObj2->m_IsVisible = true;
-		instancingObj2->m_MaterialIndex = 9;
+		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
 		float size = 1.0;
 		instancingObj2->m_World._11 = size;
@@ -556,7 +556,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["igloo"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["igloo"].Bounds;
 		instancingObj2->m_IsVisible = true;
-		instancingObj2->m_MaterialIndex = 9;
+		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
 		float size = 0.6;
 		instancingObj2->m_World._11 = size;
@@ -580,7 +580,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["fish"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["fish"].Bounds;
 		instancingObj2->m_IsVisible = true;
-		instancingObj2->m_MaterialIndex = 9;
+		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
 		float size = 0.7;
 		instancingObj2->m_World._11 = size;
@@ -606,7 +606,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["sled"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["sled"].Bounds;
 		instancingObj2->m_IsVisible = true;
-		instancingObj2->m_MaterialIndex = 9;
+		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
 		float size = 1;
 		instancingObj2->m_World._11 = size;
@@ -630,7 +630,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["fishrack"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["fishrack"].Bounds;
 		instancingObj2->m_IsVisible = true;
-		instancingObj2->m_MaterialIndex = 9;
+		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
 		float size = 1;
 		instancingObj2->m_World._11 = size;
@@ -652,7 +652,7 @@ void ApplicationContext::CreateBackground()
 			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["fish"].BaseVertexLocation;
 			instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["fish"].Bounds;
 			instancingObj->m_IsVisible = true;
-			instancingObj->m_MaterialIndex = 9;
+			instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 			instancingObj->m_World = MathHelper::Identity4x4();
 			float size = .7;
 			instancingObj->m_World._11 = size;
