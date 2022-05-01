@@ -4,10 +4,14 @@
 #include "CREVASS.h"
 #include "SceneManager.h"
 
+#include "MainFramework.h"
+
 namespace Core
 {
 	extern std::map<int, Character*> m_Users;
 }
+
+using namespace Core;
 
 void Network::InitSocket()
 {
@@ -189,6 +193,10 @@ void Network::ProcessPacket(char* packet_buffer)
 					}
 				}
 			}
+		}
+		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
+		{
+			PlayerPos[i] = packet.players[i].pos;
 		}
 		SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 		break;

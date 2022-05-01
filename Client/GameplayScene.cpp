@@ -26,7 +26,7 @@ using namespace Core;
 void GameplayScene::Initialize()
 {
 	m_SceneController = new GameplayController(this);
-
+	
 	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
 	AppContext->CreateBlocks();
 	AppContext->CreateSnowmans();
@@ -65,6 +65,10 @@ bool GameplayScene::Enter()
 	m_Users[4] = AppContext->FindObject<Character>("Seal", "Seal0");
 	m_Users[4]->m_IsVisible = true;
 
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->m_pGameInfo->m_PlayersInfo[i]->GetPosition());
+	}
 	return false;
 }
 
@@ -83,8 +87,11 @@ void GameplayScene::Exit()
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
-
-	cout <<"tkdlwm ==" << m_Users.size() << endl;
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
+	}
+	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
