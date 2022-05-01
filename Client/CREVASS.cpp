@@ -156,16 +156,11 @@ void CREVASS::RenderScene(void)
 
 void CREVASS::BuildCharacters()
 {
-<<<<<<< HEAD
 	AppContext->CreateCharacter("husky", "husky0", "husky", BoneIndex::Husky);
 	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "Penguin", BoneIndex::Penguin);
 	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
 	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
 	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
-
-=======
-	AppContext->CreateCharacter("husky", "husky0", "None", BoneIndex::Husky);
-	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "None", BoneIndex::Penguin);
 }
 
 void CREVASS::BuildStream() {
@@ -187,5 +182,4 @@ void CREVASS::BuildStream() {
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fishrack01_m.mesh", "fishrack");
 	
 	
->>>>>>> origin/SH
 }
