@@ -94,6 +94,7 @@ void MaterialReference::BuildMaterials()
 	lobby->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	lobby->Roughness = 1.0f;
 
+<<<<<<< HEAD
 	auto ArcticFox = std::make_unique<Material>();
 	ArcticFox->MatCBIndex = 9;
 	ArcticFox->DiffuseSrvHeapIndex = 9;
@@ -114,6 +115,14 @@ void MaterialReference::BuildMaterials()
 	Seal->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	Seal->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Seal->Roughness = 1.0f;
+=======
+	auto arctic = std::make_unique<Material>();
+	arctic->MatCBIndex = 9;
+	arctic->DiffuseSrvHeapIndex = 9;
+	arctic->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	arctic->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	arctic->Roughness = 1.0f;
+>>>>>>> origin/SH
 
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
@@ -124,8 +133,12 @@ void MaterialReference::BuildMaterials()
 	m_Materials["heartline"] = std::move(heartline);
 	m_Materials["rope"] = std::move(rope);
 	m_Materials["lobby"] = std::move(lobby);
+<<<<<<< HEAD
 	m_Materials["ArcticFox"] = std::move(ArcticFox);
 	m_Materials["PolarBear"] = std::move(PolarBear);
 	m_Materials["Seal"] = std::move(Seal);
+=======
+	m_Materials["arctic"] = std::move(arctic);
+>>>>>>> origin/SH
 	
 }
