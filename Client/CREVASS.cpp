@@ -405,7 +405,6 @@ void CREVASS::BuildCharacters()
 	AppContext->CreateCharacter("husky", "husky0", "None", 0);
 
 
-
 	//0: Skybox,  1~50: Ȧ���� ����, ¦���� ����, 51~75: ���帧, 76~77: �����, 78: �ٴ�, 79:���
 
 	//layer ,mesh type , id		

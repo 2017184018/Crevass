@@ -5,6 +5,11 @@
 
 #include "CREVASS.h"
 
+#include "MainFramework.h"
+#include "Network.h"
+
+using namespace Core;
+
 LobbyController::LobbyController(LobbyScene* myScene) :
 	m_MyScene(myScene)
 {
@@ -41,7 +46,10 @@ void LobbyController::HandleInput(const float deltaT)
 	//	Service::GetApp()->Notify(EVENT_LOBBY_MANUALMATCH_ROOM_JOIN, 1, tempEnterRoomNumber);
 	//}
 
-
+	if (InputHandler::IsKeyUp('B'))
+	{
+		g_pFramework->m_pNetwork->Send(CS_READY);
+	}
 }
 
 void LobbyController::MouseCallback()

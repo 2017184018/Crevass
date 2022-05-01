@@ -48,7 +48,6 @@ bool GameplayScene::Enter()
 	m_PlayerID = 0;
 
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>("husky", "husky0");
-
 	//m_Users[m_PlayerID]->m_PlayerRole = ROLE_MASTER;
 	//m_Users[1] = AppContext->FindObject<Character>(CHARACTER_DRUID, CHARACTER_DRUID);
 	//m_Users[2] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
@@ -75,31 +74,34 @@ BOOL B = true;
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
-	if (m_Users[m_PlayerID])
-		m_Users[m_PlayerID]->Update(fDeltaTime);
+	//if (m_Users[m_PlayerID])
+	//	m_Users[m_PlayerID]->Update(fDeltaTime);
 	float speed = 100 * fDeltaTime;
-	if (m_Users[m_PlayerID]) {
-		if (m_Users[m_PlayerID]->bJump == true && B == true) {
-			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
-		}
+	m_Users[0]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(0));
+	m_Users[0]->Update(fDeltaTime);
 
-		if (m_Users[m_PlayerID]->GetPosition().y > 70) {
-			B = false;
+	//if (m_Users[m_PlayerID]) {
+	//	if (m_Users[m_PlayerID]->bJump == true && B == true) {
+	//		m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
+	//	}
 
-		}
+	//	if (m_Users[m_PlayerID]->GetPosition().y > 70) {
+	//		B = false;
 
-		if (m_Users[m_PlayerID]->GetPosition().y > 30) {
-			m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-		}
+	//	}
 
-		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
-			m_Users[m_PlayerID]->bJump = false;
-			m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
-		}
-		m_Users[m_PlayerID]->Update(fDeltaTime);
+	//	if (m_Users[m_PlayerID]->GetPosition().y > 30) {
+	//		m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
+	//	}
+
+	//	if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
+	//		m_Users[m_PlayerID]->bJump = false;
+	//		m_Users[m_PlayerID]->m_KeyState = Character::PlayerState::STATE_IDLE;
+	//	}
+	//	m_Users[m_PlayerID]->Update(fDeltaTime);
 
 
-	}
+	//}
 	//OnKeyboardInput(deltaT);
 	for (int i = 0; i < 25; ++i) {
 		if (IsShake[i] || !IsDown[i]) {
@@ -223,8 +225,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 	}
-
-
 }
 
 void GameplayScene::Render()

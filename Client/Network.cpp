@@ -190,14 +190,14 @@ void Network::ProcessPacket(char* packet_buffer)
 				}
 			}
 		}
-		SceneManager::GetApp()->ChangeScene(SceneType::GamePlay);
+		SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 		break;
 	}
 	case SC_POS:
 	{
 		sc_packet_pos packet;
 		memcpy(&packet, ptr, sizeof(packet));
-		for (int i = 0; i < TOTAL_PLAYER_NUM; ++i)
+		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
 		{
 			PlayerPos[i] = packet.players[i].pos;
 		}
@@ -205,7 +205,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		//	OtherPlayerPos = packet.players[1].pos;
 		//else
 		//	OtherPlayerPos = packet.players[0].pos;
-
 		break;
 	}
 	case SC_REMOVE_PLAYER:
