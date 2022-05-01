@@ -88,7 +88,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		p.second->Update(fDeltaTime);
 	}
 
-	float speed = 100* fDeltaTime;
+	float speed = 100 * fDeltaTime;
 	if (m_Users[m_PlayerID]) {
 		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
 			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
@@ -163,9 +163,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
 		AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
-		AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
+		if (!IsFall) {
+			AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
+			AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
+		}
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
-		AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.01;
 	}
 	{	//���� ���� �� �ӽ�
@@ -189,6 +191,20 @@ void GameplayScene::Update(const float& fDeltaTime)
 	float r = MathHelper::RandF(0.2f, 0.5f);
 	Core::mWaves->Disturb(i, j, r);
 	if (IsFall) {
+		static bool Isup = true;
+		cout << Lifecnt << endl;
+		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 <= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14+15) {
+			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 += 0.1f;
+			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 += 0.1f;
+			if (AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 >= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14+15) {
+				AppContext->m_RItemsVec[133 + Lifecnt]->m_MaterialIndex = 6;
+				Isup = false;
+			}
+		}
+		else if(AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 > XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14) {
+			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 -= 0.1f;
+			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 -= 0.1f;
+		}
 		static float time = 0;
 		time += fDeltaTime;
 		BlurCnt = 3;
@@ -196,6 +212,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 			time = 0;
 			IsFall = false;
 			BlurCnt = 0;
+			if (Lifecnt > 0) {
+				--Lifecnt;
+				Isup = true;
+			}
 		}
 		else if (time < 0.03) {
 			Core::mWaves->Disturb(50, 57, 2);
@@ -225,14 +245,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
-	
+
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Penguin, MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Husky, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
-	
-	
-	
-	
-	
+
+
+
+
+
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(AppContext->FindObject<GameObject>("husky", "husky0")->GetPosition());
@@ -285,7 +305,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
-	
+
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 
@@ -348,8 +368,5 @@ bool GameplayScene::BlockCheck(int idx) {
 void GameplayScene::Fall() {
 	if (!IsFall) {
 		IsFall = true;
-		if (Lifecnt > 0) {
-			AppContext->m_RItemsVec[133 + Lifecnt--]->m_MaterialIndex = 6;
-		}
 	}
 }

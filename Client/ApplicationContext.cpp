@@ -62,7 +62,7 @@ void ApplicationContext::CreateLobby(){
 	top->m_IsVisible = true;
 	top->m_MaterialIndex = 8;
 	top->m_World = MathHelper::Identity4x4();
-	top->m_World._11 = 300;
+	top->m_World._11 = 400;
 	top->m_World._22 = 1;
 	top->m_World._33 = 200;
 	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
