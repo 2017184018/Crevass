@@ -208,7 +208,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static float time = 0;
 		time += fDeltaTime;
 		BlurCnt = 3;
-		if (time >= 4) {
+		if (time >= 3) {
 			time = 0;
 			IsFall = false;
 			BlurCnt = 0;

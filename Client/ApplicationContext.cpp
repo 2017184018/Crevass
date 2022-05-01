@@ -52,7 +52,7 @@ std::string ApplicationContext::FindAnimName(int animCode) const
 	return animName;
 }
 
-void ApplicationContext::CreateLobby(){
+void ApplicationContext::CreateLobby() {
 	GameObject* top = CreateObject<GameObject>("lobby", "lobby0");
 	top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 	top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -74,8 +74,8 @@ void ApplicationContext::CreateLobby(){
 
 void ApplicationContext::CreateSkycube(std::string skycubeName, std::string instID, std::string matName)
 {
-//	m_RItemsVec.clear();
-//	m_RItemsMap.clear();
+	//	m_RItemsVec.clear();
+	//	m_RItemsMap.clear();
 	GameObject* skyRitem = CreateObject<GameObject>(skycubeName, instID);		//0
 	skyRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
@@ -195,9 +195,10 @@ void ApplicationContext::CreateBlocks()
 			instancingObj->m_IsVisible = true;
 			instancingObj->m_MaterialIndex = 1;
 			instancingObj->m_World = MathHelper::Identity4x4();
-			instancingObj->m_World._11 = 0.5;
-			instancingObj->m_World._22 = 0.4;
-			instancingObj->m_World._33 = 0.5;
+			instancingObj->m_World._11 = SCALE - 0.05;
+			instancingObj->m_World._22 = SCALE - 0.05;
+			instancingObj->m_World._33 = SCALE - 0.05;
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			instancingObj->m_World._41 = distance * i;
 			instancingObj->m_World._42 = 0;
 			instancingObj->m_World._43 = distance * j;
@@ -219,6 +220,7 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
 		instancingObj->m_MaterialIndex = 1;
+		instancingObj->m_IsVisible = true;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		instancingObj->m_World._11 = SCALE - 0.2f;
 		instancingObj->m_World._22 = SCALE - 0.2f;
