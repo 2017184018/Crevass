@@ -14,3 +14,5 @@
 #define DIR_LEFT_DOWN	7
 
 #define MAXPLAYER		3
+
+#define FPS				60

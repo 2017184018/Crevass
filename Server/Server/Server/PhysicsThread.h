@@ -2,9 +2,9 @@
 #include "pch.h"
 #include "Global.h"
 
-void Update(vector<Player>& player, float deltaT)
+void Update(vector<Player>& player)
 {
-	float speed = 1.0f; 30 * deltaT;
+	float speed = 1.0f; ;
 	float crossspeed = sqrt(2)/2;
 	for (int i = 0; i < numOfCls; ++i)
 	{
@@ -65,20 +65,25 @@ void ProcessClients()
 		phyPlayers[i].SetPos(temp);
 	}
 
-	using FpFloatMilliseconds = duration<float, milliseconds::period>;
-	auto prev_Time = chrono::high_resolution_clock::now();
-	float elapsedTime{};
-	float deltaT;
+	//using FpFloatMilliseconds = duration<float, milliseconds::period>;
+	//auto prev_Time = chrono::high_resolution_clock::now();
+	//float elapsedTime{};
+	//float deltaT;
+
+	using frame = duration<int32_t, ratio<1, FPS>>;
+	using ms = duration<float, milli>;
+
+	time_point<steady_clock> fpsTimer(steady_clock::now());
+	frame FramePerSec{};
 	while (true)
 	{
-		auto cur_Time = chrono::high_resolution_clock::now();
-		elapsedTime += FpFloatMilliseconds(cur_Time - prev_Time).count();
+		//auto cur_Time = chrono::high_resolution_clock::now();
+		//elapsedTime += FpFloatMilliseconds(cur_Time - prev_Time).count();
+		//deltaT = FpFloatMilliseconds(cur_Time - prev_Time).count();
+		//prev_Time = cur_Time;
+		FramePerSec = duration_cast<frame>(steady_clock::now() - fpsTimer);
 
-		deltaT = FpFloatMilliseconds(cur_Time - prev_Time).count();
-
-		prev_Time = cur_Time;
-
-		if (elapsedTime > 17)
+		if (FramePerSec.count()>=1)
 		{
 			g_MsgQueueLock.lock();
 			phyMsgQueue = g_MsgQueue;
@@ -112,7 +117,7 @@ void ProcessClients()
 							break;
 						}
 				}
-				Update(phyPlayers, deltaT);
+				Update(phyPlayers);
 
 				for (int i = 0; i < numOfCls; ++i)
 				{
@@ -122,12 +127,13 @@ void ProcessClients()
 					players[i].pos.z = phyPlayers[i].m_pos.z;
 				}
 				SendPos(*players);
-				elapsedTime = 0;
 				for (int i = 0; i < numOfCls; ++i)
 				{
 					std::cout << players[i].pos.x << std::endl;
 				}
 			}
+			fpsTimer = steady_clock::now();
+			cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
 		}
 	}
 	phyPlayers.clear();
