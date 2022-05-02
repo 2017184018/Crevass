@@ -47,23 +47,26 @@ bool GameplayScene::Enter()
 {
 	cout << "GamePlay Scene" << endl;
 
-	m_PlayerID = 0;
+	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo ->m_ClientID;
 
 	//나 
-	m_Users[m_PlayerID] = AppContext->FindObject<Character>("husky", "husky0");
-
-	m_Users[m_PlayerID]->m_IsVisible = true;
-	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
-	m_Users[m_PlayerID]->SetController();
+	m_Users[0] = AppContext->FindObject<Character>("husky", "husky0");
+	m_Users[0]->m_IsVisible = true;
 
 	m_Users[1] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
 	m_Users[1]->m_IsVisible = true;
+
 	m_Users[2] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
 	m_Users[2]->m_IsVisible = true;
+
 	m_Users[3] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
 	m_Users[3]->m_IsVisible = true;
+
 	m_Users[4] = AppContext->FindObject<Character>("Seal", "Seal0");
 	m_Users[4]->m_IsVisible = true;
+
+	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
+	m_Users[m_PlayerID]->SetController();
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{

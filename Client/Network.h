@@ -31,7 +31,7 @@ public:
 
 	char* ptr;
 
-	DirectX::XMFLOAT3 GetPlayerPos(int num);
+	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
 
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];

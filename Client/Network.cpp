@@ -268,7 +268,7 @@ void Network::ErrorDisplay(const char* msg)
 	std::cout << "Error! - " << msg << "descripton: " << lpMsgBuf << std::endl;
 }
 
-DirectX::XMFLOAT3 Network::GetPlayerPos(int num)
+DirectX::XMFLOAT3 Network::GetPlayerPos(int num)const
 {
 	return PlayerPos[num];
 }

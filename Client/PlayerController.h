@@ -21,4 +21,5 @@ private:
 
 private:
 	Character* m_Owner;
+	int tmp = -1;		//화면 내려갈 때 키 눌림 해제
 };
