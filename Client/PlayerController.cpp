@@ -22,11 +22,13 @@ PlayerController::PlayerController(Character* player) :
 
 void PlayerController::Update(const float deltaT)
 {
-	MouseCallback();
-	HandleInput(deltaT);
+	if (!Inactive) {
+		MouseCallback();
+		HandleInput(deltaT);
 
-	OnKeyPressed();
-	OnKeyReleased();
+		OnKeyPressed();
+		OnKeyReleased();
+	}
 }
 
 static bool SpacePush = false;
@@ -35,7 +37,7 @@ void PlayerController::HandleInput(const float deltaT)
 {
 
 	//���ݵ��� �������̰�
-	if ( CommandCenter::GetApp()->m_StartAttackAnim) return;
+	if (CommandCenter::GetApp()->m_StartAttackAnim) return;
 
 	float speed = 300 * deltaT;
 	XMVECTOR direction = {};
@@ -64,13 +66,13 @@ void PlayerController::HandleInput(const float deltaT)
 
 
 		if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
-		/*	if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
-				m_Owner->Move(DIR_LEFT, speed, true);
-				if (!m_Owner->bJump)
-					m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
-				m_Owner->SetDir(270);
-			}*/
-			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			/*	if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
+					m_Owner->Move(DIR_LEFT, speed, true);
+					if (!m_Owner->bJump)
+						m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
+					m_Owner->SetDir(270);
+				}*/
+				//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->Move(DIR_LEFT, speed, true);
 			m_Owner->SetDir(270);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
@@ -143,28 +145,28 @@ void PlayerController::HandleInput(const float deltaT)
 
 				m_Owner->SetDir(135);
 			}*/
-		//	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			//	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->SetDir(135);
 		}
 
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000 && GetAsyncKeyState(VK_LEFT) & 0x8000) {
-		/*	if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
-				if (!m_Owner->bJump)
-					m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
-				m_Owner->SetDir(225);
-			}*/
-		//	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			/*	if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
+					if (!m_Owner->bJump)
+						m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
+					m_Owner->SetDir(225);
+				}*/
+				//	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->SetDir(225);
 		}
 
 		if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000) {
-		/*	if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
-				if (!m_Owner->bJump)
-					m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
+			/*	if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
+					if (!m_Owner->bJump)
+						m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
 
-				m_Owner->SetDir(315);
-			}*/
-			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+					m_Owner->SetDir(315);
+				}*/
+				//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			m_Owner->SetDir(315);
 		}
 
@@ -217,7 +219,7 @@ void PlayerController::OnKeyPressed()
 	{
 	case CameraType::First:
 	case CameraType::Third:
-		
+
 		if (InputHandler::IsKeyDown('A')) {
 			CommandCenter::GetApp()->m_StartAttackAnim = true;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
