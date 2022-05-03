@@ -101,6 +101,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		p.second->Update(fDeltaTime);
 	}
+
+	static float gra = 0.1;
+
+
 	float speed = 100 * fDeltaTime;
 	if (m_Users[m_PlayerID]) {
 		static float YSave = 30;
@@ -108,16 +112,23 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static float HighY = YSave + 40;
 		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
 			if (IsFirst) {
-				YSave = m_Users[m_PlayerID]->GetPosition().y;
+				if (m_Users[m_PlayerID]->GetPosition().y > 30)
+					YSave = 30;
+				else
+					YSave = m_Users[m_PlayerID]->GetPosition().y;
 				IsFirst = false;
 				HighY = YSave + 40;
 			}
+			gra = 0.1;
 			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
 		}
 
 		if (m_Users[m_PlayerID]->GetPosition().y > HighY) {
 			m_Users[m_PlayerID]->is_Inair = false;
 		}
+
+		if (!m_Users[m_PlayerID]->is_Inair)
+			gra += 0.05;
 
 		if (tmp != -1) {
 			YSave = 30;
@@ -128,6 +139,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			YSave = 30;
 			IsFirst = true;
 			HighY = YSave + 40;
+			gra = 0.1;
 		}
 
 	}
@@ -229,7 +241,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 		else if (time < 0.03) {
-			Core::mWaves->Disturb(50, 57, 2);
+			Core::mWaves->Disturb(FallZ, FallX, 4);
 		}
 	}
 
@@ -276,10 +288,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
 
-
-
-
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
+
+	//cout << m_Users[m_PlayerID]->GetPosition().x << ", " << m_Users[m_PlayerID]->GetPosition().z << endl;
 
 	//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(AppContext->FindObject<GameObject>("husky", "husky0")->GetPosition());
 	//AppContext->FindObject<GameObject>("icecubeBB", "icecubeBB0")->SetPosition(AppContext->FindObject<GameObject>("snowcube", "snowcube0")->GetPosition());
@@ -313,12 +324,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
+	speed += gra;
 	if (tmp == -1 && tmp2 == -1) {
 		m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
 	}
 	else {
 		if (tmp != -1) {
-			if (m_Users[m_PlayerID]->GetPosition().y > 20 && m_Users[m_PlayerID]->bJump == false) {
+			if (m_Users[m_PlayerID]->GetPosition().y > 10 && m_Users[m_PlayerID]->bJump == false && DestructionCnt[tmp] != 3) {
 				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
 					AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
 			}
@@ -327,7 +339,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 		else {
-			cout << m_Users[m_PlayerID]->GetPosition().y << ", " << AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(0))->GetPosition().y + 60 << endl;
 			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y >= 50 &&
 				m_Users[m_PlayerID]->bJump == false) {
 				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
@@ -425,7 +436,7 @@ void GameplayScene::shake(GameObject* object, int index) {
 			}
 		}
 		else {
-			if (object->m_World._42 <= -30 && tmp2 == -1) {
+			if (object->m_World._42 <= -30 && (tmp2 == -1 || m_Users[m_PlayerID]->bJump)) {
 				object->m_World._42 += 0.2f;
 			}
 			else {
@@ -444,6 +455,8 @@ bool GameplayScene::BlockCheck(int idx) {
 
 void GameplayScene::Fall() {
 	if (!IsFall) {
+		FallX = round(m_Users[m_PlayerID]->GetPosition().x * 119 / 1300 + 699.0/ 26.0);
+		FallZ = round(m_Users[m_PlayerID]->GetPosition().z * -119 / 1300 + 2603.0/ 26.0);
 		IsFall = true;
 	}
 }

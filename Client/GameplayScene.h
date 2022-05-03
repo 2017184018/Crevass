@@ -74,5 +74,7 @@ public:
 
 	void Fall();
 	UINT Lifecnt = 5;
+
+	int FallX, FallZ;
 };
 
