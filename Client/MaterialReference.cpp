@@ -30,7 +30,6 @@ void MaterialReference::Update(float t) {
 
 void MaterialReference::BuildMaterials()
 {
-	
 	auto sky = std::make_unique<Material>();
 	sky->MatCBIndex = 0;
 	sky->DiffuseSrvHeapIndex = 0;
@@ -122,7 +121,6 @@ void MaterialReference::BuildMaterials()
 	Seal->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Seal->Roughness = 1.0f;
 
-
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -136,5 +134,4 @@ void MaterialReference::BuildMaterials()
 	m_Materials["ArcticFox"] = std::move(ArcticFox);
 	m_Materials["PolarBear"] = std::move(PolarBear);
 	m_Materials["Seal"] = std::move(Seal);
-	
 }

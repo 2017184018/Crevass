@@ -76,8 +76,6 @@ void ApplicationContext::CreateLobby() {
 
 void ApplicationContext::CreateSkycube(std::string skycubeName, std::string instID, std::string matName)
 {
-	//	m_RItemsVec.clear();
-	//	m_RItemsMap.clear();
 	GameObject* skyRitem = CreateObject<GameObject>(skycubeName, instID);		//0
 	skyRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
@@ -162,8 +160,6 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["snowcube"].Bounds.Center, instancingObj->GetPosition());
 			}
 
-
-
 			GameObject* top = CreateObject<GameObject>("snow_top", "snow_top" + std::to_string(5 * i + j));
 			top->Geo = MeshReference::GetApp()->m_GeometryMesh["snow_top"].get();
 			top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -183,8 +179,6 @@ void ApplicationContext::CreateBlocks()
 			top->m_TexTransform = MathHelper::Identity4x4();
 		}
 	}
-
-
 
 	for (int i = 0; i < 5; ++i) {	//51~75
 		for (int j = 0; j < 5; ++j) {
@@ -211,7 +205,6 @@ void ApplicationContext::CreateBlocks()
 
 void ApplicationContext::CreateSnowmans()
 {
-
 	int RandomLocation[2] = { -1,-1 };
 
 	for (int i = 0; i < 2; ++i) {		//76, 77
@@ -248,7 +241,6 @@ void ApplicationContext::CreateSnowmans()
 		}
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
-
 }
 
 void ApplicationContext::CreateWave()
@@ -262,9 +254,7 @@ void ApplicationContext::CreateWave()
 	Sea->m_IsVisible = true;
 	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	Sea->m_MaterialIndex = 3;
-
 	Sea->m_World = MathHelper::Identity4x4();
-
 	Sea->m_World._11 = 11;
 	Sea->m_World._33 = 11;
 
@@ -695,13 +685,12 @@ void ApplicationContext::CreateBackground()
 			instancingObj->m_IsVisible = true;
 			instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 			instancingObj->m_World = MathHelper::Identity4x4();
-			float size = .7;
+			float size = 0.7;
 			instancingObj->m_World._11 = size;
 			instancingObj->m_World._22 = size;
 			instancingObj->m_World._33 = size;
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * 11 / 10));
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * 1.5 / 10));
-			//		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationZ(3.141592 * -1 / 10));
 			instancingObj->m_World._41 = X[0] + 470 + 11 * i;
 			instancingObj->m_World._42 = 180;
 			instancingObj->m_World._43 = 1110 + 15 * i;
@@ -742,7 +731,6 @@ void ApplicationContext::HiddenBlocks()
 				GameObject* obj = FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j));
 				if (!obj)
 					return;
-
 				ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 				ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 			}
@@ -750,17 +738,12 @@ void ApplicationContext::HiddenBlocks()
 				GameObject* obj = FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j));
 				if (!obj)
 					return;
-
 				ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 				ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 			}
-
-
-
 			GameObject* obj = FindObject<GameObject>("snow_top", "snow_top" + std::to_string(5 * i + j));
 			if (!obj)
 				return;
-
 			ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 			ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 
@@ -788,7 +771,6 @@ void ApplicationContext::HiddenBlocks()
 				GameObject* obj = FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j));
 				obj->m_IsVisible = false;
 			}
-
 			GameObject* obj = FindObject<GameObject>("snow_top", "snow_top" + std::to_string(5 * i + j));
 			obj->m_IsVisible = false;
 			GameObject* obj0 = FindObject<GameObject>("icicle", "icicle" + std::to_string(5 * i + j));
@@ -812,5 +794,4 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 
 	// Update InstanceData
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[userName], AppContext->m_RItemsVec);
-
 }
