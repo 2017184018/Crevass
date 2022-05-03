@@ -308,17 +308,49 @@ void ApplicationContext::CreateBackground()
 
 	//84~133	캐릭터
 	for (int i = 0; i < 50; ++i) {
-		std::string meshName = "husky";
-		std::string instID = "husky" + std::to_string(i + 1);
+		std::string meshName;
+		std::string instID;
+		int matidx = -1;
+		auto bonidx = BoneIndex::Count;
+		if (i / 10 == 0) {
+			meshName = "husky";
+			instID = "husky" + std::to_string(i + 100);
+			matidx = 4;
+			bonidx = BoneIndex::Husky;
+		}
+		else if (i / 10 == 1) {
+			meshName = "Penguin_LOD0skin";
+			instID = "Penguin_LOD0skin" + std::to_string(i + 100);
+			matidx = 2;
+			bonidx = BoneIndex::Penguin;
+		}
+		else if (i / 10 == 2) {
+			meshName = "ArcticFox";
+			instID = "ArcticFox" + std::to_string(i + 100);
+			matidx = 10;
+			bonidx = BoneIndex::Fox;
+		}
+		else if (i / 10 == 3) {
+			meshName = "PolarBear";
+			instID = "PolarBear" + std::to_string(i + 100);
+			matidx = 11;
+			bonidx = BoneIndex::PolarBear;
+		}
+		else if (i / 10 == 4) {
+			meshName = "Seal";
+			instID = "Seal" + std::to_string(i + 100);
+			matidx = 12;
+			bonidx = BoneIndex::Seal;
+		}
 		Character* chr = CreateObject<Character>(meshName, instID);
 		chr->Geo = MeshReference::GetApp()->m_GeometryMesh[meshName].get();
 		chr->IndexCount = chr->Geo->DrawArgs[meshName].IndexCount;
 		chr->StartIndexLocation = chr->Geo->DrawArgs[meshName].StartIndexLocation;
 		chr->BaseVertexLocation = chr->Geo->DrawArgs[meshName].BaseVertexLocation;
 		chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		chr->m_Bounds = chr->Geo->DrawArgs["husky"].Bounds;
-		chr->m_MaterialIndex = 4;
-		chr->m_SkinnedCBIndex = BoneIndex::Husky;
+		chr->m_Bounds = chr->Geo->DrawArgs[meshName].Bounds;
+		chr->m_MaterialIndex = matidx;
+		chr->m_SkinnedCBIndex = bonidx;
 		chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
 		chr->m_IsVisible = true;
 		// 임시 스폰위치 지정
@@ -539,7 +571,7 @@ void ApplicationContext::CreateBackground()
 		}
 		else {
 			instancingObj2->m_World._41 = X[1] + 100 + cos(i * 3.141592 / 15 * 2) * 100;
-			instancingObj2->m_World._42 = 70;
+			instancingObj2->m_World._42 = 65;
 			instancingObj2->m_World._43 = Z[1] - 500 + sin(i * 3.141592 / 15 * 2) * 100;
 		}
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
@@ -658,9 +690,9 @@ void ApplicationContext::CreateBackground()
 			instancingObj->m_World._11 = size;
 			instancingObj->m_World._22 = size;
 			instancingObj->m_World._33 = size;
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationY(3.141592 * 11 / 10));
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationX(3.141592 * 1.5 / 10));
-	//		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationZ(3.141592 * -1 / 10));
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * 11 / 10));
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * 1.5 / 10));
+			//		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World)* XMMatrixRotationZ(3.141592 * -1 / 10));
 			instancingObj->m_World._41 = X[0] + 470 + 11 * i;
 			instancingObj->m_World._42 = 180;
 			instancingObj->m_World._43 = 1110 + 15 * i;

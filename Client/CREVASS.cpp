@@ -181,6 +181,4 @@ void CREVASS::BuildStream() {
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/igloo01_m.mesh", "igloo");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_sled_m.mesh", "sled");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fishrack01_m.mesh", "fishrack");
-	
-	
 }
