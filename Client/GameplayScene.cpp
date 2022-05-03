@@ -103,18 +103,31 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 	float speed = 100 * fDeltaTime;
 	if (m_Users[m_PlayerID]) {
+		static float YSave = 30;
+		static bool IsFirst = true;
+		static float HighY = YSave + 40;
 		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
+			if (IsFirst) {
+				YSave = m_Users[m_PlayerID]->GetPosition().y;
+				IsFirst = false;
+				HighY = YSave + 40;
+			}
 			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
 		}
 
-		if (m_Users[m_PlayerID]->GetPosition().y > 70) {
+		if (m_Users[m_PlayerID]->GetPosition().y > HighY) {
 			m_Users[m_PlayerID]->is_Inair = false;
 		}
 
-		//	}
+		if (tmp != -1) {
+			YSave = 30;
+		}
 
-		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
+		if (m_Users[m_PlayerID]->GetPosition().y <= YSave && m_Users[m_PlayerID]->bJump == true) {
 			m_Users[m_PlayerID]->bJump = false;
+			YSave = 30;
+			IsFirst = true;
+			HighY = YSave + 40;
 		}
 
 	}
@@ -174,7 +187,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
 		AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
-		if (!IsFall || i<Lifecnt-1) {
+		if (!IsFall || i < Lifecnt - 1) {
 			AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
 			AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
 		}
@@ -305,7 +318,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 	else {
 		if (tmp != -1) {
-			if (m_Users[m_PlayerID]->GetPosition().y >= 10) {
+			if (m_Users[m_PlayerID]->GetPosition().y > 20 && m_Users[m_PlayerID]->bJump == false) {
 				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
 					AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
 			}
@@ -314,7 +327,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 		else {
-			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60 >= 10) {
+			cout << m_Users[m_PlayerID]->GetPosition().y << ", " << AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(0))->GetPosition().y + 60 << endl;
+			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y >= 50 &&
+				m_Users[m_PlayerID]->bJump == false) {
 				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
 					AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
 			}
@@ -322,7 +337,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
 			}
 		}
-		g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
+		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 	}
 
 	if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
