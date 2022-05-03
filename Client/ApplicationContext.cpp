@@ -8,8 +8,6 @@
 
 #include <random>
 
-
-
 random_device rd1;
 default_random_engine dre2(rd1());
 uniform_int_distribution<> uid5{ 0,8 }; //´«»ç¶÷ À§Ä¡
@@ -313,16 +311,24 @@ void ApplicationContext::CreateBackground()
 		int matidx = -1;
 		auto bonidx = BoneIndex::Count;
 		if (i / 10 == 0) {
-			meshName = "husky";
-			instID = "husky" + std::to_string(i + 100);
-			matidx = 4;
-			bonidx = BoneIndex::Husky;
+			//meshName = "husky";
+			//instID = "husky" + std::to_string(i + 100);
+			//matidx = 4;
+			//bonidx = BoneIndex::Husky;
+			meshName = "ArcticFox";
+			instID = "ArcticFox" + std::to_string(i + 100);
+			matidx = 10;
+			bonidx = BoneIndex::Fox;
 		}
 		else if (i / 10 == 1) {
-			meshName = "Penguin_LOD0skin";
-			instID = "Penguin_LOD0skin" + std::to_string(i + 100);
-			matidx = 2;
-			bonidx = BoneIndex::Penguin;
+			//meshName = "Penguin_LOD0skin";
+			//instID = "Penguin_LOD0skin" + std::to_string(i + 100);
+			//matidx = 2;
+			//bonidx = BoneIndex::Penguin;
+			meshName = "Seal";
+			instID = "Seal" + std::to_string(i + 100);
+			matidx = 12;
+			bonidx = BoneIndex::Seal;
 		}
 		else if (i / 10 == 2) {
 			meshName = "ArcticFox";

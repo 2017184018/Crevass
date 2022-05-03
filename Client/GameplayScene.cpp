@@ -26,7 +26,7 @@ using namespace Core;
 void GameplayScene::Initialize()
 {
 	m_SceneController = new GameplayController(this);
-	
+
 	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
 	AppContext->CreateBlocks();
 	AppContext->CreateSnowmans();
@@ -47,7 +47,7 @@ bool GameplayScene::Enter()
 {
 	cout << "GamePlay Scene" << endl;
 
-	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo ->m_ClientID;
+	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 
 	//나 
 	m_Users[0] = AppContext->FindObject<Character>("husky", "husky0");
@@ -98,7 +98,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
-		
+
 		p.second->Update(fDeltaTime);
 	}
 	float speed = 100 * fDeltaTime;
@@ -111,7 +111,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[m_PlayerID]->is_Inair = false;
 		}
 
-	//	}
+		//	}
 
 		if (m_Users[m_PlayerID]->GetPosition().y <= 30 && m_Users[m_PlayerID]->bJump == true) {
 			m_Users[m_PlayerID]->bJump = false;
@@ -174,24 +174,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
 		AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
-		if (!IsFall) {
+		if (!IsFall || i<Lifecnt-1) {
 			AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
 			AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
 		}
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.01;
-	}
-	{	//���� ���� �� �ӽ�
-		static bool pushone = false;
-		if (GetAsyncKeyState('1') & 0x8000) {
-			if (!pushone) {
-				Fall();
-				pushone = true;
-			}
-		}
-		else {
-			pushone = false;
-		}
 	}
 
 	MaterialReference::GetApp()->Update(fDeltaTime);
@@ -203,7 +191,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 	Core::mWaves->Disturb(i, j, r);
 	if (IsFall) {
 		static bool Isup = true;
-		cout << Lifecnt << endl;
 		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 <= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
 			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 += 0.1f;
 			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 += 0.1f;
@@ -312,6 +299,36 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 	}
+
+	if (tmp == -1 && tmp2 == -1) {
+		m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
+	}
+	else {
+		if (tmp != -1) {
+			if (m_Users[m_PlayerID]->GetPosition().y >= 10) {
+				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
+					AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
+			}
+			else {
+				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
+			}
+		}
+		else {
+			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60 >= 10) {
+				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
+					AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
+			}
+			else {
+				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
+			}
+		}
+		g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
+	}
+
+	if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
+		Fall();
+		m_Users[m_PlayerID]->Move(DIR_UP, speed, true);
+	}
 }
 
 void GameplayScene::Render()
@@ -393,7 +410,7 @@ void GameplayScene::shake(GameObject* object, int index) {
 			}
 		}
 		else {
-			if (object->m_World._42 <= -30 && tmp2==-1) {
+			if (object->m_World._42 <= -30 && tmp2 == -1) {
 				object->m_World._42 += 0.2f;
 			}
 			else {
