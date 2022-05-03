@@ -43,3 +43,8 @@ void MoveCommand::Jump()
 {
 	m_Owner->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
 }
+
+void MoveCommand::Fall()
+{
+	m_Owner->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
+}

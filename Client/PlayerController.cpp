@@ -89,7 +89,7 @@ void PlayerController::HandleInput(const float deltaT)
 {
 
 	//���ݵ��� �������̰�
-	if (CommandCenter::GetApp()->m_StartAttackAnim) return;
+	if (CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
 
 	float speed = 300 * deltaT;
 	XMVECTOR direction = {};
@@ -111,7 +111,10 @@ void PlayerController::HandleInput(const float deltaT)
 				m_Owner->SetDir(0);
 			}*/
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_FORWARD, speed, true);
+#elif DEBUG_SERVER
+#endif
 			m_Owner->SetDir(0);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 			tmp = 0;
@@ -126,7 +129,11 @@ void PlayerController::HandleInput(const float deltaT)
 					m_Owner->SetDir(270);
 				}*/
 				//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_LEFT, speed, true);
+#elif DEBUG_SERVER
+#endif
 			m_Owner->SetDir(270);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
 			tmp = 6;
@@ -140,7 +147,11 @@ void PlayerController::HandleInput(const float deltaT)
 				m_Owner->SetDir(180);
 			}*/
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_BACKWARD, speed, true);
+#elif DEBUG_SERVER
+#endif
 			m_Owner->SetDir(180);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
 			tmp = 4;
@@ -154,7 +165,12 @@ void PlayerController::HandleInput(const float deltaT)
 				m_Owner->SetDir(90);
 			}*/
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+		
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_RIGHT, speed, true);
+#elif DEBUG_SERVER
+#endif
+
 			m_Owner->SetDir(90);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
 			tmp = 2;
@@ -274,7 +290,7 @@ void PlayerController::OnKeyPressed()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
@@ -282,13 +298,18 @@ void PlayerController::OnKeyPressed()
 	case CameraType::Third:
 
 		if (InputHandler::IsKeyDown('A')) {
-			m_Owner->is_fall = true;
 			CommandCenter::GetApp()->m_StartAttackAnim = true;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
 		}
 
+		if (InputHandler::IsKeyDown('S')) {
+
+			m_Owner->is_fall = !m_Owner->is_fall;
+			CommandCenter::GetApp()->m_StartFallAnim = true;
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Fall), m_Owner);
+		}
+
 		if (InputHandler::IsKeyDown(VK_UP)) {
-			m_Owner->is_fall = false;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 			tmp = 0;
@@ -348,7 +369,7 @@ void PlayerController::OnKeyReleased()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
@@ -382,6 +403,8 @@ void PlayerController::OnKeyReleased()
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp('A')) {
+		}
+		if (InputHandler::IsKeyUp('S')) {
 		}
 		break;
 	}

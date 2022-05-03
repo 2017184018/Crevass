@@ -45,6 +45,7 @@
 #define ANIM_ATTACK			2
 #define ANIM_RUNNING		3
 #define ANIM_JUMP		    4
+#define ANIM_FALL		    5
 
 #pragma pack(push ,1)
 

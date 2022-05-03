@@ -29,7 +29,7 @@ int main(void)
 	 //LoadFolderFbx("..//..//..//Resource//fbx//*.fbx", "..//..//..//Resource//convert");
 
 	// 파일안에 모든 애니메이션 FBX 파일 변환을 원할 때
-	LoadFolderAnimationFbx(".//Ani//husky_Attack.fbx", "./Ani/");
+	LoadFolderAnimationFbx(".//Ani//ArticFox_Death.fbx", "./Ani/");
 	// 특정 애니메이션 파일 하나만 변환을 원할 때
 	// .FBX는 제외한 이름만 넣어주어야함
 	// LoadFileAnimationFbx("Idle", "./Ani/");

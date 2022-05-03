@@ -228,6 +228,9 @@ void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos,
 	if(clipName == "Jump")
 		timePos *= 1.5f;
 
+	if (clipName == "Fall")
+		timePos *= 1.5f;
+
 	//이 클립의 모든 뼈대를 시간에 맞게 보간함
 	auto clip = mAnimations.find(clipName);
 	clip->second.Interpolate(timePos, toParentTransforms);
@@ -263,6 +266,8 @@ void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos,
 
 void SkinnedData::GetBlendedAnimationData(const std::string& clipName1, float timePos1, const std::string& clipName2, float timePos2, float factor, std::vector<DirectX::XMFLOAT4X4>& finalTransform)
 {
+	if ((clipName1 == "") || (clipName2 == "")) return;
+
 	std::vector< DirectX::XMFLOAT4X4> bones1;
 	std::vector< DirectX::XMFLOAT4X4> bones2;
 
@@ -270,7 +275,8 @@ void SkinnedData::GetBlendedAnimationData(const std::string& clipName1, float ti
 	GetFinalTransforms(clipName1, timePos1, bones1);
 	GetFinalTransforms(clipName2, timePos2, bones2);
 
-	finalTransform.resize(bones1.size());
+	bones1.resize(finalTransform.size());
+	bones2.resize(finalTransform.size());
 
 	if (factor < 0.0f) factor = 0.0f;
 	if (factor > 1.0f) factor = 1.0f;
