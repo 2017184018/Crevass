@@ -45,6 +45,9 @@ std::string ApplicationContext::FindAnimName(int animCode) const
 	case ANIM_JUMP:
 		animName = "jump";
 		break;
+	case ANIM_FALL:
+		animName = "Fall";
+		break;
 	default:
 		cout << "None Anim Code" << endl;
 		break;

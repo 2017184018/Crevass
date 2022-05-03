@@ -1,7 +1,7 @@
 #pragma once
 
 #define BUFSIZE (1024*16)	// 일단 여기 추가함
-#define TOTAL_PLAYER_NUM 3
+#define TOTAL_PLAYER_NUM 5
 #define TOTAL_BULLET_NUM 100
 #define TOTAL_LIFE_NUM	5
 

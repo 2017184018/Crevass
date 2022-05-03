@@ -13,8 +13,8 @@
 #include "d3dUtil.h"
 
 #include "../protocol.h"
-//#define DEBUG_CLIENT 0x00FF0
-#define DEBUG_SERVER 0x00FF1
+#define DEBUG_CLIENT 0x00FF0
+//#define DEBUG_SERVER 0x00FF1
 // 
 // 콘솔창 띄우기
 #ifdef UNICODE

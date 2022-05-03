@@ -61,6 +61,18 @@ public:
 			}
 		}
 
+		else if (m_StartFallAnim)
+		{
+			m_FallDeltaT += 60.f / (1.f / deltaT);
+
+			if (m_FallAnimTime < m_FallDeltaT)
+			{
+				m_FallDeltaT = 0;
+				m_StartFallAnim = false;
+				PopCommand(static_cast<int>(MoveState::Fall));
+			}
+		}
+
 		m_FSM.back()->Execute();
 	}
 
@@ -78,5 +90,9 @@ public:
 	bool	m_StartJumpAnim = false;
 	float	m_JumpAnimTime = 45.f;
 	float	m_JumpDeltaT = 0;
+
+	bool	m_StartFallAnim = false;
+	float	m_FallAnimTime = 76.f;
+	float	m_FallDeltaT = 0;
 };
 

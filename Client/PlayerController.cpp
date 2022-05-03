@@ -89,7 +89,7 @@ void PlayerController::HandleInput(const float deltaT)
 {
 
 	//���ݵ��� �������̰�
-	if (CommandCenter::GetApp()->m_StartAttackAnim) return;
+	if (CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
 
 	float speed = 300 * deltaT;
 	XMVECTOR direction = {};
@@ -290,7 +290,7 @@ void PlayerController::OnKeyPressed()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
@@ -300,6 +300,11 @@ void PlayerController::OnKeyPressed()
 		if (InputHandler::IsKeyDown('A')) {
 			CommandCenter::GetApp()->m_StartAttackAnim = true;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+		}
+
+		if (InputHandler::IsKeyDown('S')) {
+			CommandCenter::GetApp()->m_StartFallAnim = true;
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Fall), m_Owner);
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {
@@ -362,7 +367,7 @@ void PlayerController::OnKeyReleased()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
@@ -396,6 +401,8 @@ void PlayerController::OnKeyReleased()
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp('A')) {
+		}
+		if (InputHandler::IsKeyUp('S')) {
 		}
 		break;
 	}

@@ -50,16 +50,16 @@ bool GameplayScene::Enter()
 	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo ->m_ClientID;
 
 	//나 
-	m_Users[0] = AppContext->FindObject<Character>("husky", "husky0");
+	m_Users[0] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
 	m_Users[0]->m_IsVisible = true;
 
-	m_Users[1] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+	m_Users[1] = AppContext->FindObject<Character>("husky", "husky0");
 	m_Users[1]->m_IsVisible = true;
 
-	m_Users[2] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
+	m_Users[2] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
 	m_Users[2]->m_IsVisible = true;
 
-	m_Users[3] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
+	m_Users[3] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
 	m_Users[3]->m_IsVisible = true;
 
 	m_Users[4] = AppContext->FindObject<Character>("Seal", "Seal0");
@@ -94,6 +94,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	{
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 	}
+
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
@@ -101,6 +102,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		
 		p.second->Update(fDeltaTime);
 	}
+
 	float speed = 100 * fDeltaTime;
 	if (m_Users[m_PlayerID]) {
 		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {

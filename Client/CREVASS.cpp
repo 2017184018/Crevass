@@ -28,6 +28,7 @@ using namespace Core;
 
 void CREVASS::Startup(void)
 {
+
 	//g_pFramework->m_pNetwork->Send(CS_READY);
 	//g_pFramework->m_pNetwork->Recv();
 	m_Camera = new Camera;
@@ -47,39 +48,42 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 	m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "icecube", m_MeshRef->m_GeometryMesh["icecube"].get()->DrawArgs["icecube"].Bounds);
 
-	//husky
+	//Character
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "husky");
 	m_MeshRef->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get(), "husky", m_MeshRef->m_GeometryMesh["husky"].get()->DrawArgs["husky"].Bounds);
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Idle");
-	m_MeshRef->BuildSkinnedModelAnimation("husky", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Attack");
+	m_MeshRef->BuildSkinnedModelAnimation("husky", "Fall");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Walk");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Attack");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Fall");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "ArcticFox");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Attack");
+	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Fall");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "PolarBear");
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Attack");
+	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Fall");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Seal");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Run");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Idle");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Attack");
+	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Fall");
 
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 

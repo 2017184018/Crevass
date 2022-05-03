@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "CharacterParts.h"
 
-void Character::SetState()
+void Character::SetState(const float deltaT)
 {
 	switch (m_PlayerState)
 	{
@@ -26,6 +26,12 @@ void Character::SetState()
 		case STATE_ATTACK:
 			m_PlayerState = STATE_IDLE_TO_ATTACK;
 			m_MapAnimData["Attack"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		case STATE_FALL:
+			m_PlayerState = STATE_IDLE_TO_FALL;
+			m_MapAnimData["Fall"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 
@@ -52,6 +58,12 @@ void Character::SetState()
 			m_BlendFrame = 1.0f;
 			break;
 
+		case STATE_FALL:
+			m_PlayerState = STATE_FORWARD_TO_FALL;
+			m_MapAnimData["Fall"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
 		}
 		break;
 	case STATE_JUMP:
@@ -71,6 +83,12 @@ void Character::SetState()
 		case STATE_ATTACK:
 			m_PlayerState = STATE_JUMP_TO_ATTACK;
 			m_MapAnimData["Attack"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		case STATE_FALL:
+			m_PlayerState = STATE_JUMP_TO_FALL;
+			m_MapAnimData["Fall"]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 
@@ -96,38 +114,86 @@ void Character::SetState()
 			m_BlendFrame = 1.0f;
 			break;
 
+		case STATE_FALL:
+			m_PlayerState = STATE_ATTACK_TO_FALL;
+			m_MapAnimData["Fall"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
 		}
 		break;
 
+	case STATE_FALL:
+		switch (m_KeyState)
+		{
+		case STATE_IDLE:
+			m_PlayerState = STATE_FALL_TO_IDLE;
+			m_MapAnimData["Idle"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+		case STATE_FORWARD:
+			m_PlayerState = STATE_FALL_TO_FORWARD;
+			m_MapAnimData["Run"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		case STATE_JUMP:
+			m_PlayerState = STATE_FALL_TO_JUMP;
+			m_MapAnimData["Jump"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		case STATE_ATTACK:
+			m_PlayerState = STATE_FALL_TO_ATTACK;
+			m_MapAnimData["Attack"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		}
+		break;
+
+	case STATE_FALL_TO_FORWARD:
 	case STATE_ATTACK_TO_FORWARD:
 	case STATE_JUMP_TO_FORWARD:
 	case STATE_IDLE_TO_FORWARD:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_FORWARD;
-		m_BlendFrame++;
+		m_BlendFrame += 60.f / (1.f / deltaT);
 		break;
 
+	case STATE_FALL_TO_IDLE:
 	case STATE_ATTACK_TO_IDLE:
 	case STATE_FORWARD_TO_IDLE:
 	case STATE_JUMP_TO_IDLE:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_IDLE;
-		m_BlendFrame++;
+		m_BlendFrame += 60.f / (1.f / deltaT);
 		break;
+	case STATE_FALL_TO_JUMP:
 	case STATE_ATTACK_TO_JUMP:
 	case STATE_FORWARD_TO_JUMP:
 	case STATE_IDLE_TO_JUMP:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_JUMP;
-		m_BlendFrame++;
+		m_BlendFrame += 60.f / (1.f / deltaT);
 		break;
 
+	case STATE_FALL_TO_ATTACK:
 	case STATE_JUMP_TO_ATTACK:
 	case STATE_FORWARD_TO_ATTACK:
 	case STATE_IDLE_TO_ATTACK:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_ATTACK;
-		m_BlendFrame++;
+		m_BlendFrame += 60.f / (1.f / deltaT);
+		break;
+
+	case STATE_IDLE_TO_FALL:
+	case STATE_FORWARD_TO_FALL:
+	case STATE_JUMP_TO_FALL:
+	case STATE_ATTACK_TO_FALL:
+		if (m_BlendFrame > m_MaxBlendFrames)
+			m_PlayerState = STATE_FALL;
+		m_BlendFrame += 60.f / (1.f / deltaT);
 		break;
 	}
 }
@@ -166,6 +232,13 @@ void Character::UpdateBoneTransforms()
 			m_MapAnimData["Attack"]->m_Time
 		);
 		break;
+	case Character::STATE_FALL:
+		strState = "Fall";
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time
+		);
+		break;
 	case Character::STATE_IDLE_TO_FORWARD:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Idle"]->m_Name,
@@ -193,12 +266,48 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
+	case Character::STATE_IDLE_TO_FALL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Idle"]->m_Name,
+			m_MapAnimData["Idle"]->m_Time,
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
 	case Character::STATE_FORWARD_TO_IDLE:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Run"]->m_Name,
 			m_MapAnimData["Run"]->m_Time,
 			m_MapAnimData["Idle"]->m_Name,
 			m_MapAnimData["Idle"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_FORWARD_TO_ATTACK:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Run"]->m_Name,
+			m_MapAnimData["Run"]->m_Time,
+			m_MapAnimData["Attack"]->m_Name,
+			m_MapAnimData["Attack"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_FORWARD_TO_JUMP:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Run"]->m_Name,
+			m_MapAnimData["Run"]->m_Time,
+			m_MapAnimData["Jump"]->m_Name,
+			m_MapAnimData["Jump"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_FORWARD_TO_FALL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Run"]->m_Name,
+			m_MapAnimData["Run"]->m_Time,
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
@@ -229,16 +338,16 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
-
-	case Character::STATE_FORWARD_TO_ATTACK:
+	case Character::STATE_JUMP_TO_FALL:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
-			m_MapAnimData["Run"]->m_Name,
-			m_MapAnimData["Run"]->m_Time,
-			m_MapAnimData["Attack"]->m_Name,
-			m_MapAnimData["Attack"]->m_Time,
+			m_MapAnimData["Jump"]->m_Name,
+			m_MapAnimData["Jump"]->m_Time,
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
+	
 	
 	case Character::STATE_ATTACK_TO_FORWARD:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
@@ -267,7 +376,56 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
+	case Character::STATE_ATTACK_TO_FALL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Attack"]->m_Name,
+			m_MapAnimData["Attack"]->m_Time,
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+
+	case Character::STATE_FALL_TO_FORWARD:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			m_MapAnimData["Run"]->m_Name,
+			m_MapAnimData["Run"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_FALL_TO_JUMP:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			m_MapAnimData["Jump"]->m_Name,
+			m_MapAnimData["Jump"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_FALL_TO_IDLE:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			m_MapAnimData["Idle"]->m_Name,
+			m_MapAnimData["Idle"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_FALL_TO_ATTACK:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			m_MapAnimData["Attack"]->m_Name,
+			m_MapAnimData["Attack"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
 	}
+
+	if (strState == "")
+		return;
 
 	if (m_MapAnimData[strState]->m_Time > m_SkinnedModelInst->SkinnedInfo->GetClipEndTime(strState))
 	{
@@ -295,6 +453,7 @@ Character::Character( std::string type, std::string id) :
 	m_MapAnimData["Run"] = std::make_unique<AnimData>("Run", 0.f);
 	m_MapAnimData["Jump"] = std::make_unique<AnimData>("Jump", 0.f);
 	m_MapAnimData["Attack"] = std::make_unique<AnimData>("Attack", 0.f);
+	m_MapAnimData["Fall"] = std::make_unique<AnimData>("Fall", 0.f);
 	m_MaxBlendFrames = 10.f;
 }
 
@@ -306,7 +465,7 @@ Character::~Character()
 void Character::Update(const float deltaT)
 {
 
-	SetState();
+	SetState(deltaT);
 	if (m_PlayerController)
 		m_PlayerController->Update(deltaT);
 
@@ -317,6 +476,7 @@ void Character::Update(const float deltaT)
 		p.second->m_Time += deltaT;
 	}
 	UpdateBoneTransforms();
+	
 	if (m_MyCamera != NULL) {
 	
 
@@ -330,6 +490,7 @@ void Character::Update(const float deltaT)
 			m_MyCamera->SetTarget(target);
 		}
 	}
+
 }
 
 void Character::SetCamera(Camera* myCamera, CameraType cameraType)
