@@ -282,11 +282,13 @@ void PlayerController::OnKeyPressed()
 	case CameraType::Third:
 
 		if (InputHandler::IsKeyDown('A')) {
+			m_Owner->is_fall = true;
 			CommandCenter::GetApp()->m_StartAttackAnim = true;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {
+			m_Owner->is_fall = false;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 			tmp = 0;

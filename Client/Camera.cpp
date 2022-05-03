@@ -89,7 +89,18 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 		xmf4x4Rotate._13 = xmf3Right.z; xmf4x4Rotate._23 = xmf3Up.z; xmf4x4Rotate._33 = xmf3Look.z;
 	
 		XMFLOAT3 xmf3Offset = MathHelper::TransformCoord(mOffset, xmf4x4Rotate);
-		XMFLOAT3 xmf3Position = MathHelper::Add(m_Owner->GetPosition(), xmf3Offset);
+		XMFLOAT3 xmf3Position;
+		if (m_Owner->is_fall == false) {
+		 xmf3Position = MathHelper::Add(m_Owner->GetPosition(), xmf3Offset);
+		}
+		else {
+			XMFLOAT3 pos;
+			pos.x = m_Owner->GetPosition().x;
+			pos.y = m_Owner->GetPosition().y+200;
+			pos.z = m_Owner->GetPosition().z+300;
+		 xmf3Position = MathHelper::Add(pos, xmf3Offset);
+		}
+
 		XMFLOAT3 xmf3Direction = MathHelper::Subtract(xmf3Position, mPosition);
 		float fLength = MathHelper::Length(xmf3Direction);
 		xmf3Direction = MathHelper::Normalize(xmf3Direction);

@@ -95,6 +95,8 @@ public:
 	int m_Dir = 0;
 	BOOL bJump = false;
 	BOOL is_Inair = false;
+	BOOL is_fall = false;
+
 private:
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Right;
@@ -106,4 +108,5 @@ private:
 	float m_Roll;
 
 	float m_CurrentAngle = 0.0f;
+
 };
