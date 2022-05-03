@@ -111,7 +111,10 @@ void PlayerController::HandleInput(const float deltaT)
 				m_Owner->SetDir(0);
 			}*/
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_FORWARD, speed, true);
+#elif DEBUG_SERVER
+#endif
 			m_Owner->SetDir(0);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 			tmp = 0;
@@ -126,7 +129,11 @@ void PlayerController::HandleInput(const float deltaT)
 					m_Owner->SetDir(270);
 				}*/
 				//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_LEFT, speed, true);
+#elif DEBUG_SERVER
+#endif
 			m_Owner->SetDir(270);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
 			tmp = 6;
@@ -140,7 +147,11 @@ void PlayerController::HandleInput(const float deltaT)
 				m_Owner->SetDir(180);
 			}*/
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_BACKWARD, speed, true);
+#elif DEBUG_SERVER
+#endif
 			m_Owner->SetDir(180);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
 			tmp = 4;
@@ -154,7 +165,12 @@ void PlayerController::HandleInput(const float deltaT)
 				m_Owner->SetDir(90);
 			}*/
 			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+		
+#ifdef DEBUG_CLIENT
 			m_Owner->Move(DIR_RIGHT, speed, true);
+#elif DEBUG_SERVER
+#endif
+
 			m_Owner->SetDir(90);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
 			tmp = 2;
