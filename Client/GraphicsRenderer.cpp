@@ -37,8 +37,6 @@ void GraphicsRenderer::Initialize()
 	BuildDescriptorHeaps();
 	BuildShaderAndInputLayout();
 	BuildPipelineStateObjects();
-
-
 }
 
 void GraphicsRenderer::Shutdown()
@@ -67,7 +65,6 @@ void GraphicsRenderer::RenderGraphics()
 
 void GraphicsRenderer::LoadTextures()
 {
-
 	std::vector<std::string> texNames =
 	{
 		"snowcube1024",
@@ -117,7 +114,6 @@ void GraphicsRenderer::LoadTextures()
 
 void GraphicsRenderer::BuildDescriptorHeaps()
 {
-
 	const int blurDescriptorCount = 4;
 	//
 		// Create the SRV heap.
@@ -267,8 +263,6 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.MipLevels = Seal->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(Seal.Get(), &srvDesc, hDescriptor);
-
-	
 
 	mSkyTexHeapIndex = 0;
 

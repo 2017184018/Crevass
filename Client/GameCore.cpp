@@ -9,18 +9,18 @@
 #include "MainFramework.h"
 #include "Network.h"
 
-//#define _WITH_SWAPCHAIN_FULLSCREEN_STATE		//��üȭ��
+//#define _WITH_SWAPCHAIN_FULLSCREEN_STATE		//FULLSCREEN
 
 using namespace Core;
 
 namespace Core
 {
-	GameCore*			g_Core = nullptr;
-	GameTimer*			g_GameTimer = nullptr;
+	GameCore* g_Core = nullptr;
+	GameTimer* g_GameTimer = nullptr;
 
 	HINSTANCE			g_hAppInst = nullptr; // application instance handle
 	HWND				g_hMainWnd = nullptr; // main window handle
-	const wchar_t*		g_AppName = nullptr;
+	const wchar_t* g_AppName = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Device> g_Device;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> g_CommandQueue;
@@ -80,7 +80,7 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 				break;
 		}
 	}
-	
+
 	TerminateApplication(app);
 }
 
@@ -139,9 +139,8 @@ void GameCore::InitializeCore(IGameApp& game)
 	// Create Renderer
 	m_GraphicsContext = GraphicsContext::GetApp();
 	m_GraphicsRenderer = GraphicsRenderer::GetApp();
-	
+
 	InitMainWindow();
-	//InitDirect3D();
 	OnResize();
 
 	BackBuffer = CurrentBackBuffer();
@@ -151,7 +150,7 @@ void GameCore::InitializeCore(IGameApp& game)
 	game.Startup();
 	m_GraphicsContext->Initialize();
 	m_GraphicsRenderer->Initialize();
-		
+
 	// Execute the initialization commands.
 	ThrowIfFailed(g_CommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { g_CommandList.Get() };
@@ -201,9 +200,6 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
-		// WM_ACTIVATE is sent when the window is activated or deactivated.  
-		// We pause the game when the window is deactivated and unpause it 
-		// when it becomes active.  
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
@@ -214,8 +210,8 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		else
 		{
 			Inactive = false;
-		/*	mAppPaused = false;
-			g_GameTimer->Start();*/
+			/*	mAppPaused = false;
+				g_GameTimer->Start();*/
 		}
 		return 0;
 

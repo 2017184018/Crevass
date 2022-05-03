@@ -19,13 +19,6 @@
 #include <random>
 using namespace Core;
 
-//random_device rd;
-//default_random_engine dre(rd());
-//uniform_int_distribution<> uid{ 0,8 }; //����� ��ġ
-//uniform_int_distribution<> uid2{ 0,3 }; //���� ���� ȸ��
-//uniform_int_distribution<> uid3{ 0,24 }; //���� ����
-
-
 void CREVASS::Startup(void)
 {
 	//g_pFramework->m_pNetwork->Send(CS_READY);
@@ -88,9 +81,6 @@ void CREVASS::Startup(void)
 	MaterialReference::GetApp()->BuildMaterials();
 
 	// Build RenderItem
-	
-
-	
 
 	SceneManager::GetApp()->InitializeScenes();
 	// 위 아래 바꾸면 이상함 
@@ -101,7 +91,6 @@ void CREVASS::Startup(void)
 	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->skinnedObjectCount = BoneIndex::Count;
 	GraphicsContext::GetApp()->materialCount = MaterialReference::GetApp()->m_Materials.size();
-
 
 	for (auto& p : AppContext->m_RItemsMap)
 	{
@@ -146,7 +135,6 @@ void CREVASS::Update(float deltaT)
 	m_Camera->UpdateViewMatrix();
 
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
-
 }
 
 void CREVASS::RenderScene(void)
@@ -161,7 +149,6 @@ void CREVASS::BuildCharacters()
 	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
 	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
 	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
-
 }
 
 void CREVASS::BuildStream() {

@@ -69,12 +69,13 @@ public:
 	bool BlockCheck(int);		//부숴지는 블록인지 아닌지 체크
 
 	bool BlockIn = false;		//블록 한번만 밟게
-	int tmp = -1;
+	int tmp1 = -1;
 	int tmp2 = -1;
 
 	void Fall();
 	UINT Lifecnt = 5;
 
 	int FallX, FallZ;
+	float Gravity = 0.1;
 };
 

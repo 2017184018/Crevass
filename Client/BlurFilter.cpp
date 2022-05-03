@@ -1,7 +1,3 @@
-//***************************************************************************************
-// BlurFilter.cpp by Frank Luna (C) 2011 All Rights Reserved.
-//***************************************************************************************
-
 #include "BlurFilter.h"
 
 BlurFilter::BlurFilter(ID3D12Device* device,
