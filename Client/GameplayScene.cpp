@@ -182,6 +182,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 20;
 	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 20;
 
+	static bool f = true;
 	for (int i = 0; i < 5; ++i) {
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
@@ -190,8 +191,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
 			AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
 		}
+		else {
+			if (f) {
+				AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = 85 + 14;
+				AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
+				f = false;
+			}
+		}
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
-		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.01;
+		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
 	}
 
 	MaterialReference::GetApp()->Update(fDeltaTime);
@@ -201,9 +209,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	float r = MathHelper::RandF(0.2f, 0.5f);
 	Core::mWaves->Disturb(i, j, r);
+	static bool m = true;
+		if (m) {
+			cout << AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42<<", "<< XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition())+14 << endl;
+		}
 	if (IsFall) {
+			m = false;
 		static bool Isup = true;
-		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 <= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
+		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 < XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
 			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 += 0.1f;
 			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 += 0.1f;
 			if (AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 >= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
@@ -343,7 +356,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 	}
 
-	if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
+	if (m_Users[m_PlayerID]->GetPosition().y <= -100 ) {
+		auto camerapos = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 		Fall();
 		m_Users[m_PlayerID]->Move(DIR_UP, speed, true);
 	}
