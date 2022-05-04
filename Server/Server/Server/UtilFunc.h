@@ -12,21 +12,21 @@ bool CheckGameStart()
 	int count = 0;
 	for (int i = 0; i < numOfCls; ++i)
 	{
-		g_connectedClsLock.lock();
+		g_ConnectedClsLock.lock();
 		if (g_connectedCls[i].is_connected != false)
 		{
-			g_connectedClsLock.unlock();
-			g_playerReadyInfoLock.lock();
+			g_ConnectedClsLock.unlock();
+			g_PlayerReadyInfoLock.lock();
 			if (g_playerReadyInfo[i].ready != 0)
 			{
-				g_playerReadyInfoLock.unlock();
+				g_PlayerReadyInfoLock.unlock();
 				count += 1;
-				g_playerReadyInfoLock.lock();
+				g_PlayerReadyInfoLock.lock();
 			}
-			g_playerReadyInfoLock.unlock();
-			g_connectedClsLock.lock();
+			g_PlayerReadyInfoLock.unlock();
+			g_ConnectedClsLock.lock();
 		}
-		g_connectedClsLock.unlock();
+		g_ConnectedClsLock.unlock();
 	}
 
 	std::cout << "numof cl : " << numOfCls << ", count : " << count << std::endl;

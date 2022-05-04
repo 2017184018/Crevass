@@ -31,7 +31,7 @@ std::vector <Player> phyPlayers;
 
 // 플레이어들의 초기 위치
 
-Pro_Player g_initialPos[3] = { {0,DirectX::XMFLOAT3(200.0f,30.0f,0.0f)},{1,DirectX::XMFLOAT3(300.0f,30.0f,0.0f)},{2,DirectX::XMFLOAT3(200.0f,200.0f,0.0f)} };
+Pro_Player g_initialPos[3] = { {0,DirectX::XMFLOAT3(200.0f,30.0f,0.0f),0},{1,DirectX::XMFLOAT3(300.0f,30.0f,0.0f),0},{2,DirectX::XMFLOAT3(200.0f,200.0f,0.0f),0} };
 
 PlayerReadyInfo g_playerReadyInfo[3]{ {-1, 0}, {-1, 0}, {-1, 0} };
 
@@ -47,7 +47,8 @@ atomic_int numOfCls;				// 접속한 클라이언트 수
 bool g_isPlaying = false;
 
 mutex g_MsgQueueLock;
-mutex g_connectedClsLock;
-mutex g_socketLock;
-mutex g_playerReadyInfoLock;
-mutex g_initialPosLock;
+mutex g_ConnectedClsLock;
+mutex g_SocketLock;
+mutex g_PlayerReadyInfoLock;
+mutex g_InitialPosLock;
+mutex g_SnowmanPosLock;

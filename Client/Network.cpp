@@ -198,6 +198,11 @@ void Network::ProcessPacket(char* packet_buffer)
 		{
 			PlayerPos[i] = packet.players[i].pos;
 		}
+		for (int i = 0; i < 2; ++i)
+		{
+			SnowmanLocation[i] = packet.SnowmanLocation[i];
+		}
+		cout << SnowmanLocation[0];
 		SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 		break;
 	}
@@ -208,6 +213,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
 		{
 			PlayerPos[i] = packet.players[i].pos;
+			dir[i] = packet.players[i].dir;
 		}
 		//if (m_pGameInfo->m_ClientID == 0)
 		//	OtherPlayerPos = packet.players[1].pos;
@@ -271,4 +277,14 @@ void Network::ErrorDisplay(const char* msg)
 DirectX::XMFLOAT3 Network::GetPlayerPos(int num)const
 {
 	return PlayerPos[num];
+}
+
+int Network::GetSnowmanLocation(int num)const
+{
+	return SnowmanLocation[num];
+}
+
+int Network::GetPlayerDir(int num)const
+{
+	return static_cast<int>(dir[num]);
 }

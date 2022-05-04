@@ -45,10 +45,10 @@ int main()
 
 		for (int i = 0; i < MAXPLAYER; ++i) 
 		{
-			g_connectedClsLock.lock();
+			g_ConnectedClsLock.lock();
 			if (false == g_connectedCls[i].is_connected) {
 				g_connectedCls[i].is_connected = true;
-				g_connectedClsLock.unlock();
+				g_ConnectedClsLock.unlock();
 				user_id = i;
 				numOfCls++;
 				cout << "==============================" << endl;
@@ -57,17 +57,17 @@ int main()
 
 				break;
 			}
-			g_connectedClsLock.unlock();
+			g_ConnectedClsLock.unlock();
 		}
 
-		g_socketLock.lock();
+		g_SocketLock.lock();
 		g_clients[user_id] = client_sock;
-		g_socketLock.unlock();
+		g_SocketLock.unlock();
 
-		g_playerReadyInfoLock.lock();
+		g_PlayerReadyInfoLock.lock();
 		g_playerReadyInfo[user_id].id = user_id;
 		g_playerReadyInfo[user_id].ready = 0;		// 일단은 false로
-		g_playerReadyInfoLock.unlock();
+		g_PlayerReadyInfoLock.unlock();
 
 		// 접속한 클라이언트에 id 알려주기
 		SendLoginOkPacket(user_id);
@@ -77,17 +77,17 @@ int main()
 		//나머지 클라에게 나의 레디상황
 		for (int i = 0; i < MAXPLAYER; ++i)	// 유저아이디가 순서대로 증가할 때만 가능
 		{
-			g_connectedClsLock.lock();
+			g_ConnectedClsLock.lock();
 			if (true == g_connectedCls[i].is_connected)
 			{
-				g_connectedClsLock.unlock();
-				g_playerReadyInfoLock.lock();
+				g_ConnectedClsLock.unlock();
+				g_PlayerReadyInfoLock.lock();
 				SendReadyPacket(user_id, i, g_playerReadyInfo[i].ready);	//mutex 필요
-				g_playerReadyInfoLock.unlock();
+				g_PlayerReadyInfoLock.unlock();
 				SendReadyPacket(i, user_id, 0);	//0넣은 이유 mutex안쓰려고
-				g_connectedClsLock.lock();				
+				g_ConnectedClsLock.lock();				
 			}
-			g_connectedClsLock.unlock();
+			g_ConnectedClsLock.unlock();
 		}
 		// RecvThread 생성
 		thread RecvThread(Receiver, user_id);

@@ -8,7 +8,13 @@ public:
 	~Player();
 
 	void SetKeyW(bool input);
+	void SetKeyWA(bool input);
+	void SetKeyWD(bool input);
+
 	void SetKeyS(bool input);
+	void SetKeySA(bool input);
+	void SetKeySD(bool input);
+
 	void SetKeyA(bool input);
 	void SetKeyD(bool input);
 
@@ -23,4 +29,6 @@ private:
 	bool m_keyA = false;
 	bool m_keyD = false;
 
+public:
+	char dir = 0;
 };

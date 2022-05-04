@@ -18,9 +18,9 @@ void Receiver(char id)
 
 	Message msg{};
 
-	g_socketLock.lock();
+	g_SocketLock.lock();
 	SOCKET sock = g_clients[id];
-	g_socketLock.unlock();
+	g_SocketLock.unlock();
 
 	while (true)
 	{
@@ -34,16 +34,16 @@ void Receiver(char id)
 		{
 			closesocket(sock);
 
-			g_socketLock.lock();
+			g_SocketLock.lock();
 			g_clients.erase(id);
-			g_socketLock.unlock();
+			g_SocketLock.unlock();
 
 			for (auto& cl : g_clients)
 				SendRemovePlayerPacket(cl.first, id);
 
-			g_connectedClsLock.lock();
+			g_ConnectedClsLock.lock();
 			g_connectedCls[id].is_connected = false;
-			g_connectedClsLock.unlock();
+			g_ConnectedClsLock.unlock();
 			--numOfCls;
 
 			cout << "======================================================" << endl;
@@ -70,14 +70,48 @@ void Receiver(char id)
 			//printf("%d updown\n", msg.id);
 			break;
 		}
+		case CS_PLAYER_UP_LEFT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP_LEFT;
+			msg.isPushed = true;
+			break;
+		}
+		case CS_PLAYER_UP_RIGHT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP_RIGHT;
+			msg.isPushed = true;
+			break;
+		}
+
 		case CS_PLAYER_DOWN_DOWN:
 		{
 			msg.id = id;
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_DOWN;
 			msg.isPushed = true;
-			//printf("%d downdown\n",msg.id);
 
+			break;
+		}
+
+		case CS_PLAYER_DOWN_LEFT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN_LEFT;
+			msg.isPushed = true;
+			break;
+		}
+
+		case CS_PLAYER_DOWN_RIGHT_DOWN:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN_RIGHT;
+			msg.isPushed = true;
 			break;
 		}
 		case CS_PLAYER_LEFT_DOWN:
@@ -109,6 +143,30 @@ void Receiver(char id)
 
 			break;
 		}
+		case CS_PLAYER_UP_LEFT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP_LEFT;
+			msg.isPushed = false;
+			//printf("%d upup\n",msg.id);
+
+			break;
+		}
+
+		case CS_PLAYER_UP_RIGHT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_UP_RIGHT;
+			msg.isPushed = false;
+			//printf("%d upup\n",msg.id);
+
+			break;
+		}
+
+
+
 		case CS_PLAYER_DOWN_UP:
 		{
 			msg.id = id;
@@ -119,6 +177,30 @@ void Receiver(char id)
 
 			break;
 		}
+
+		case CS_PLAYER_DOWN_LEFT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN_LEFT;
+			msg.isPushed = false;
+			//printf("%d downup\n",msg.id);
+
+			break;
+		}
+
+		case CS_PLAYER_DOWN_RIGHT_UP:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = DIR_DOWN_RIGHT;
+			msg.isPushed = false;
+			//printf("%d downup\n",msg.id);
+
+			break;
+		}
+
+
 		case CS_PLAYER_LEFT_UP:
 		{
 			msg.id = id;
@@ -142,9 +224,9 @@ void Receiver(char id)
 
 		case CS_READY:
 		{
-			g_playerReadyInfoLock.lock();
+			g_PlayerReadyInfoLock.lock();
 			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
-			g_playerReadyInfoLock.unlock();
+			g_PlayerReadyInfoLock.unlock();
 
 			for (auto& cl : g_clients)
 				SendReadyPacket(cl.first, id, ready);

@@ -32,9 +32,13 @@ public:
 	char* ptr;
 
 	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
+	int GetSnowmanLocation(int num)const;
+	int GetPlayerDir(int num)const;
 
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
+	int SnowmanLocation[2];
+	char dir[3];
 
 public:
 	GameInfo* m_pGameInfo;
