@@ -123,6 +123,9 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 
 void MeshReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName,BoundingBox BB)
 {
+	/*BoundingBox B2;
+	B2.Extents = XMFLOAT3(10.0, 30.0, 12.0);*/
+
 	GeometryGenerator geoGen;
 	GeometryGenerator::MeshData box = geoGen.CreateBox(BB, 3);
 	UINT boxVertexOffset = 0;

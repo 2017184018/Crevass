@@ -341,6 +341,7 @@ void ApplicationContext::CreateBackground()
 			matidx = 12;
 			bonidx = BoneIndex::Seal;
 		}
+
 		Character* chr = CreateObject<Character>(meshName, instID);
 		chr->Geo = MeshReference::GetApp()->m_GeometryMesh[meshName].get();
 		chr->IndexCount = chr->Geo->DrawArgs[meshName].IndexCount;
@@ -710,6 +711,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->BaseVertexLocation = chr->Geo->DrawArgs[meshName].BaseVertexLocation;
 	chr->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	chr->m_Bounds = chr->Geo->DrawArgs[meshName].Bounds;
+	chr->m_HitBox.Extents = XMFLOAT3(10.0, 30.0, 12.0);
 	chr->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();

@@ -25,7 +25,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateSnowmans();
 	AppContext->CreateWave();
 	AppContext->CreateBackground();
-	//AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
+	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
 	for (int i = 0; i < 25; ++i) {
 		IsShake[i] = false;
@@ -86,7 +86,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 	}
-
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
@@ -257,7 +256,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
-	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
@@ -291,6 +290,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(AppContext->FindObject<GameObject>("husky", "husky0")->GetPosition());
+
 	//AppContext->FindObject<GameObject>("icecubeBB", "icecubeBB0")->SetPosition(AppContext->FindObject<GameObject>("snowcube", "snowcube0")->GetPosition());
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -354,6 +354,19 @@ void GameplayScene::Update(const float& fDeltaTime)
 		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 	}
 
+	//hit check
+	for (int i = 0; i < 5; i++) {
+		if (i != m_PlayerID) {
+			if (m_Users[m_PlayerID]->m_HitBox.Intersects(m_Users[i]->m_Bounds))
+			{
+				cout << "check" << endl;
+				m_Users[m_PlayerID]->m_HitBox.Center = XMFLOAT3(0, 0, 0);
+				m_Users[i]->pushed_back(70.0f, 50.0f, 1, m_Users[m_PlayerID]->m_CurrentAngle);
+
+			}
+		}
+	}
+
 	if (m_Users[m_PlayerID]->GetPosition().y <= -100 ) {
 		auto camerapos = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 		Fall();
@@ -383,9 +396,9 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fish"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
-	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
-//	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
-	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
+	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 

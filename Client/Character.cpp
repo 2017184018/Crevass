@@ -679,6 +679,38 @@ void Character::Scale(float x, float y, float z)
 	}
 }
 
+void Character::pushed_back(float up, float back,float speed,float hit_angle)
+{
+	cout << GetPosition().y << endl;
+	
+	if (hit_angle == 0) {
+		float temp = GetPosition().z + back;
+			while (GetPosition().z < temp) {
+				Move(DIR_FORWARD, speed, true);
+			}
+	}
+	else if (hit_angle == 90) {
+		float temp = GetPosition().x + back;
+			while (GetPosition().x < temp) {
+				Move(DIR_RIGHT, speed, true);
+			}
+	}
+	else if (hit_angle == 180) {
+		float temp = GetPosition().z - back;
+			while (GetPosition().z > temp) {
+				Move(DIR_BACKWARD, speed, true);
+			}
+	}
+	else if (hit_angle == 270) {
+		float temp = GetPosition().x - back;
+			while (GetPosition().x > temp) {
+				Move(DIR_LEFT, speed, true);
+			}
+	}
+	
+
+}
+
 void Character::SetAnimationKeyState(PlayerState keyState)
 {
 	m_KeyState = keyState;

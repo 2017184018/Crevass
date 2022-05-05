@@ -3,6 +3,8 @@
 #include "InputHandler.h"
 #include "Camera.h"
 
+//#include "ApplicationContext.h"
+//#include "GameObject.h"
 #include "Character.h"
 #include "SkinnedModelInstance.h"
 #include "CommandCenter.h"
@@ -277,8 +279,35 @@ void PlayerController::OnKeyPressed()
 	case CameraType::Third:
 
 		if (InputHandler::IsKeyDown('A')) {
+			//HIT박스 위치 업데이트 
+			if (m_Owner->m_CurrentAngle == 0) {
+				
+				m_Owner->m_HitBox.Center = m_Owner->GetPosition();
+				m_Owner->m_HitBox.Center.z += m_Owner->m_HitBox.Extents.z;
+				//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(m_Owner->m_HitBox.Center);
+
+			}
+			else if(m_Owner->m_CurrentAngle == 90)
+			{
+				m_Owner->m_HitBox.Center = m_Owner->GetPosition();
+				m_Owner->m_HitBox.Center.x += m_Owner->m_HitBox.Extents.z;
+				//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(m_Owner->m_HitBox.Center);
+			}
+			else if (m_Owner->m_CurrentAngle == 180)
+			{
+				m_Owner->m_HitBox.Center = m_Owner->GetPosition();
+				m_Owner->m_HitBox.Center.z -= m_Owner->m_HitBox.Extents.z;
+				//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(m_Owner->m_HitBox.Center);
+			}
+			else if (m_Owner->m_CurrentAngle == 270)
+			{
+				m_Owner->m_HitBox.Center = m_Owner->GetPosition();
+				m_Owner->m_HitBox.Center.x -= m_Owner->m_HitBox.Extents.z;
+				//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(m_Owner->m_HitBox.Center);
+			}
 			CommandCenter::GetApp()->m_StartAttackAnim = true;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+		
 		}
 
 		if (InputHandler::IsKeyDown('S')) {

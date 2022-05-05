@@ -97,17 +97,19 @@ public:
 
 
 	virtual void Scale(float x, float y, float z) override;
-
+	void pushed_back(float up, float back, float speed,float hit_angle);
 	void SetAnimationKeyState(PlayerState keyState);
 public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;
 	std::map<std::string, CharacterParts*> m_Parts;
-	int m_Dir = 0;
 	BOOL bJump = false;
 	BOOL is_Inair = false;
 	BOOL is_fall = false;
 
+	float m_CurrentAngle = 0.0f;
+
+	BoundingBox m_HitBox;
 private:
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Right;
@@ -118,6 +120,5 @@ private:
 	float m_Yaw;
 	float m_Roll;
 
-	float m_CurrentAngle = 0.0f;
 
 };
