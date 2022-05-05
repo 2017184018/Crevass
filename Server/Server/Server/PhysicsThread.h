@@ -11,35 +11,49 @@ void Update(vector<Player>& player)
 		if (player[i].GetKeyW() && player[i].GetKeyA()) {
 			player[i].m_pos.z += crossspeed;
 			player[i].m_pos.x -= crossspeed;
+			player[i].dir = DIR_UP_LEFT;
 		}
 		else if (player[i].GetKeyW() && player[i].GetKeyD()) {
 			player[i].m_pos.z += crossspeed;
 			player[i].m_pos.x += crossspeed;
+			player[i].dir = DIR_UP_RIGHT;
 		}
 		else if (player[i].GetKeyS() && player[i].GetKeyD()) {
 			player[i].m_pos.z -= crossspeed;
 			player[i].m_pos.x += crossspeed;
+			player[i].dir = DIR_DOWN_RIGHT;
+
 		}
 		else if (player[i].GetKeyS() && player[i].GetKeyA()) {
 			player[i].m_pos.z -= crossspeed;
 			player[i].m_pos.x -= crossspeed;
+			player[i].dir = DIR_DOWN_LEFT;
+
 		}
 		else {
 			if (player[i].GetKeyW())
 			{
 				player[i].m_pos.z += speed;
+				player[i].dir = DIR_UP;
+
 			}
 			if (player[i].GetKeyS())
 			{
 				player[i].m_pos.z -= speed;
+				player[i].dir = DIR_DOWN;
+
 			}
 			if (player[i].GetKeyA())
 			{
 				player[i].m_pos.x -= speed;
+				player[i].dir = DIR_LEFT;
+
 			}
 			if (player[i].GetKeyD())
 			{
 				player[i].m_pos.x += speed;
+				player[i].dir = DIR_RIGHT;
+
 			}
 		}
 	}
@@ -65,25 +79,25 @@ void ProcessClients()
 		phyPlayers[i].SetPos(temp);
 	}
 
-	//using FpFloatMilliseconds = duration<float, milliseconds::period>;
-	//auto prev_Time = chrono::high_resolution_clock::now();
-	//float elapsedTime{};
-	//float deltaT;
+	using FpFloatMilliseconds = duration<float, milliseconds::period>;
+	auto prev_Time = chrono::high_resolution_clock::now();
+	float elapsedTime{};
+	float deltaT;
 
-	using frame = duration<int32_t, ratio<1, FPS>>;
-	using ms = duration<float, milli>;
+	//using frame = duration<int32_t, ratio<1, FPS>>;
+	//using ms = duration<float, milli>;
 
-	time_point<steady_clock> fpsTimer(steady_clock::now());
-	frame FramePerSec{};
+	//time_point<steady_clock> fpsTimer(steady_clock::now());
+	//frame FramePerSec{};
 	while (true)
 	{
-		//auto cur_Time = chrono::high_resolution_clock::now();
-		//elapsedTime += FpFloatMilliseconds(cur_Time - prev_Time).count();
-		//deltaT = FpFloatMilliseconds(cur_Time - prev_Time).count();
-		//prev_Time = cur_Time;
-		FramePerSec = duration_cast<frame>(steady_clock::now() - fpsTimer);
+		auto cur_Time = chrono::high_resolution_clock::now();
+		elapsedTime += FpFloatMilliseconds(cur_Time - prev_Time).count();
+		deltaT = FpFloatMilliseconds(cur_Time - prev_Time).count();
+		prev_Time = cur_Time;
+		//FramePerSec = duration_cast<frame>(steady_clock::now() - fpsTimer);
 
-		if (FramePerSec.count()>=1)
+		if (/*FramePerSec.count() >= 1*/elapsedTime>16)
 		{
 			g_MsgQueueLock.lock();
 			phyMsgQueue = g_MsgQueue;
@@ -125,15 +139,14 @@ void ProcessClients()
 					players[i].pos.x = phyPlayers[i].m_pos.x;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
 					players[i].pos.z = phyPlayers[i].m_pos.z;
+					players[i].dir = phyPlayers[i].dir;
 				}
 				SendPos(*players);
-				for (int i = 0; i < numOfCls; ++i)
-				{
-					std::cout << players[i].pos.x << std::endl;
-				}
+				cout << static_cast<int>(players[0].dir) << endl;
 			}
-			fpsTimer = steady_clock::now();
-			cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
+			//fpsTimer = steady_clock::now();
+			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
+			elapsedTime = 0;
 		}
 	}
 	phyPlayers.clear();

@@ -1,6 +1,11 @@
 #pragma once
 #include "pch.h"
 #include "Global.h"
+#include <random>
+
+random_device rd1;
+default_random_engine dre2(rd1());
+uniform_int_distribution<>uid5{ 0,8 };
 
 void SendPacket(void* buff)
 {
@@ -42,13 +47,25 @@ void SendGameStartPacket()
 	std::cout << "Send Game Start!" << std::endl;
 	// player에 초기화 좌표를 다 넣어줘야한다
 	// 현재 들어온 클라이언트 정보만 넣어서 보내주기.
-	g_initialPosLock.lock();
+	g_InitialPosLock.lock();
 	Pro_Player tempPlayer[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} }; // 일단 복사.
-	g_initialPosLock.unlock();
+	g_InitialPosLock.unlock();
 
-	g_playerReadyInfoLock.lock();
+	g_PlayerReadyInfoLock.lock();
 	PlayerReadyInfo tempInfo[3] = { {g_playerReadyInfo[0]},{g_playerReadyInfo[1]},{g_playerReadyInfo[2]} };
-	g_playerReadyInfoLock.unlock();
+	g_PlayerReadyInfoLock.unlock();
+
+	g_SnowmanPosLock.lock();
+	int TempSnowmanLocation[2];
+	for (int i = 0; i < 2; ++i)
+	{
+		do 
+		{
+			TempSnowmanLocation[i] = uid5(dre2);
+		}
+		while (i == 1 && TempSnowmanLocation[0] == TempSnowmanLocation[1]);
+	}
+
 	for (int i = 0; i < numOfCls; ++i) 
 	{
 		if (tempInfo[i].id == -1) 
@@ -60,6 +77,9 @@ void SendGameStartPacket()
 	sc_packet_game_start packet;
 	packet.size = sizeof(packet);
 	packet.type = SC_GAMESTART;
+	for (int i = 0; i < 2; ++i)
+		packet.SnowmanLocation[i] = TempSnowmanLocation[i];
+
 	memcpy(&packet.players, &tempPlayer, sizeof(tempPlayer));
 	SendPacket(&packet);
 

@@ -63,8 +63,9 @@ bool GameplayScene::Enter()
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
-		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->m_pGameInfo->m_PlayersInfo[i]->GetPosition());
+		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 	}
+
 	return false;
 }
 
@@ -83,6 +84,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
+		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 	}
 
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;

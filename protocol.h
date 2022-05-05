@@ -11,25 +11,27 @@
 #define SC_HIT				7
 #define SC_GAMEOVER			8
 ///////////////////////////////
-#define CS_PLAYER_UP_UP			1
-#define CS_PLAYER_DOWN_UP		2
-#define CS_PLAYER_LEFT_UP		3
-#define CS_PLAYER_RIGHT_UP		4
+#define CS_PLAYER_UP_UP				1
+#define CS_PLAYER_UP_LEFT_UP		2
+#define CS_PLAYER_UP_RIGHT_UP		3
 
-#define CS_PLAYER_UP_DOWN		5
-#define CS_PLAYER_DOWN_DOWN		6
-#define CS_PLAYER_LEFT_DOWN		7
-#define CS_PLAYER_RIGHT_DOWN	8
+#define CS_PLAYER_DOWN_UP			4
+#define CS_PLAYER_DOWN_LEFT_UP		5
+#define CS_PLAYER_DOWN_RIGHT_UP		6
 
-#define CS_SHOOT_UP				9
-#define CS_SHOOT_DOWN			10
-#define CS_SHOOT_LEFT			11
-#define CS_SHOOT_RIGHT			12
+#define CS_PLAYER_LEFT_UP			7
+#define CS_PLAYER_RIGHT_UP			8
 
-#define CS_SHOOT_RIGHT_UP		13
-#define CS_SHOOT_RIGHT_DOWN		14
-#define CS_SHOOT_LEFT_UP		15
-#define CS_SHOOT_LEFT_DOWN		16
+#define CS_PLAYER_UP_DOWN			9
+#define CS_PLAYER_UP_LEFT_DOWN		10
+#define CS_PLAYER_UP_RIGHT_DOWN		11
+
+#define CS_PLAYER_DOWN_DOWN			12
+#define CS_PLAYER_DOWN_LEFT_DOWN	13
+#define CS_PLAYER_DOWN_RIGHT_DOWN	14
+
+#define CS_PLAYER_LEFT_DOWN			15
+#define CS_PLAYER_RIGHT_DOWN		16
 
 #define CS_READY				17
 
@@ -53,6 +55,7 @@
 struct Pro_Player {
 	char id;
 	DirectX::XMFLOAT3 pos;
+	char dir;
 };
 
 /* Server to Client */
@@ -73,6 +76,7 @@ struct sc_packet_game_start {
 	short size;
 	char type;
 	Pro_Player players[3];
+	int SnowmanLocation[2];
 };
 
 struct sc_packet_remove_player {
