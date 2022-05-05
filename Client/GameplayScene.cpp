@@ -211,12 +211,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	float r = MathHelper::RandF(0.2f, 0.5f);
 	Core::mWaves->Disturb(i, j, r);
-	static bool m = true;
-		if (m) {
-			cout << AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42<<", "<< XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition())+14 << endl;
-		}
+
 	if (IsFall) {
-			m = false;
 		static bool Isup = true;
 		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 < XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
 			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 += 0.1f;
