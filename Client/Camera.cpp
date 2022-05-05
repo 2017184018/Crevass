@@ -96,8 +96,8 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 		else {
 			XMFLOAT3 pos;
 			pos.x = m_Owner->GetPosition().x;
-			pos.y = m_Owner->GetPosition().y+200;
-			pos.z = m_Owner->GetPosition().z+300;
+			pos.y = m_Owner->GetPosition().y+300;
+			pos.z = m_Owner->GetPosition().z+250;
 		 xmf3Position = MathHelper::Add(pos, xmf3Offset);
 		}
 
