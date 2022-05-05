@@ -415,7 +415,7 @@ void ApplicationContext::CreateBackground()
 		top->m_World._33 = size;
 		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 		top->m_World._41 = (size * 1.1) * i;
-		top->m_World._42 = 300.1;
+		top->m_World._42 = 300;
 		top->m_World._43 = 400;
 		top->m_TexTransform = MathHelper::Identity4x4();
 	}

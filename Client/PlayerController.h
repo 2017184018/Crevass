@@ -11,6 +11,7 @@ public:
 
 public:
 	virtual void Update(const float deltaT) override;
+	void Fall();
 
 private:
 	virtual void HandleInput(const float deltaT) override;
