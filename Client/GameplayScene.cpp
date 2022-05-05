@@ -14,6 +14,10 @@
 #include "MainFramework.h"
 #include <random>
 
+random_device rd;
+default_random_engine dre(rd());
+uniform_int_distribution<> uid{ 0,8 };
+
 using namespace Core;
 
 void GameplayScene::Initialize()
@@ -183,22 +187,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 20;
 	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 20;
 
-	static bool f = true;
 	for (int i = 0; i < 5; ++i) {
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
 		AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
-		if (!IsFall || i < Lifecnt - 1) {
-			AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
-			AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
-		}
-		else {
-			if (f) {
-				AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = 85 + 14;
-				AppContext->m_RItemsVec[139 + i]->m_World._42 += 7.f;
-				f = false;
-			}
-		}
+		AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
+		AppContext->m_RItemsVec[139 + i]->m_World._42 += 9.f;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
 	}
@@ -212,20 +206,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	Core::mWaves->Disturb(i, j, r);
 
 	if (IsFall) {
-		static bool Isup = true;
-		if (Isup && AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 < XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
-			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 += 0.1f;
-			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 += 0.1f;
-			if (AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 >= XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14 + 15) {
-				AppContext->m_RItemsVec[133 + Lifecnt]->m_MaterialIndex = 6;
-				Isup = false;
-			}
-		}
-		else if (AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 > XMVectorGetY(m_Users[m_PlayerID]->m_MyCamera->GetPosition()) + 14) {
-			AppContext->m_RItemsVec[133 + Lifecnt]->m_World._42 -= 0.1f;
-			AppContext->m_RItemsVec[133 + Lifecnt + 5]->m_World._42 -= 0.1f;
-		}
+		AppContext->m_RItemsVec[133 + Lifecnt]->m_MaterialIndex = 6;
 		static float time = 0;
+		static int tmpidx = -1;
 		time += fDeltaTime;
 		BlurCnt = 3;
 		if (time >= 3) {
@@ -234,21 +217,25 @@ void GameplayScene::Update(const float& fDeltaTime)
 			BlurCnt = 0;
 			if (Lifecnt > 0) {
 				--Lifecnt;
-				Isup = true;
 			}
+			tmpidx = -1;
+		}
+		else if (time >= 2.9) {
+			m_Users[m_PlayerID]->is_fall = false;
+			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
+			Gravity = 0.01;
 		}
 		else if (time < 0.03) {
 			if (FallZ < 4) FallZ = 4;
 			if (FallX < 4) FallX = 4;
 			if (FallZ > 123) FallZ = 123;
 			if (FallX > 123) FallX = 123;
+			tmpidx = uid(dre);
 			Core::mWaves->Disturb(FallZ, FallX, 4);
 		}
 	}
-
 	// Update the wave simulation.
 	Core::mWaves->Update(fDeltaTime);
-
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
@@ -316,7 +303,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					IsShake[5 * i + j] = true;
 					IsDown[5 * i + j] = true;
 				}
-				if (tmp2 != -1 && !AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+				if (IsFall || (tmp2 != -1 && !AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds))) {
 					IsDown[tmp2] = false;
 					if (!m_Users[m_PlayerID]->is_Inair)
 						Gravity += 0.05;
@@ -343,7 +330,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 		else {
 			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y >= 50 &&
-				m_Users[m_PlayerID]->bJump == false) {
+				m_Users[m_PlayerID]->bJump == false && !IsFall) {
 				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
 					AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
 			}
@@ -367,11 +354,20 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	if (m_Users[m_PlayerID]->GetPosition().y <= -100 ) {
-		auto camerapos = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
+	
+	static bool one = true;
+	if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
 		Fall();
 		m_Users[m_PlayerID]->Move(DIR_UP, speed, true);
+		if (one) {
+			m_Users[m_PlayerID]->m_PlayerController->Fall();
+			one = false;
+		}
 	}
+	else {
+		one = true;
+	}
+
 }
 
 void GameplayScene::Render()

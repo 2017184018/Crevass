@@ -417,3 +417,9 @@ void PlayerController::OnKeyReleased()
 		break;
 	}
 }
+
+void PlayerController::Fall() {
+	m_Owner->is_fall = true;
+	CommandCenter::GetApp()->m_StartFallAnim = true;
+	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Fall), m_Owner);
+}
