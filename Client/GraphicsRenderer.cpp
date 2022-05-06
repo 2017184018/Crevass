@@ -79,7 +79,12 @@ void GraphicsRenderer::LoadTextures()
 		"arctic",
 		"ArcticFox",
 		"PolarBear",
-		"Seal"
+		"Seal",
+		"lobby1",
+		"lobby2",
+		"lobby3",
+		"lobby4",
+		"lobby5",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -92,11 +97,16 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/Heart.dds",
 		L"./Textures/HeartLine_white.dds",
 		L"./Textures/rope.dds",
-		L"./Textures/LOBBY.dds",
+		L"./Textures/lobby0.dds",
 		L"./Textures/arctic_atlas01.dds",
 		L"./Textures/Tex_ArcticFox.dds",
 		L"./Textures/Tex_PolarBear.dds",
-		L"./Textures/Tex_Seal.dds"
+		L"./Textures/Tex_Seal.dds",
+		L"./Textures/lobby1.dds",
+		L"./Textures/lobby2.dds",
+		L"./Textures/lobby3.dds",
+		L"./Textures/lobby4.dds",
+		L"./Textures/lobby5.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -142,6 +152,11 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	auto ArcticFox = m_Textures["ArcticFox"]->Resource;
 	auto PolarBear = m_Textures["PolarBear"]->Resource;
 	auto Seal = m_Textures["Seal"]->Resource;
+	auto lobby1 = m_Textures["lobby1"]->Resource;
+	auto lobby2 = m_Textures["lobby2"]->Resource;
+	auto lobby3 = m_Textures["lobby3"]->Resource;
+	auto lobby4 = m_Textures["lobby4"]->Resource;
+	auto lobby5 = m_Textures["lobby5"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -263,6 +278,51 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.MipLevels = Seal->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(Seal.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = lobby1->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = lobby1->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(lobby1.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = lobby2->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = lobby2->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(lobby2.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = lobby3->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = lobby3->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(lobby3.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = lobby4->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = lobby4->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(lobby4.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = lobby5->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = lobby5->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(lobby5.Get(), &srvDesc, hDescriptor);
 
 	mSkyTexHeapIndex = 0;
 

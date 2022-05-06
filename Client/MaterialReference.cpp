@@ -121,6 +121,41 @@ void MaterialReference::BuildMaterials()
 	Seal->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Seal->Roughness = 1.0f;
 
+	auto lobby1 = std::make_unique<Material>();
+	lobby1->MatCBIndex = 13;
+	lobby1->DiffuseSrvHeapIndex = 13;
+	lobby1->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lobby1->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	lobby1->Roughness = 1.0f;
+
+	auto lobby2 = std::make_unique<Material>();
+	lobby2->MatCBIndex = 14;
+	lobby2->DiffuseSrvHeapIndex = 14;
+	lobby2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lobby2->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	lobby2->Roughness = 1.0f;
+
+	auto lobby3 = std::make_unique<Material>();
+	lobby3->MatCBIndex = 15;
+	lobby3->DiffuseSrvHeapIndex = 15;
+	lobby3->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lobby3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	lobby3->Roughness = 1.0f;
+
+	auto lobby4 = std::make_unique<Material>();
+	lobby4->MatCBIndex = 16;
+	lobby4->DiffuseSrvHeapIndex = 16;
+	lobby4->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lobby4->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	lobby4->Roughness = 1.0f;
+
+	auto lobby5 = std::make_unique<Material>();
+	lobby5->MatCBIndex = 17;
+	lobby5->DiffuseSrvHeapIndex = 17;
+	lobby5->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	lobby5->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	lobby5->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -134,4 +169,9 @@ void MaterialReference::BuildMaterials()
 	m_Materials["ArcticFox"] = std::move(ArcticFox);
 	m_Materials["PolarBear"] = std::move(PolarBear);
 	m_Materials["Seal"] = std::move(Seal);
+	m_Materials["lobby1"] = std::move(lobby1);
+	m_Materials["lobby2"] = std::move(lobby2);
+	m_Materials["lobby3"] = std::move(lobby3);
+	m_Materials["lobby4"] = std::move(lobby4);
+	m_Materials["lobby5"] = std::move(lobby5);
 }
