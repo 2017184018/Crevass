@@ -64,9 +64,9 @@ void ApplicationContext::CreateLobby() {
 	top->m_IsVisible = true;
 	top->m_MaterialIndex = 8;
 	top->m_World = MathHelper::Identity4x4();
-	top->m_World._11 = 400;
+	top->m_World._11 = 200*1.43;
 	top->m_World._22 = 1;
-	top->m_World._33 = 200;
+	top->m_World._33 = 150 * 1.43;
 	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 	top->m_World._41 = 180;
 	top->m_World._42 = 90;
@@ -647,7 +647,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//199~ 물고기 걸이, 물고기
+	//199~209 물고기 걸이, 물고기
 	{
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("fishrack", "fishrack" + std::to_string(0));
@@ -699,7 +699,6 @@ void ApplicationContext::CreateBackground()
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {
-	//139
 	Character* chr = CreateObject<Character>(meshName, instID);
 	chr->Geo = MeshReference::GetApp()->m_GeometryMesh[meshName].get();
 	chr->IndexCount = chr->Geo->DrawArgs[meshName].IndexCount;

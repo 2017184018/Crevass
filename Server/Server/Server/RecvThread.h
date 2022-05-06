@@ -220,8 +220,6 @@ void Receiver(char id)
 			break;
 		}
 
-
-
 		case CS_READY:
 		{
 			g_PlayerReadyInfoLock.lock();

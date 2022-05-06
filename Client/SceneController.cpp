@@ -28,11 +28,45 @@ void LobbyController::HandleInput(const float deltaT)
 	{
 		SceneManager::GetApp()->ChangeScene();
 	}
-		if (InputHandler::IsKeyUp('B'))
+	if (InputHandler::IsKeyUp('B'))
 	{
-		g_pFramework->m_pNetwork->Send(CS_READY);
+		g_pFramework->m_pNetwork->Send(CS_READY);			//송신할 때 내 캐릭터 뭔지도 전송
 	}
 
+	if (!Inactive) {
+		//8 로비  13 펭귄  14 허스키  15 곰  16여우  17물개
+		static bool one = true;
+		if (GetAsyncKeyState(VK_UP) & 0x8000) {
+			if (one) {
+				if (AppContext->m_RItemsVec[210]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[210]->m_MaterialIndex == 17) {
+					AppContext->m_RItemsVec[210]->m_MaterialIndex = 13;
+				}
+				else {
+					++AppContext->m_RItemsVec[210]->m_MaterialIndex;
+				}
+				one = false;
+			}
+		}
+		else {
+			one = true;
+		}
+
+		static bool one2 = true;
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+			if (one2) {
+				if (AppContext->m_RItemsVec[210]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[210]->m_MaterialIndex == 13) {
+					AppContext->m_RItemsVec[210]->m_MaterialIndex = 17;
+				}
+				else {
+					--AppContext->m_RItemsVec[210]->m_MaterialIndex;
+				}
+				one2 = false;
+			}
+		}
+		else {
+			one2 = true;
+		}
+	}
 }
 
 void LobbyController::MouseCallback()
@@ -76,6 +110,7 @@ void GameresultController::HandleInput(const float deltaT)
 	{
 		SceneManager::GetApp()->ChangeScene(SceneType::Lobby);
 	}
+
 }
 
 void GameresultController::MouseCallback()
