@@ -30,12 +30,12 @@ void LobbyController::HandleInput(const float deltaT)
 	}
 	if (InputHandler::IsKeyUp('B'))
 	{
-		g_pFramework->m_pNetwork->Send(CS_READY);
+		g_pFramework->m_pNetwork->Send(CS_READY);			//송신할 때 내 캐릭터 뭔지도 전송
 	}
 
 	if (!Inactive) {
-		static bool one = true;
 		//12 로비  13 펭귄  14 허스키  15 곰  16여우  17물개
+		static bool one = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
 			if (one) {
 				if (AppContext->m_RItemsVec[210]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[210]->m_MaterialIndex == 17) {
