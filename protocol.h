@@ -44,6 +44,7 @@
 #define ANIM_MOVE			1
 #define ANIM_ATTACK			2
 #define ANIM_JUMP		    3
+#define ANIM_FALL			4
 
 // player type
 #define CHARACTER_NONE 0

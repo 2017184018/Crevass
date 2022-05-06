@@ -125,8 +125,7 @@ void UpdateBlock(Block* object) {
 
 void ProcessClients()
 {
-	mutex player_lock;
-	player_lock.lock();
+	g_player_lock.lock();
 	Pro_Player players[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} };
 	Block blocks[25];
 	for (int i = 0; i < 25; ++i) {
@@ -140,7 +139,7 @@ void ProcessClients()
 		IsDown[i] = true;
 		IsShake[i] = false;
 	}
-	player_lock.unlock();
+	//g_player_lock.unlock();
 
 	std::queue <Message> phyMsgQueue;
 	Message phyMsg;

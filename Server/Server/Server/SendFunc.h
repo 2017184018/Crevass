@@ -81,7 +81,6 @@ void SendGameStartPacket()
 	packet.type = SC_GAMESTART;
 	for (int i = 0; i < 2; ++i)
 		packet.SnowmanLocation[i] = TempSnowmanLocation[i];
-	g_SnowmanPosLock.unlock();
 
 	g_BlockInitialPosLock.lock();
 	for (int i = 0; i < 25; ++i) {
