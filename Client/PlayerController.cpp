@@ -34,39 +34,39 @@ void PlayerController::Update(const float deltaT)
 	else {
 		if (tmp == 0)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 		}
 		if (tmp == 1)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 		}
 		if (tmp == 2)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 		}
 		if (tmp == 3)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 		}
 		if (tmp == 4)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 		}
 		if (tmp == 5)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
 		}
 		if (tmp == 6)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
 		}
 		if (tmp == 7)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+			//CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
 		}
 		if (tmp == 8) {}
 		tmp = -1;
@@ -235,33 +235,34 @@ void PlayerController::OnKeyPressed()
 	case CameraType::Third:
 
 		if (InputHandler::IsKeyDown('A')) {
-			CommandCenter::GetApp()->m_StartAttackAnim = true;
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+			//CommandCenter::GetApp()->m_StartAttackAnim = true;
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_ATTACK);
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			tmp = 0;
 		}
 
 		if (InputHandler::IsKeyDown(VK_LEFT)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
 			tmp = 6;
 		}
 
 		if (InputHandler::IsKeyDown(VK_DOWN)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
 			tmp = 4;
 		}
 
 		if (InputHandler::IsKeyDown(VK_RIGHT)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
 			tmp = 2;
 		}
 
 		if (InputHandler::IsKeyDown(VK_SPACE)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
-			CommandCenter::GetApp()->m_StartJumpAnim = true;
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
+			//CommandCenter::GetApp()->m_StartJumpAnim = true;
 			m_Owner->is_Inair = true;
 			m_Owner->bJump = true;
 			tmp = 8;

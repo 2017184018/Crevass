@@ -221,6 +221,18 @@ void Network::ProcessPacket(char* packet_buffer)
 		//	OtherPlayerPos = packet.players[0].pos;
 		break;
 	}
+
+	case SC_ANIM:
+	{
+		sc_packet_anim packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
+		{
+			PlayerAnim[i] = static_cast<int>(packet.players[i].anim);
+		}
+		break;
+	}
+
 	case SC_REMOVE_PLAYER:
 	{
 		std::cout << "remove player" << std::endl;
@@ -287,4 +299,9 @@ int Network::GetSnowmanLocation(int num)const
 int Network::GetPlayerDir(int num)const
 {
 	return static_cast<int>(dir[num]);
+}
+
+int Network::GetPlayerAnim(int num)const
+{
+	return PlayerAnim[num];
 }

@@ -65,6 +65,7 @@ void SendGameStartPacket()
 		}
 		while (i == 1 && TempSnowmanLocation[0] == TempSnowmanLocation[1]);
 	}
+	g_SnowmanPosLock.unlock();
 
 	for (int i = 0; i < numOfCls; ++i) 
 	{
@@ -102,6 +103,16 @@ void SendPos(Pro_Player& players)
 	sc_packet_pos packet;
 	packet.size = sizeof(packet);
 	packet.type = SC_POS;
+	memcpy(&packet.players, &players, sizeof(packet.players));
+
+	SendPacket(&packet);
+}
+
+void SendAnim(Pro_Player& players)
+{
+	sc_packet_anim packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_ANIM;
 	memcpy(&packet.players, &players, sizeof(packet.players));
 
 	SendPacket(&packet);

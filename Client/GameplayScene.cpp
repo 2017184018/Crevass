@@ -71,6 +71,7 @@ bool GameplayScene::Enter()
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
+		m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
 	}
 
 	return false;
@@ -95,6 +96,22 @@ void GameplayScene::Update(const float& fDeltaTime)
 	{
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
+		switch (g_pFramework->m_pNetwork->GetPlayerAnim(i))
+		{
+		case ANIM_IDLE:
+			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
+			break;
+		case ANIM_MOVE:
+			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FORWARD);
+			break;
+		case ANIM_ATTACK:
+			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_ATTACK);
+			break;
+		case ANIM_JUMP:
+			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
+			break;
+
+		}
 	}
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)

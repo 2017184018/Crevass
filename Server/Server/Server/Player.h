@@ -29,6 +29,8 @@ private:
 	bool m_keyA = false;
 	bool m_keyD = false;
 
+
 public:
 	char dir = 0;
+	char anim = 0;
 };

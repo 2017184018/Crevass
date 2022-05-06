@@ -131,18 +131,52 @@ void ProcessClients()
 							break;
 						}
 				}
+				else if (phyMsg.type == TYPE_ANIMATION)
+				{
+					switch (phyMsg.AnimType)
+					{
+					case ANIM_IDLE:
+						phyPlayers[phyMsg.id].anim = ANIM_IDLE;
+						break;
+
+					case ANIM_MOVE:
+						phyPlayers[phyMsg.id].anim = ANIM_MOVE;
+						break;
+
+					case ANIM_ATTACK:
+						phyPlayers[phyMsg.id].anim = ANIM_ATTACK;
+						break;
+
+					case ANIM_JUMP:
+						phyPlayers[phyMsg.id].anim = ANIM_JUMP;
+						break;
+
+					}
+				}
 				Update(phyPlayers);
 
-				for (int i = 0; i < numOfCls; ++i)
+				if (phyMsg.type == TYPE_PLAYER)
 				{
-					players[i].id = i;
-					players[i].pos.x = phyPlayers[i].m_pos.x;
-					players[i].pos.y = phyPlayers[i].m_pos.y;
-					players[i].pos.z = phyPlayers[i].m_pos.z;
-					players[i].dir = phyPlayers[i].dir;
+					for (int i = 0; i < numOfCls; ++i)
+					{
+						players[i].id = i;
+						players[i].pos.x = phyPlayers[i].m_pos.x;
+						players[i].pos.y = phyPlayers[i].m_pos.y;
+						players[i].pos.z = phyPlayers[i].m_pos.z;
+						players[i].dir = phyPlayers[i].dir;
+					}
+					SendPos(*players);
+					cout << static_cast<int>(players[0].dir) << endl;
 				}
-				SendPos(*players);
-				cout << static_cast<int>(players[0].dir) << endl;
+				else if (phyMsg.type == TYPE_ANIMATION)
+				{
+					for (int i = 0; i < numOfCls; ++i)
+					{
+						players[i].id = i;
+						players[i].anim = phyPlayers[i].anim;
+					}
+					SendAnim(*players);
+				}
 			}
 			//fpsTimer = steady_clock::now();
 			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;

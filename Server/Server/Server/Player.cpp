@@ -47,3 +47,4 @@ bool Player::GetKeyD()
 {
 	return m_keyD;
 }
+

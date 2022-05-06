@@ -8,36 +8,31 @@
 #define SC_GAMESTART		3
 #define SC_REMOVE_PLAYER	4
 #define SC_POS				5
-#define SC_BULLETS			6
+#define SC_ANIM				6
 #define SC_HIT				7
 #define SC_GAMEOVER			8
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
-#define CS_PLAYER_UP_RIGHT_UP		2
-#define CS_PLAYER_UP_LEFT_UP		3
 
-#define CS_PLAYER_DOWN_UP			4
-#define CS_PLAYER_DOWN_RIGHT_UP		5
-#define CS_PLAYER_DOWN_LEFT_UP		6
+#define CS_PLAYER_DOWN_UP			2
 
+#define CS_PLAYER_LEFT_UP			3
+#define CS_PLAYER_RIGHT_UP			4
 
-#define CS_PLAYER_LEFT_UP			7
-#define CS_PLAYER_RIGHT_UP			8
+#define CS_PLAYER_UP_DOWN			5
 
+#define CS_PLAYER_DOWN_DOWN			6
 
-#define CS_PLAYER_UP_DOWN			9
-#define CS_PLAYER_UP_RIGHT_DOWN		10
-#define CS_PLAYER_UP_LEFT_DOWN		11
+#define CS_PLAYER_LEFT_DOWN			7
+#define CS_PLAYER_RIGHT_DOWN		8
 
-#define CS_PLAYER_DOWN_DOWN			12
-#define CS_PLAYER_DOWN_RIGHT_DOWN	13
-#define CS_PLAYER_DOWN_LEFT_DOWN	14
+#define CS_PLAYER_IDLE				9
+#define CS_PLAYER_MOVE				10
+#define CS_PLAYER_JUMP				11
+#define CS_PLAYER_ATTACK			12
 
 
-#define CS_PLAYER_LEFT_DOWN			15
-#define CS_PLAYER_RIGHT_DOWN		16
-
-#define CS_READY				17
+#define CS_READY					17
 
 #pragma pack(push ,1)
 
@@ -46,6 +41,7 @@ struct Pro_Player {
 	char id;
 	DirectX::XMFLOAT3 pos;
 	char dir;
+	char anim;
 };
 
 /* Server to Client */
@@ -76,6 +72,13 @@ struct sc_packet_remove_player {
 };
 
 struct sc_packet_pos
+{
+	short size;
+	char type;
+	Pro_Player players[3];
+};
+
+struct sc_packet_anim
 {
 	short size;
 	char type;
