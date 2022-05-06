@@ -47,3 +47,13 @@ bool Player::GetKeyD()
 {
 	return m_keyD;
 }
+
+void Player::SetCharacterType(char c_type)
+{
+	m_CharacterType = c_type;
+}
+
+char Player::GetCharacterType()
+{
+	return m_CharacterType;
+}

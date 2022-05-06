@@ -45,9 +45,30 @@ bool GameplayScene::Enter()
 	cout << "GamePlay Scene" << endl;
 
 	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
-
 	//나 
-	m_Users[0] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		int ty = g_pFramework->m_pNetwork->GetPlayerType(i);
+		cout << "ty =" << ty << endl;
+		if (ty == CHARACTER_PENGUIN) {
+			m_Users[i] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+		}
+		else if (ty == CHARACTER_ARCTICFOX) {
+			m_Users[i] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
+		}
+		else if (ty == CHARACTER_HUSKY) {
+			m_Users[i] = AppContext->FindObject<Character>("husky", "husky0");
+		}
+		else if (ty == CHARACTER_SEAL) {
+			m_Users[i] = AppContext->FindObject<Character>("Seal", "Seal0");
+		}
+		else /*if (ty == CHARACTER_POLARBEAR)*/ {
+			m_Users[i] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
+		}
+		m_Users[i]->m_IsVisible = true;
+	}
+
+	/*m_Users[0] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
 	m_Users[0]->m_IsVisible = true;
 
 	m_Users[1] = AppContext->FindObject<Character>("husky", "husky0");
@@ -60,7 +81,7 @@ bool GameplayScene::Enter()
 	m_Users[3]->m_IsVisible = true;
 
 	m_Users[4] = AppContext->FindObject<Character>("Seal", "Seal0");
-	m_Users[4]->m_IsVisible = true;
+	m_Users[4]->m_IsVisible = true;*/
 
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
 	m_Users[m_PlayerID]->SetController();
@@ -385,7 +406,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	//hit check
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; i++) {
 		if (i != m_PlayerID) {
 			if (m_Users[m_PlayerID]->m_HitBox.Intersects(m_Users[i]->m_Bounds))
 			{

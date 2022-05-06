@@ -714,7 +714,10 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->m_IsVisible = false;
 	// 임시 스폰위치 지정
 	//chr->m_SpawnLoaction = skinnedCBIndex;
-	chr->Scale(20, 20, 20);
+	if (meshName == "Seal")
+		chr->Scale(15, 15, 15);
+	else
+		chr->Scale(20, 20, 20);
 	chr->SetPosition(0, 30, 0);
 
 }

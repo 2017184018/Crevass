@@ -47,3 +47,13 @@ bool PlayerInfo::GetReadyState() const
 {
 	return m_ReadyState;
 }
+
+void PlayerInfo::SetCharacterType(char c_type)
+{
+	m_CharacterType = c_type;
+}
+
+char PlayerInfo::GetCharacterType()
+{
+	return m_CharacterType;
+}

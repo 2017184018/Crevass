@@ -50,6 +50,14 @@
 #define ANIM_JUMP		    4
 #define ANIM_FALL		    5
 
+// player type
+#define CHARACTER_NONE 0
+#define CHARACTER_HUSKY 1
+#define CHARACTER_PENGUIN 2
+#define CHARACTER_POLARBEAR 3
+#define CHARACTER_ARCTICFOX 4
+#define CHARACTER_SEAL 5
+
 #pragma pack(push ,1)
 
 
@@ -57,6 +65,7 @@ struct Pro_Player {
 	char id;
 	DirectX::XMFLOAT3 pos;
 	char dir;
+	char Character_type;
 };
 
 struct Block {

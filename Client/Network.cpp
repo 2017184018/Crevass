@@ -190,10 +190,17 @@ void Network::ProcessPacket(char* packet_buffer)
 					if (packet.players[i].pos.x != NULL && packet.players[i].pos.y != NULL && packet.players->pos.z != NULL)
 					{
 						m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players->pos);
+						m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetCharacterType(packet.players->Character_type);
 					}
 				}
 			}
 		}
+
+		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
+		{
+			Player_Type[i] = packet.players[i].Character_type;
+		}
+
 		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
 		{
 			PlayerPos[i] = packet.players[i].pos;
@@ -291,6 +298,11 @@ void Network::ErrorDisplay(const char* msg)
 DirectX::XMFLOAT3 Network::GetPlayerPos(int num)const
 {
 	return PlayerPos[num];
+}
+
+int Network::GetPlayerType(int num)const
+{
+	return static_cast<int>(Player_Type[num]);
 }
 
 int Network::GetSnowmanLocation(int num)const
