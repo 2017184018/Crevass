@@ -35,38 +35,50 @@ void PlayerController::Update(const float deltaT)
 		if (tmp == 0)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 		}
 		if (tmp == 1)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 		if (tmp == 2)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 		if (tmp == 3)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 		if (tmp == 4)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
 		}
 		if (tmp == 5)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
 		if (tmp == 6)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
 		if (tmp == 7)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
 		if (tmp == 8) {}
 		tmp = -1;
