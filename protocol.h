@@ -67,6 +67,12 @@ struct Pro_Player {
 	char dir;
 	char anim;
 	char Character_type;
+
+	bool isAttack = false;
+	float AttackTimeCount = 0.0f;
+
+	bool isJump = false;
+	float JumpTimeCount = 0.0f;
 };
 
 struct Block {

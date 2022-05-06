@@ -206,6 +206,10 @@ void Network::ProcessPacket(char* packet_buffer)
 		{
 			PlayerPos[i] = packet.players[i].pos;
 		}
+		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
+		{
+			PlayerAnim[i] = packet.players[i].anim;
+		}
 		for (int i = 0; i < 2; ++i)
 		{
 			SnowmanLocation[i] = packet.SnowmanLocation[i];

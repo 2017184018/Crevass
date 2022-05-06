@@ -129,7 +129,7 @@ void SendGameStartPacket()
 			tempPlayer[i].id = -1;
 		}
 	}
-
+	
 	sc_packet_game_start packet;
 	packet.size = sizeof(packet);
 	packet.type = SC_GAMESTART;
@@ -148,8 +148,6 @@ void SendGameStartPacket()
 
 	memcpy(&packet.players, &tempPlayer, sizeof(tempPlayer));
 	SendPacket(&packet);
-
-	printf("client 0 x=%f\n", packet.players[1].pos.x);
 }
 
 void SendGameOverPacket(char id)

@@ -233,10 +233,12 @@ void ProcessClients()
 
 					case ANIM_ATTACK:
 						phyPlayers[phyMsg.id].anim = ANIM_ATTACK;
+						players[phyMsg.id].isAttack = true;
 						break;
 
 					case ANIM_JUMP:
 						phyPlayers[phyMsg.id].anim = ANIM_JUMP;
+						players[phyMsg.id].isJump = true;
 						break;
 
 					}
@@ -264,6 +266,32 @@ void ProcessClients()
 						players[i].anim = phyPlayers[i].anim;
 					}
 					SendAnim(*players);
+				}
+			}
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (players[i].isAttack == true)
+				{
+					players[i].AttackTimeCount += 1.0f;
+					if (players[i].AttackTimeCount > 60.0f)
+					{
+						players[i].AttackTimeCount = 0.0f;
+						players[i].isAttack = false;
+						players[i].anim = ANIM_IDLE;
+						SendAnim(*players);
+					}
+				}
+
+				if (players[i].isJump == true)
+				{
+					players[i].JumpTimeCount += 1.0f;
+					if (players[i].JumpTimeCount > 60.0f)
+					{
+						players[i].JumpTimeCount = 0.0f;
+						players[i].isJump = false;
+						players[i].anim = ANIM_IDLE;
+						SendAnim(*players);
+					}
 				}
 			}
 			UpdateBlock(blocks);

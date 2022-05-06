@@ -32,7 +32,9 @@ std::vector <Player> phyPlayers;
 
 // �÷��̾���� �ʱ� ��ġ
 
-Pro_Player g_initialPos[3] = { {0,DirectX::XMFLOAT3(200.0f,30.0f,0.0f),0,0,CHARACTER_HUSKY},{1,DirectX::XMFLOAT3(300.0f,30.0f,0.0f),0,0,CHARACTER_ARCTICFOX},{2,DirectX::XMFLOAT3(200.0f,200.0f,0.0f),0,0,CHARACTER_POLARBEAR} };
+Pro_Player g_initialPos[3] = { {0,DirectX::XMFLOAT3(200.0f,30.0f,0.0f),0,0,CHARACTER_HUSKY},
+	{1,DirectX::XMFLOAT3(300.0f,30.0f,0.0f),0,0,CHARACTER_ARCTICFOX},
+	{2,DirectX::XMFLOAT3(200.0f,200.0f,0.0f),0,0,CHARACTER_POLARBEAR} };
 
 PlayerReadyInfo g_playerReadyInfo[3]{ {-1, 0}, {-1, 0}, {-1, 0} };
 
