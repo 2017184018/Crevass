@@ -16,7 +16,7 @@ struct PlayerReadyInfo
 	char ready;
 };
 
-// ==Å¬¶óÀÌ¾ðÆ® °ü¸® ±¸Á¶Ã¼===
+// ==Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼===
 
 struct ConnectClient
 {
@@ -30,14 +30,10 @@ std::vector <Player> phyPlayers;
 
 // =======================================
 
-// ÇÃ·¹ÀÌ¾îµéÀÇ ÃÊ±â À§Ä¡
+// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½Ä¡
 
-Pro_Player g_initialPos[3] = { {0,DirectX::XMFLOAT3(200.0f,30.0f,0.0f),0,0,CHARACTER_PENGUIN},{1,DirectX::XMFLOAT3(300.0f,30.0f,0.0f),0,0,CHARACTER_HUSKY},{2,DirectX::XMFLOAT3(200.0f,30.0f,0.0f),0,0,CHARACTER_POLARBEAR} };
-char id;
-DirectX::XMFLOAT3 pos;
-char dir;
-char anim;
-char Character_type;
+Pro_Player g_initialPos[3] = { {0,DirectX::XMFLOAT3(200.0f,30.0f,0.0f),0,0,CHARACTER_HUSKY},{1,DirectX::XMFLOAT3(300.0f,30.0f,0.0f),0,0,CHARACTER_ARCTICFOX},{2,DirectX::XMFLOAT3(200.0f,200.0f,0.0f),0,0,CHARACTER_POLARBEAR} };
+
 PlayerReadyInfo g_playerReadyInfo[3]{ {-1, 0}, {-1, 0}, {-1, 0} };
 
 // =======================================
@@ -47,7 +43,7 @@ std::queue <Message> g_MsgQueue;
 std::map <char, SOCKET> g_clients;
 
 
-atomic_int numOfCls;				// Á¢¼ÓÇÑ Å¬¶óÀÌ¾ðÆ® ¼ö
+atomic_int numOfCls;				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½
 
 map<string, DirectX::BoundingBox*> g_boundaries;
 
