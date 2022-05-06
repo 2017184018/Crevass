@@ -149,6 +149,7 @@ void Network::ProcessPacket(char* packet_buffer)
 				m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.id)]->SetReadyState(packet.ready);
 
 			}
+			CharacterType[packet.id] = packet.Character_type;
 		}
 
 		break;
@@ -312,11 +313,6 @@ DirectX::XMFLOAT3 Network::GetPlayerPos(int num)const
 	return PlayerPos[num];
 }
 
-int Network::GetPlayerType(int num)const
-{
-	return static_cast<int>(Player_Type[num]);
-}
-
 int Network::GetSnowmanLocation(int num)const
 {
 	return SnowmanLocation[num];
@@ -335,7 +331,12 @@ DirectX::XMFLOAT3 Network::GetBlockPos(int num)const
 int Network::GetBlockDestructionCnt(int num)const {
 	return BlockDestructionCnt[num];
 }
+
 int Network::GetPlayerAnim(int num)const
 {
 	return PlayerAnim[num];
+}
+
+char Network::GetCharacterType(int num)const {
+	return CharacterType[num];
 }

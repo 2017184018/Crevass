@@ -176,14 +176,98 @@ void Receiver(char id)
 			break;
 		}
 
-		case CS_READY:
+		case CS_READY_PENGUIN:
 		{
 			g_PlayerReadyInfoLock.lock();
 			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
 			for (auto& cl : g_clients)
-				SendReadyPacket(cl.first, id, ready);
+				SendReadyPenguin(cl.first, id, ready);
+
+			if (CheckGameStart())
+			{
+				SendGameStartPacket();
+				g_isPlaying = true;
+
+				// Physics Thread ����
+				std::cout << "physics thread ����!" << std::endl;
+				thread PhysicsThread(ProcessClients);
+				PhysicsThread.detach();
+			}
+			break;
+		}
+		case CS_READY_HUSKY:
+		{
+			g_PlayerReadyInfoLock.lock();
+			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			g_PlayerReadyInfoLock.unlock();
+
+			for (auto& cl : g_clients)
+				SendReadyHusky(cl.first, id, ready);
+
+			if (CheckGameStart())
+			{
+				SendGameStartPacket();
+				g_isPlaying = true;
+
+				// Physics Thread ����
+				std::cout << "physics thread ����!" << std::endl;
+				thread PhysicsThread(ProcessClients);
+				PhysicsThread.detach();
+			}
+			break;
+		}
+		case CS_READY_POLARBEAR:
+		{
+			g_PlayerReadyInfoLock.lock();
+			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			g_PlayerReadyInfoLock.unlock();
+
+			for (auto& cl : g_clients)
+				SendReadyBear(cl.first, id, ready);
+
+			if (CheckGameStart())
+			{
+				SendGameStartPacket();
+				g_isPlaying = true;
+
+				// Physics Thread ����
+				std::cout << "physics thread ����!" << std::endl;
+				thread PhysicsThread(ProcessClients);
+				PhysicsThread.detach();
+			}
+			break;
+		}
+		case CS_READY_FOX:
+		{
+			g_PlayerReadyInfoLock.lock();
+			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			g_PlayerReadyInfoLock.unlock();
+
+			for (auto& cl : g_clients)
+				SendReadyFox(cl.first, id, ready);
+
+			if (CheckGameStart())
+			{
+				SendGameStartPacket();
+				g_isPlaying = true;
+
+				// Physics Thread ����
+				std::cout << "physics thread ����!" << std::endl;
+				thread PhysicsThread(ProcessClients);
+				PhysicsThread.detach();
+			}
+			break;
+		}
+		case CS_READY_SEAL:
+		{
+			g_PlayerReadyInfoLock.lock();
+			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			g_PlayerReadyInfoLock.unlock();
+
+			for (auto& cl : g_clients)
+				SendReadySeal(cl.first, id, ready);
 
 			if (CheckGameStart())
 			{

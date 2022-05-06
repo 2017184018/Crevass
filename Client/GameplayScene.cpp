@@ -48,7 +48,7 @@ bool GameplayScene::Enter()
 	//나 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
-		int ty = g_pFramework->m_pNetwork->GetPlayerType(i);
+		int ty = g_pFramework->m_pNetwork->GetCharacterType(i);
 		cout << "ty =" << ty << endl;
 		if (ty == CHARACTER_PENGUIN) {
 			m_Users[i] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");

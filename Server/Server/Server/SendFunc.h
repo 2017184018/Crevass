@@ -37,10 +37,64 @@ void SendReadyPacket(char id, char other, char ready)
 	packet.type = SC_READY;
 	//mutex 필요
 	packet.ready = g_playerReadyInfo[other].ready;
-
 	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 	//SendPacket( id, &packet );
 }
+
+void SendReadyPenguin(char id,char other ,char ready) {
+	sc_packet_ready packet;
+	packet.id = other;
+	packet.size = sizeof(packet);
+	packet.type = SC_READY;
+	//mutex 필요
+	packet.ready = g_playerReadyInfo[other].ready;
+	packet.Character_type = CHARACTER_PENGUIN;
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+}
+
+void SendReadyHusky(char id, char other, char ready) {
+	sc_packet_ready packet;
+	packet.id = other;
+	packet.size = sizeof(packet);
+	packet.type = SC_READY;
+	//mutex 필요
+	packet.ready = g_playerReadyInfo[other].ready;
+	packet.Character_type = CHARACTER_HUSKY;
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+}
+
+void SendReadyBear(char id, char other, char ready) {
+	sc_packet_ready packet;
+	packet.id = other;
+	packet.size = sizeof(packet);
+	packet.type = SC_READY;
+	//mutex 필요
+	packet.ready = g_playerReadyInfo[other].ready;
+	packet.Character_type = CHARACTER_POLARBEAR;
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+}
+
+ void SendReadyFox(char id, char other, char ready) {
+	sc_packet_ready packet;
+	packet.id = other;
+	packet.size = sizeof(packet);
+	packet.type = SC_READY;
+	//mutex 필요
+	packet.ready = g_playerReadyInfo[other].ready;
+	packet.Character_type = CHARACTER_ARCTICFOX;
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+}
+
+ void SendReadySeal(char id, char other, char ready) {
+	 sc_packet_ready packet;
+	 packet.id = other;
+	 packet.size = sizeof(packet);
+	 packet.type = SC_READY;
+	 //mutex 필요
+	 packet.ready = g_playerReadyInfo[other].ready;
+	 packet.Character_type = CHARACTER_SEAL;
+	 int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+ }
 
 void SendGameStartPacket()
 {

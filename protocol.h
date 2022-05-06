@@ -31,7 +31,11 @@
 #define CS_PLAYER_JUMP				11
 #define CS_PLAYER_ATTACK			12
 
-#define CS_READY				17
+#define CS_READY_PENGUIN				17
+#define CS_READY_HUSKY				18
+#define CS_READY_FOX				19
+#define CS_READY_POLARBEAR				20
+#define CS_READY_SEAL				21
 
 
 
@@ -83,6 +87,7 @@ struct sc_packet_ready {
 	char type;
 	char id;
 	char ready;
+	char Character_type;
 };
 
 struct sc_packet_game_start {

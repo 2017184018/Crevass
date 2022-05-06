@@ -32,14 +32,13 @@ public:
 	char* ptr;
 
 	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
-	int GetPlayerType(int num)const;
 	DirectX::XMFLOAT3 GetBlockPos(int num)const;
 	int GetSnowmanLocation(int num)const;
 	int GetPlayerDir(int num)const;
 	int GetBlockDestructionCnt(int num) const;
 
 	int GetPlayerAnim(int num)const;
-
+	char GetCharacterType(int num)const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];
@@ -50,6 +49,8 @@ private:
 
 	DirectX::XMFLOAT3 BlockPos[25];
 	int BlockDestructionCnt[25];
+
+	char CharacterType[3];
 public:
 	GameInfo* m_pGameInfo;
 };

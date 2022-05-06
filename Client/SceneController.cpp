@@ -30,7 +30,24 @@ void LobbyController::HandleInput(const float deltaT)
 	}
 	if (InputHandler::IsKeyUp('B'))
 	{
-		g_pFramework->m_pNetwork->Send(CS_READY);			//송신할 때 내 캐릭터 뭔지도 전송
+		switch (AppContext->m_RItemsVec[210]->m_MaterialIndex) {
+		case 8:
+		case 13:
+			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);	
+			break;
+		case 14:
+			g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
+			break;
+		case 15:
+			g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
+			break;
+		case 16:
+			g_pFramework->m_pNetwork->Send(CS_READY_FOX);
+			break;
+		case 17:
+			g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
+			break;
+		}
 	}
 
 	if (!Inactive) {
