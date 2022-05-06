@@ -7,32 +7,29 @@
 #define SC_GAMESTART		3
 #define SC_REMOVE_PLAYER	4
 #define SC_POS				5
-#define SC_BULLETS			6
+#define SC_ANIM				6
 #define SC_HIT				7
 #define SC_GAMEOVER			8
 #define SC_BLOCK			9
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
-#define CS_PLAYER_UP_LEFT_UP		2
-#define CS_PLAYER_UP_RIGHT_UP		3
 
-#define CS_PLAYER_DOWN_UP			4
-#define CS_PLAYER_DOWN_LEFT_UP		5
-#define CS_PLAYER_DOWN_RIGHT_UP		6
+#define CS_PLAYER_DOWN_UP			2
 
-#define CS_PLAYER_LEFT_UP			7
-#define CS_PLAYER_RIGHT_UP			8
+#define CS_PLAYER_LEFT_UP			3
+#define CS_PLAYER_RIGHT_UP			4
 
-#define CS_PLAYER_UP_DOWN			9
-#define CS_PLAYER_UP_LEFT_DOWN		10
-#define CS_PLAYER_UP_RIGHT_DOWN		11
+#define CS_PLAYER_UP_DOWN			5
 
-#define CS_PLAYER_DOWN_DOWN			12
-#define CS_PLAYER_DOWN_LEFT_DOWN	13
-#define CS_PLAYER_DOWN_RIGHT_DOWN	14
+#define CS_PLAYER_DOWN_DOWN			6
 
-#define CS_PLAYER_LEFT_DOWN			15
-#define CS_PLAYER_RIGHT_DOWN		16
+#define CS_PLAYER_LEFT_DOWN			7
+#define CS_PLAYER_RIGHT_DOWN		8
+
+#define CS_PLAYER_IDLE				9
+#define CS_PLAYER_MOVE				10
+#define CS_PLAYER_JUMP				11
+#define CS_PLAYER_ATTACK			12
 
 #define CS_READY				17
 
@@ -44,11 +41,9 @@
 
 // ANIMATION TYPES
 #define	ANIM_IDLE			0
-#define ANIM_FORWARD		1
+#define ANIM_MOVE			1
 #define ANIM_ATTACK			2
-#define ANIM_RUNNING		3
-#define ANIM_JUMP		    4
-#define ANIM_FALL		    5
+#define ANIM_JUMP		    3
 
 #pragma pack(push ,1)
 
@@ -57,6 +52,7 @@ struct Pro_Player {
 	char id;
 	DirectX::XMFLOAT3 pos;
 	char dir;
+	char anim;
 };
 
 struct Block {
@@ -100,6 +96,13 @@ struct sc_packet_pos
 	Pro_Player players[3];
 };
 
+struct sc_packet_anim
+{
+	short size;
+	char type;
+	Pro_Player players[3];
+};
+
 struct sc_packet_hit {
 	short size;
 	char type;
@@ -111,7 +114,7 @@ struct sc_packet_gameover
 {
 	short size;
 	char type;
-	char id;	//winner id -> °°À¸¸é ÀÌ±ä°Å´Ù ´Ù¸£¸é Áø°Å
+	char id;	//winner id -> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½Å´ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 };
 
 struct sc_packet_block

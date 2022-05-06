@@ -70,23 +70,6 @@ void Receiver(char id)
 			//printf("%d updown\n", msg.id);
 			break;
 		}
-		case CS_PLAYER_UP_LEFT_DOWN:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_UP_LEFT;
-			msg.isPushed = true;
-			break;
-		}
-		case CS_PLAYER_UP_RIGHT_DOWN:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_UP_RIGHT;
-			msg.isPushed = true;
-			break;
-		}
-
 		case CS_PLAYER_DOWN_DOWN:
 		{
 			msg.id = id;
@@ -97,23 +80,6 @@ void Receiver(char id)
 			break;
 		}
 
-		case CS_PLAYER_DOWN_LEFT_DOWN:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_DOWN_LEFT;
-			msg.isPushed = true;
-			break;
-		}
-
-		case CS_PLAYER_DOWN_RIGHT_DOWN:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_DOWN_RIGHT;
-			msg.isPushed = true;
-			break;
-		}
 		case CS_PLAYER_LEFT_DOWN:
 		{
 			msg.id = id;
@@ -143,27 +109,6 @@ void Receiver(char id)
 
 			break;
 		}
-		case CS_PLAYER_UP_LEFT_UP:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_UP_LEFT;
-			msg.isPushed = false;
-			//printf("%d upup\n",msg.id);
-
-			break;
-		}
-
-		case CS_PLAYER_UP_RIGHT_UP:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_UP_RIGHT;
-			msg.isPushed = false;
-			//printf("%d upup\n",msg.id);
-
-			break;
-		}
 
 
 
@@ -178,27 +123,6 @@ void Receiver(char id)
 			break;
 		}
 
-		case CS_PLAYER_DOWN_LEFT_UP:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_DOWN_LEFT;
-			msg.isPushed = false;
-			//printf("%d downup\n",msg.id);
-
-			break;
-		}
-
-		case CS_PLAYER_DOWN_RIGHT_UP:
-		{
-			msg.id = id;
-			msg.type = TYPE_PLAYER;
-			msg.dir = DIR_DOWN_RIGHT;
-			msg.isPushed = false;
-			//printf("%d downup\n",msg.id);
-
-			break;
-		}
 
 
 		case CS_PLAYER_LEFT_UP:
@@ -219,8 +143,38 @@ void Receiver(char id)
 			msg.isPushed = false;
 			break;
 		}
+		case CS_PLAYER_IDLE:
+		{
+			msg.id = id;
+			msg.type = TYPE_ANIMATION;
+			msg.AnimType = ANIM_IDLE;
+			break;
+		}
 
 
+		case CS_PLAYER_MOVE:
+		{
+			msg.id = id;
+			msg.type = TYPE_ANIMATION;
+			msg.AnimType = ANIM_MOVE;
+			break;
+		}
+
+
+		case CS_PLAYER_ATTACK:
+		{
+			msg.id = id;
+			msg.type = TYPE_ANIMATION;
+			msg.AnimType = ANIM_ATTACK;
+			break;
+		}
+		case CS_PLAYER_JUMP:
+		{
+			msg.id = id;
+			msg.type = TYPE_ANIMATION;
+			msg.AnimType = ANIM_JUMP;
+			break;
+		}
 
 		case CS_READY:
 		{

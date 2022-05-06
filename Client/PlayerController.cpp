@@ -35,50 +35,38 @@ void PlayerController::Update(const float deltaT)
 		if (tmp == 0)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 		}
 		if (tmp == 1)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 		if (tmp == 2)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 		if (tmp == 3)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 		if (tmp == 4)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
 		}
 		if (tmp == 5)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
 		if (tmp == 6)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
 		if (tmp == 7)
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
 		if (tmp == 8) {}
 		tmp = -1;
@@ -324,26 +312,23 @@ void PlayerController::OnKeyPressed()
 		}
 
 		if (InputHandler::IsKeyDown(VK_LEFT)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
-			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
 			tmp = 6;
 		}
 
 		if (InputHandler::IsKeyDown(VK_DOWN)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
-			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
 			tmp = 4;
 		}
 
 		if (InputHandler::IsKeyDown(VK_RIGHT)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
-			//g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
 			tmp = 2;
 		}
 
 		if (InputHandler::IsKeyDown(VK_SPACE)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
-			CommandCenter::GetApp()->m_StartJumpAnim = true;
+			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
+			//CommandCenter::GetApp()->m_StartJumpAnim = true;
 			m_Owner->is_Inair = true;
 			m_Owner->bJump = true;
 			tmp = 8;

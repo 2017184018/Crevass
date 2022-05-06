@@ -1,7 +1,7 @@
 #pragma once
 
 #define TYPE_PLAYER		0
-#define TYPE_BULLET		1
+#define TYPE_ANIMATION	1
 
 #define DIR_UP			0
 #define DIR_UP_RIGHT	1
@@ -11,6 +11,11 @@
 #define DIR_DOWN_LEFT	5
 #define DIR_LEFT		6
 #define DIR_UP_LEFT		7
+
+#define ANIM_IDLE		0
+#define ANIM_MOVE		1
+#define ANIM_ATTACK		2
+#define ANIM_JUMP		3
 
 #define MAXPLAYER		3
 

@@ -7,6 +7,7 @@ struct Message
 	char type;
 	char dir;
 	bool isPushed;
+	char AnimType;
 };
 
 struct PlayerReadyInfo

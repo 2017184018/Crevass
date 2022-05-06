@@ -37,8 +37,11 @@ public:
 	int GetPlayerDir(int num)const;
 	int GetBlockDestructionCnt(int num) const;
 
+	int GetPlayerAnim(int num)const;
+
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
+	int PlayerAnim[3];
 	int SnowmanLocation[2];
 	char dir[3];
 

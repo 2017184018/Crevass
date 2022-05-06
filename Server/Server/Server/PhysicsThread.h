@@ -91,7 +91,7 @@ void shake(Block* object, int index) {
 			++ShakeCnt[index];
 	}
 	else {
-		if (IsDown[index] /* && tmp2 != -1*/) {		//ºí·ÏÀ» ¾È ¹âÀ¸¸é
+		if (IsDown[index] /* && tmp2 != -1*/) {		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if (object->pos.y <= -170)
 				IsDown[index] = false;
 			else {
@@ -99,7 +99,7 @@ void shake(Block* object, int index) {
 			}
 		}
 		else {
-			if (object->pos.y <= -30/* && (tmp2 == -1 || m_Users[m_PlayerID]->bJump)*/) {		//ºí·ÏÀ» ¾È ¹â°í ÀÖ°Å³ª ÇÃ·¹ÀÌ¾î°¡ Á¡ÇÁÁßÀÌ¸é
+			if (object->pos.y <= -30/* && (tmp2 == -1 || m_Users[m_PlayerID]->bJump)*/) {		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½
 				object->pos.y += 0.2f;
 			}
 			else {
@@ -175,7 +175,7 @@ void ProcessClients()
 		if (/*FramePerSec.count() >= 1*/elapsedTime > 16)
 		{
 			static bool d = true;
-			if (GetAsyncKeyState('1') & 0x8000) {		//n¹ø ºí·Ï¿¡ Ãæµ¹ÇÒ ½Ã IsShake[n], IsDown[n] µÑ ´Ù true·Î ¼³Á¤ÇÏµµ·Ï ³ªÁß¿¡ ¹Ù²Ù±â ÇÊ¿ä
+			if (GetAsyncKeyState('1') & 0x8000) {		//nï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ IsShake[n], IsDown[n] ï¿½ï¿½ ï¿½ï¿½ trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½Ù²Ù±ï¿½ ï¿½Ê¿ï¿½
 				if (d) {
 					IsShake[5] = true;
 					IsDown[5] = true;
@@ -220,20 +220,52 @@ void ProcessClients()
 						break;
 					}
 				}
+				else if (phyMsg.type == TYPE_ANIMATION)
+				{
+					switch (phyMsg.AnimType)
+					{
+					case ANIM_IDLE:
+						phyPlayers[phyMsg.id].anim = ANIM_IDLE;
+						break;
+
+					case ANIM_MOVE:
+						phyPlayers[phyMsg.id].anim = ANIM_MOVE;
+						break;
+
+					case ANIM_ATTACK:
+						phyPlayers[phyMsg.id].anim = ANIM_ATTACK;
+						break;
+
+					case ANIM_JUMP:
+						phyPlayers[phyMsg.id].anim = ANIM_JUMP;
+						break;
+
+					}
+				}
 				Update(phyPlayers);
 
-
-				for (int i = 0; i < numOfCls; ++i)
+				if (phyMsg.type == TYPE_PLAYER)
 				{
-					players[i].id = i;
-					players[i].pos.x = phyPlayers[i].m_pos.x;
-					players[i].pos.y = phyPlayers[i].m_pos.y;
-					players[i].pos.z = phyPlayers[i].m_pos.z;
-					players[i].dir = phyPlayers[i].dir;
+					for (int i = 0; i < numOfCls; ++i)
+					{
+						players[i].id = i;
+						players[i].pos.x = phyPlayers[i].m_pos.x;
+						players[i].pos.y = phyPlayers[i].m_pos.y;
+						players[i].pos.z = phyPlayers[i].m_pos.z;
+						players[i].dir = phyPlayers[i].dir;
+					}
+					SendPos(*players);
+					cout << static_cast<int>(players[0].dir) << endl;
 				}
-				SendPos(*players);
-
-				cout << static_cast<int>(players[0].dir) << endl;
+				else if (phyMsg.type == TYPE_ANIMATION)
+				{
+					for (int i = 0; i < numOfCls; ++i)
+					{
+						players[i].id = i;
+						players[i].anim = phyPlayers[i].anim;
+					}
+					SendAnim(*players);
+				}
 			}
 			UpdateBlock(blocks);
 			SendBlockPacket(*blocks);

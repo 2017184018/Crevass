@@ -31,15 +31,15 @@ std::string ApplicationContext::FindAnimName(int animCode) const
 	case ANIM_IDLE:
 		animName = "Idle";
 		break;
-	case ANIM_FORWARD:
+	case ANIM_MOVE:
 		animName = "Forward";
 		break;
 	case ANIM_ATTACK:
 		animName = "Attack";
 		break;
-	case ANIM_RUNNING:
-		animName = "Running";
-		break;
+	//case ANIM_RUNNING:
+	//	animName = "Running";
+	//	break;
 	case ANIM_JUMP:
 		animName = "jump";
 		break;

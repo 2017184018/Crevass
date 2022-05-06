@@ -15,7 +15,7 @@ using namespace Core;
 
 void Network::InitSocket()
 {
-	// ³íºí·Ï ¼ÒÄÏ »ý¼º
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) ErrorQuit("error wsa Init");
 	m_ClientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -24,7 +24,7 @@ void Network::InitSocket()
 	BOOL optval = TRUE;
 	setsockopt(m_ClientSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
 	ioctlsocket(m_ClientSocket, FIONBIO, &on);	//nonblock
-	std::cout << "Å¬¶óÀÌ¾ðÆ® ¼ÒÄÏ »ý¼º" << std::endl;
+	std::cout << "Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½" << std::endl;
 
 	ZeroMemory(&serveraddr, sizeof(SOCKADDR_IN));
 	serveraddr.sin_family = AF_INET;
@@ -33,7 +33,7 @@ void Network::InitSocket()
 
 void Network::Connect(/*std::string* ipAddr*/)
 {
-	// IPÀÔ·ÂÇÏ°í Enter ¹öÆ° ´­·¶À»½Ã -> Connect()
+	// IPï¿½Ô·ï¿½ï¿½Ï°ï¿½ Enter ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -> Connect()
 	serveraddr.sin_addr.s_addr = inet_addr(/*ipAddr->c_str()*/SERVERIP);
 	m_Retval = connect(m_ClientSocket, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	if (m_Retval == SOCKET_ERROR) {
@@ -82,8 +82,8 @@ void Network::ProcessData(char* buf, size_t io_byte)
 	static char packet_buffer[BUFSIZE];
 
 	while (0 != io_byte) {
-		if (0 == in_packet_size) in_packet_size = MAKEWORD(ptr[0], ptr[1]); // Ã³À½¹ÞÀº ¸Þ½ÃÁö Å©±â¸¦ ÀúÀå
-		if (io_byte + saved_packet_size >= in_packet_size) {   // Ã³À½¹ÞÀº ¸Þ½ÃÁö Å©±âº¸´Ù »õ·Î ¹ÞÀº ¹ÙÀÌÆ® ¼ö + ÀúÀåÇÏ°í ÀÖ´ø ¹ÙÀÌÆ® ¼ö°¡ Å©¸é processPacket È£Ãâ, ³Ñ°ÜÁØ ¹ÙÀÌÆ® ¸¸Å­ ¹öÆÛ Æ÷ÀÎÅÍ, ¹ÞÀº ¹ÙÀÌÆ® ¼ö °»½Å
+		if (0 == in_packet_size) in_packet_size = MAKEWORD(ptr[0], ptr[1]); // Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½
+		if (io_byte + saved_packet_size >= in_packet_size) {   // Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ Å©ï¿½âº¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ processPacket È£ï¿½ï¿½, ï¿½Ñ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
 			ProcessPacket(packet_buffer);
 			ptr += in_packet_size - saved_packet_size;
@@ -92,7 +92,7 @@ void Network::ProcessData(char* buf, size_t io_byte)
 			saved_packet_size = 0;
 		}
 		else {
-			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);   // ¹ÞÀº °Í ¸¸Å­¸¸ ÀÓ½Ã ÀúÀå ¹öÆÛ¿¡ ´ã¾ÆµÎ±â.
+			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Å­ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û¿ï¿½ ï¿½ï¿½ÆµÎ±ï¿½.
 			saved_packet_size += io_byte;
 			io_byte = 0;
 		}
@@ -235,6 +235,18 @@ void Network::ProcessPacket(char* packet_buffer)
 		}
 		break;
 	}
+
+	case SC_ANIM:
+	{
+		sc_packet_anim packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
+		{
+			PlayerAnim[i] = static_cast<int>(packet.players[i].anim);
+		}
+		break;
+	}
+
 	case SC_REMOVE_PLAYER:
 	{
 		std::cout << "remove player" << std::endl;
@@ -310,4 +322,8 @@ DirectX::XMFLOAT3 Network::GetBlockPos(int num)const
 
 int Network::GetBlockDestructionCnt(int num)const {
 	return BlockDestructionCnt[num];
+}
+int Network::GetPlayerAnim(int num)const
+{
+	return PlayerAnim[num];
 }
