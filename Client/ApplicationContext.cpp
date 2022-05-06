@@ -220,25 +220,21 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->m_World._11 = SCALE * 3 / 5.0;
 		instancingObj->m_World._22 = SCALE * 3 / 5.0;
 		instancingObj->m_World._33 = SCALE * 3 / 5.0;
-		RandomLocation[i] = uid5(dre2);
-		while (i == 1 && RandomLocation[0] == RandomLocation[1]) {
-			RandomLocation[i] = uid5(dre2);
-		}
-		SnowmanIndex[i] = SnowmanLocaArray[RandomLocation[i]];
-		if (SnowmanIndex[i] % 4) {
+
+		/*if (SnowmanIndex[i] % 4) {
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
 			int distance = SCALE * 200;
-			instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance - 15.0f;
-			instancingObj->m_World._42 = 40;
-			instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance + 15.0f;
+			instancingObj->m_World._41 =  SnowmanIndex[i] / 5 * distance - 15.0f;
+			instancingObj->m_World._42 = 20;
+			instancingObj->m_World._43 =  SnowmanIndex[i] % 5 * distance + 15.0f;
 		}
 		else {
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
 			int distance = SCALE * 200;
-			instancingObj->m_World._41 = SnowmanIndex[i] / 5 * distance + 15.0f;
-			instancingObj->m_World._42 = 40;
-			instancingObj->m_World._43 = SnowmanIndex[i] % 5 * distance; +15.0f;
-		}
+			instancingObj->m_World._41 =  SnowmanIndex[i] / 5 * distance + 15.0f;
+			instancingObj->m_World._42 = 20;
+			instancingObj->m_World._43 =  SnowmanIndex[i] % 5 * distance; +15.0f;
+		}*/
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 }

@@ -69,6 +69,15 @@ bool GameplayScene::Enter()
 	{
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 	}
+	for (int i = 0; i < 2; ++i) {
+		SnowmanIndex[i] = SnowmanLocaArray[g_pFramework->m_pNetwork->GetSnowmanLocation(i)];
+		if (SnowmanIndex[i] % 4) {
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
+		}
+		else {
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
+		}
+	}
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -95,6 +104,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 	}
+
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));

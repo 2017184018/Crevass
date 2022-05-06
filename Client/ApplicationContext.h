@@ -2,10 +2,13 @@
 #include "Singleton.h"
 #include "GameObject.h"
 #include "ObjectInfo.h"
+#include "MainFramework.h"
+#include "Network.h"
 
 namespace Core {
 	extern GameObject* wave;
 	extern UINT SnowmanIndex[2];
+	extern 	MainFramework* g_pFramework;
 }
 
 class Character;
