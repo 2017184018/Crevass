@@ -69,7 +69,12 @@ bool GameplayScene::Enter()
 	{
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 	}
-
+	for (int i = 0; i < 25; ++i) {
+		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
+	}
 	return false;
 }
 
@@ -89,6 +94,31 @@ void GameplayScene::Update(const float& fDeltaTime)
 	{
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
+	}
+	for (int i = 0; i < 25; ++i) {
+		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
+		if (DestructionCnt[i] == 1) {
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 0;
+		}
+		else if (DestructionCnt[i] == 2) {
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 0;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 0;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 0;
+		}
+		else if (DestructionCnt[i] == 3) {
+			AppContext->m_RItemsVec[i + 51]->m_World._11 = 0;
+			AppContext->m_RItemsVec[i + 51]->m_World._22 = 0;
+			AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
+		}
+		AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
+		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
+		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
+
 	}
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
@@ -136,58 +166,61 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	for (int i = 0; i < 25; ++i) {
-		if (IsShake[i] || !IsDown[i]) {
-			shake(AppContext->m_RItemsVec[2 * i + 1], i);	//block
-			shake(AppContext->m_RItemsVec[2 * (i + 1)], i);	//snow_top
-			shake(AppContext->m_RItemsVec[51 + i], i);	//icicle
+	//for (int i = 0; i < 25; ++i) {
+	//	if (IsShake[i] || !IsDown[i]) {
+	//		shake(AppContext->m_RItemsVec[2 * i + 1], i);	//block
+	//		shake(AppContext->m_RItemsVec[2 * (i + 1)], i);	//snow_top
+	//		shake(AppContext->m_RItemsVec[51 + i], i);	//icicle
+	//	}
+	//	if (ShakeCnt[i] == 3) {
+	//		ShakeCnt[i] = 0;
+	//		IsShake[i] = false;
+	//		++DestructionCnt[i];
+	//		if (DestructionCnt[i] == 1) {
+	//			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
+	//			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;
+	//			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 0;
+	//		}
+	//		else if (DestructionCnt[i] == 2) {
+	//			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 0;
+	//			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 0;
+	//			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 0;
+	//		}
+	//		else if (DestructionCnt[i] == 3) {
+	//			AppContext->m_RItemsVec[i + 51]->m_World._11 = 0;
+	//			AppContext->m_RItemsVec[i + 51]->m_World._22 = 0;
+	//			AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
+	//		}
+	//	}
+	//	// syncro block
+	//	AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
+	//	AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
+	//	AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
+	//}
+
+	{
+		//syncro snowman
+		if (SnowmanIndex[0] % 4) {
+			AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 20;
 		}
-		if (ShakeCnt[i] == 3) {
-			ShakeCnt[i] = 0;
-			IsShake[i] = false;
-			++DestructionCnt[i];
-			if (DestructionCnt[i] == 1) {
-				AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
-				AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;
-				AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 0;
-			}
-			else if (DestructionCnt[i] == 2) {
-				AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 0;
-				AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 0;
-				AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 0;
-			}
-			else if (DestructionCnt[i] == 3) {
-				AppContext->m_RItemsVec[i + 51]->m_World._11 = 0;
-				AppContext->m_RItemsVec[i + 51]->m_World._22 = 0;
-				AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
-			}
+		else {
+			AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 20;
 		}
-		// syncro block
-		AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
-		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
-		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
-	}
-	//syncro snowman
-	if (SnowmanIndex[0] % 4) {
-		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 20;
-	}
-	else {
-		AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 20;
-	}
-	AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 20;
-	AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 20;
+		AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 20;
+		AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 20;
 
-	if (SnowmanIndex[1] % 4) {
-		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 20;
-	}
-	else {
-		AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 20;
+		if (SnowmanIndex[1] % 4) {
+			AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 20;
+		}
+		else {
+			AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 20;
+		}
+
+		AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 20;
+		AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 20;
 	}
 
-	AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 20;
-	AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 20;
-
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 5; ++i) {	//life
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
 		AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
@@ -354,7 +387,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	
+
 	static bool one = true;
 	if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
 		Fall();

@@ -1,6 +1,5 @@
 #pragma once
 #include <DirectXMath.h>
-
 #define SERVER_PORT			3500
 ///////////////////////////////
 #define SC_LOGIN_OK			1
@@ -11,6 +10,7 @@
 #define SC_BULLETS			6
 #define SC_HIT				7
 #define SC_GAMEOVER			8
+#define SC_BLOCK			9
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 #define CS_PLAYER_UP_RIGHT_UP		2
@@ -20,10 +20,8 @@
 #define CS_PLAYER_DOWN_RIGHT_UP		5
 #define CS_PLAYER_DOWN_LEFT_UP		6
 
-
 #define CS_PLAYER_LEFT_UP			7
 #define CS_PLAYER_RIGHT_UP			8
-
 
 #define CS_PLAYER_UP_DOWN			9
 #define CS_PLAYER_UP_RIGHT_DOWN		10
@@ -32,7 +30,6 @@
 #define CS_PLAYER_DOWN_DOWN			12
 #define CS_PLAYER_DOWN_RIGHT_DOWN	13
 #define CS_PLAYER_DOWN_LEFT_DOWN	14
-
 
 #define CS_PLAYER_LEFT_DOWN			15
 #define CS_PLAYER_RIGHT_DOWN		16
@@ -46,6 +43,12 @@ struct Pro_Player {
 	char id;
 	DirectX::XMFLOAT3 pos;
 	char dir;
+};
+
+struct Block {
+	char id;
+	DirectX::XMFLOAT3 pos;
+	char destuctioncnt;
 };
 
 /* Server to Client */
@@ -67,6 +70,7 @@ struct sc_packet_game_start {
 	char type;
 	Pro_Player players[3];
 	int SnowmanLocation[2];
+	Block blocks[25];
 };
 
 struct sc_packet_remove_player {
@@ -94,6 +98,13 @@ struct sc_packet_gameover
 	short size;
 	char type;
 	char id;	//winner id -> 같으면 이긴거다 다르면 진거
+};
+
+struct sc_packet_block
+{
+	short size;
+	char type;
+	Block blocks[25];
 };
 
 /* Client to Server */

@@ -719,7 +719,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	// 임시 스폰위치 지정
 	//chr->m_SpawnLoaction = skinnedCBIndex;
 	chr->Scale(20, 20, 20);
-	chr->SetPosition(250, 30, 0);
+	chr->SetPosition(0, 30, 0);
 
 }
 

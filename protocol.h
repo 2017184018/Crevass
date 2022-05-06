@@ -10,6 +10,7 @@
 #define SC_BULLETS			6
 #define SC_HIT				7
 #define SC_GAMEOVER			8
+#define SC_BLOCK			9
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 #define CS_PLAYER_UP_LEFT_UP		2
@@ -58,6 +59,12 @@ struct Pro_Player {
 	char dir;
 };
 
+struct Block {
+	char id;
+	DirectX::XMFLOAT3 pos;
+	char destuctioncnt;
+};
+
 /* Server to Client */
 struct sc_packet_login_ok {
 	short size;
@@ -77,6 +84,7 @@ struct sc_packet_game_start {
 	char type;
 	Pro_Player players[3];
 	int SnowmanLocation[2];
+	Block blocks[25];
 };
 
 struct sc_packet_remove_player {
@@ -104,6 +112,13 @@ struct sc_packet_gameover
 	short size;
 	char type;
 	char id;	//winner id -> 같으면 이긴거다 다르면 진거
+};
+
+struct sc_packet_block
+{
+	short size;
+	char type;
+	Block blocks[25];
 };
 
 /* Client to Server */

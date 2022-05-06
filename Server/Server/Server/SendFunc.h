@@ -79,6 +79,17 @@ void SendGameStartPacket()
 	packet.type = SC_GAMESTART;
 	for (int i = 0; i < 2; ++i)
 		packet.SnowmanLocation[i] = TempSnowmanLocation[i];
+	g_SnowmanPosLock.unlock();
+
+	g_BlockInitialPosLock.lock();
+	for (int i = 0; i < 25; ++i) {
+		packet.blocks[i].id = i;
+		packet.blocks[i].destuctioncnt = 0;
+		packet.blocks[i].pos.x = i / 5 * 200;
+		packet.blocks[i].pos.y = -30.0;
+		packet.blocks[i].pos.z = i % 5 * 200;
+	}
+	g_BlockInitialPosLock.unlock();
 
 	memcpy(&packet.players, &tempPlayer, sizeof(tempPlayer));
 	SendPacket(&packet);
@@ -113,5 +124,14 @@ void SendRemovePlayerPacket(char client, char leaver)
 	packet.id = leaver;
 	packet.size = sizeof(packet);
 	packet.type = SC_REMOVE_PLAYER;
+	SendPacket(&packet);
+}
+
+void SendBlockPacket(Block& blocks) {
+	sc_packet_block packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_BLOCK;
+	memcpy(&packet.blocks, &blocks, sizeof(packet.blocks));
+
 	SendPacket(&packet);
 }

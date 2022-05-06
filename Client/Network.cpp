@@ -202,6 +202,10 @@ void Network::ProcessPacket(char* packet_buffer)
 		{
 			SnowmanLocation[i] = packet.SnowmanLocation[i];
 		}
+		for (int i = 0; i < 25; ++i) {
+			BlockPos[i] = packet.blocks[i].pos;
+			BlockDestructionCnt[i] = packet.blocks[i].destuctioncnt;
+		}
 		cout << SnowmanLocation[0];
 		SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 		break;
@@ -219,6 +223,16 @@ void Network::ProcessPacket(char* packet_buffer)
 		//	OtherPlayerPos = packet.players[1].pos;
 		//else
 		//	OtherPlayerPos = packet.players[0].pos;
+		break;
+	}
+	case SC_BLOCK:
+	{
+		sc_packet_block packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		for (int i = 0; i < 25; ++i) {
+			BlockPos[i] = packet.blocks[i].pos;
+			BlockDestructionCnt[i] = packet.blocks[i].destuctioncnt;
+		}
 		break;
 	}
 	case SC_REMOVE_PLAYER:
@@ -287,4 +301,13 @@ int Network::GetSnowmanLocation(int num)const
 int Network::GetPlayerDir(int num)const
 {
 	return static_cast<int>(dir[num]);
+}
+
+DirectX::XMFLOAT3 Network::GetBlockPos(int num)const
+{
+	return BlockPos[num]; 
+}
+
+int Network::GetBlockDestructionCnt(int num)const {
+	return BlockDestructionCnt[num];
 }
