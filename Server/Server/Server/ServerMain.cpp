@@ -5,8 +5,22 @@
 void ErrQuit(const char* msg);
 void ErrDisplay(const char* msg);
 
+void LoadBBs(std::string filepath) {
+	std::ifstream in(filepath);
+
+	while (!in.eof()) {
+		DirectX::BoundingBox* BB = new DirectX::BoundingBox;
+		string meshname;
+		in >> meshname >> BB->Extents.x >> BB->Extents.y >> BB->Extents.z;
+
+		g_boundaries[meshname] = BB;
+	}
+}
+
 int main()
 {
+	LoadBBs("BB.txt");
+
 	wcout.imbue(locale("korean")); // 한국어로 세팅 
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return 1;

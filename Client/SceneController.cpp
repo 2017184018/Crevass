@@ -34,7 +34,7 @@ void LobbyController::HandleInput(const float deltaT)
 	}
 
 	if (!Inactive) {
-		//12 ·Îºñ  13 Æë±Ï  14 Çã½ºÅ°  15 °õ  16¿©¿ì  17¹°°³
+		//8 ·Îºñ  13 Æë±Ï  14 Çã½ºÅ°  15 °õ  16¿©¿ì  17¹°°³
 		static bool one = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
 			if (one) {

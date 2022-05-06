@@ -6,13 +6,13 @@
 
 void Receiver(char id)
 {
-	// RecvThread ½º·¹µå ÇÔ¼ö
+	// RecvThread ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 
-	// RecvThreadÀÇ thread ÇÔ¼ö ÀÔ´Ï´Ù.
-	// Å¬¶óÀÌ¾ðÆ®·Î ºÎÅÍ ¹ÞÀº ÆÐÅ¶ÀÇ Å¸ÀÔÀ» ±¸ºÐÇÕ´Ï´Ù.
-	// cs_packet_readyÀº ÇÔ¼ö ³»ºÎ¿¡¼­ Ã³¸®ÇÕ´Ï´Ù.
-	// ±×¿ÜÀÇ cs ÆÐÅ¶Àº Message º¯¼ö¿¡ °ªÀ» ³Ö¾î MsgQueue¿¡ push ÇÕ´Ï´Ù.
-	// sc_gamestart_packetÀ» º¸³»¸é PhysicThread¸¦ ¸¸µì´Ï´Ù.
+	// RecvThreadï¿½ï¿½ thread ï¿½Ô¼ï¿½ ï¿½Ô´Ï´ï¿½.
+	// Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+	// cs_packet_readyï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+	// ï¿½×¿ï¿½ï¿½ï¿½ cs ï¿½ï¿½Å¶ï¿½ï¿½ Message ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ MsgQueueï¿½ï¿½ push ï¿½Õ´Ï´ï¿½.
+	// sc_gamestart_packetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ PhysicThreadï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
 
 	std::cout << "RecvThread is operating!" << std::endl;
 
@@ -24,12 +24,12 @@ void Receiver(char id)
 
 	while (true)
 	{
-		// ID´Â 0ºÎÅÍ ½ÃÀÛÀÌ¹Ç·Î -1·Î ÃÊ±âÈ­ ÇÕ´Ï´Ù.
+		// IDï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ -1ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Õ´Ï´ï¿½.
 		msg.id = -1;
 		char buf[BUFSIZE];
 		char retval = recv(sock, buf, 1, 0);
 
-		// Å¬¶óÀÌ¾ðÆ® Á¢¼Ó Á¾·á, recv ¿¡·¯ Ã³¸®
+		// Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, recv ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 		if (retval == 0 || retval == SOCKET_ERROR)
 		{
 			closesocket(sock);
@@ -55,7 +55,7 @@ void Receiver(char id)
 			return;
 
 		}
-		// Message Àç»ç¿ëÀ» À§ÇÑ ÃÊ±âÈ­
+		// Message ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 		ZeroMemory(&msg, sizeof(Message));
 		msg.id = -1;
 		switch ((int)buf[0])
@@ -190,8 +190,8 @@ void Receiver(char id)
 				SendGameStartPacket();
 				g_isPlaying = true;
 
-				// Physics Thread »ý¼º
-				std::cout << "physics thread »ý¼º!" << std::endl;
+				// Physics Thread ï¿½ï¿½ï¿½ï¿½
+				std::cout << "physics thread ï¿½ï¿½ï¿½ï¿½!" << std::endl;
 				thread PhysicsThread(ProcessClients);
 				PhysicsThread.detach();
 			}

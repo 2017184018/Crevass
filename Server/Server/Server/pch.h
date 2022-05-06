@@ -20,6 +20,10 @@
 #include <atomic>
 #include <mutex>
 #include <chrono>
+
+
+#include <DirectXMath.h>
+#include <DirectXCollision.h>
 using namespace std;
 using namespace chrono;
 
@@ -27,5 +31,5 @@ using namespace chrono;
 #include "define.h"
 
 // 외부 헤더파일 입니다.
-#include "../../protocol.h"
+#include "../../../protocol.h"
 #define BUFSIZE 512

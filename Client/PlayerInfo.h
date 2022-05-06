@@ -20,10 +20,14 @@ public:
 	void					SetReadyState(bool readyState);
 	bool					GetReadyState()const;
 
+	void SetCharacterType(char c_type);
+	char GetCharacterType();
+
 	void SetPosition(DirectX::XMFLOAT3 PlayerPos);
 	DirectX::XMFLOAT3 GetPosition();
 private:
 	int						m_ID;
 	bool					m_ReadyState;
 	DirectX::XMFLOAT3		m_Pos;
+	char m_CharacterType;
 };

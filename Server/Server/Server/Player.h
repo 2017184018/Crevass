@@ -23,6 +23,9 @@ public:
 	bool GetKeyA();
 	bool GetKeyD();
 
+	void SetCharacterType(char c_type);
+	char GetCharacterType();
+
 private:
 	bool m_keyW = false;
 	bool m_keyS = false;
@@ -33,4 +36,6 @@ private:
 public:
 	char dir = 0;
 	char anim = 0;
+	DirectX::BoundingBox BB;
+	char m_CharacterType;
 };
