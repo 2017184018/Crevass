@@ -10,6 +10,7 @@ bool IsShake[25];
 int tmp1[3] = { -1,-1,-1 };
 bool BlockIn = false;
 float Gravity = 0.1;
+int tmp2[3] = { -1,-1,-1 };
 
 void Update(vector<Player>& player)
 {
@@ -95,7 +96,7 @@ void shake(Block* object, int index) {
 			++ShakeCnt[index];
 	}
 	else {
-		if (IsDown[index] /* && tmp2 != -1*/) {		//������ �� ������
+		if (IsDown[index] && (tmp2[0] != -1 || tmp2[1] != -1 || tmp2[2] != -1)) {
 			if (object->pos.y <= -170)
 				IsDown[index] = false;
 			else {
@@ -103,7 +104,7 @@ void shake(Block* object, int index) {
 			}
 		}
 		else {
-			if (object->pos.y <= -30/* && (tmp2 == -1 || m_Users[m_PlayerID]->bJump)*/) {		//������ �� ��� �ְų� �÷��̾ �������̸�
+			if (object->pos.y <= -30 && (tmp2[0] == -1 || tmp2[1] == -1 || tmp2[2] == -1)) {
 				object->pos.y += 0.2f;
 			}
 			else {
@@ -111,6 +112,7 @@ void shake(Block* object, int index) {
 			}
 			IsShake[index] = false;
 		}
+
 	}
 }
 
@@ -132,6 +134,7 @@ void ProcessClients()
 	g_player_lock.lock();
 	Pro_Player players[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} };
 	string TypeName[3];
+
 	for (int i = 0; i < 3; ++i) {
 		if (players[i].Character_type == CHARACTER_HUSKY) {
 			g_boundaries["husky"]->Center = players[i].pos;
@@ -154,18 +157,18 @@ void ProcessClients()
 			TypeName[i] = "PolarBear";
 		}
 	}
+
 	Block blocks[25];
 	DirectX::XMFLOAT3 tmp[25];
+
 	for (int i = 0; i < 25; ++i) {
 		blocks[i].id = i;
 		tmp[i] = DirectX::XMFLOAT3(i / 5 * 200, -30.0, i % 5 * 200);
 		if (BlockCheck(i)) {
-			g_boundaries["icecube_" + std::to_string(i)]->Center = blocks[i].pos = tmp[i];
+			g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos = tmp[i];
 		}
 		else {
-			g_boundaries["snowcube_" + std::to_string(i)]->Center.x = blocks[i].pos.x = i / 5 * 200;
-			g_boundaries["snowcube_" + std::to_string(i)]->Center.y = blocks[i].pos.y = -30.0;
-			g_boundaries["snowcube_" + std::to_string(i)]->Center.z = blocks[i].pos.z = i % 5 * 200;
+			g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos = tmp[i];
 		}
 
 		blocks[i].destuctioncnt = 0;
@@ -175,7 +178,7 @@ void ProcessClients()
 		IsDown[i] = true;
 		IsShake[i] = false;
 	}
-	
+
 	//g_player_lock.unlock();
 
 	std::queue <Message> phyMsgQueue;
@@ -335,19 +338,10 @@ void ProcessClients()
 			}
 
 			UpdateBlock(blocks);
-			for (int i = 0; i < 25; ++i) {
-				if (BlockCheck(i)) {
-					//	g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
-				}
-				else {
-					//	g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
-				}
-			}
-
 			for (int j = 0; j < numOfCls; ++j) {
 				for (int i = 0; i < 25; ++i) {
-
 					if (BlockCheck(i)) {
+						g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
 						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
 							tmp1[j] = i;
 							if (!BlockIn) {
@@ -355,17 +349,27 @@ void ProcessClients()
 								IsDown[i] = true;
 								BlockIn = true;
 							}
-							cout << j << ": " << tmp1[j] << ", innnnnnnnnnnnnnnnnnn" << endl;
 						}
 						if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
 							BlockIn = false;
 							if (!players[j].isJump)
 								Gravity += 0.05;
-							cout << j << ": " << tmp1[j] << ", outtttttttttttttttttttt" << endl;
 							tmp1[j] = -1;
 						}
 					}
 					else {
+				//		g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
+						if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
+							tmp2[j] = i;
+							IsShake[i] = true;
+							IsDown[i] = true;
+						}
+						if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]]))) {  // or 물에 떨어지면
+							IsDown[tmp2[j]] = false;
+							if (!players[j].isJump)
+								Gravity += 0.05;
+							tmp2[j] = -1;
+						}
 					}
 				}
 			}

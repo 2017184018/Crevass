@@ -14,9 +14,16 @@ void LoadBBs(std::string filepath) {
 		string meshname;
 		in >> meshname >> BB->Extents.x >> BB->Extents.y >> BB->Extents.z;
 
+		float tmpx = BB->Extents.x;
+		float tmpy = BB->Extents.y;
+		float tmpz = BB->Extents.z;
 		if (meshname == "icecube" || meshname == "snowcube") {
 			for (int i = 0; i < 25; ++i) {
-				g_boundaries[meshname+"_" + std::to_string(i)] = BB;
+				g_boundaries[meshname + std::to_string(i)] = BB;
+				BB = new DirectX::BoundingBox;
+				BB->Extents.x = tmpx;
+				BB->Extents.y = tmpy;
+				BB->Extents.z = tmpz;
 			}
 		}
 		else {
