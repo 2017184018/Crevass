@@ -218,7 +218,6 @@ void Network::ProcessPacket(char* packet_buffer)
 			BlockPos[i] = packet.blocks[i].pos;
 			BlockDestructionCnt[i] = packet.blocks[i].destuctioncnt;
 		}
-		cout << SnowmanLocation[0];
 		SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
 		break;
 	}
