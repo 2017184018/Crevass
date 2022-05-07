@@ -224,7 +224,10 @@ void ProcessClients()
 					switch (phyMsg.AnimType)
 					{
 					case ANIM_IDLE:
-						phyPlayers[phyMsg.id].anim = ANIM_IDLE;
+						if(phyPlayers[phyMsg.id].GetKeyA() || phyPlayers[phyMsg.id].GetKeyS()|| phyPlayers[phyMsg.id].GetKeyW()|| phyPlayers[phyMsg.id].GetKeyD())
+						phyPlayers[phyMsg.id].anim = ANIM_MOVE;
+						else
+							phyPlayers[phyMsg.id].anim = ANIM_IDLE;
 						break;
 
 					case ANIM_MOVE:
