@@ -6,6 +6,7 @@
 #include "CommandContext.h"
 #include "ApplicationContext.h"
 #include "InputHandler.h"
+#include "SceneManager.h"
 
 #include "GameObject.h"
 #include "Character.h"
@@ -78,7 +79,7 @@ bool GameplayScene::Enter()
 	for (int i = 0; i < 2; ++i) {
 		SnowmanIndex[i] = SnowmanLocaArray[g_pFramework->m_pNetwork->GetSnowmanLocation(i)];
 		if (SnowmanIndex[i] % 4) {		//방향 오류, 가끔 게임 스타트 패킷을 2번 받는 듯
-			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(3.0f/5.0f, 3.0f / 5.0f, 3.0f / 5.0f) * XMMatrixRotationY(3.14 * 5 / 6));
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(3.0f / 5.0f, 3.0f / 5.0f, 3.0f / 5.0f) * XMMatrixRotationY(3.14 * 5 / 6));
 		}
 		else {
 			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(3.0f / 5.0f, 3.0f / 5.0f, 3.0f / 5.0f) * XMMatrixRotationY(3.14 * 7 / 6));
@@ -107,10 +108,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 	m_SceneController->Update(fDeltaTime);
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
-	
-			m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
-			m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
-			if (i != m_PlayerID) {//애니메이션은 나는 제외 
+
+		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
+		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
+		if (i != m_PlayerID) {//애니메이션은 나는 제외 
 			switch (g_pFramework->m_pNetwork->GetPlayerAnim(i))
 			{
 			case ANIM_IDLE:
@@ -252,6 +253,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 			BlurCnt = 0;
 			if (Lifecnt > 0) {
 				--Lifecnt;
+				if (Lifecnt == 0) {
+				//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
+					//서버에 패배 전송
+				}
 			}
 			tmpidx = -1;
 		}
@@ -373,7 +378,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
 			}
 		}
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 	}
 
 	//hit check
@@ -391,10 +395,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 
 	static bool one = true;
-	if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
-		Fall();
-		m_Users[m_PlayerID]->Move(DIR_UP, speed, true);
+	//if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
+	if (GetAsyncKeyState('1') & 0x8000) {
+		//	m_Users[m_PlayerID]->Move(DIR_UP, speed, true);
 		if (one) {
+			Fall();
 			m_Users[m_PlayerID]->m_PlayerController->Fall();
 			one = false;
 		}

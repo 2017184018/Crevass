@@ -12,6 +12,7 @@ bool BlockIn = false;
 float Gravity = 0.1;
 int tmp2[3] = { -1,-1,-1 };
 string TypeName[3];
+bool IsFall[3] = { false,false,false };
 
 void Update(vector<Player>& player)
 {
@@ -79,12 +80,13 @@ void Update(vector<Player>& player)
 		for (int j = 0; j < numOfCls; ++j) {
 			if (i != j) {
 				g_boundaries[TypeName[i]]->Center.x += saveX;
-				g_boundaries[TypeName[i]]->Center.z+= saveZ;
+				g_boundaries[TypeName[i]]->Center.z += saveZ;
 				if (g_boundaries[TypeName[i]]->Intersects(*g_boundaries[TypeName[j]])) {
 					player[i].m_pos.x -= saveX;
 					player[i].m_pos.z -= saveZ;
 					g_boundaries[TypeName[i]]->Center.x -= saveX;
 					g_boundaries[TypeName[i]]->Center.z -= saveZ;
+
 				}
 			}
 		}
@@ -242,6 +244,13 @@ void ProcessClients()
 				g_MsgQueue.pop();
 			g_MsgQueueLock.unlock();
 
+
+
+			float  speed = 1.0f; 
+			speed += Gravity;			//점프 하면 중력 0.1로 최고점에서 닿은 순간부터 중력에 0.05씩 더하기
+
+
+
 			while (!phyMsgQueue.empty())
 			{
 				phyMsg = phyMsgQueue.front();
@@ -265,7 +274,7 @@ void ProcessClients()
 						break;
 					case KEY_ATTACK:
 						phyPlayers[phyMsg.id].is_attack = true;
-						cout << "attack1 ===="<< static_cast<int>(phyMsg.id) << "==>" << phyPlayers[phyMsg.id].is_attack << endl;
+						cout << "attack1 ====" << static_cast<int>(phyMsg.id) << "==>" << phyPlayers[phyMsg.id].is_attack << endl;
 						break;
 					case KEY_JUMP:
 
@@ -314,13 +323,12 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
-						cout <<"attack2 ==="<<i <<" ==> " << phyPlayers[i].is_attack << endl;
+						cout << "attack2 ===" << i << " ==> " << phyPlayers[i].is_attack << endl;
 						players[i].anim = phyPlayers[i].GetAnimType();
 
 						g_boundaries[TypeName[i]]->Center = players[i].pos;
 
 					}
-
 
 					SendPos(*players);
 					SendAnim(*players);
@@ -338,6 +346,9 @@ void ProcessClients()
 				//}
 			}
 
+
+
+
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				if (phyPlayers[i].is_attack == true)
@@ -347,13 +358,13 @@ void ProcessClients()
 					{
 						phyPlayers[i].AttackTimeCount = 0.0f;
 						phyPlayers[i].is_attack = false;
-					/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
-						{
-							players[i].anim = ANIM_MOVE;
-						}
-						else {
-							players[i].anim = ANIM_IDLE;
-						}*/
+						/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
+							{
+								players[i].anim = ANIM_MOVE;
+							}
+							else {
+								players[i].anim = ANIM_IDLE;
+							}*/
 						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
@@ -366,13 +377,13 @@ void ProcessClients()
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
 						phyPlayers[i].is_jump = false;
-					/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
-						{
-							players[i].anim = ANIM_MOVE;
-						}
-						else {
-							players[i].anim = ANIM_IDLE;
-						}*/
+						/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
+							{
+								players[i].anim = ANIM_MOVE;
+							}
+							else {
+								players[i].anim = ANIM_IDLE;
+							}*/
 						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
@@ -380,16 +391,54 @@ void ProcessClients()
 
 
 			}
-		/*	for (int i = 0; i < numOfCls; ++i)
-			{
-				players[i].id = i;
-				players[i].anim = phyPlayers[i].anim;
+			/*	for (int i = 0; i < numOfCls; ++i)
+				{
+					players[i].id = i;
+					players[i].anim = phyPlayers[i].anim;
+				}
+				if (phyMsg.type == TYPE_ANIMATION)
+				{
+					players[phyMsg.id].anim = phyPlayers[phyMsg.id].GetAnimType();
+					SendAnim(*players);
+				}*/
+
+
+			for (int i = 0; i < numOfCls; ++i) {
+				if (tmp1[i] == -1 && tmp2[i] == -1) {
+					phyPlayers[i].m_pos.y -= speed;
+					players[i].pos.y = phyPlayers[i].m_pos.y;
+				}
+				else {
+					if (tmp1[i] != -1) {
+						if (phyPlayers[i].m_pos.y > 10 && phyPlayers[i].is_jump == false && blocks[tmp1[i]].destuctioncnt != 3) {
+							phyPlayers[i].m_pos.y = blocks[tmp1[i]].pos.y + 60;
+							players[i].pos.y = phyPlayers[i].m_pos.y;
+						}
+						else {
+							phyPlayers[i].m_pos.y -= speed;
+							players[i].pos.y = phyPlayers[i].m_pos.y;
+						}
+					}
+					else {
+						if (phyPlayers[i].m_pos.y -= speed - blocks[tmp2[i]].pos.y >= 50 &&
+							phyPlayers[i].is_jump == false && !IsFall[i]) {
+							phyPlayers[i].m_pos.y = blocks[tmp2[i]].pos.y + 60;
+							players[i].pos.y = phyPlayers[i].m_pos.y;
+						}
+						else {
+							phyPlayers[i].m_pos.y -= speed;
+							players[i].pos.y = phyPlayers[i].m_pos.y;
+						}
+					}
+				}
+				if (phyPlayers[i].m_pos.y < -100) {
+					IsFall[i] = true;
+					phyPlayers[i].m_pos.y = -100;
+					players[i].pos.y = phyPlayers[i].m_pos.y;
+					//fall 애니메이션
+				}
 			}
-			if (phyMsg.type == TYPE_ANIMATION)
-			{
-				players[phyMsg.id].anim = phyPlayers[phyMsg.id].GetAnimType();
-				SendAnim(*players);
-			}*/
+			SendPos(*players);
 
 			UpdateBlock(blocks);
 			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크

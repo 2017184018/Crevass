@@ -28,8 +28,9 @@ void LoadBBs(std::string filepath) {
 		}
 		else {
 			g_boundaries[meshname] = BB;
+			//cout << meshname <<": " << g_boundaries[meshname]->Extents.x << ", " << g_boundaries[meshname]->Extents.y << ", "
+			//	<< g_boundaries[meshname]->Extents.z << endl;
 		}
-
 	}
 }
 
