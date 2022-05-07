@@ -164,15 +164,15 @@ void Receiver(char id)
 		case CS_PLAYER_ATTACK:
 		{
 			msg.id = id;
-			msg.type = TYPE_ANIMATION;
-			msg.AnimType = ANIM_ATTACK;
+			msg.type = TYPE_PLAYER;
+			msg.dir = KEY_ATTACK;
 			break;
 		}
 		case CS_PLAYER_JUMP:
 		{
 			msg.id = id;
-			msg.type = TYPE_ANIMATION;
-			msg.AnimType = ANIM_JUMP;
+			msg.type = TYPE_PLAYER;
+			msg.dir = KEY_JUMP;
 			break;
 		}
 

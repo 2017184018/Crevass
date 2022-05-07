@@ -22,8 +22,8 @@ public:
 	void SetCharacterType(char c_type);
 	char GetCharacterType();
 
-	//char GetAnimType();
-private:
+	char GetAnimType();
+public:
 	bool m_keyW = false;
 	bool m_keyS = false;
 	bool m_keyA = false;
@@ -31,6 +31,11 @@ private:
 	bool m_keySpace = false;
 	bool m_keyAttack = false;
 
+	bool is_attack = false;
+	float AttackTimeCount = 0.0f;
+
+	bool is_jump = false;
+	float JumpTimeCount = 0.0f;
 public:
 	char dir = 0;
 	char anim = 0;

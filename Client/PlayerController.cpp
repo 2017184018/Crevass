@@ -310,31 +310,31 @@ void PlayerController::OnKeyPressed()
 			m_Owner->is_fall = !m_Owner->is_fall;
 			CommandCenter::GetApp()->m_StartFallAnim = true;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Fall), m_Owner);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
+		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
+		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 0;
 		}
 
 		if (InputHandler::IsKeyDown(VK_LEFT)) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
+			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 6;
 		}
 
 		if (InputHandler::IsKeyDown(VK_DOWN)) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
+			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 4;
 		}
 
 		if (InputHandler::IsKeyDown(VK_RIGHT)) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
+			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 2;
 		}
 
@@ -387,7 +387,7 @@ void PlayerController::OnKeyReleased()
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 
 			tmp = -1;
 		}
@@ -396,7 +396,7 @@ void PlayerController::OnKeyReleased()
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 
 			tmp = -1;
 		}
@@ -405,7 +405,7 @@ void PlayerController::OnKeyReleased()
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
 
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 
 			tmp = -1;
 		}
@@ -413,7 +413,7 @@ void PlayerController::OnKeyReleased()
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {

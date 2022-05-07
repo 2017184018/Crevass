@@ -217,35 +217,45 @@ void ProcessClients()
 					case DIR_RIGHT:
 						phyPlayers[phyMsg.id].SetKeyD(phyMsg.isPushed);
 						break;
+					case KEY_ATTACK:
+						phyPlayers[phyMsg.id].is_attack = true;
+						cout << "attack1 ===="<< static_cast<int>(phyMsg.id) << "==>" << phyPlayers[phyMsg.id].is_attack << endl;
+						break;
+					case KEY_JUMP:
+
+						phyPlayers[phyMsg.id].is_jump = true;
+						break;
 					}
 				}
-				else if (phyMsg.type == TYPE_ANIMATION)
-				{
-					switch (phyMsg.AnimType)
-					{
-					case ANIM_IDLE:
-						if(phyPlayers[phyMsg.id].GetKeyA() || phyPlayers[phyMsg.id].GetKeyS()|| phyPlayers[phyMsg.id].GetKeyW()|| phyPlayers[phyMsg.id].GetKeyD())
-						phyPlayers[phyMsg.id].anim = ANIM_MOVE;
-						else
-							phyPlayers[phyMsg.id].anim = ANIM_IDLE;
-						break;
+				//else if (phyMsg.type == TYPE_ANIMATION)
+				//{
+				//	switch (phyMsg.AnimType)
+				//	{
+				///*	case ANIM_IDLE:
+				//		if(phyPlayers[phyMsg.id].GetKeyA() || phyPlayers[phyMsg.id].GetKeyS()|| phyPlayers[phyMsg.id].GetKeyW()|| phyPlayers[phyMsg.id].GetKeyD())
+				//		phyPlayers[phyMsg.id].anim = ANIM_MOVE;
+				//		else
+				//			phyPlayers[phyMsg.id].anim = ANIM_IDLE;
+				//		break;
 
-					case ANIM_MOVE:
-						phyPlayers[phyMsg.id].anim = ANIM_MOVE;
-						break;
+				//	case ANIM_MOVE:
+				//		phyPlayers[phyMsg.id].anim = ANIM_MOVE;
+				//		break;*/
 
-					case ANIM_ATTACK:
-						phyPlayers[phyMsg.id].anim = ANIM_ATTACK;
-						players[phyMsg.id].isAttack = true;
-						break;
+				//	case ANIM_ATTACK:
+				//		
+				//		phyPlayers[phyMsg.id].anim = ANIM_ATTACK;
+				//		phyPlayers[phyMsg.id].isAttack = true;
+				//		
+				//		break;
 
-					case ANIM_JUMP:
-						phyPlayers[phyMsg.id].anim = ANIM_JUMP;
-						players[phyMsg.id].isJump = true;
-						break;
+				//	case ANIM_JUMP:
+				//		phyPlayers[phyMsg.id].anim = ANIM_JUMP;
+				//		phyPlayers[phyMsg.id].isJump = true;
+				//		break;
 
-					}
-				}
+				//	}
+				//}
 
 				Update(phyPlayers);
 
@@ -258,59 +268,78 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
+						cout <<"attack2 ==="<<i <<" ==> " << phyPlayers[i].is_attack << endl;
+						players[i].anim = phyPlayers[i].GetAnimType();
 					}
 					SendPos(*players);
+					SendAnim(*players);
 					cout << static_cast<int>(players[0].dir) << endl;
 				}
-				else if (phyMsg.type == TYPE_ANIMATION)
-				{
-					for (int i = 0; i < numOfCls; ++i)
-					{
-						players[i].id = i;
-						players[i].anim = phyPlayers[i].anim;
-					}
-					SendAnim(*players);
-				}
+				//else if (phyMsg.type == TYPE_ANIMATION)
+				//{
+				//	for (int i = 0; i < numOfCls; ++i)
+				//	{
+				//		players[i].id = i;
+				//	//	players[i].anim = phyPlayers[i].anim;
+				//		players[i].anim = phyPlayers[i].GetAnimType();
+				//	}
+				//	SendAnim(*players);
+				//}
 			}
+
 			for (int i = 0; i < numOfCls; ++i)
 			{
-				if (players[i].isAttack == true)
+				if (phyPlayers[i].is_attack == true)
 				{
-					players[i].AttackTimeCount += 1.0f;
-					if (players[i].AttackTimeCount > 60.0f)
+					phyPlayers[i].AttackTimeCount += 1.0f;
+					if (phyPlayers[i].AttackTimeCount > 60.0f)
 					{
-						players[i].AttackTimeCount = 0.0f;
-						players[i].isAttack = false;
-						if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
+						phyPlayers[i].AttackTimeCount = 0.0f;
+						phyPlayers[i].is_attack = false;
+					/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
 						{
 							players[i].anim = ANIM_MOVE;
 						}
 						else {
 							players[i].anim = ANIM_IDLE;
-						}
+						}*/
+						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
 				}
 
-				if (players[i].isJump == true)
+				if (phyPlayers[i].is_jump == true)
 				{
-					players[i].JumpTimeCount += 1.0f;
-					if (players[i].JumpTimeCount > 60.0f)
+					phyPlayers[i].JumpTimeCount += 1.0f;
+					if (phyPlayers[i].JumpTimeCount > 60.0f)
 					{
-						players[i].JumpTimeCount = 0.0f;
-						players[i].isJump = false;
-						if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
+						phyPlayers[i].JumpTimeCount = 0.0f;
+						phyPlayers[i].is_jump = false;
+					/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
 						{
 							players[i].anim = ANIM_MOVE;
 						}
 						else {
 							players[i].anim = ANIM_IDLE;
-						}
-
+						}*/
+						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
 				}
+
+
 			}
+		/*	for (int i = 0; i < numOfCls; ++i)
+			{
+				players[i].id = i;
+				players[i].anim = phyPlayers[i].anim;
+			}
+			if (phyMsg.type == TYPE_ANIMATION)
+			{
+				players[phyMsg.id].anim = phyPlayers[phyMsg.id].GetAnimType();
+				SendAnim(*players);
+			}*/
+
 			UpdateBlock(blocks);
 			SendBlockPacket(*blocks);
 			//fpsTimer = steady_clock::now();
