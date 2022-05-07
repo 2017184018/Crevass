@@ -49,7 +49,6 @@ bool GameplayScene::Enter()
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		int ty = g_pFramework->m_pNetwork->GetCharacterType(i);
-		cout << "ty =" << ty << endl;
 		if (ty == CHARACTER_PENGUIN) {
 			m_Users[i] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
 		}
@@ -78,11 +77,11 @@ bool GameplayScene::Enter()
 	}
 	for (int i = 0; i < 2; ++i) {
 		SnowmanIndex[i] = SnowmanLocaArray[g_pFramework->m_pNetwork->GetSnowmanLocation(i)];
-		if (SnowmanIndex[i] % 4) {
-			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
+		if (SnowmanIndex[i] % 4) {		//방향 오류, 가끔 게임 스타트 패킷을 2번 받는 듯
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(3.0f/5.0f, 3.0f / 5.0f, 3.0f / 5.0f) * XMMatrixRotationY(3.14 * 5 / 6));
 		}
 		else {
-			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(3.0f / 5.0f, 3.0f / 5.0f, 3.0f / 5.0f) * XMMatrixRotationY(3.14 * 7 / 6));
 		}
 	}
 	for (int i = 0; i < 25; ++i) {
@@ -198,38 +197,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	//for (int i = 0; i < 25; ++i) {
-	//	if (IsShake[i] || !IsDown[i]) {
-	//		shake(AppContext->m_RItemsVec[2 * i + 1], i);	//block
-	//		shake(AppContext->m_RItemsVec[2 * (i + 1)], i);	//snow_top
-	//		shake(AppContext->m_RItemsVec[51 + i], i);	//icicle
-	//	}
-	//	if (ShakeCnt[i] == 3) {
-	//		ShakeCnt[i] = 0;
-	//		IsShake[i] = false;
-	//		++DestructionCnt[i];
-	//		if (DestructionCnt[i] == 1) {
-	//			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
-	//			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;
-	//			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 0;
-	//		}
-	//		else if (DestructionCnt[i] == 2) {
-	//			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 0;
-	//			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 0;
-	//			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 0;
-	//		}
-	//		else if (DestructionCnt[i] == 3) {
-	//			AppContext->m_RItemsVec[i + 51]->m_World._11 = 0;
-	//			AppContext->m_RItemsVec[i + 51]->m_World._22 = 0;
-	//			AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
-	//		}
-	//	}
-	//	// syncro block
-	//	AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
-	//	AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
-	//	AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
-	//}
-
 	{
 		//syncro snowman
 		if (SnowmanIndex[0] % 4) {
@@ -344,39 +311,39 @@ void GameplayScene::Update(const float& fDeltaTime)
 	//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(AppContext->FindObject<GameObject>("husky", "husky0")->GetPosition());
 
 	//AppContext->FindObject<GameObject>("icecubeBB", "icecubeBB0")->SetPosition(AppContext->FindObject<GameObject>("snowcube", "snowcube0")->GetPosition());
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5; j++) {
-			if (BlockCheck(5 * i + j)) {
-				if (tmp1 == -1 && AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					tmp1 = 5 * i + j;
-					if (!BlockIn) {
-						IsShake[5 * i + j] = true;
-						IsDown[5 * i + j] = true;
-						BlockIn = true;
-					}
-				}
-				if (tmp1 != -1 && !AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp1))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					BlockIn = false;
-					if (!m_Users[m_PlayerID]->is_Inair)
-						Gravity += 0.05;
-					tmp1 = -1;
-				}
-			}
-			else {
-				if (tmp2 == -1 && AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-					tmp2 = 5 * i + j;
-					IsShake[5 * i + j] = true;
-					IsDown[5 * i + j] = true;
-				}
-				if (IsFall || (tmp2 != -1 && !AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds))) {
-					IsDown[tmp2] = false;
-					if (!m_Users[m_PlayerID]->is_Inair)
-						Gravity += 0.05;
-					tmp2 = -1;
-				}
-			}
-		}
-	}
+	//for (int i = 0; i < 5; i++) {
+	//	for (int j = 0; j < 5; j++) {
+	//		if (BlockCheck(5 * i + j)) {
+	//			if (tmp1 == -1 && AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+	//				tmp1 = 5 * i + j;
+	//				if (!BlockIn) {
+	//					IsShake[5 * i + j] = true;
+	//					IsDown[5 * i + j] = true;
+	//					BlockIn = true;
+	//				}
+	//			}
+	//			if (tmp1 != -1 && !AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp1))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+	//				BlockIn = false;
+	//				if (!m_Users[m_PlayerID]->is_Inair)
+	//					Gravity += 0.05;
+	//				tmp1 = -1;
+	//			}
+	//		}
+	//		else {
+	//			if (tmp2 == -1 && AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
+	//				tmp2 = 5 * i + j;
+	//				IsShake[5 * i + j] = true;
+	//				IsDown[5 * i + j] = true;
+	//			}
+	//			if (IsFall || (tmp2 != -1 && !AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds))) {
+	//				IsDown[tmp2] = false;
+	//				if (!m_Users[m_PlayerID]->is_Inair)
+	//					Gravity += 0.05;
+	//				tmp2 = -1;
+	//			}
+	//		}
+	//	}
+	//}
 
 	speed += Gravity;
 
