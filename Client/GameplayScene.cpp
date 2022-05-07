@@ -108,22 +108,25 @@ void GameplayScene::Update(const float& fDeltaTime)
 	m_SceneController->Update(fDeltaTime);
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
-		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
-		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
-		switch (g_pFramework->m_pNetwork->GetPlayerAnim(i))
-		{
-		case ANIM_IDLE:
-			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
-			break;
-		case ANIM_MOVE:
-			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FORWARD);
-			break;
-		case ANIM_ATTACK:
-			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_ATTACK);
-			break;
-		case ANIM_JUMP:
-			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
-			break;
+	
+			m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
+			m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
+			if (i != m_PlayerID) {//애니메이션은 나는 제외 
+			switch (g_pFramework->m_pNetwork->GetPlayerAnim(i))
+			{
+			case ANIM_IDLE:
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
+				break;
+			case ANIM_MOVE:
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FORWARD);
+				break;
+			case ANIM_ATTACK:
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_ATTACK);
+				break;
+			case ANIM_JUMP:
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
+				break;
+			}
 		}
 	}
 

@@ -243,6 +243,7 @@ void ProcessClients()
 
 					}
 				}
+
 				Update(phyPlayers);
 
 				if (phyMsg.type == TYPE_PLAYER)
@@ -277,7 +278,13 @@ void ProcessClients()
 					{
 						players[i].AttackTimeCount = 0.0f;
 						players[i].isAttack = false;
-						players[i].anim = ANIM_IDLE;
+						if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
+						{
+							players[i].anim = ANIM_MOVE;
+						}
+						else {
+							players[i].anim = ANIM_IDLE;
+						}
 						SendAnim(*players);
 					}
 				}
@@ -289,7 +296,14 @@ void ProcessClients()
 					{
 						players[i].JumpTimeCount = 0.0f;
 						players[i].isJump = false;
-						players[i].anim = ANIM_IDLE;
+						if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
+						{
+							players[i].anim = ANIM_MOVE;
+						}
+						else {
+							players[i].anim = ANIM_IDLE;
+						}
+
 						SendAnim(*players);
 					}
 				}

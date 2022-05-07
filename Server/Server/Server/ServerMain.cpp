@@ -20,7 +20,6 @@ void LoadBBs(std::string filepath) {
 int main()
 {
 	LoadBBs("BB.txt");
-
 	wcout.imbue(locale("korean")); // 한국어로 세팅 
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return 1;

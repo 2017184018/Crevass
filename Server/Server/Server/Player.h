@@ -22,12 +22,14 @@ public:
 	void SetCharacterType(char c_type);
 	char GetCharacterType();
 
+	//char GetAnimType();
 private:
 	bool m_keyW = false;
 	bool m_keyS = false;
 	bool m_keyA = false;
 	bool m_keyD = false;
-
+	bool m_keySpace = false;
+	bool m_keyAttack = false;
 
 public:
 	char dir = 0;
