@@ -187,9 +187,10 @@ void Receiver(char id)
 
 			if (CheckGameStart())
 			{
+
 				SendGameStartPacket();
 				g_isPlaying = true;
-
+				g_initialPos[id].Character_type = CHARACTER_PENGUIN;
 				// Physics Thread ����
 				std::cout << "physics thread ����!" << std::endl;
 				thread PhysicsThread(ProcessClients);
@@ -210,6 +211,7 @@ void Receiver(char id)
 			{
 				SendGameStartPacket();
 				g_isPlaying = true;
+				g_initialPos[id].Character_type = CHARACTER_HUSKY;
 
 				// Physics Thread ����
 				std::cout << "physics thread ����!" << std::endl;
@@ -231,6 +233,7 @@ void Receiver(char id)
 			{
 				SendGameStartPacket();
 				g_isPlaying = true;
+				g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
 
 				// Physics Thread ����
 				std::cout << "physics thread ����!" << std::endl;
@@ -252,6 +255,7 @@ void Receiver(char id)
 			{
 				SendGameStartPacket();
 				g_isPlaying = true;
+				g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
 
 				// Physics Thread ����
 				std::cout << "physics thread ����!" << std::endl;
@@ -273,6 +277,7 @@ void Receiver(char id)
 			{
 				SendGameStartPacket();
 				g_isPlaying = true;
+				g_initialPos[id].Character_type = CHARACTER_SEAL;
 
 				// Physics Thread ����
 				std::cout << "physics thread ����!" << std::endl;

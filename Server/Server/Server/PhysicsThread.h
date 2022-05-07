@@ -1,11 +1,15 @@
 #pragma once
 #include "pch.h"
 #include "Global.h"
+#include <string>
 
 bool IsRight[25];
 UINT ShakeCnt[25];
 bool IsDown[25];
 bool IsShake[25];
+int tmp1[3] = { -1,-1,-1 };
+bool BlockIn = false;
+float Gravity = 0.1;
 
 void Update(vector<Player>& player)
 {
@@ -127,18 +131,51 @@ void ProcessClients()
 {
 	g_player_lock.lock();
 	Pro_Player players[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} };
+	string TypeName[3];
+	for (int i = 0; i < 3; ++i) {
+		if (players[i].Character_type == CHARACTER_HUSKY) {
+			g_boundaries["husky"]->Center = players[i].pos;
+			TypeName[i] = "husky";
+		}
+		else if (players[i].Character_type == CHARACTER_PENGUIN) {
+			g_boundaries["Penguin"]->Center = players[i].pos;
+			TypeName[i] = "Penguin";
+		}
+		else if (players[i].Character_type == CHARACTER_ARCTICFOX) {
+			g_boundaries["ArcticFox"]->Center = players[i].pos;
+			TypeName[i] = "ArcticFox";
+		}
+		else if (players[i].Character_type == CHARACTER_SEAL) {
+			g_boundaries["Seal"]->Center = players[i].pos;
+			TypeName[i] = "Seal";
+		}
+		else if (players[i].Character_type == CHARACTER_POLARBEAR) {
+			g_boundaries["PolarBear"]->Center = players[i].pos;
+			TypeName[i] = "PolarBear";
+		}
+	}
 	Block blocks[25];
+	DirectX::XMFLOAT3 tmp[25];
 	for (int i = 0; i < 25; ++i) {
 		blocks[i].id = i;
+		tmp[i] = DirectX::XMFLOAT3(i / 5 * 200, -30.0, i % 5 * 200);
+		if (BlockCheck(i)) {
+			g_boundaries["icecube_" + std::to_string(i)]->Center = blocks[i].pos = tmp[i];
+		}
+		else {
+			g_boundaries["snowcube_" + std::to_string(i)]->Center.x = blocks[i].pos.x = i / 5 * 200;
+			g_boundaries["snowcube_" + std::to_string(i)]->Center.y = blocks[i].pos.y = -30.0;
+			g_boundaries["snowcube_" + std::to_string(i)]->Center.z = blocks[i].pos.z = i % 5 * 200;
+		}
+
 		blocks[i].destuctioncnt = 0;
-		blocks[i].pos.x = i / 5 * 200;
-		blocks[i].pos.y = -30.0;
-		blocks[i].pos.z = i % 5 * 200;
+
 		IsRight[i] = true;
 		ShakeCnt[i] = 0;
 		IsDown[i] = true;
 		IsShake[i] = false;
 	}
+	
 	//g_player_lock.unlock();
 
 	std::queue <Message> phyMsgQueue;
@@ -173,20 +210,6 @@ void ProcessClients()
 
 		if (/*FramePerSec.count() >= 1*/elapsedTime > 16)
 		{
-			static bool d = true;
-			if (GetAsyncKeyState('1') & 0x8000) {		//n�� ���Ͽ� �浹�� �� IsShake[n], IsDown[n] �� �� true�� �����ϵ��� ���߿� �ٲٱ� �ʿ�
-				if (d) {
-					IsShake[5] = true;
-					IsDown[5] = true;
-					IsShake[10] = true;
-					IsDown[10] = true;
-					d = false;
-				}
-			}
-			else {
-				d = true;
-			}
-
 			g_MsgQueueLock.lock();
 			phyMsgQueue = g_MsgQueue;
 			g_MsgQueueLock.unlock();
@@ -254,6 +277,22 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
+
+						if (players[i].Character_type == CHARACTER_HUSKY) {
+							g_boundaries["husky"]->Center = players[i].pos;
+						}
+						else if (players[i].Character_type == CHARACTER_PENGUIN) {
+							g_boundaries["Penguin"]->Center = players[i].pos;
+						}
+						else if (players[i].Character_type == CHARACTER_ARCTICFOX) {
+							g_boundaries["ArcticFox"]->Center = players[i].pos;
+						}
+						else if (players[i].Character_type == CHARACTER_SEAL) {
+							g_boundaries["Seal"]->Center = players[i].pos;
+						}
+						else if (players[i].Character_type == CHARACTER_POLARBEAR) {
+							g_boundaries["PolarBear"]->Center = players[i].pos;
+						}
 					}
 					SendPos(*players);
 					cout << static_cast<int>(players[0].dir) << endl;
@@ -294,7 +333,42 @@ void ProcessClients()
 					}
 				}
 			}
+
 			UpdateBlock(blocks);
+			for (int i = 0; i < 25; ++i) {
+				if (BlockCheck(i)) {
+					//	g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
+				}
+				else {
+					//	g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
+				}
+			}
+
+			for (int j = 0; j < numOfCls; ++j) {
+				for (int i = 0; i < 25; ++i) {
+
+					if (BlockCheck(i)) {
+						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
+							tmp1[j] = i;
+							if (!BlockIn) {
+								IsShake[i] = true;
+								IsDown[i] = true;
+								BlockIn = true;
+							}
+							cout << j << ": " << tmp1[j] << ", innnnnnnnnnnnnnnnnnn" << endl;
+						}
+						if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
+							BlockIn = false;
+							if (!players[j].isJump)
+								Gravity += 0.05;
+							cout << j << ": " << tmp1[j] << ", outtttttttttttttttttttt" << endl;
+							tmp1[j] = -1;
+						}
+					}
+					else {
+					}
+				}
+			}
 			SendBlockPacket(*blocks);
 			//fpsTimer = steady_clock::now();
 			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;

@@ -296,7 +296,6 @@ void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 
 		XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
 		XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
-	
 
 	SubmeshGeometry submesh;
 	submesh.IndexCount = indices.size();
@@ -370,7 +369,6 @@ void MeshReference::BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsComma
 	BoundingBox bounds;
 	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax)*20);
 	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin)*20);
-	
 
 	SubmeshGeometry submesh;
 	submesh.IndexCount = indices.size();
