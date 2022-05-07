@@ -11,6 +11,7 @@ int tmp1[3] = { -1,-1,-1 };
 bool BlockIn = false;
 float Gravity = 0.1;
 int tmp2[3] = { -1,-1,-1 };
+string TypeName[3];
 
 void Update(vector<Player>& player)
 {
@@ -18,56 +19,76 @@ void Update(vector<Player>& player)
 	float crossspeed = sqrt(2) / 2;
 	for (int i = 0; i < numOfCls; ++i)
 	{
+		float saveX = 0;
+		float saveZ = 0;
 		if (player[i].GetKeyW() && player[i].GetKeyA()) {
 			player[i].m_pos.z += crossspeed;
 			player[i].m_pos.x -= crossspeed;
 			player[i].dir = DIR_UP_LEFT;
+			saveX = -crossspeed;
+			saveZ = crossspeed;
 		}
 		else if (player[i].GetKeyW() && player[i].GetKeyD()) {
 			player[i].m_pos.z += crossspeed;
 			player[i].m_pos.x += crossspeed;
 			player[i].dir = DIR_UP_RIGHT;
+			saveX = crossspeed;
+			saveZ = crossspeed;
 		}
 		else if (player[i].GetKeyS() && player[i].GetKeyD()) {
 			player[i].m_pos.z -= crossspeed;
 			player[i].m_pos.x += crossspeed;
 			player[i].dir = DIR_DOWN_RIGHT;
+			saveX = crossspeed;
+			saveZ = -crossspeed;
 
 		}
 		else if (player[i].GetKeyS() && player[i].GetKeyA()) {
 			player[i].m_pos.z -= crossspeed;
 			player[i].m_pos.x -= crossspeed;
 			player[i].dir = DIR_DOWN_LEFT;
-
+			saveX = -crossspeed;
+			saveZ = -crossspeed;
 		}
 		else {
 			if (player[i].GetKeyW())
 			{
 				player[i].m_pos.z += speed;
 				player[i].dir = DIR_UP;
-
+				saveZ = speed;
 			}
 			if (player[i].GetKeyS())
 			{
 				player[i].m_pos.z -= speed;
 				player[i].dir = DIR_DOWN;
-
+				saveZ = -speed;
 			}
 			if (player[i].GetKeyA())
 			{
 				player[i].m_pos.x -= speed;
 				player[i].dir = DIR_LEFT;
-
+				saveX = -speed;
 			}
 			if (player[i].GetKeyD())
 			{
 				player[i].m_pos.x += speed;
 				player[i].dir = DIR_RIGHT;
-
+				saveX = speed;
+			}
+		}
+		for (int j = 0; j < numOfCls; ++j) {
+			if (i != j) {
+				g_boundaries[TypeName[i]]->Center.x += saveX;
+				g_boundaries[TypeName[i]]->Center.z+= saveZ;
+				if (g_boundaries[TypeName[i]]->Intersects(*g_boundaries[TypeName[j]])) {
+					player[i].m_pos.x -= saveX;
+					player[i].m_pos.z -= saveZ;
+					g_boundaries[TypeName[i]]->Center.x -= saveX;
+					g_boundaries[TypeName[i]]->Center.z -= saveZ;
+				}
 			}
 		}
 	}
-
 }
 
 bool BlockCheck(int idx) {
@@ -133,7 +154,6 @@ void ProcessClients()
 {
 	g_player_lock.lock();
 	Pro_Player players[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} };
-	string TypeName[3];
 
 	for (int i = 0; i < 3; ++i) {
 		if (players[i].Character_type == CHARACTER_HUSKY) {
@@ -281,22 +301,11 @@ void ProcessClients()
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
 
-						if (players[i].Character_type == CHARACTER_HUSKY) {
-							g_boundaries["husky"]->Center = players[i].pos;
-						}
-						else if (players[i].Character_type == CHARACTER_PENGUIN) {
-							g_boundaries["Penguin"]->Center = players[i].pos;
-						}
-						else if (players[i].Character_type == CHARACTER_ARCTICFOX) {
-							g_boundaries["ArcticFox"]->Center = players[i].pos;
-						}
-						else if (players[i].Character_type == CHARACTER_SEAL) {
-							g_boundaries["Seal"]->Center = players[i].pos;
-						}
-						else if (players[i].Character_type == CHARACTER_POLARBEAR) {
-							g_boundaries["PolarBear"]->Center = players[i].pos;
-						}
+						g_boundaries[TypeName[i]]->Center = players[i].pos;
+
 					}
+
+
 					SendPos(*players);
 					cout << static_cast<int>(players[0].dir) << endl;
 				}
@@ -338,7 +347,7 @@ void ProcessClients()
 			}
 
 			UpdateBlock(blocks);
-			for (int j = 0; j < numOfCls; ++j) {
+			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
 				for (int i = 0; i < 25; ++i) {
 					if (BlockCheck(i)) {
 						g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
@@ -358,7 +367,6 @@ void ProcessClients()
 						}
 					}
 					else {
-				//		g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
 						if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
 							tmp2[j] = i;
 							IsShake[i] = true;
