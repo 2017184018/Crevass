@@ -413,7 +413,7 @@ void PlayerController::OnKeyReleased()
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {

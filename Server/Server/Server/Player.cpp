@@ -62,7 +62,9 @@ char Player::GetAnimType()
 {
 	// 이동하면서 발사하면 그냥 공격애니메이션만 나온다.(현재는)
 	//if( !m_ ) return ANIM_IDLE;
-
+	if (is_hitted) {
+		return ANIM_FALL;
+	}
 
 	if(is_attack){
 		return ANIM_ATTACK;

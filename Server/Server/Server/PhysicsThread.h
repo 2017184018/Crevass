@@ -21,59 +21,89 @@ void Update(vector<Player>& player)
 	{
 		float saveX = 0;
 		float saveZ = 0;
-		if (player[i].GetKeyW() && player[i].GetKeyA()) {
-			player[i].m_pos.z += crossspeed;
-			player[i].m_pos.x -= crossspeed;
-			player[i].dir = DIR_UP_LEFT;
-			saveX = -crossspeed;
-			saveZ = crossspeed;
-		}
-		else if (player[i].GetKeyW() && player[i].GetKeyD()) {
-			player[i].m_pos.z += crossspeed;
-			player[i].m_pos.x += crossspeed;
-			player[i].dir = DIR_UP_RIGHT;
-			saveX = crossspeed;
-			saveZ = crossspeed;
-		}
-		else if (player[i].GetKeyS() && player[i].GetKeyD()) {
-			player[i].m_pos.z -= crossspeed;
-			player[i].m_pos.x += crossspeed;
-			player[i].dir = DIR_DOWN_RIGHT;
-			saveX = crossspeed;
-			saveZ = -crossspeed;
+		if (player[i].is_hitted == false) {
+			if (player[i].GetKeyW() && player[i].GetKeyA()) {
+				player[i].m_pos.z += crossspeed;
+				player[i].m_pos.x -= crossspeed;
+				player[i].dir = DIR_UP_LEFT;
+				saveX = -crossspeed;
+				saveZ = crossspeed;
+			}
+			else if (player[i].GetKeyW() && player[i].GetKeyD()) {
+				player[i].m_pos.z += crossspeed;
+				player[i].m_pos.x += crossspeed;
+				player[i].dir = DIR_UP_RIGHT;
+				saveX = crossspeed;
+				saveZ = crossspeed;
+			}
+			else if (player[i].GetKeyS() && player[i].GetKeyD()) {
+				player[i].m_pos.z -= crossspeed;
+				player[i].m_pos.x += crossspeed;
+				player[i].dir = DIR_DOWN_RIGHT;
+				saveX = crossspeed;
+				saveZ = -crossspeed;
 
+			}
+			else if (player[i].GetKeyS() && player[i].GetKeyA()) {
+				player[i].m_pos.z -= crossspeed;
+				player[i].m_pos.x -= crossspeed;
+				player[i].dir = DIR_DOWN_LEFT;
+				saveX = -crossspeed;
+				saveZ = -crossspeed;
+			}
+			else {
+				if (player[i].GetKeyW())
+				{
+					player[i].m_pos.z += speed;
+					player[i].dir = DIR_UP;
+					saveZ = speed;
+				}
+				if (player[i].GetKeyS())
+				{
+					player[i].m_pos.z -= speed;
+					player[i].dir = DIR_DOWN;
+					saveZ = -speed;
+				}
+				if (player[i].GetKeyA())
+				{
+					player[i].m_pos.x -= speed;
+					player[i].dir = DIR_LEFT;
+					saveX = -speed;
+				}
+				if (player[i].GetKeyD())
+				{
+					player[i].m_pos.x += speed;
+					player[i].dir = DIR_RIGHT;
+					saveX = speed;
+				}
+			}
 		}
-		else if (player[i].GetKeyS() && player[i].GetKeyA()) {
-			player[i].m_pos.z -= crossspeed;
-			player[i].m_pos.x -= crossspeed;
-			player[i].dir = DIR_DOWN_LEFT;
-			saveX = -crossspeed;
-			saveZ = -crossspeed;
-		}
+
 		else {
-			if (player[i].GetKeyW())
-			{
+			//위
+			
+			if (static_cast<int>(player[i].hitted_dir) == 0) {
 				player[i].m_pos.z += speed;
+				player[i].dir = DIR_DOWN;
+				saveZ = speed;
+			}
+			else if (static_cast<int>(player[i].hitted_dir) == 2)
+			{
+				player[i].m_pos.x += speed;
+				player[i].dir = DIR_LEFT;
+				saveZ = speed;
+			}
+			else if (static_cast<int>(player[i].hitted_dir) == 4)
+			{
+				player[i].m_pos.z -= speed;
 				player[i].dir = DIR_UP;
 				saveZ = speed;
 			}
-			if (player[i].GetKeyS())
-			{
-				player[i].m_pos.z -= speed;
-				player[i].dir = DIR_DOWN;
-				saveZ = -speed;
-			}
-			if (player[i].GetKeyA())
+			else if (static_cast<int>(player[i].hitted_dir) == 6)
 			{
 				player[i].m_pos.x -= speed;
-				player[i].dir = DIR_LEFT;
-				saveX = -speed;
-			}
-			if (player[i].GetKeyD())
-			{
-				player[i].m_pos.x += speed;
 				player[i].dir = DIR_RIGHT;
-				saveX = speed;
+				saveZ = speed;
 			}
 		}
 		for (int j = 0; j < numOfCls; ++j) {
@@ -91,6 +121,51 @@ void Update(vector<Player>& player)
 	}
 }
 
+void Hitted_Pos_Update(Player& player,int tyname_num) {
+	float speed = 1.0f; ;
+	float crossspeed = sqrt(2) / 2;
+		float saveX = 0;
+		float saveZ = 0;
+			//위
+			if (static_cast<int>(player.hitted_dir) == 0) {
+				player.m_pos.z += speed;
+				player.dir = DIR_DOWN;
+				saveZ = speed;
+			}
+			else if (static_cast<int>(player.hitted_dir) == 2)
+			{
+				player.m_pos.x += speed;
+				player.dir = DIR_LEFT;
+				saveZ = speed;
+			}
+			else if (static_cast<int>(player.hitted_dir) == 4)
+			{
+				player.m_pos.z -= speed;
+				player.dir = DIR_UP;
+				saveZ = speed;
+			}
+			else if (static_cast<int>(player.hitted_dir) == 6)
+			{
+				player.m_pos.x -= speed;
+				player.dir = DIR_RIGHT;
+				saveZ = speed;
+			}
+		
+		for (int j = 0; j < numOfCls; ++j) {
+			if (tyname_num != j) {
+				g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
+				g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
+				if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
+					
+					player.m_pos.x -= saveX;
+					player.m_pos.z -= saveZ;
+					g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
+					g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
+				}
+			}
+		}
+	
+}
 bool BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
 		return false;
@@ -211,6 +286,8 @@ void ProcessClients()
 		phyPlayers.emplace_back(Player());
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
+		phyPlayers[i].Hit_BB.Radius = g_boundaries[TypeName[i]]->Extents.z/2;
+
 	}
 
 	using FpFloatMilliseconds = duration<float, milliseconds::period>;
@@ -265,7 +342,35 @@ void ProcessClients()
 						break;
 					case KEY_ATTACK:
 						phyPlayers[phyMsg.id].is_attack = true;
-						cout << "attack1 ===="<< static_cast<int>(phyMsg.id) << "==>" << phyPlayers[phyMsg.id].is_attack << endl;
+						//hit box  위치 갱신 
+						phyPlayers[phyMsg.id].Hit_BB.Center = phyPlayers[phyMsg.id].GetPos();
+						if (phyPlayers[phyMsg.id].dir == 0) {
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+						}
+						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 2)
+						{
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+						}
+						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 4)
+						{
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+						}
+						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 6)
+						{
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+						}
+
+						for (int i = 0; i < numOfCls; i++) {
+							if (phyMsg.id != i) {
+								if (phyPlayers[phyMsg.id].Hit_BB.Intersects(*g_boundaries[TypeName[i]])) {
+									cout << "hit!" << endl;
+									phyPlayers[i].is_hitted = true;
+									//처맞은 방향
+									phyPlayers[i].hitted_dir = phyPlayers[phyMsg.id].dir;
+									phyPlayers[phyMsg.id].Hit_BB.Center = DirectX::XMFLOAT3(0, 0, 0);
+								}
+							}
+						}
 						break;
 					case KEY_JUMP:
 
@@ -314,7 +419,7 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
-						cout <<"attack2 ==="<<i <<" ==> " << phyPlayers[i].is_attack << endl;
+						cout << static_cast<int>(players[i].dir) << endl;
 						players[i].anim = phyPlayers[i].GetAnimType();
 
 						g_boundaries[TypeName[i]]->Center = players[i].pos;
@@ -324,7 +429,6 @@ void ProcessClients()
 
 					SendPos(*players);
 					SendAnim(*players);
-					cout << static_cast<int>(players[0].dir) << endl;
 				}
 				//else if (phyMsg.type == TYPE_ANIMATION)
 				//{
@@ -366,30 +470,36 @@ void ProcessClients()
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
 						phyPlayers[i].is_jump = false;
-					/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
-						{
-							players[i].anim = ANIM_MOVE;
-						}
-						else {
-							players[i].anim = ANIM_IDLE;
-						}*/
 						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
 				}
 
+				if (phyPlayers[i].is_hitted == true)
+				{
+					phyPlayers[i].hittedTimeCount += 1.0f;
+					if (phyPlayers[i].hittedTimeCount > 60.0f)
+					{
+						phyPlayers[i].hittedTimeCount = 0.0f;
+						phyPlayers[i].is_hitted = false;
+						players[i].anim = phyPlayers[i].GetAnimType();
+						SendAnim(*players);
+					}
+					else {
+						cout << "호출" << endl;
+						Hitted_Pos_Update(phyPlayers[i], i);
+						players[i].id = i;
+						players[i].pos.x = phyPlayers[i].m_pos.x;
+						players[i].pos.y = phyPlayers[i].m_pos.y;
+						players[i].pos.z = phyPlayers[i].m_pos.z;
+						players[i].dir = phyPlayers[i].dir;
+						SendPos(*players);
+					}
+				}
+
 
 			}
-		/*	for (int i = 0; i < numOfCls; ++i)
-			{
-				players[i].id = i;
-				players[i].anim = phyPlayers[i].anim;
-			}
-			if (phyMsg.type == TYPE_ANIMATION)
-			{
-				players[phyMsg.id].anim = phyPlayers[phyMsg.id].GetAnimType();
-				SendAnim(*players);
-			}*/
+
 
 			UpdateBlock(blocks);
 			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크

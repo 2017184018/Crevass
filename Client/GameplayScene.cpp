@@ -126,7 +126,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
 				break;
 			}
+		
 		}
+			if(g_pFramework->m_pNetwork->GetPlayerAnim(i) == ANIM_FALL){
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
+			}
 	}
 
 	for (int i = 0; i < 25; ++i) {
