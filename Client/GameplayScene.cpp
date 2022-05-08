@@ -141,7 +141,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			else {
 				m_Users[i]->is_StartFallAnim = false;
 			}
-			cout <<i<<" ===== " << m_Users[i]->is_StartFallAnim << endl;
 	}
 
 	for (int i = 0; i < 25; ++i) {

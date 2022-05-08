@@ -74,7 +74,10 @@ void PlayerController::Update(const float deltaT)
 }
 
 static bool SpacePush = false;
-
+static int key_switch_up = 0;
+static int key_switch_down = 0;
+static int key_switch_left = 0;
+static int key_switch_right = 0;
 void PlayerController::HandleInput(const float deltaT)
 {
 
@@ -95,44 +98,48 @@ void PlayerController::HandleInput(const float deltaT)
 		if (GetAsyncKeyState(VK_UP) & 0x8000)
 		{
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
-			
+			key_switch_up = 0;
 
 			tmp = 0;
 		}
-
-		else {
+		else if(key_switch_up ==0){
+			key_switch_up = 1;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 		}
 
 		if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 		{
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
-
+			key_switch_left = 0;
 			tmp = 6;
 		}
-				else {
+				else  if (key_switch_left == 0) {
+			key_switch_left = 1;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
 
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 		{
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
-
+			key_switch_down = 0;
 			tmp = 4;
 		}
-		else {
+		else  if (key_switch_down == 0) {
+			key_switch_down = 1;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
 		}
 
 		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 		{
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
-
+			key_switch_right = 0;
 			tmp = 2;
 		}
-		else {
+		else if (key_switch_right == 0){
+			key_switch_right = 1;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
+
 		//
 		//		if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
 		//			/*if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
