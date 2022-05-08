@@ -541,6 +541,14 @@ void ProcessClients()
 						players[i].anim = phyPlayers[i].GetAnimType();
 
 						g_boundaries[TypeName[i]]->Center = players[i].pos;
+						//임시방편
+						if (TypeName[i] == "Penguin") {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+						}
+						else {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+						}
+
 					}
 				//	SendPos(*players);
 					SendAnim(*players);
@@ -657,6 +665,12 @@ void ProcessClients()
 					SendFall(i);
 				}
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
+				if(TypeName[i] =="Penguin"){
+					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+				}
+				else {
+					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+				}
 			}
 
 			UpdateBlock(blocks);
@@ -720,7 +734,12 @@ void ProcessClients()
 				players[i].anim = phyPlayers[i].GetAnimType();
 				players[i].pos = phyPlayers[i].m_pos;
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
-
+				if (TypeName[i] == "Penguin") {
+					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+				}
+				else {
+					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+				}
 			}
 			
 			SendAnim(*players);

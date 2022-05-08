@@ -50,12 +50,12 @@ public:
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;
 
-	bool IsShake[25];
-	bool IsRight[25];		//오른쪽으로 흔들리는지
-	UINT ShakeCnt[25];		//좌우로 몇 번 움직였는지
+//	bool IsShake[25];
+	//bool IsRight[25];		//오른쪽으로 흔들리는지
+	//UINT ShakeCnt[25];		//좌우로 몇 번 움직였는지
 	UINT DestructionCnt[25];	//몇 번 파괴 됐는지
 
-	bool IsDown[25];		//내려가는 중인지
+	//bool IsDown[25];		//내려가는 중인지
 
 
 	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
@@ -64,9 +64,6 @@ public:
 
 	UINT BlurCnt = 0;
 
-	void shake(GameObject* object, int index);
-
-	bool BlockCheck(int);		//부숴지는 블록인지 아닌지 체크
 
 	bool BlockIn = false;		//블록 한번만 밟게
 	int tmp1 = -1;

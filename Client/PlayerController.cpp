@@ -140,86 +140,6 @@ void PlayerController::HandleInput(const float deltaT)
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 
-		//
-		//		if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-		//			/*if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
-		//				if (m_Owner->bJump == false) {
-		//					if (!SpacePush) {
-		//						m_Owner->bJump = true;
-		//						m_Owner->is_Inair = true;
-		//						m_Owner->m_KeyState = Character::PlayerState::STATE_JUMP;
-		//						SpacePush = true;
-		//					}
-		//				}
-		//				
-		//
-		//			}*/
-		//			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
-		//#ifdef DEBUG_CLIENT
-		//			m_Owner->Move(DIR_FORWARD, speed, true);
-		//#elif DEBUG_SERVER
-		//#endif
-		//			m_Owner->SetDir(0);
-		//			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
-		//			tmp = 0;
-		//		}
-		//
-		//
-		//		if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
-		//			/*	if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
-		//					m_Owner->Move(DIR_LEFT, speed, true);
-		//					if (!m_Owner->bJump)
-		//						m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
-		//					m_Owner->SetDir(270);
-		//				}*/
-		//				//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
-		//			
-		//#ifdef DEBUG_CLIENT
-		//			m_Owner->Move(DIR_LEFT, speed, true);
-		//#elif DEBUG_SERVER
-		//#endif
-		//			m_Owner->SetDir(270);
-		//			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_DOWN);
-		//			tmp = 6;
-		//		}
-		//
-		//		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
-		//			/*if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
-		//				m_Owner->Move(DIR_BACKWARD, speed, true);
-		//				if (!m_Owner->bJump)
-		//					m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
-		//				m_Owner->SetDir(180);
-		//			}*/
-		//			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
-		//			
-		//#ifdef DEBUG_CLIENT
-		//			m_Owner->Move(DIR_BACKWARD, speed, true);
-		//#elif DEBUG_SERVER
-		//#endif
-		//			m_Owner->SetDir(180);
-		//			g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_DOWN);
-		//			tmp = 4;
-		//		}
-		//
-		//		if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
-		//			/*if (m_Owner->m_KeyState != Character::PlayerState::STATE_ATTACK) {
-		//				m_Owner->Move(DIR_RIGHT, speed, true);
-		//				if (!m_Owner->bJump)
-		//					m_Owner->m_KeyState = Character::PlayerState::STATE_FORWARD;
-		//				m_Owner->SetDir(90);
-		//			}*/
-		//			//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
-		//		
-		//#ifdef DEBUG_CLIENT
-		//			m_Owner->Move(DIR_RIGHT, speed, true);
-		//#elif DEBUG_SERVER
-		//#endif
-		//
-		//			m_Owner->SetDir(90);
-		//			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_DOWN);
-		//			tmp = 2;
-		//		}
-
 		if ((GetAsyncKeyState(VK_RIGHT) & 0x8000 )&& (GetAsyncKeyState(VK_UP) & 0x8000)) {
 			tmp = 1;
 		}
@@ -324,11 +244,8 @@ void PlayerController::OnKeyPressed()
 		}
 
 		if (InputHandler::IsKeyDown('S')) {
-
-			m_Owner->is_fall = !m_Owner->is_fall;
-			CommandCenter::GetApp()->m_StartFallAnim = true;
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Fall), m_Owner);
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
+			MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
+			
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {
@@ -361,8 +278,6 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_JUMP);
 
-			m_Owner->is_Inair = true;
-			m_Owner->bJump = true;
 			tmp = 8;
 		}
 		else {

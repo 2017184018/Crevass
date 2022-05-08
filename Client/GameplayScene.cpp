@@ -33,11 +33,11 @@ void GameplayScene::Initialize()
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
 	for (int i = 0; i < 25; ++i) {
-		IsShake[i] = false;
-		IsRight[i] = true;
-		ShakeCnt[i] = 0;
+		//IsShake[i] = false;
+		//IsRight[i] = true;
+		//ShakeCnt[i] = 0;
 		DestructionCnt[i] = 0;
-		IsDown[i] = true;
+		//IsDown[i] = true;
 	}
 }
 
@@ -168,6 +168,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
 
 	}
+
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
@@ -176,7 +177,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		p.second->Update(fDeltaTime);
 	}
 
-	float speed = 100 * fDeltaTime;
+	/*float speed = 100 * fDeltaTime;
 	if (m_Users[m_PlayerID]) {
 		static float YSave = 30;
 		static bool IsFirst = true;
@@ -212,7 +213,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			HighY = YSave + 40;
 			Gravity = 0.1;
 		}
-	}
+	}*/
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
@@ -273,20 +274,20 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static int tmpidx = -1;
 		time += fDeltaTime;
 		BlurCnt = 3;
-		if (time >= 3) {
-			time = 0;
-			IsFall[m_PlayerID] = false;
-			BlurCnt = 0;
-			if (Lifecnt > 0) {
-				--Lifecnt;
-				if (Lifecnt == 0) {
-					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-						//서버에 패배 전송
-				}
-			}
-			tmpidx = -1;
-		}
-		else if (time >= 2.9) {
+		//if (time >= 3) {
+		//	time = 0;
+		//	IsFall[m_PlayerID] = false;
+		//	BlurCnt = 0;
+		//	if (Lifecnt > 0) {
+		//		--Lifecnt;
+		//		if (Lifecnt == 0) {
+		//			//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
+		//				//서버에 패배 전송
+		//		}
+		//	}
+		//	tmpidx = -1;
+		//}
+		 if (time >= 2.9) {
 			m_Users[m_PlayerID]->is_fall = false;
 			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
 			Gravity = 0.01;
@@ -343,46 +344,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
-	//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(AppContext->FindObject<GameObject>("husky", "husky0")->GetPosition());
-
-	//AppContext->FindObject<GameObject>("icecubeBB", "icecubeBB0")->SetPosition(AppContext->FindObject<GameObject>("snowcube", "snowcube0")->GetPosition());
-	//for (int i = 0; i < 5; i++) {
-	//	for (int j = 0; j < 5; j++) {
-	//		if (BlockCheck(5 * i + j)) {
-	//			if (tmp1 == -1 && AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-	//				tmp1 = 5 * i + j;
-	//				if (!BlockIn) {
-	//					IsShake[5 * i + j] = true;
-	//					IsDown[5 * i + j] = true;
-	//					BlockIn = true;
-	//				}
-	//			}
-	//			if (tmp1 != -1 && !AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp1))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-	//				BlockIn = false;
-	//				if (!m_Users[m_PlayerID]->is_Inair)
-	//					Gravity += 0.05;
-	//				tmp1 = -1;
-	//			}
-	//		}
-	//		else {
-	//			if (tmp2 == -1 && AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds)) {
-	//				tmp2 = 5 * i + j;
-	//				IsShake[5 * i + j] = true;
-	//				IsDown[5 * i + j] = true;
-	//			}
-	//			if (IsFall || (tmp2 != -1 && !AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->m_Bounds.Intersects(m_Users[m_PlayerID]->m_Bounds))) {
-	//				IsDown[tmp2] = false;
-	//				if (!m_Users[m_PlayerID]->is_Inair)
-	//					Gravity += 0.05;
-	//				tmp2 = -1;
-	//			}
-	//		}
-	//	}
-	//}
-
-	speed += Gravity;
-
-	if (tmp1 == -1 && tmp2 == -1) {
+	/*if (tmp1 == -1 && tmp2 == -1) {
 		m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
 	}
 	else {
@@ -405,20 +367,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
 			}
 		}
-	}
-
-	//hit check
-	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; i++) {
-		if (i != m_PlayerID) {
-			if (m_Users[m_PlayerID]->m_HitBox.Intersects(m_Users[i]->m_Bounds))
-			{
-				cout << "check" << endl;
-				m_Users[m_PlayerID]->m_HitBox.Center = XMFLOAT3(0, 0, 0);
-				m_Users[i]->pushed_back(70.0f, 50.0f, 1, m_Users[m_PlayerID]->m_CurrentAngle);
-
-			}
-		}
-	}
+	}*/
 }
 
 void GameplayScene::Render()
@@ -468,51 +417,6 @@ void GameplayScene::Render()
 	// Transition to PRESENT state.
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
-}
-
-void GameplayScene::shake(GameObject* object, int index) {
-	if (BlockCheck(index)) {		//destruct block
-		if (IsRight[index]) {
-			if (object->m_World._41 < 200 * (index / 5) + 5) {
-				object->m_World._41 += 0.18f;
-			}
-			else
-				IsRight[index] = false;
-		}
-		else {
-			if (object->m_World._41 > 200 * (index / 5) - 5) {
-				object->m_World._41 -= 0.18f;
-			}
-			else
-				IsRight[index] = true;
-		}
-		if (IsRight[index] && (object->m_World._41 - 0.001f <= 200 * (index / 5) && object->m_World._41 + 0.001f >= 200 * (index / 5)))
-			++ShakeCnt[index];
-	}
-	else {
-		if (IsDown[index] && tmp2 != -1) {
-			if (object->m_World._42 <= -170)
-				IsDown[index] = false;
-			else {
-				object->m_World._42 -= (-object->m_World._42 / 140.0 - 4.0 / 35.0);
-			}
-		}
-		else {
-			if (object->m_World._42 <= -30 && (tmp2 == -1 || m_Users[m_PlayerID]->bJump)) {
-				object->m_World._42 += 0.2f;
-			}
-			else {
-				IsDown[index] = true;
-			}
-			IsShake[index] = false;
-		}
-	}
-}
-
-bool GameplayScene::BlockCheck(int idx) {
-	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
-		return false;
-	return true;
 }
 
 void GameplayScene::Fall(int num) {
