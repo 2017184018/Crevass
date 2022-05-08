@@ -259,6 +259,12 @@ void Network::ProcessPacket(char* packet_buffer)
 		break;
 	}
 
+	case SC_FALL:
+		sc_packet_fall packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		g_pFramework->m_pNetwork->IsFall[packet.id] = true;
+		break;
+
 	case SC_REMOVE_PLAYER:
 	{
 		std::cout << "remove player" << std::endl;
@@ -343,4 +349,9 @@ int Network::GetPlayerAnim(int num)const
 
 char Network::GetCharacterType(int num)const {
 	return CharacterType[num];
+}
+
+bool Network::GetCharacterFall(int num)const
+{
+	return IsFall[num];
 }

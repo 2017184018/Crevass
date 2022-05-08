@@ -39,6 +39,8 @@ public:
 
 	int GetPlayerAnim(int num)const;
 	char GetCharacterType(int num)const;
+
+	bool GetCharacterFall(int num)const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];
@@ -51,6 +53,8 @@ private:
 	int BlockDestructionCnt[25];
 
 	char CharacterType[3];
+
+	bool IsFall[3]{ false,false,false };
 public:
 	GameInfo* m_pGameInfo;
 };
