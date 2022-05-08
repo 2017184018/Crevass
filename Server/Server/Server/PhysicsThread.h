@@ -392,35 +392,6 @@ void ProcessClients()
 						break;
 					}
 				}
-				//else if (phyMsg.type == TYPE_ANIMATION)
-				//{
-				//	switch (phyMsg.AnimType)
-				//	{
-				///*	case ANIM_IDLE:
-				//		if(phyPlayers[phyMsg.id].GetKeyA() || phyPlayers[phyMsg.id].GetKeyS()|| phyPlayers[phyMsg.id].GetKeyW()|| phyPlayers[phyMsg.id].GetKeyD())
-				//		phyPlayers[phyMsg.id].anim = ANIM_MOVE;
-				//		else
-				//			phyPlayers[phyMsg.id].anim = ANIM_IDLE;
-				//		break;
-
-				//	case ANIM_MOVE:
-				//		phyPlayers[phyMsg.id].anim = ANIM_MOVE;
-				//		break;*/
-
-				//	case ANIM_ATTACK:
-				//		
-				//		phyPlayers[phyMsg.id].anim = ANIM_ATTACK;
-				//		phyPlayers[phyMsg.id].isAttack = true;
-				//		
-				//		break;
-
-				//	case ANIM_JUMP:
-				//		phyPlayers[phyMsg.id].anim = ANIM_JUMP;
-				//		phyPlayers[phyMsg.id].isJump = true;
-				//		break;
-
-				//	}
-				//}
 
 				Update(phyPlayers);
 
@@ -443,16 +414,6 @@ void ProcessClients()
 				//	SendPos(*players);
 					SendAnim(*players);
 				}
-				//else if (phyMsg.type == TYPE_ANIMATION)
-				//{
-				//	for (int i = 0; i < numOfCls; ++i)
-				//	{
-				//		players[i].id = i;
-				//	//	players[i].anim = phyPlayers[i].anim;
-				//		players[i].anim = phyPlayers[i].GetAnimType();
-				//	}
-				//	SendAnim(*players);
-				//}
 			}
 
 
@@ -635,11 +596,13 @@ void ProcessClients()
 
 			for (int i = 0; i < numOfCls; ++i)
 			{
+				players[i].anim = phyPlayers[i].GetAnimType();
 				players[i].pos = phyPlayers[i].m_pos;
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
 
 			}
-
+			
+			SendAnim(*players);
 			SendPos(*players);
 
 			//for (int i = 0; i < numOfCls; ++i)
