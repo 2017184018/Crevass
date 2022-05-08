@@ -155,63 +155,72 @@ void Update(vector<Player>& player)
 	}
 }
 
-void Hitted_Pos_Update(Player& player, int tyname_num) {
-	float speed = 1.0f; ;
+void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
+	
+	
+	float speed = 1.0f; 
 	float crossspeed = sqrt(2) / 2;
 	float saveX = 0;
 	float saveZ = 0;
 	//위
 	if (static_cast<int>(player.hitted_dir) == 0) {
-		player.m_pos.z += speed;
+		player.m_pos.z += speed* HITTED_POWER;
 		player.dir = DIR_DOWN;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 2)
 	{
-		player.m_pos.x += speed;
+		player.m_pos.x += speed * HITTED_POWER;
 		player.dir = DIR_LEFT;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 4)
 	{
-		player.m_pos.z -= speed;
+		player.m_pos.z -= speed * HITTED_POWER;
 		player.dir = DIR_UP;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 6)
 	{
-		player.m_pos.x -= speed;
+		player.m_pos.x -= speed * HITTED_POWER;
 		player.dir = DIR_RIGHT;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 1)
 	{
-		player.m_pos.x += crossspeed;
-		player.m_pos.z += crossspeed;
+		player.m_pos.x += crossspeed * HITTED_POWER;
+		player.m_pos.z += crossspeed * HITTED_POWER;
 		player.dir = DIR_DOWN_LEFT;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 3)
 	{
-		player.m_pos.x += crossspeed;
-		player.m_pos.z -= crossspeed;
+		player.m_pos.x += crossspeed * HITTED_POWER;
+		player.m_pos.z -= crossspeed * HITTED_POWER;
 		player.dir = DIR_UP_LEFT;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 5)
 	{
-		player.m_pos.x -= crossspeed;
-		player.m_pos.z -= crossspeed;
+		player.m_pos.x -= crossspeed * HITTED_POWER;
+		player.m_pos.z -= crossspeed * HITTED_POWER;
 		player.dir = DIR_UP_RIGHT;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 7)
 	{
-		player.m_pos.x -= crossspeed;
-		player.m_pos.z += crossspeed;
+		player.m_pos.x -= crossspeed * HITTED_POWER;
+		player.m_pos.z += crossspeed * HITTED_POWER;
 		player.dir = DIR_DOWN_RIGHT;
-		saveZ = speed;
+		saveZ = speed * HITTED_POWER;
 	}
+
+	//if (anitime < 30) {
+	//	player.m_pos.y += speed;
+	//}
+	//else {
+	//	player.m_pos.y -= speed;
+	//}
 
 	for (int j = 0; j < numOfCls; ++j) {
 		if (tyname_num != j) {
@@ -455,6 +464,7 @@ void ProcessClients()
 								if (phyPlayers[phyMsg.id].Hit_BB.Intersects(*g_boundaries[TypeName[i]])) {
 									cout << "hit!" << endl;
 									phyPlayers[i].is_hitted = true;
+									phyPlayers[i].is_jump = true;
 									//처맞은 방향
 									phyPlayers[i].hitted_dir = phyPlayers[phyMsg.id].dir;
 									phyPlayers[phyMsg.id].Hit_BB.Center = DirectX::XMFLOAT3(0, 0, 0);
@@ -480,13 +490,10 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
-					//	cout << static_cast<int>(players[i].dir) << endl;
 						players[i].anim = phyPlayers[i].GetAnimType();
 
 						g_boundaries[TypeName[i]]->Center = players[i].pos;
-
 					}
-
 				//	SendPos(*players);
 					SendAnim(*players);
 				}
@@ -504,13 +511,6 @@ void ProcessClients()
 					{
 						phyPlayers[i].AttackTimeCount = 0.0f;
 						phyPlayers[i].is_attack = false;
-						/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
-							{
-								players[i].anim = ANIM_MOVE;
-							}
-							else {
-								players[i].anim = ANIM_IDLE;
-							}*/
 						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
@@ -523,14 +523,6 @@ void ProcessClients()
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
 						//phyPlayers[i].is_jump = false;
-						//phyPlayers[i].is_jump = false;
-						/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
-							{
-								players[i].anim = ANIM_MOVE;
-							}
-							else {
-								players[i].anim = ANIM_IDLE;
-							}*/
 						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
@@ -547,14 +539,14 @@ void ProcessClients()
 						SendAnim(*players);
 					}
 					else {
-						cout << "호출" << endl;
-						Hitted_Pos_Update(phyPlayers[i], i);
+						Hitted_Pos_Update(phyPlayers[i], i, phyPlayers[i].hittedTimeCount);
 						players[i].id = i;
 						players[i].pos.x = phyPlayers[i].m_pos.x;
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
 						SendPos(*players);
+					    
 					}
 				}
 
@@ -572,6 +564,7 @@ void ProcessClients()
 				}*/
 			for (int i = 0; i < numOfCls; ++i)
 			{
+				//아이스 , 스노우 아무것도 출동하지 않을때 
 				if (tmp1[i] == -1 && tmp2[i] == -1)
 				{
 					phyPlayers[i].gravity -= 0.02f;
@@ -664,7 +657,10 @@ void ProcessClients()
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
-				if (phyPlayers[i].is_jump == true)
+				if (phyPlayers[i].is_jump == true && phyPlayers[i].is_hitted == true) {
+					phyPlayers[i].m_pos.y += (HITTED_JUMP_POWER + phyPlayers[i].gravity);
+				}
+				else if (phyPlayers[i].is_jump == true)
 				{
 					phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
 				}
