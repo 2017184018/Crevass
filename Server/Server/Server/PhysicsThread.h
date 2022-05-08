@@ -17,7 +17,8 @@ bool IsFall[3] = { false,false,false };
 void Update(vector<Player>& player)
 {
 	float speed = 1.0f; ;
-	float crossspeed = sqrt(2) / 2;
+	//float crossspeed = sqrt(2) / 2;
+	float crossspeed = cos(45);
 	for (int i = 0; i < numOfCls; ++i)
 	{
 		float saveX = 0;
