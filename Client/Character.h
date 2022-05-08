@@ -106,7 +106,7 @@ public:
 	BOOL bJump = false;
 	BOOL is_Inair = false;
 	BOOL is_fall = false;
-
+	BOOL is_StartFallAnim = false;
 	float m_CurrentAngle = 0.0f;
 
 	BoundingBox m_HitBox;

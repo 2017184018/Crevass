@@ -79,7 +79,7 @@ void PlayerController::HandleInput(const float deltaT)
 {
 
 	//���ݵ��� �������̰�
-	if (CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
+	if (CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim || m_Owner->is_StartFallAnim) return;
 
 	float speed = 300 * deltaT;
 	XMVECTOR direction = {};
@@ -265,7 +265,7 @@ void PlayerController::OnKeyPressed()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim|| m_Owner->is_StartFallAnim) return;
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
@@ -376,7 +376,7 @@ void PlayerController::OnKeyReleased()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim || m_Owner->is_StartFallAnim) return;
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{

@@ -569,8 +569,8 @@ void ProcessClients()
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
 					//fall 애니메이션
-					players[i].anim = ANIM_FALL;
-					SendAnim(*players);
+				/*	players[i].anim = ANIM_FALL;
+					SendAnim(*players);*/
 				}
 			}
 			SendPos(*players);

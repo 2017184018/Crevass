@@ -116,23 +116,29 @@ void GameplayScene::Update(const float& fDeltaTime)
 			{
 			case ANIM_IDLE:
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
+				m_Users[i]->is_StartFallAnim = false;
 				break;
 			case ANIM_MOVE:
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FORWARD);
+				m_Users[i]->is_StartFallAnim = false;
 				break;
 			case ANIM_ATTACK:
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_ATTACK);
+				m_Users[i]->is_StartFallAnim = false;
 				break;
 			case ANIM_JUMP:
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
+				m_Users[i]->is_StartFallAnim = false;
 				break;
 			case ANIM_FALL:
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
+				m_Users[i]->is_StartFallAnim = true;
 			}
 		
 		}
 			if(g_pFramework->m_pNetwork->GetPlayerAnim(i) == ANIM_FALL){
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
+				m_Users[i]->is_StartFallAnim = true;
 			}
 	}
 
