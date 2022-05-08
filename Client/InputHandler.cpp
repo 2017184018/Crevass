@@ -4,24 +4,34 @@
 
 namespace InputHandler
 {
-	bool	KeyFlag[256];
+	bool	KeyFlag[256] = { 0, };
 
 	bool InputHandler::IsKeyDown(int key)
 	{
+		//if (key == VK_RIGHT) {
+		//	cout << KeyFlag[key] << endl;
+		//}
 		if (GetAsyncKeyState(key) & 0x8000) {
-			if (!KeyFlag[key])
-				return KeyFlag[key] = true;
+			if (!KeyFlag[key]) {
+				KeyFlag[key] = true;
+				return KeyFlag[key];
+			}
 		}
 		return false;
 	}
 
 	bool InputHandler::IsKeyUp(int key)
 	{
-		if (GetAsyncKeyState(key) & 0x8000)
+		if (GetAsyncKeyState(key) & 0x8000) {
 			KeyFlag[key] = true;
-		else
-			if (KeyFlag[key])
-				return !(KeyFlag[key] = false);
+		
+		}
+		else {
+			if (KeyFlag[key]) {
+				KeyFlag[key] = false;
+				return !(KeyFlag[key]);
+			}
+		}
 		return false;
 	}
 }

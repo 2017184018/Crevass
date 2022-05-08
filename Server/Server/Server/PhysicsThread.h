@@ -223,6 +223,10 @@ void UpdateBlock(Block* object) {
 			ShakeCnt[i] = 0;
 			IsShake[i] = false;
 			++object[i].destuctioncnt;
+			if (object[i].destuctioncnt == 3) {
+				g_boundaries["icecube" + std::to_string(i)]->Center = DirectX::XMFLOAT3(-0, -1000, 0);
+				g_boundaries["icecube" + std::to_string(i)]->Extents = DirectX::XMFLOAT3(0, 0, 0);
+			}
 		}
 	}
 }
@@ -574,13 +578,13 @@ void ProcessClients()
 				}
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
 			}
-			SendPos(*players);
 
 			UpdateBlock(blocks);
 			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
 				for (int i = 0; i < 25; ++i) {
 					if (BlockCheck(i)) {
-						g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
+						if (blocks[i].destuctioncnt != 3)
+							g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
 						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
 							tmp1[j] = i;
 							phyPlayers[j].gravity = 0.0f;
@@ -620,19 +624,21 @@ void ProcessClients()
 
 			for (int i = 0; i < numOfCls; ++i)
 			{
-				cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
+				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
 				if (phyPlayers[i].is_jump == true)
 				{
 					phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
-					g_boundaries[TypeName[i]]->Center = players[i].pos;
 				}
 			}
-			Update(phyPlayers);
+		//	Update(phyPlayers);
 
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				players[i].pos = phyPlayers[i].m_pos;
+				g_boundaries[TypeName[i]]->Center = players[i].pos;
+
 			}
+
 			SendPos(*players);
 
 			//for (int i = 0; i < numOfCls; ++i)

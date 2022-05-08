@@ -230,6 +230,7 @@ void Network::ProcessPacket(char* packet_buffer)
 			PlayerPos[i] = packet.players[i].pos;
 			dir[i] = packet.players[i].dir;
 		}
+	//	cout << packet.players[0].pos.x << endl;
 		//if (m_pGameInfo->m_ClientID == 0)
 		//	OtherPlayerPos = packet.players[1].pos;
 		//else

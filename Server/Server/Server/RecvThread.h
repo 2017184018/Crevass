@@ -67,7 +67,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = true;
-			//printf("%d updown\n", msg.id);
+		//	printf("%d updown\n", msg.id);
 			break;
 		}
 		case CS_PLAYER_DOWN_DOWN:
@@ -86,7 +86,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = true;
-			//printf("%d leftdown\n",msg.id);
+		//	printf("%d leftdown\n",msg.id);
 
 			break;
 		}
@@ -96,7 +96,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_RIGHT;
 			msg.isPushed = true;
-			//printf("%d rightdown\n",msg.id);
+		//	printf("%d rightdown\n",msg.id);
 			break;
 		}
 		case CS_PLAYER_UP_UP:
@@ -105,7 +105,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = false;
-			//printf("%d upup\n",msg.id);
+		//	printf("%d upup\n",msg.id);
 
 			break;
 		}
@@ -118,7 +118,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_DOWN;
 			msg.isPushed = false;
-			//printf("%d downup\n",msg.id);
+		//	printf("%d downup\n",msg.id);
 
 			break;
 		}
@@ -131,7 +131,7 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = false;
-			//printf("%d leftup\n",msg.id);
+		//	printf("%d leftup\n",msg.id);
 
 			break;
 		}
@@ -141,6 +141,8 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_RIGHT;
 			msg.isPushed = false;
+		//	printf("%d rightup\n", msg.id);
+
 			break;
 		}
 		case CS_PLAYER_IDLE:
