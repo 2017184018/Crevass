@@ -14,6 +14,12 @@ int tmp2[3] = { -1,-1,-1 };
 string TypeName[3];
 bool IsFall[3] = { false,false,false };
 
+bool BlockCheck(int idx) {
+	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
+		return false;
+	return true;
+}
+
 void Update(vector<Player>& player)
 {
 	float speed = 1.0f; ;
@@ -121,6 +127,29 @@ void Update(vector<Player>& player)
 				}
 			}
 		}
+
+		for (int j = 0; j < 25; ++j) {
+			if (phyPlayers[i].m_pos.y < 30) {
+				g_boundaries[TypeName[i]]->Center.x += saveX;
+				g_boundaries[TypeName[i]]->Center.z += saveZ;
+				if (BlockCheck(j)) {
+					if (g_boundaries["icecube" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
+						player[i].m_pos.x -= saveX;
+						player[i].m_pos.z -= saveZ;
+						g_boundaries[TypeName[i]]->Center.x -= saveX;
+						g_boundaries[TypeName[i]]->Center.z -= saveZ;
+					}
+				}
+				else {
+					if (g_boundaries["snowcube" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
+						player[i].m_pos.x -= saveX;
+						player[i].m_pos.z -= saveZ;
+						g_boundaries[TypeName[i]]->Center.x -= saveX;
+						g_boundaries[TypeName[i]]->Center.z -= saveZ;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -168,11 +197,6 @@ void Hitted_Pos_Update(Player& player, int tyname_num) {
 		}
 	}
 
-}
-bool BlockCheck(int idx) {
-	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
-		return false;
-	return true;
 }
 
 void shake(Block* object, int index) {
@@ -387,8 +411,8 @@ void ProcessClients()
 						}
 						break;
 					case KEY_JUMP:
-
-						phyPlayers[phyMsg.id].is_jump = true;
+						if (phyPlayers[phyMsg.id].m_pos.y > -100)
+							phyPlayers[phyMsg.id].is_jump = true;
 						break;
 					}
 				}
@@ -576,6 +600,7 @@ void ProcessClients()
 					//fall 애니메이션
 				/*	players[i].anim = ANIM_FALL;
 					SendAnim(*players);*/
+					SendFall(i);
 				}
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
 			}

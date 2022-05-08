@@ -9,8 +9,9 @@
 #define SC_POS				5
 #define SC_ANIM				6
 #define SC_HIT				7
-#define SC_GAMEOVER			8
-#define SC_BLOCK			9
+#define SC_FALL				8
+#define SC_GAMEOVER			9
+#define SC_BLOCK			10
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -116,6 +117,12 @@ struct sc_packet_anim
 	short size;
 	char type;
 	Pro_Player players[3];
+};
+struct sc_packet_fall
+{
+	short size;
+	char type;
+	char id;
 };
 
 struct sc_packet_hit {

@@ -215,6 +215,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
+	//for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	//{
+	//}
+
 	{
 		//syncro snowman
 		if (SnowmanIndex[0] % 4) {

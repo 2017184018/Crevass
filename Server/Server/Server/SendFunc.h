@@ -181,6 +181,16 @@ void SendAnim(Pro_Player& players)
 	SendPacket(&packet);
 }
 
+void SendFall(int client)
+{
+	sc_packet_fall packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_FALL;
+	packet.id = client;
+
+	SendPacket(&packet);
+}
+
 void SendRemovePlayerPacket(char client, char leaver)
 {
 	sc_packet_remove_player packet;

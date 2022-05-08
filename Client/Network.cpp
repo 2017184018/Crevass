@@ -259,6 +259,12 @@ void Network::ProcessPacket(char* packet_buffer)
 		break;
 	}
 
+	case SC_FALL:
+		sc_packet_fall packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		g_pFramework->m_pNetwork->IsFall[packet.id] = true;
+		break;
+
 	case SC_REMOVE_PLAYER:
 	{
 		std::cout << "remove player" << std::endl;

@@ -51,6 +51,8 @@ private:
 	int BlockDestructionCnt[25];
 
 	char CharacterType[3];
+
+	bool IsFall[3]{ false,false,false };
 public:
 	GameInfo* m_pGameInfo;
 };
