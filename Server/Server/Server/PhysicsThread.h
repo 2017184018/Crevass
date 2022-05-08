@@ -14,8 +14,8 @@ int tmp2[3] = { -1,-1,-1 };
 string TypeName[3];
 bool IsFall[3] = { false,false,false };
 Block blocks[25];
-
-
+DirectX::XMFLOAT3 temp(0.f,0.f,0.f);
+bool dir_switch[3];
 bool BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
 		return false;
@@ -236,6 +236,29 @@ void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
 		}
 	}
 
+	for (int j = 0; j < 25; ++j) {
+		if (player.m_pos.y < blocks[j].pos.y + 60) {
+			g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
+			g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
+			if (BlockCheck(j)) {
+				if (g_boundaries["icecube" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[tyname_num]])) {
+					player.m_pos.x -= saveX;
+					player.m_pos.z -= saveZ;
+					g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
+					g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
+				}
+			}
+			else {
+				if (g_boundaries["snowcube" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[tyname_num]])) {
+					player.m_pos.x -= saveX;
+					player.m_pos.z -= saveZ;
+					g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
+					g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
+				}
+			}
+		}
+	}
+
 }
 
 void shake(Block* object, int index) {
@@ -356,7 +379,7 @@ void ProcessClients()
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
 		phyPlayers[i].Hit_BB.Radius = g_boundaries[TypeName[i]]->Extents.z / 2;
-
+		
 	}
 
 	using FpFloatMilliseconds = duration<float, milliseconds::period>;
@@ -406,15 +429,40 @@ void ProcessClients()
 					{
 					case DIR_UP:
 						phyPlayers[phyMsg.id].SetKeyW(phyMsg.isPushed);
+						if (!dir_switch) {
+							temp.z = g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.z = g_boundaries[TypeName[phyMsg.id]]->Extents.x;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.x = temp.z;
+							dir_switch[phyMsg.id] = true;
+						}
 						break;
 					case DIR_DOWN:
+						
 						phyPlayers[phyMsg.id].SetKeyS(phyMsg.isPushed);
+						if (dir_switch) {
+							temp.z = g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.z = g_boundaries[TypeName[phyMsg.id]]->Extents.x;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.x = temp.z;
+							dir_switch[phyMsg.id] = false;
+						}
 						break;
 					case DIR_LEFT:
 						phyPlayers[phyMsg.id].SetKeyA(phyMsg.isPushed);
+						if (dir_switch) {
+							temp.z = g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.z = g_boundaries[TypeName[phyMsg.id]]->Extents.x;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.x = temp.z;
+							dir_switch[phyMsg.id] = false;
+						}
 						break;
 					case DIR_RIGHT:
 						phyPlayers[phyMsg.id].SetKeyD(phyMsg.isPushed);
+						if (!dir_switch) {
+							temp.z = g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.z = g_boundaries[TypeName[phyMsg.id]]->Extents.x;
+							g_boundaries[TypeName[phyMsg.id]]->Extents.x = temp.z;
+							dir_switch[phyMsg.id] = true;
+						}
 						break;
 					case KEY_ATTACK:
 						phyPlayers[phyMsg.id].is_attack = true;
