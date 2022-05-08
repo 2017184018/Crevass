@@ -286,6 +286,12 @@ void Receiver(char id)
 			}
 			break;
 		}
+
+		case CS_PLAYER_LOSE:
+		{
+			SendGameOverPacket(id);
+			break;
+		}
 		default:
 			cout << "Packet Type Error! - " << buf[0] << endl;
 			while (true);

@@ -289,7 +289,11 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_gameover packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = false;
-		m_pGameInfo->m_WinnerID = static_cast<int>(packet.id);
+		if (static_cast<int>(packet.id) == 0)
+			m_pGameInfo->m_WinnerID = 1;
+		else
+			m_pGameInfo->m_WinnerID = 0;
+		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
 		break;
 	}
 	default:

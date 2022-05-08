@@ -245,6 +245,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					if (Lifecnt == 0) {
 						//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
 							//서버에 패배 전송
+						g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
 					}
 				}
 			}

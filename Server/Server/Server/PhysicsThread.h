@@ -719,6 +719,7 @@ void ProcessClients()
 			SendAnim(*players);
 			SendPos(*players);
 
+
 			//for (int i = 0; i < numOfCls; ++i)
 			//{
 			//}
