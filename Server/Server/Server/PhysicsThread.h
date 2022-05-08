@@ -13,6 +13,8 @@ float Gravity = 0.1;
 int tmp2[3] = { -1,-1,-1 };
 string TypeName[3];
 bool IsFall[3] = { false,false,false };
+Block blocks[25];
+
 
 bool BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
@@ -129,7 +131,7 @@ void Update(vector<Player>& player)
 		}
 
 		for (int j = 0; j < 25; ++j) {
-			if (phyPlayers[i].m_pos.y < 30) {
+			if (phyPlayers[i].m_pos.y < blocks[j].pos.y + 60) {
 				g_boundaries[TypeName[i]]->Center.x += saveX;
 				g_boundaries[TypeName[i]]->Center.z += saveZ;
 				if (BlockCheck(j)) {
@@ -284,7 +286,6 @@ void ProcessClients()
 		}
 	}
 
-	Block blocks[25];
 	DirectX::XMFLOAT3 tmp[25];
 
 	for (int i = 0; i < 25; ++i) {

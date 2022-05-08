@@ -60,7 +60,7 @@ public:
 
 	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
-	bool IsFall = false;		// 블러링, 높은 물결
+	bool IsFall[3] = { 0, };		// 블러링, 높은 물결
 
 	UINT BlurCnt = 0;
 
@@ -72,7 +72,7 @@ public:
 	int tmp1 = -1;
 	int tmp2 = -1;
 
-	void Fall();
+	void Fall(int num);
 	UINT Lifecnt = 5;
 
 	int FallX, FallZ;

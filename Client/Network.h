@@ -39,6 +39,8 @@ public:
 
 	int GetPlayerAnim(int num)const;
 	char GetCharacterType(int num)const;
+
+	bool GetCharacterFall(int num)const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];

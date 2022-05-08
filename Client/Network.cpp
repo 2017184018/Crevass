@@ -350,3 +350,8 @@ int Network::GetPlayerAnim(int num)const
 char Network::GetCharacterType(int num)const {
 	return CharacterType[num];
 }
+
+bool Network::GetCharacterFall(int num)const
+{
+	return IsFall[num];
+}

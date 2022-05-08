@@ -130,17 +130,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
 				m_Users[i]->is_StartFallAnim = false;
 				break;
-		
+
 			}
-		
+
 		}
-			if(g_pFramework->m_pNetwork->GetPlayerAnim(i) == ANIM_FALL){
-				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
-				m_Users[i]->is_StartFallAnim = true;
-			}
-			else {
-				m_Users[i]->is_StartFallAnim = false;
-			}
+		if (g_pFramework->m_pNetwork->GetPlayerAnim(i) == ANIM_FALL) {
+			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
+			m_Users[i]->is_StartFallAnim = true;
+		}
+		else {
+			m_Users[i]->is_StartFallAnim = false;
+		}
 	}
 
 	for (int i = 0; i < 25; ++i) {
@@ -214,9 +214,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	//for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
-	//{
-	//}
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		if (g_pFramework->m_pNetwork->GetCharacterFall(i) == true)
+		{
+			if (i == m_PlayerID)
+			{
+				m_Users[i]->m_PlayerController->Fall();
+				Fall(i);
+			}
+		}
+	}
 
 	{
 		//syncro snowman
@@ -258,7 +266,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	float r = MathHelper::RandF(0.2f, 0.5f);
 	Core::mWaves->Disturb(i, j, r);
 
-	if (IsFall) {
+
+	if (IsFall[m_PlayerID]) {
 		AppContext->m_RItemsVec[133 + Lifecnt]->m_MaterialIndex = 6;
 		static float time = 0;
 		static int tmpidx = -1;
@@ -266,13 +275,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 		BlurCnt = 3;
 		if (time >= 3) {
 			time = 0;
-			IsFall = false;
+			IsFall[m_PlayerID] = false;
 			BlurCnt = 0;
 			if (Lifecnt > 0) {
 				--Lifecnt;
 				if (Lifecnt == 0) {
-				//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-					//서버에 패배 전송
+					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
+						//서버에 패배 전송
 				}
 			}
 			tmpidx = -1;
@@ -291,6 +300,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			Core::mWaves->Disturb(FallZ, FallX, 4);
 		}
 	}
+
 	// Update the wave simulation.
 	Core::mWaves->Update(fDeltaTime);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);
@@ -387,7 +397,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 		else {
 			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y >= 50 &&
-				m_Users[m_PlayerID]->bJump == false && !IsFall) {
+				m_Users[m_PlayerID]->bJump == false && !IsFall[m_PlayerID]) {
 				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
 					AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
 			}
@@ -409,22 +419,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 	}
-
-
-	static bool one = true;
-	//if (m_Users[m_PlayerID]->GetPosition().y <= -100) {
-	if (GetAsyncKeyState('1') & 0x8000) {
-		//	m_Users[m_PlayerID]->Move(DIR_UP, speed, true);
-		if (one) {
-			Fall();
-			m_Users[m_PlayerID]->m_PlayerController->Fall();
-			one = false;
-		}
-	}
-	else {
-		one = true;
-	}
-
 }
 
 void GameplayScene::Render()
@@ -521,10 +515,10 @@ bool GameplayScene::BlockCheck(int idx) {
 	return true;
 }
 
-void GameplayScene::Fall() {
-	if (!IsFall) {
+void GameplayScene::Fall(int num) {
+	if (!IsFall[num]) {
 		FallX = round(m_Users[m_PlayerID]->GetPosition().x * 119 / 1300 + 699.0 / 26.0);
 		FallZ = round(m_Users[m_PlayerID]->GetPosition().z * -119 / 1300 + 2603.0 / 26.0);
-		IsFall = true;
+		IsFall[num] = true;
 	}
 }
