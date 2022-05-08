@@ -681,7 +681,6 @@ void Character::Scale(float x, float y, float z)
 
 void Character::pushed_back(float up, float back,float speed,float hit_angle)
 {
-	cout << GetPosition().y << endl;
 	
 	if (hit_angle == 0) {
 		float temp = GetPosition().z + back;

@@ -464,7 +464,7 @@ void ProcessClients()
 
 					}
 
-					SendPos(*players);
+				//	SendPos(*players);
 					SendAnim(*players);
 				}
 				//else if (phyMsg.type == TYPE_ANIMATION)
