@@ -140,6 +140,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
 				m_Users[i]->is_StartFallAnim = true;
 			}
+			cout <<i<<" ===== " << m_Users[i]->is_StartFallAnim << endl;
 	}
 
 	for (int i = 0; i < 25; ++i) {
