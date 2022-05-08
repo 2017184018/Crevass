@@ -83,7 +83,7 @@ void Update(vector<Player>& player)
 
 		else {
 			//위
-			
+
 			if (static_cast<int>(player[i].hitted_dir) == 0) {
 				player[i].m_pos.z += speed;
 				player[i].dir = DIR_DOWN;
@@ -124,50 +124,50 @@ void Update(vector<Player>& player)
 	}
 }
 
-void Hitted_Pos_Update(Player& player,int tyname_num) {
+void Hitted_Pos_Update(Player& player, int tyname_num) {
 	float speed = 1.0f; ;
 	float crossspeed = sqrt(2) / 2;
-		float saveX = 0;
-		float saveZ = 0;
-			//위
-			if (static_cast<int>(player.hitted_dir) == 0) {
-				player.m_pos.z += speed;
-				player.dir = DIR_DOWN;
-				saveZ = speed;
-			}
-			else if (static_cast<int>(player.hitted_dir) == 2)
-			{
-				player.m_pos.x += speed;
-				player.dir = DIR_LEFT;
-				saveZ = speed;
-			}
-			else if (static_cast<int>(player.hitted_dir) == 4)
-			{
-				player.m_pos.z -= speed;
-				player.dir = DIR_UP;
-				saveZ = speed;
-			}
-			else if (static_cast<int>(player.hitted_dir) == 6)
-			{
-				player.m_pos.x -= speed;
-				player.dir = DIR_RIGHT;
-				saveZ = speed;
-			}
-		
-		for (int j = 0; j < numOfCls; ++j) {
-			if (tyname_num != j) {
-				g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
-				g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
-				if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
-					
-					player.m_pos.x -= saveX;
-					player.m_pos.z -= saveZ;
-					g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
-					g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
-				}
+	float saveX = 0;
+	float saveZ = 0;
+	//위
+	if (static_cast<int>(player.hitted_dir) == 0) {
+		player.m_pos.z += speed;
+		player.dir = DIR_DOWN;
+		saveZ = speed;
+	}
+	else if (static_cast<int>(player.hitted_dir) == 2)
+	{
+		player.m_pos.x += speed;
+		player.dir = DIR_LEFT;
+		saveZ = speed;
+	}
+	else if (static_cast<int>(player.hitted_dir) == 4)
+	{
+		player.m_pos.z -= speed;
+		player.dir = DIR_UP;
+		saveZ = speed;
+	}
+	else if (static_cast<int>(player.hitted_dir) == 6)
+	{
+		player.m_pos.x -= speed;
+		player.dir = DIR_RIGHT;
+		saveZ = speed;
+	}
+
+	for (int j = 0; j < numOfCls; ++j) {
+		if (tyname_num != j) {
+			g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
+			g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
+			if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
+
+				player.m_pos.x -= saveX;
+				player.m_pos.z -= saveZ;
+				g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
+				g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
 			}
 		}
-	
+	}
+
 }
 bool BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
@@ -289,7 +289,7 @@ void ProcessClients()
 		phyPlayers.emplace_back(Player());
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
-		phyPlayers[i].Hit_BB.Radius = g_boundaries[TypeName[i]]->Extents.z/2;
+		phyPlayers[i].Hit_BB.Radius = g_boundaries[TypeName[i]]->Extents.z / 2;
 
 	}
 
@@ -429,7 +429,7 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
-						cout << static_cast<int>(players[i].dir) << endl;
+					//	cout << static_cast<int>(players[i].dir) << endl;
 						players[i].anim = phyPlayers[i].GetAnimType();
 
 						g_boundaries[TypeName[i]]->Center = players[i].pos;
@@ -481,7 +481,7 @@ void ProcessClients()
 					if (phyPlayers[i].JumpTimeCount > 60.0f)
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
-						phyPlayers[i].is_jump = false;
+						//phyPlayers[i].is_jump = false;
 						//phyPlayers[i].is_jump = false;
 						/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
 							{
@@ -554,7 +554,7 @@ void ProcessClients()
 						}
 					}
 					else {
-						if (phyPlayers[i].m_pos.y += phyPlayers[i].gravity - blocks[tmp2[i]].pos.y >= 50 &&
+						if (phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y >= 50 &&
 							phyPlayers[i].is_jump == false && !IsFall[i]) {
 							phyPlayers[i].m_pos.y = blocks[tmp2[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
@@ -573,6 +573,7 @@ void ProcessClients()
 				/*	players[i].anim = ANIM_FALL;
 					SendAnim(*players);*/
 				}
+				g_boundaries[TypeName[i]]->Center = players[i].pos;
 			}
 			SendPos(*players);
 
@@ -599,6 +600,7 @@ void ProcessClients()
 						}
 					}
 					else {
+						g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
 						if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
 							tmp2[j] = i;
 							phyPlayers[j].gravity = 0.0f;
@@ -617,13 +619,15 @@ void ProcessClients()
 			}
 			SendBlockPacket(*blocks);
 
-			//for (int i = 0; i < numOfCls; ++i)
-			//{
-			//	if (phyPlayers[i].is_jump == true)
-			//	{
-			//		phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
-			//	}
-			//}
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
+				if (phyPlayers[i].is_jump == true)
+				{
+					phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
+					g_boundaries[TypeName[i]]->Center = players[i].pos;
+				}
+			}
 			Update(phyPlayers);
 
 			for (int i = 0; i < numOfCls; ++i)
