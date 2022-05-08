@@ -2,6 +2,12 @@
 #include "pch.h"
 #include "Global.h"
 #include <string>
+#include <random>
+
+random_device rd;
+default_random_engine dre(rd());
+uniform_int_distribution<> uid{ 0,2 };
+
 
 bool IsRight[25];
 UINT ShakeCnt[25];
@@ -686,9 +692,9 @@ void ProcessClients()
 						phyPlayers[i].is_reset = false;
 						phyPlayers[i].ResetTimeCount = 0.0f;
 
-						phyPlayers[i].m_pos.x = (i+1) * (400.0f);
+						phyPlayers[i].m_pos.x = uid(dre)*400;
 						phyPlayers[i].m_pos.y = 100.0f;
-						phyPlayers[i].m_pos.z = 0.0f;
+						phyPlayers[i].m_pos.z = uid(dre)*400;
 						phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[TypeName[i]]->Center = players[i].pos;
 						if (TypeName[i] == "Penguin") {
