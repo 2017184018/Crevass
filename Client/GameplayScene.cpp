@@ -126,6 +126,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			case ANIM_JUMP:
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
 				break;
+			case ANIM_FALL:
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
 			}
 		
 		}

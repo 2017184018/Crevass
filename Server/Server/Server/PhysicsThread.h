@@ -323,8 +323,8 @@ void ProcessClients()
 
 
 
-			float  speed = 1.0f; 
-			speed += Gravity;			//점프 하면 중력 0.1로 최고점에서 닿은 순간부터 중력에 0.05씩 더하기
+			//float  speed = 1.0f; 
+			//speed += Gravity;			//점프 하면 중력 0.1로 최고점에서 닿은 순간부터 중력에 0.05씩 더하기
 
 
 
@@ -481,6 +481,14 @@ void ProcessClients()
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
 						phyPlayers[i].is_jump = false;
+						//phyPlayers[i].is_jump = false;
+						/*	if (phyPlayers[i].GetKeyA() || phyPlayers[i].GetKeyW() || phyPlayers[i].GetKeyS() || phyPlayers[i].GetKeyD())
+							{
+								players[i].anim = ANIM_MOVE;
+							}
+							else {
+								players[i].anim = ANIM_IDLE;
+							}*/
 						players[i].anim = phyPlayers[i].GetAnimType();
 						SendAnim(*players);
 					}
@@ -520,11 +528,17 @@ void ProcessClients()
 					players[phyMsg.id].anim = phyPlayers[phyMsg.id].GetAnimType();
 					SendAnim(*players);
 				}*/
-
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (tmp1[i] == -1 && tmp2[i] == -1)
+				{
+					phyPlayers[i].gravity -= 0.02f;
+				}
+			}
 
 			for (int i = 0; i < numOfCls; ++i) {
 				if (tmp1[i] == -1 && tmp2[i] == -1) {
-					phyPlayers[i].m_pos.y -= speed;
+					phyPlayers[i].m_pos.y += phyPlayers[i].gravity;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
 				}
 				else {
@@ -534,18 +548,18 @@ void ProcessClients()
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
 						else {
-							phyPlayers[i].m_pos.y -= speed;
+							phyPlayers[i].m_pos.y += phyPlayers[i].gravity;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
 					}
 					else {
-						if (phyPlayers[i].m_pos.y -= speed - blocks[tmp2[i]].pos.y >= 50 &&
+						if (phyPlayers[i].m_pos.y += phyPlayers[i].gravity - blocks[tmp2[i]].pos.y >= 50 &&
 							phyPlayers[i].is_jump == false && !IsFall[i]) {
 							phyPlayers[i].m_pos.y = blocks[tmp2[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
 						else {
-							phyPlayers[i].m_pos.y -= speed;
+							phyPlayers[i].m_pos.y += phyPlayers[i].gravity;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
 					}
@@ -555,6 +569,8 @@ void ProcessClients()
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
 					//fall 애니메이션
+					players[i].anim = ANIM_FALL;
+					SendAnim(*players);
 				}
 			}
 			SendPos(*players);
@@ -566,6 +582,8 @@ void ProcessClients()
 						g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
 						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
 							tmp1[j] = i;
+							phyPlayers[j].gravity = 0.0f;
+							phyPlayers[j].is_jump = false;
 							if (!BlockIn) {
 								IsShake[i] = true;
 								IsDown[i] = true;
@@ -574,27 +592,48 @@ void ProcessClients()
 						}
 						if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
 							BlockIn = false;
-							if (!phyPlayers[j].is_jump)
-								Gravity += 0.05;
+							//if (!phyPlayers[j].is_jump)
+							//	Gravity += 0.05;
 							tmp1[j] = -1;
 						}
 					}
 					else {
 						if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
 							tmp2[j] = i;
+							phyPlayers[j].gravity = 0.0f;
+							phyPlayers[j].is_jump = false;
 							IsShake[i] = true;
 							IsDown[i] = true;
 						}
 						if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]]))) {  // or 물에 떨어지면
 							IsDown[tmp2[j]] = false;
-							if (!phyPlayers[j].is_jump)
-								Gravity += 0.05;
+							//if (!phyPlayers[j].is_jump)
+							//	Gravity += 0.05;
 							tmp2[j] = -1;
 						}
 					}
 				}
 			}
 			SendBlockPacket(*blocks);
+
+			//for (int i = 0; i < numOfCls; ++i)
+			//{
+			//	if (phyPlayers[i].is_jump == true)
+			//	{
+			//		phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
+			//	}
+			//}
+			Update(phyPlayers);
+
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				players[i].pos = phyPlayers[i].m_pos;
+			}
+			SendPos(*players);
+
+			//for (int i = 0; i < numOfCls; ++i)
+			//{
+			//}
 			//fpsTimer = steady_clock::now();
 			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
 			elapsedTime = 0;

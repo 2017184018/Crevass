@@ -38,6 +38,8 @@ public:
 	bool is_hitted = false;
 	float hittedTimeCount = 0.0f;
 
+	float gravity = 0.0f;
+
 public:
 	char dir = 0;
 	char anim = 0;

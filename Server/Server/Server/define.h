@@ -21,4 +21,6 @@
 
 #define MAXPLAYER		3
 
+#define JUMP_POWER		0.1
+
 #define FPS				30
