@@ -191,6 +191,14 @@ void SendFall(int client)
 	SendPacket(&packet);
 }
 
+void SendReset(int client)
+{
+	sc_packet_reset packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_RESET;
+	packet.id = client;
+}
+
 void SendRemovePlayerPacket(char client, char leaver)
 {
 	sc_packet_remove_player packet;

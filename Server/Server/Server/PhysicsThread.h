@@ -226,7 +226,6 @@ void Hitted_Pos_Update(Player& player, int tyname_num) {
 			}
 		}
 	}
-
 }
 
 void shake(Block* object, int index) {
@@ -585,7 +584,7 @@ void ProcessClients()
 				}
 				else {
 					if (tmp1[i] != -1) {
-						if (phyPlayers[i].m_pos.y > 10 && phyPlayers[i].is_jump == false && blocks[tmp1[i]].destuctioncnt != 3) {
+						if (phyPlayers[i].m_pos.y > 10 && phyPlayers[i].is_jump == false && blocks[tmp1[i]].destuctioncnt != 3 && phyPlayers[i].m_pos.y <= 30) {   //점프 이상하면 마지막 조건 지우기
 							phyPlayers[i].m_pos.y = blocks[tmp1[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
@@ -596,11 +595,13 @@ void ProcessClients()
 					}
 					else {
 						if (phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y >= 50 &&
-							phyPlayers[i].is_jump == false && !IsFall[i]) {
+							phyPlayers[i].is_jump == false && !IsFall[i]  && phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y <=70)
+						{//점프 이상하면 마지막 조건 지우기
 							phyPlayers[i].m_pos.y = blocks[tmp2[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
-						else {
+						else 
+						{
 							phyPlayers[i].m_pos.y += phyPlayers[i].gravity;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
@@ -614,9 +615,44 @@ void ProcessClients()
 				/*	players[i].anim = ANIM_FALL;
 					SendAnim(*players);*/
 					SendFall(i);
+					phyPlayers[i].is_reset = true;
 				}
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
 			}
+
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (phyPlayers[i].is_reset == true)
+				{
+					phyPlayers[i].ResetTimeCount += 1;
+					if (phyPlayers[i].ResetTimeCount > 180.0f)
+					{
+						phyPlayers[i].is_reset = false;
+						phyPlayers[i].ResetTimeCount = 0.0f;
+
+						phyPlayers[i].m_pos.x = (i+1) * (400.0f);
+						phyPlayers[i].m_pos.y = 100.0f;
+						phyPlayers[i].m_pos.z = 0.0f;
+						phyPlayers[i].anim = ANIM_IDLE;
+						g_boundaries[TypeName[i]]->Center = players[i].pos;
+						SendReset(i);
+					}
+				}
+			}
+			Update(phyPlayers);
+			
+
+
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				players[i].pos = phyPlayers[i].m_pos;
+				players[i].anim = phyPlayers[i].anim;
+
+			}
+
+			SendPos(*players);
+			SendAnim(*players);
+
 
 			UpdateBlock(blocks);
 			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
@@ -624,7 +660,7 @@ void ProcessClients()
 					if (BlockCheck(i)) {
 						if (blocks[i].destuctioncnt != 3)
 							g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
-						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
+						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) ) {
 							tmp1[j] = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;

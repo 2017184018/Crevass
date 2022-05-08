@@ -10,8 +10,9 @@
 #define SC_ANIM				6
 #define SC_HIT				7
 #define SC_FALL				8
-#define SC_GAMEOVER			9
-#define SC_BLOCK			10
+#define SC_RESET			10
+#define SC_GAMEOVER			11
+#define SC_BLOCK			12
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -125,6 +126,12 @@ struct sc_packet_fall
 	char id;
 };
 
+struct sc_packet_reset
+{
+	short size;
+	char type;
+	char id;
+};
 struct sc_packet_hit {
 	short size;
 	char type;

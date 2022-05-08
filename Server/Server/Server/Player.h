@@ -39,6 +39,8 @@ public:
 	float hittedTimeCount = 0.0f;
 
 	float gravity = 0.0f;
+	bool is_reset = false;
+	float ResetTimeCount = 0.0f;
 
 public:
 	char dir = 0;

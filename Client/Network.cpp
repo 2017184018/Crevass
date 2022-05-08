@@ -260,10 +260,21 @@ void Network::ProcessPacket(char* packet_buffer)
 	}
 
 	case SC_FALL:
+	{
 		sc_packet_fall packet;
 		memcpy(&packet, ptr, sizeof(packet));
-		g_pFramework->m_pNetwork->IsFall[packet.id] = true;
+		IsFall[packet.id] = true;
+		cout << "fall" << endl;
 		break;
+	}
+
+	case SC_RESET:
+	{
+		sc_packet_reset packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		isReset[packet.id] = true;
+		break;
+	}
 
 	case SC_REMOVE_PLAYER:
 	{
@@ -354,4 +365,14 @@ char Network::GetCharacterType(int num)const {
 bool Network::GetCharacterFall(int num)const
 {
 	return IsFall[num];
+}
+
+bool Network::GetCharacterReset(int num)const
+{
+	return isReset[num];
+}
+
+void Network::SetCharacterReset(int num)
+{
+	isReset[num] = false;
 }

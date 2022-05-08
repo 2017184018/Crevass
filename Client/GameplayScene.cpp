@@ -226,6 +226,24 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		if (g_pFramework->m_pNetwork->GetCharacterReset(i) == true)
+		{
+			//m_Users[m_PlayerID]->is_fall = false;
+			BlurCnt = 0;
+			g_pFramework->m_pNetwork->SetCharacterReset(i);
+			IsFall[m_PlayerID] = false;
+			if (Lifecnt > 0) {
+				--Lifecnt;
+				if (Lifecnt == 0) {
+					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
+						//서버에 패배 전송
+				}
+			}
+		}
+	}
+
 	{
 		//syncro snowman
 		if (SnowmanIndex[0] % 4) {
@@ -275,21 +293,21 @@ void GameplayScene::Update(const float& fDeltaTime)
 		BlurCnt = 3;
 		if (time >= 3) {
 			time = 0;
-			IsFall[m_PlayerID] = false;
-			BlurCnt = 0;
-			if (Lifecnt > 0) {
-				--Lifecnt;
-				if (Lifecnt == 0) {
-					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-						//서버에 패배 전송
-				}
-			}
+			//IsFall[m_PlayerID] = false;
+			//BlurCnt = 0;
+			//if (Lifecnt > 0) {
+			//	--Lifecnt;
+			//	if (Lifecnt == 0) {
+			//		//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
+			//			//서버에 패배 전송
+			//	}
+			//}
 			tmpidx = -1;
 		}
 		else if (time >= 2.9) {
-			m_Users[m_PlayerID]->is_fall = false;
-			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
-			Gravity = 0.01;
+//			m_Users[m_PlayerID]->is_fall = false;
+//			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
+	//		Gravity = 0.01;
 		}
 		else if (time < 0.03) {
 			if (FallZ < 4) FallZ = 4;
