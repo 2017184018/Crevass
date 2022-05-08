@@ -260,10 +260,20 @@ void Network::ProcessPacket(char* packet_buffer)
 	}
 
 	case SC_FALL:
+	{
 		sc_packet_fall packet;
 		memcpy(&packet, ptr, sizeof(packet));
-		g_pFramework->m_pNetwork->IsFall[packet.id] = true;
+		IsFall[packet.id] = true;
 		break;
+	}
+
+	case SC_RESET:
+	{
+		sc_packet_reset packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		isReset[packet.id] = true;
+		break;
+	}
 
 	case SC_REMOVE_PLAYER:
 	{
@@ -279,7 +289,16 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_gameover packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = false;
-		m_pGameInfo->m_WinnerID = static_cast<int>(packet.id);
+		if (static_cast<int>(packet.id) == 0)
+			m_pGameInfo->m_WinnerID = 1;
+		else
+			m_pGameInfo->m_WinnerID = 0;
+		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
+		if(m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
+		MessageBox(nullptr,L"You Win", L"Game Over!", MB_OK);
+		else if(m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
+		MessageBox(nullptr, L"You Loss", L"Game Over!", MB_OK);
+
 		break;
 	}
 	default:
@@ -354,4 +373,21 @@ char Network::GetCharacterType(int num)const {
 bool Network::GetCharacterFall(int num)const
 {
 	return IsFall[num];
+}
+
+void Network::SetCharacterFall(int num)
+{
+	IsFall[num] = false;
+	cout << num << endl;
+
+}
+
+bool Network::GetCharacterReset(int num)const
+{
+	return isReset[num];
+}
+
+void Network::SetCharacterReset(int num)
+{
+	isReset[num] = false;
 }

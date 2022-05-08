@@ -72,14 +72,16 @@ char Player::GetAnimType()
 	if( is_jump ){
 		return ANIM_JUMP;
 	}
-	if( m_keyW )
+	if (m_keyW)
 		return ANIM_MOVE;
-	else if( m_keyS )
+	else if (m_keyS)
 		return ANIM_MOVE;
-	else if( m_keyA || (m_keyA && m_keyW) || (m_keyA && m_keyS) )
+	else if (m_keyA || (m_keyA && m_keyW) || (m_keyA && m_keyS))
 		return ANIM_MOVE;
-	else if( m_keyD || (m_keyD && m_keyW) || (m_keyD && m_keyS) )
+	else if (m_keyD || (m_keyD && m_keyW) || (m_keyD && m_keyS))
 		return ANIM_MOVE;
+	else if (ResetTimeCount > 180.0f)
+		return  ANIM_IDLE;
 	else
 		return ANIM_IDLE;
 }

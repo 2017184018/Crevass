@@ -366,3 +366,8 @@ void PlayerController::Fall() {
 	CommandCenter::GetApp()->m_StartFallAnim = true;
 	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Fall), m_Owner);
 }
+
+void PlayerController::SetIsFall()
+{
+	m_Owner->is_fall = false;
+}

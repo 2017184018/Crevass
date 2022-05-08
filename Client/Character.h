@@ -96,6 +96,7 @@ public:
 	virtual void Rotate(float pitch, float yaw, float roll);
 
 
+
 	virtual void Scale(float x, float y, float z) override;
 	void pushed_back(float up, float back, float speed,float hit_angle);
 	void SetAnimationKeyState(PlayerState keyState);

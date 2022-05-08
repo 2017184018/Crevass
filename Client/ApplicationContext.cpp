@@ -348,7 +348,7 @@ void ApplicationContext::CreateBackground()
 		chr->m_MaterialIndex = matidx;
 		chr->m_SkinnedCBIndex = bonidx;
 		chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
-		chr->m_IsVisible = true;
+		chr->m_IsVisible = false;
 		// 임시 스폰위치 지정
 		//chr->m_SpawnLoaction = skinnedCBIndex;
 		int XPos, ZPos;

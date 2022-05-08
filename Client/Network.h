@@ -41,6 +41,10 @@ public:
 	char GetCharacterType(int num)const;
 
 	bool GetCharacterFall(int num)const;
+	void SetCharacterFall(int num);
+
+	bool GetCharacterReset(int num)const;
+	void SetCharacterReset(int num);
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];
@@ -55,6 +59,7 @@ private:
 	char CharacterType[3];
 
 	bool IsFall[3]{ false,false,false };
+	bool isReset[3]{ false, false, false };
 public:
 	GameInfo* m_pGameInfo;
 };
