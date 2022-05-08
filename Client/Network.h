@@ -41,6 +41,7 @@ public:
 	char GetCharacterType(int num)const;
 
 	bool GetCharacterFall(int num)const;
+	void SetCharacterFall(int num);
 
 	bool GetCharacterReset(int num)const;
 	void SetCharacterReset(int num);

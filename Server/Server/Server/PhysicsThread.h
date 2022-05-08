@@ -607,7 +607,8 @@ void ProcessClients()
 						}
 					}
 				}
-				if (phyPlayers[i].m_pos.y < -100) {
+				if (phyPlayers[i].m_pos.y < -100)
+				{
 					IsFall[i] = true;
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;

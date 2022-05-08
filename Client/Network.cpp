@@ -264,7 +264,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_fall packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		IsFall[packet.id] = true;
-		cout << "fall" << endl;
 		break;
 	}
 
@@ -365,6 +364,13 @@ char Network::GetCharacterType(int num)const {
 bool Network::GetCharacterFall(int num)const
 {
 	return IsFall[num];
+}
+
+void Network::SetCharacterFall(int num)
+{
+	IsFall[num] = false;
+	cout << num << endl;
+
 }
 
 bool Network::GetCharacterReset(int num)const

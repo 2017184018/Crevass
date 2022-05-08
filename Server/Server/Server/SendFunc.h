@@ -197,6 +197,8 @@ void SendReset(int client)
 	packet.size = sizeof(packet);
 	packet.type = SC_RESET;
 	packet.id = client;
+
+	SendPacket(&packet);
 }
 
 void SendRemovePlayerPacket(char client, char leaver)

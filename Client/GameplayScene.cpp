@@ -222,6 +222,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			{
 				m_Users[i]->m_PlayerController->Fall();
 				Fall(i);
+				//cout << "fall" << endl;
 			}
 		}
 	}
@@ -231,14 +232,20 @@ void GameplayScene::Update(const float& fDeltaTime)
 		if (g_pFramework->m_pNetwork->GetCharacterReset(i) == true)
 		{
 			//m_Users[m_PlayerID]->is_fall = false;
-			BlurCnt = 0;
+			//cout << "reset" << endl;
 			g_pFramework->m_pNetwork->SetCharacterReset(i);
-			IsFall[m_PlayerID] = false;
-			if (Lifecnt > 0) {
-				--Lifecnt;
-				if (Lifecnt == 0) {
-					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-						//서버에 패배 전송
+			g_pFramework->m_pNetwork->SetCharacterFall(i);
+			if (i == m_PlayerID)
+			{
+				m_Users[i]->m_PlayerController->SetIsFall();
+				BlurCnt = 0;
+				IsFall[m_PlayerID] = false;
+				if (Lifecnt > 0) {
+					--Lifecnt;
+					if (Lifecnt == 0) {
+						//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
+							//서버에 패배 전송
+					}
 				}
 			}
 		}
