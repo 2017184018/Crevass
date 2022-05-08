@@ -184,6 +184,34 @@ void Hitted_Pos_Update(Player& player, int tyname_num) {
 		player.dir = DIR_RIGHT;
 		saveZ = speed;
 	}
+	else if (static_cast<int>(player.hitted_dir) == 1)
+	{
+		player.m_pos.x += crossspeed;
+		player.m_pos.z += crossspeed;
+		player.dir = DIR_DOWN_LEFT;
+		saveZ = speed;
+	}
+	else if (static_cast<int>(player.hitted_dir) == 3)
+	{
+		player.m_pos.x += crossspeed;
+		player.m_pos.z -= crossspeed;
+		player.dir = DIR_UP_LEFT;
+		saveZ = speed;
+	}
+	else if (static_cast<int>(player.hitted_dir) == 5)
+	{
+		player.m_pos.x -= crossspeed;
+		player.m_pos.z -= crossspeed;
+		player.dir = DIR_UP_RIGHT;
+		saveZ = speed;
+	}
+	else if (static_cast<int>(player.hitted_dir) == 7)
+	{
+		player.m_pos.x -= crossspeed;
+		player.m_pos.z += crossspeed;
+		player.dir = DIR_DOWN_RIGHT;
+		saveZ = speed;
+	}
 
 	for (int j = 0; j < numOfCls; ++j) {
 		if (tyname_num != j) {
@@ -397,6 +425,29 @@ void ProcessClients()
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 6)
 						{
 							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[TypeName[phyMsg.id]]->Extents.z;
+						}
+						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 1)
+						{
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[TypeName[phyMsg.id]]->Extents.z*cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
+						}
+						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 3)
+						{
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
+
+						}
+						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 5)
+						{
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
+
+						}
+						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 7)
+						{
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
+
 						}
 
 						for (int i = 0; i < numOfCls; i++) {
