@@ -297,7 +297,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		if(m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
 		MessageBox(nullptr,L"You Win", L"Game Over!", MB_OK);
 		else if(m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
-		MessageBox(nullptr, L"You Loss", L"Game Over!", MB_OK);
+		MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
 
 		break;
 	}

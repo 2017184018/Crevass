@@ -669,9 +669,6 @@ void ProcessClients()
 					IsFall[i] = true;
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
-					//fall 애니메이션
-				/*	players[i].anim = ANIM_FALL;
-					SendAnim(*players);*/
 					SendFall(i);
 					phyPlayers[i].is_reset = true;
 				}
@@ -697,6 +694,7 @@ void ProcessClients()
 						phyPlayers[i].is_jump = false;
 						phyPlayers[i].is_hitted = false;
 						phyPlayers[i].is_attack = false;
+
 						phyPlayers[i].m_pos.x = uid(dre)*400;
 						phyPlayers[i].m_pos.y = 100.0f;
 						phyPlayers[i].m_pos.z = uid(dre)*400;
@@ -716,15 +714,7 @@ void ProcessClients()
 			
 
 
-			for (int i = 0; i < numOfCls; ++i)
-			{
-				players[i].pos = phyPlayers[i].m_pos;
-				players[i].anim = phyPlayers[i].anim;
-
-			}
-
-			SendPos(*players);
-			SendAnim(*players);
+		
 
 
 			UpdateBlock(blocks);
@@ -797,9 +787,9 @@ void ProcessClients()
 					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
 				}
 			}
-			
-			SendAnim(*players);
+		
 			SendPos(*players);
+			SendAnim(*players);
 
 
 			//for (int i = 0; i < numOfCls; ++i)
