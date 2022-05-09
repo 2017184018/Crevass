@@ -20,7 +20,7 @@ int tmp2[3] = { -1,-1,-1 };
 string TypeName[3];
 bool IsFall[3] = { false,false,false };
 Block blocks[25];
-DirectX::XMFLOAT3 temp(0.f,0.f,0.f);
+DirectX::XMFLOAT3 temp(0.f, 0.f, 0.f);
 bool dir_switch[3];
 bool BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
@@ -30,9 +30,9 @@ bool BlockCheck(int idx) {
 
 void Update(vector<Player>& player)
 {
-	float speed = 1.0f; ;
+	float speed = 1.0f * 1.5f ;
 	//float crossspeed = sqrt(2) / 2;
-	float crossspeed = cos(45);
+	float crossspeed = cos(45) *1.5f;
 	for (int i = 0; i < numOfCls; ++i)
 	{
 		float saveX = 0;
@@ -164,15 +164,15 @@ void Update(vector<Player>& player)
 }
 
 void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
-	
-	
-	float speed = 1.0f; 
-	float crossspeed = sqrt(2) / 2;
+
+
+	float speed = 1.0f *1.5f;
+	float crossspeed = cos(45)*1.5f;
 	float saveX = 0;
 	float saveZ = 0;
 	//위
 	if (static_cast<int>(player.hitted_dir) == 0) {
-		player.m_pos.z += speed* HITTED_POWER;
+		player.m_pos.z += speed * HITTED_POWER;
 		player.dir = DIR_DOWN;
 		saveZ = speed * HITTED_POWER;
 	}
@@ -386,7 +386,7 @@ void ProcessClients()
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
 		phyPlayers[i].Hit_BB.Radius = g_boundaries[TypeName[i]]->Extents.z / 2;
-		
+
 	}
 
 	using FpFloatMilliseconds = duration<float, milliseconds::period>;
@@ -444,7 +444,7 @@ void ProcessClients()
 						}
 						break;
 					case DIR_DOWN:
-						
+
 						phyPlayers[phyMsg.id].SetKeyS(phyMsg.isPushed);
 						if (dir_switch) {
 							temp.z = g_boundaries[TypeName[phyMsg.id]]->Extents.z;
@@ -492,7 +492,7 @@ void ProcessClients()
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 1)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[TypeName[phyMsg.id]]->Extents.z*cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
 							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[TypeName[phyMsg.id]]->Extents.z * cos(45);
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 3)
@@ -534,32 +534,32 @@ void ProcessClients()
 					}
 				}
 
-				Update(phyPlayers);
+				//Update(phyPlayers);
 
-				if (phyMsg.type == TYPE_PLAYER)
-				{
-					for (int i = 0; i < numOfCls; ++i)
-					{
-						players[i].id = i;
-						players[i].pos.x = phyPlayers[i].m_pos.x;
-						players[i].pos.y = phyPlayers[i].m_pos.y;
-						players[i].pos.z = phyPlayers[i].m_pos.z;
-						players[i].dir = phyPlayers[i].dir;
-						players[i].anim = phyPlayers[i].GetAnimType();
+				//if (phyMsg.type == TYPE_PLAYER)
+				//{
+				//	for (int i = 0; i < numOfCls; ++i)
+				//	{
+				//		players[i].id = i;
+				//		players[i].pos.x = phyPlayers[i].m_pos.x;
+				//		players[i].pos.y = phyPlayers[i].m_pos.y;
+				//		players[i].pos.z = phyPlayers[i].m_pos.z;
+				//		players[i].dir = phyPlayers[i].dir;
+				//		players[i].anim = phyPlayers[i].GetAnimType();
 
-						g_boundaries[TypeName[i]]->Center = players[i].pos;
-						//임시방편
-						if (TypeName[i] == "Penguin") {
-							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-						}
-						else {
-							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-						}
+				//		g_boundaries[TypeName[i]]->Center = players[i].pos;
+				//		//임시방편
+				//		if (TypeName[i] == "Penguin") {
+				//			g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+				//		}
+				//		else {
+				//			g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+				//		}
 
-					}
-				//	SendPos(*players);
-					SendAnim(*players);
-				}
+				//	}
+				//	//	SendPos(*players);
+				//	SendAnim(*players);
+				//}
 			}
 
 
@@ -608,8 +608,8 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
-						SendPos(*players);
-					    
+						//SendPos(*players);
+
 					}
 				}
 
@@ -652,12 +652,12 @@ void ProcessClients()
 					}
 					else {
 						if (phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y >= 50 &&
-							phyPlayers[i].is_jump == false && !IsFall[i]  && phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y <=70)
+							phyPlayers[i].is_jump == false && !IsFall[i] && phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y <= 70)
 						{//점프 이상하면 마지막 조건 지우기
 							phyPlayers[i].m_pos.y = blocks[tmp2[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
-						else 
+						else
 						{
 							phyPlayers[i].m_pos.y += phyPlayers[i].gravity;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
@@ -673,7 +673,7 @@ void ProcessClients()
 					phyPlayers[i].is_reset = true;
 				}
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
-				if(TypeName[i] =="Penguin"){
+				if (TypeName[i] == "Penguin") {
 					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
 				}
 				else {
@@ -694,10 +694,16 @@ void ProcessClients()
 						phyPlayers[i].is_jump = false;
 						phyPlayers[i].is_hitted = false;
 						phyPlayers[i].is_attack = false;
-
-						phyPlayers[i].m_pos.x = uid(dre)*400;
+						int BlockTmpX;
+						int BlockTmpZ;
+						do {
+							BlockTmpX = uid(dre);
+							BlockTmpZ = uid(dre);
+						} while (blocks[BlockTmpX * 10 + BlockTmpZ * 2].pos.y < -50);
+						phyPlayers[i].m_pos.x = BlockTmpX * 400;
 						phyPlayers[i].m_pos.y = 100.0f;
-						phyPlayers[i].m_pos.z = uid(dre)*400;
+						phyPlayers[i].m_pos.z = BlockTmpZ * 400;
+
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[TypeName[i]]->Center = phyPlayers[i].m_pos;
 						if (TypeName[i] == "Penguin") {
@@ -711,7 +717,7 @@ void ProcessClients()
 				}
 			}
 			Update(phyPlayers);
-			
+
 
 
 		
@@ -723,7 +729,7 @@ void ProcessClients()
 					if (BlockCheck(i)) {
 						if (blocks[i].destuctioncnt != 3)
 							g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
-						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) ) {
+						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
 							tmp1[j] = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;
@@ -773,12 +779,13 @@ void ProcessClients()
 					phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
 				}
 			}
-		//	Update(phyPlayers);
+			//	Update(phyPlayers);
 
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				players[i].anim = phyPlayers[i].GetAnimType();
 				players[i].pos = phyPlayers[i].m_pos;
+				players[i].dir = phyPlayers[i].dir;
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
 				if (TypeName[i] == "Penguin") {
 					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
@@ -787,7 +794,6 @@ void ProcessClients()
 					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
 				}
 			}
-		
 			SendPos(*players);
 			SendAnim(*players);
 

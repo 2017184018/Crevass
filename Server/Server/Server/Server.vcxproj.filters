@@ -42,9 +42,6 @@
     <ClCompile Include="Player.cpp">
       <Filter>Object\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Boundary.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -73,9 +70,6 @@
     </ClInclude>
     <ClInclude Include="PhysicsThread.h">
       <Filter>Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="Boundary.h">
-      <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
