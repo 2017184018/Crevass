@@ -15,7 +15,6 @@ bool IsDown[25];
 bool IsShake[25];
 int tmp1[3] = { -1,-1,-1 };
 bool BlockIn = false;
-float Gravity = 0.1;
 int tmp2[3] = { -1,-1,-1 };
 string TypeName[3];
 bool IsFall[3] = { false,false,false };
@@ -30,9 +29,9 @@ bool BlockCheck(int idx) {
 
 void Update(vector<Player>& player)
 {
-	float speed = 1.0f * 1.5f ;
+	float speed = 1.0f * SPEED_POWER;
 	//float crossspeed = sqrt(2) / 2;
-	float crossspeed = cos(45) *1.5f;
+	float crossspeed = cos(45) * SPEED_POWER;
 	for (int i = 0; i < numOfCls; ++i)
 	{
 		float saveX = 0;
@@ -135,7 +134,7 @@ void Update(vector<Player>& player)
 				}
 			}
 		}
-
+		//블록이랑 닿으면 그쪽으로 안가게
 		for (int j = 0; j < 25; ++j) {
 			if (phyPlayers[i].m_pos.y < blocks[j].pos.y + 60) {
 				g_boundaries[TypeName[i]]->Center.x += saveX;
@@ -166,8 +165,8 @@ void Update(vector<Player>& player)
 void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
 
 
-	float speed = 1.0f *1.5f;
-	float crossspeed = cos(45)*1.5f;
+	float speed = 1.0f * SPEED_POWER;
+	float crossspeed = cos(45) * SPEED_POWER;
 	float saveX = 0;
 	float saveZ = 0;
 	//위
@@ -534,32 +533,32 @@ void ProcessClients()
 					}
 				}
 
-				//Update(phyPlayers);
+					Update(phyPlayers);
 
-				//if (phyMsg.type == TYPE_PLAYER)
-				//{
-				//	for (int i = 0; i < numOfCls; ++i)
-				//	{
-				//		players[i].id = i;
-				//		players[i].pos.x = phyPlayers[i].m_pos.x;
-				//		players[i].pos.y = phyPlayers[i].m_pos.y;
-				//		players[i].pos.z = phyPlayers[i].m_pos.z;
-				//		players[i].dir = phyPlayers[i].dir;
-				//		players[i].anim = phyPlayers[i].GetAnimType();
+				if (phyMsg.type == TYPE_PLAYER)
+				{
+					for (int i = 0; i < numOfCls; ++i)
+					{
+						players[i].id = i;
+						//	players[i].pos.x = phyPlayers[i].m_pos.x;
+							//players[i].pos.y = phyPlayers[i].m_pos.y;
+							//players[i].pos.z = phyPlayers[i].m_pos.z;
+							//players[i].dir = phyPlayers[i].dir;
+						players[i].anim = phyPlayers[i].GetAnimType();
 
-				//		g_boundaries[TypeName[i]]->Center = players[i].pos;
-				//		//임시방편
-				//		if (TypeName[i] == "Penguin") {
-				//			g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-				//		}
-				//		else {
-				//			g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-				//		}
+						g_boundaries[TypeName[i]]->Center = players[i].pos;
+						//임시방편
+						if (TypeName[i] == "Penguin") {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+						}
+						else {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+						}
 
-				//	}
-				//	//	SendPos(*players);
-				//	SendAnim(*players);
-				//}
+					}
+					//	SendPos(*players);
+					//SendAnim(*players);
+				}
 			}
 
 
@@ -630,7 +629,7 @@ void ProcessClients()
 				//아이스 , 스노우 아무것도 출동하지 않을때 
 				if (tmp1[i] == -1 && tmp2[i] == -1)
 				{
-					phyPlayers[i].gravity -= 0.02f;
+					phyPlayers[i].gravity -= 0.05f;
 				}
 			}
 
@@ -716,11 +715,11 @@ void ProcessClients()
 					}
 				}
 			}
-			Update(phyPlayers);
+			//Update(phyPlayers);
 
 
 
-		
+
 
 
 			UpdateBlock(blocks);
@@ -754,11 +753,12 @@ void ProcessClients()
 							phyPlayers[j].is_jump = false;
 							IsShake[i] = true;
 							IsDown[i] = true;
+
 						}
 						if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]]))) {  // or 물에 떨어지면
 							IsDown[tmp2[j]] = false;
 
-							cout << j << "check" << endl;
+							cout << j << "checkckeck" << endl;
 							//if (!phyPlayers[j].is_jump)
 							//	Gravity += 0.05;
 							tmp2[j] = -1;
