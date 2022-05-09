@@ -540,10 +540,10 @@ void ProcessClients()
 					for (int i = 0; i < numOfCls; ++i)
 					{
 						players[i].id = i;
-						//	players[i].pos.x = phyPlayers[i].m_pos.x;
-							//players[i].pos.y = phyPlayers[i].m_pos.y;
-							//players[i].pos.z = phyPlayers[i].m_pos.z;
-							//players[i].dir = phyPlayers[i].dir;
+							players[i].pos.x = phyPlayers[i].m_pos.x;
+							players[i].pos.y = phyPlayers[i].m_pos.y;
+							players[i].pos.z = phyPlayers[i].m_pos.z;
+							players[i].dir = phyPlayers[i].dir;
 						players[i].anim = phyPlayers[i].GetAnimType();
 
 						g_boundaries[TypeName[i]]->Center = players[i].pos;
@@ -556,7 +556,7 @@ void ProcessClients()
 						}
 
 					}
-					//	SendPos(*players);
+						SendPos(*players);
 					//SendAnim(*players);
 				}
 			}
