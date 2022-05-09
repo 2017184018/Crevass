@@ -143,6 +143,7 @@ void Update(vector<Player>& player)
 				if (BlockCheck(j)) {
 					if (g_boundaries["icecube" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
 						player[i].m_pos.x -= saveX;
+						player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
 						g_boundaries[TypeName[i]]->Center.x -= saveX;
 						g_boundaries[TypeName[i]]->Center.z -= saveZ;
@@ -151,6 +152,7 @@ void Update(vector<Player>& player)
 				else {
 					if (g_boundaries["snowcube" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
 						player[i].m_pos.x -= saveX;
+						//player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
 						g_boundaries[TypeName[i]]->Center.x -= saveX;
 						g_boundaries[TypeName[i]]->Center.z -= saveZ;
@@ -689,14 +691,17 @@ void ProcessClients()
 					phyPlayers[i].ResetTimeCount += 1;
 					if (phyPlayers[i].ResetTimeCount > 180.0f)
 					{
+						IsFall[i] = false;
 						phyPlayers[i].is_reset = false;
 						phyPlayers[i].ResetTimeCount = 0.0f;
-
+						phyPlayers[i].is_jump = false;
+						phyPlayers[i].is_hitted = false;
+						phyPlayers[i].is_attack = false;
 						phyPlayers[i].m_pos.x = uid(dre)*400;
 						phyPlayers[i].m_pos.y = 100.0f;
 						phyPlayers[i].m_pos.z = uid(dre)*400;
-						phyPlayers[i].anim = ANIM_IDLE;
-						g_boundaries[TypeName[i]]->Center = players[i].pos;
+						//phyPlayers[i].anim = ANIM_IDLE;
+						g_boundaries[TypeName[i]]->Center = phyPlayers[i].m_pos;
 						if (TypeName[i] == "Penguin") {
 							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
 						}

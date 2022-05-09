@@ -98,7 +98,7 @@ void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::str
 	item->IndexCount = item->Geo->DrawArgs[boundsName].IndexCount;
 	item->StartIndexLocation = item->Geo->DrawArgs[boundsName].StartIndexLocation;
 	item->BaseVertexLocation = item->Geo->DrawArgs[boundsName].BaseVertexLocation;
-	item->m_IsVisible = true;
+	item->m_IsVisible = false;
 	item->m_MaterialIndex = 1;
 }
 
