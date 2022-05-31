@@ -575,7 +575,7 @@ void ProcessClients()
                         phyPlayers[i].AttackTimeCount = 0.0f;
                         phyPlayers[i].is_attack = false;
                         players[i].anim = phyPlayers[i].GetAnimType();
-                        SendAnim(*players);
+                        //SendAnim(*players);   /
                     }
                 }
 
@@ -587,7 +587,7 @@ void ProcessClients()
                         phyPlayers[i].JumpTimeCount = 0.0f;
                         //phyPlayers[i].is_jump = false;
                         players[i].anim = phyPlayers[i].GetAnimType();
-                        SendAnim(*players);
+                        //SendAnim(*players);   /
                     }
                 }
 
@@ -599,7 +599,7 @@ void ProcessClients()
                         phyPlayers[i].hittedTimeCount = 0.0f;
                         phyPlayers[i].is_hitted = false;
                         players[i].anim = phyPlayers[i].GetAnimType();
-                        SendAnim(*players);
+                        //SendAnim(*players);   /
                     }
                     else {
                         Hitted_Pos_Update(phyPlayers[i], i, phyPlayers[i].hittedTimeCount);
