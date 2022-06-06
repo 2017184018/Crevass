@@ -7,7 +7,7 @@
 
 namespace Core {
 	extern GameObject* wave;
-	extern UINT SnowmanIndex[2];
+	extern UINT iglooIndex[2];
 	extern 	MainFramework* g_pFramework;
 }
 
@@ -64,6 +64,7 @@ public:
 	void CreateSkycube(std::string skycubeName, std::string instID, std::string matName);
 	void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);
 	void CreateBlocks();
+	void Createigloos();
 	void CreateSnowmans();
 	void CreateWave();
 	void CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex /*Character 종류(역할)*/);
@@ -83,7 +84,7 @@ public:
 public:
 	//void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);
 
-	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
+	UINT iglooLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
 	std::vector<GameObject*> m_RItemsVec;

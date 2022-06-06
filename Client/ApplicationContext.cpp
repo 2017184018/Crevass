@@ -203,43 +203,28 @@ void ApplicationContext::CreateBlocks()
 	}
 }
 
-void ApplicationContext::CreateSnowmans()
+void ApplicationContext::Createigloos()
 {
 	int RandomLocation[2] = { -1,-1 };
 
 	for (int i = 0; i < 2; ++i) {		//76, 77
-		GameObject* instancingObj = CreateObject<GameObject>("snowman", "snowman" + std::to_string(i));
-		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["snowman"].get();
+		GameObject* instancingObj = CreateObject<GameObject>("igloo", "igloo" + std::to_string(i));
+		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["igloo"].get();
 		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
-		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
-		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
-		instancingObj->m_MaterialIndex = 1;
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["igloo"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["igloo"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["igloo"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		instancingObj->m_World._11 = SCALE * 3 / 5.0;
-		instancingObj->m_World._22 = SCALE * 3 / 5.0;
-		instancingObj->m_World._33 = SCALE * 3 / 5.0;
-
-		/*if (SnowmanIndex[i] % 4) {
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
-			int distance = SCALE * 200;
-			instancingObj->m_World._41 =  SnowmanIndex[i] / 5 * distance - 15.0f;
-			instancingObj->m_World._42 = 20;
-			instancingObj->m_World._43 =  SnowmanIndex[i] % 5 * distance + 15.0f;
-		}
-		else {
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
-			int distance = SCALE * 200;
-			instancingObj->m_World._41 =  SnowmanIndex[i] / 5 * distance + 15.0f;
-			instancingObj->m_World._42 = 20;
-			instancingObj->m_World._43 =  SnowmanIndex[i] % 5 * distance; +15.0f;
-		}*/
+		instancingObj->m_World._11 = SCALE * 1 / 10.0;
+		instancingObj->m_World._22 = SCALE * 1 / 10.0;
+		instancingObj->m_World._33 = SCALE * 1 / 10.0;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 }
 
-void ApplicationContext::CreateWave()
+void ApplicationContext::CreateWave	()
 {
 	//78
 	GameObject* Sea = CreateObject<GameObject>("Sea", "Sea0");
@@ -576,7 +561,7 @@ void ApplicationContext::CreateBackground()
 	//193	¿Ã±€∑Á
 	{
 		GameObject* instancingObj2;
-		instancingObj2 = CreateObject<GameObject>("igloo", "igloo" + std::to_string(0));
+		instancingObj2 = CreateObject<GameObject>("igloo", "igloo" + std::to_string(2));
 		instancingObj2->Geo = MeshReference::GetApp()->m_GeometryMesh["igloo"].get();
 		instancingObj2->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		instancingObj2->IndexCount = instancingObj2->Geo->DrawArgs["igloo"].IndexCount;
@@ -696,6 +681,26 @@ void ApplicationContext::CreateBackground()
 	}
 }
 
+void ApplicationContext::CreateSnowmans()
+{
+	int RandomLocation[2] = { -1,-1 };
+
+	for (int i = 0; i < 2; ++i) {		//210~213
+		GameObject* instancingObj = CreateObject<GameObject>("snowman", "snowman" + std::to_string(i));
+		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["snowman"].get();
+		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = 1;
+		instancingObj->m_IsVisible = true;
+		instancingObj->m_World = MathHelper::Identity4x4();
+		instancingObj->m_World._11 = SCALE * 3 / 5.0;
+		instancingObj->m_World._22 = SCALE * 3 / 5.0;
+		instancingObj->m_World._33 = SCALE * 3 / 5.0;
+		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+	}
+}
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {

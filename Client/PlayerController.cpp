@@ -244,8 +244,9 @@ void PlayerController::OnKeyPressed()
 		}
 
 		if (InputHandler::IsKeyDown('S')) {
-			MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
+		//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
 			
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_INTERACT);
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {

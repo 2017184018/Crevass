@@ -175,7 +175,13 @@ void Receiver(char id)
 			msg.dir = KEY_JUMP;
 			break;
 		}
-
+		case CS_PLAYER_INTERACT:
+		{
+			msg.id = id;
+			msg.type = TYPE_PLAYER;
+			msg.dir = KEY_INTERACT;
+			break;
+		}
 		case CS_READY_PENGUIN:
 		{
 			g_PlayerReadyInfoLock.lock();

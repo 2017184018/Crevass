@@ -45,7 +45,7 @@ namespace Core
 
 	std::unique_ptr<Waves> mWaves;
 	GameObject* wave;
-	UINT SnowmanIndex[2];
+	UINT iglooIndex[2];
 	bool Inactive = false;
 }
 

@@ -212,7 +212,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		}
 		for (int i = 0; i < 2; ++i)
 		{
-			SnowmanLocation[i] = packet.SnowmanLocation[i];
+			iglooLocation[i] = packet.iglooLocation[i];
 		}
 		for (int i = 0; i < 25; ++i) {
 			BlockPos[i] = packet.blocks[i].pos;
@@ -342,9 +342,9 @@ DirectX::XMFLOAT3 Network::GetPlayerPos(int num)const
 	return PlayerPos[num];
 }
 
-int Network::GetSnowmanLocation(int num)const
+int Network::GetiglooLocation(int num)const
 {
-	return SnowmanLocation[num];
+	return iglooLocation[num];
 }
 
 int Network::GetPlayerDir(int num)const

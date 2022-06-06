@@ -6,6 +6,7 @@
 random_device rd1;
 default_random_engine dre2(rd1());
 uniform_int_distribution<>uid5{ 0,8 };
+int TempiglooLocation[2];
 
 void SendPacket(void* buff)
 {
@@ -110,17 +111,16 @@ void SendGameStartPacket()
 	PlayerReadyInfo tempInfo[3] = { {g_playerReadyInfo[0]},{g_playerReadyInfo[1]},{g_playerReadyInfo[2]} };
 	g_PlayerReadyInfoLock.unlock();
 
-	g_SnowmanPosLock.lock();
-	int TempSnowmanLocation[2];
+	g_iglooPosLock.lock();
 	for (int i = 0; i < 2; ++i)
 	{
 		do 
 		{
-			TempSnowmanLocation[i] = uid5(dre2);
+			TempiglooLocation[i] = uid5(dre2);
 		}
-		while (i == 1 && TempSnowmanLocation[0] == TempSnowmanLocation[1]);
+		while (i == 1 && TempiglooLocation[0] == TempiglooLocation[1]);
 	}
-	g_SnowmanPosLock.unlock();
+	g_iglooPosLock.unlock();
 
 	for (int i = 0; i < numOfCls; ++i) 
 	{
@@ -134,7 +134,7 @@ void SendGameStartPacket()
 	packet.size = sizeof(packet);
 	packet.type = SC_GAMESTART;
 	for (int i = 0; i < 2; ++i)
-		packet.SnowmanLocation[i] = TempSnowmanLocation[i];
+		packet.iglooLocation[i] = TempiglooLocation[i];
 
 	g_BlockInitialPosLock.lock();
 	for (int i = 0; i < 25; ++i) {

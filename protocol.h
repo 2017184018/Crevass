@@ -33,6 +33,7 @@
 #define CS_PLAYER_JUMP				11
 #define CS_PLAYER_ATTACK			12
 #define CS_PLAYER_LOSE				13
+#define CS_PLAYER_INTERACT				14
 
 #define CS_READY_PENGUIN				17
 #define CS_READY_HUSKY				18
@@ -97,7 +98,7 @@ struct sc_packet_game_start {
 	short size;
 	char type;
 	Pro_Player players[3];
-	int SnowmanLocation[2];
+	int iglooLocation[2];
 	Block blocks[25];
 };
 

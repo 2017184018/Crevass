@@ -56,6 +56,6 @@ mutex g_ConnectedClsLock;
 mutex g_SocketLock;
 mutex g_PlayerReadyInfoLock;
 mutex g_InitialPosLock;
-mutex g_SnowmanPosLock;
+mutex g_iglooPosLock;
 mutex g_BlockInitialPosLock;
 mutex g_player_lock;

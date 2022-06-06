@@ -36,7 +36,7 @@ public:
 
 	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
 	DirectX::XMFLOAT3 GetBlockPos(int num)const;
-	int GetSnowmanLocation(int num)const;
+	int GetiglooLocation(int num)const;
 	int GetPlayerDir(int num)const;
 	int GetBlockDestructionCnt(int num) const;
 
@@ -53,7 +53,7 @@ private:
 	int PlayerAnim[3];
 	char Player_Type[3];
 
-	int SnowmanLocation[2];
+	int iglooLocation[2];
 	char dir[3];
 
 	DirectX::XMFLOAT3 BlockPos[25];
