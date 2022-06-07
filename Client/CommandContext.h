@@ -1,6 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "UploadBuffer.h"
+#include "ShadowMap.h"
 #include "Waves.h"
 
 
@@ -61,7 +62,11 @@ public:
 	ID3D12PipelineState* GetPipelineState() { return m_CurPipelineState; };
 
 public:
+	std::unique_ptr<ShadowMap> mShadowMap;
+
 	ShaderResource::PassConstants mMainPassCB;
+	ShaderResource::PassConstants mShadowPassCB;
+
 	std::unique_ptr<UploadBuffer<ShaderResource::PassConstants>>	PassCB = nullptr;
 	std::map<string, std::unique_ptr<UploadBuffer<ShaderResource::InstanceData>>> m_InstanceBuffers;
 	std::array< std::unique_ptr<UploadBuffer<ShaderResource::SkinnedConstants>>, BoneIndex::Count> m_SkinnedCBs;

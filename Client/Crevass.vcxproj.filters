@@ -6,6 +6,7 @@
     <FxCompile Include="Shaders\Default.hlsl" />
     <FxCompile Include="Shaders\LightingUtil.hlsl" />
     <FxCompile Include="Shaders\Sky.hlsl" />
+    <FxCompile Include="Shaders\Shadows.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlurFilter.cpp" />
@@ -57,6 +58,7 @@
     <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="CommandCenter.cpp" />
     <ClCompile Include="MoveCommend.cpp" />
+    <ClCompile Include="ShadowMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlurFilter.h" />
@@ -120,6 +122,7 @@
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="CommandCenter.h" />
     <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="ShadowMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

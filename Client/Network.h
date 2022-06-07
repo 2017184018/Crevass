@@ -1,9 +1,9 @@
 #pragma once
 #include "headers.h"
 #include "GameInfo.h"
-//#define SERVERIP "127.0.0.1"
+#define SERVERIP "127.0.0.1"
 //#define SERVERIP "192.168.35.175"
-#define SERVERIP "192.168.161.72"
+//#define SERVERIP "172.20.10.7"
 
 class Network
 {

@@ -8,6 +8,8 @@
 #include "SkinnedModelInstance.h"
 void GraphicsContext::Initialize()
 {
+	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 2048,2048);
+
 	for (int i = 0; i < skinnedObjectCount; ++i)
 	{
 		m_SkinnedCBs[i] = std::make_unique<UploadBuffer<ShaderResource::SkinnedConstants>>(Core::g_Device.Get(), 1, true);
