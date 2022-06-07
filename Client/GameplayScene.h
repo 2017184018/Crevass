@@ -31,6 +31,7 @@ namespace Core
 	extern std::unique_ptr<Waves> mWaves;
 	extern GameObject* wave;
 	extern UINT iglooIndex[2];
+	extern UINT SnowmanIndex[2];
 	extern MainFramework* g_pFramework;
 }
 

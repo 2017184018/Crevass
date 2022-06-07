@@ -214,6 +214,9 @@ void Network::ProcessPacket(char* packet_buffer)
 		{
 			iglooLocation[i] = packet.iglooLocation[i];
 		}
+		for (int i = 0; i < 4; ++i) {
+			SnowmanLocation[i] = packet.SnowmanLocation[i];
+		}
 		for (int i = 0; i < 25; ++i) {
 			BlockPos[i] = packet.blocks[i].pos;
 			BlockDestructionCnt[i] = packet.blocks[i].destuctioncnt;
@@ -229,6 +232,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		{
 			PlayerPos[i] = packet.players[i].pos;
 			dir[i] = packet.players[i].dir;
+			PlayerHide[i] = packet.players[i].IsHide;
 		}
 	//	cout << packet.players[0].pos.x << endl;
 		//if (m_pGameInfo->m_ClientID == 0)
@@ -347,6 +351,11 @@ int Network::GetiglooLocation(int num)const
 	return iglooLocation[num];
 }
 
+int Network::GetSnowmanLocation(int num)const
+{
+	return SnowmanLocation[num];
+}
+
 int Network::GetPlayerDir(int num)const
 {
 	return static_cast<int>(dir[num]);
@@ -390,4 +399,9 @@ bool Network::GetCharacterReset(int num)const
 void Network::SetCharacterReset(int num)
 {
 	isReset[num] = false;
+}
+
+bool Network::GetPlayerHide(int num)const
+{
+	return PlayerHide[num];
 }

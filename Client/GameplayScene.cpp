@@ -30,7 +30,7 @@ void GameplayScene::Initialize()
 	AppContext->Createigloos();
 	AppContext->CreateWave();
 	AppContext->CreateBackground();
-//	AppContext->CreateSnowmans();
+	AppContext->CreateSnowmans();
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
 	for (int i = 0; i < 25; ++i) {
@@ -80,12 +80,16 @@ bool GameplayScene::Enter()
 	for (int i = 0; i < 2; ++i) {
 		float scale = 2.0f / 10.0f;
 		iglooIndex[i] = iglooLocaArray[g_pFramework->m_pNetwork->GetiglooLocation(i)];
-		if (iglooIndex[i] % 4) {		//방향 오류, 가끔 게임 스타트 패킷을 2번 받는 듯
-			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(scale, scale +0.05, scale) * XMMatrixRotationY(3.14 * 5 / 6));
+		if (iglooIndex[i] % 4) {		
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(scale, scale + 0.05, scale) * XMMatrixRotationY(3.14 * 5 / 6));
 		}
 		else {
 			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(scale, scale + 0.05, scale) * XMMatrixRotationY(3.14 * 7 / 6));
 		}
+	}
+	for (int i = 0; i < 4; ++i) {
+		float scale = 3.0f / 5.0f;
+		SnowmanIndex[i] = g_pFramework->m_pNetwork->GetSnowmanLocation(i);
 	}
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -110,7 +114,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 	m_SceneController->Update(fDeltaTime);
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
-
+		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
+		static bool one = true;
+		if (m_Users[i]->GetHide()) {
+			if (one) {
+				m_Users[i]->Scale(0.01, 0.01, 0.01);
+				one = false;
+				//움직이면 풀리게
+			}
+		}
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 		if (i != m_PlayerID) {//애니메이션은 나는 제외 
@@ -277,6 +289,37 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * iglooIndex[1] + 1]->m_World._43 + 20;
 	}
 
+	{
+		//syncro snowman
+		for (int i = 0; i < 4; ++i) {
+
+			float scale = 0;
+			if (DestructionCnt[SnowmanIndex[i]] < 3) {
+				scale = 0.6 - DestructionCnt[SnowmanIndex[i]] * 0.1;
+			}
+			else {
+				scale = 0;
+			}
+
+			if (SnowmanIndex[i] % 5 == 1 || SnowmanIndex[i] % 5 == 3) {
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 5 / 6));
+			}
+			else {
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 7 / 6));
+			}
+
+			if (SnowmanIndex[i] % 5) {
+				AppContext->m_RItemsVec[209 + i]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._41 - 20;
+			}
+			else {
+				AppContext->m_RItemsVec[209 + i]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._41 - 20;
+			}
+			AppContext->m_RItemsVec[209 + i]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._42 + 20;
+			AppContext->m_RItemsVec[209 + i]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._43 + 20;
+
+		}
+	}
+
 	for (int i = 0; i < 5; ++i) {	//life
 		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
@@ -317,9 +360,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 			tmpidx = -1;
 		}
 		else if (time >= 2.9) {
-//			m_Users[m_PlayerID]->is_fall = false;
-//			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
-	//		Gravity = 0.01;
+			//			m_Users[m_PlayerID]->is_fall = false;
+			//			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
+				//		Gravity = 0.01;
 		}
 		else if (time < 0.03) {
 			if (FallZ < 4) FallZ = 4;
@@ -335,7 +378,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	Core::mWaves->Update(fDeltaTime);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
-//	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
@@ -403,7 +446,7 @@ void GameplayScene::Render()
 {
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
-//	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 

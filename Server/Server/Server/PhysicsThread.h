@@ -21,14 +21,8 @@ bool IsFall[3] = { false,false,false };
 Block blocks[25];
 DirectX::XMFLOAT3 temp(0.f, 0.f, 0.f);
 bool dir_switch[3];
-bool IsInteract = false;
-bool IglooInteracting = false;		//상호작용 중 무적
-
-bool BlockCheck(int idx) {
-	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
-		return false;
-	return true;
-}
+bool IsInteract[3] = { false,false,false };		//상호작용 키 눌렀는지
+bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 
 void Update(vector<Player>& player)
 {
@@ -375,6 +369,9 @@ void ProcessClients()
 		IsShake[i] = false;
 	}
 
+	auto OriginSnowmanExtens = g_boundaries["snowman0"]->Extents;
+	auto OriginIglooExtens = g_boundaries["igloo0"]->Extents;
+
 	//g_player_lock.unlock();
 
 	std::queue <Message> phyMsgQueue;
@@ -534,7 +531,7 @@ void ProcessClients()
 							phyPlayers[phyMsg.id].is_jump = true;
 						break;
 					case KEY_INTERACT:
-						IsInteract = true;
+						IsInteract[phyMsg.id] = true;
 						break;
 					}
 
@@ -724,25 +721,42 @@ void ProcessClients()
 			}
 			Update(phyPlayers);
 
-			for (int j = 0; j < numOfCls; ++j) {
+			for (int j = 0; j < numOfCls; ++j) {		//상호작용
 				for (int i = 0; i < 2; ++i) {
-					g_boundaries["igloo" + std::to_string(i)]->Extents.x *= 6.0 / 10.0;
-					g_boundaries["igloo" + std::to_string(i)]->Extents.z *= 6.0 / 10.0 + 0.05;
-					g_boundaries["igloo" + std::to_string(i)]->Extents.x *= 6.0 / 10.0;
+					g_boundaries["igloo" + std::to_string(i)]->Extents.x = OriginIglooExtens.x * 2.0 / 10.0;
+					g_boundaries["igloo" + std::to_string(i)]->Extents.y = OriginIglooExtens.y * 2.0 / 10.0 + 0.05;
+					g_boundaries["igloo" + std::to_string(i)]->Extents.z = OriginIglooExtens.z * 2.0 / 10.0;
 					g_boundaries["igloo" + std::to_string(i)]->Center.x = TempiglooLocation[i] / 3 * 400;
 					g_boundaries["igloo" + std::to_string(i)]->Center.y = blocks[TempiglooLocation[i] / 3 * 10 + TempiglooLocation[i] % 3 * 2].pos.y + 60;
 					g_boundaries["igloo" + std::to_string(i)]->Center.z = TempiglooLocation[i] % 3 * 400;
-					if (IsInteract) {
-						if (g_boundaries["igloo" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
-							IglooInteracting = true;
-							phyPlayers[j].m_pos = g_boundaries["igloo" + std::to_string(1 - i)]->Center;
-							IglooInteracting = false;
-							IsInteract = false;
-						}
+				}
+				for (int i = 0; i < 4; ++i) {
+					g_boundaries["snowman" + std::to_string(i)]->Extents.x = OriginSnowmanExtens.x * (0.6 - blocks[TempSnowmanLocation[i]].destuctioncnt * 0.1);
+					g_boundaries["snowman" + std::to_string(i)]->Extents.y = OriginSnowmanExtens.y * (0.6 - blocks[TempSnowmanLocation[i]].destuctioncnt * 0.1);
+					g_boundaries["snowman" + std::to_string(i)]->Extents.z = OriginSnowmanExtens.z * (0.6 - blocks[TempSnowmanLocation[i]].destuctioncnt * 0.1);
+					g_boundaries["snowman" + std::to_string(i)]->Center.x = TempSnowmanLocation[i] / 5 * 200;
+					g_boundaries["snowman" + std::to_string(i)]->Center.y = blocks[TempSnowmanLocation[i]].pos.y + 20;
+					g_boundaries["snowman" + std::to_string(i)]->Center.z = TempSnowmanLocation[i] % 5 * 200;
+				}
+				if (IsInteract[j]) {
+					if (g_boundaries["igloo0"]->Intersects(*g_boundaries[TypeName[j]])) {
+						IsInteracting[j] = true;
+						phyPlayers[j].m_pos = g_boundaries["igloo1"]->Center;
+						IsInteracting[j] = false;
 					}
+					else if (g_boundaries["igloo1"]->Intersects(*g_boundaries[TypeName[j]])) {
+						IsInteracting[j] = true;
+						phyPlayers[j].m_pos = g_boundaries["igloo0"]->Center;
+						IsInteracting[j] = false;
+					}
+					else if (g_boundaries["snowman0"]->Intersects(*g_boundaries[TypeName[j]]) || g_boundaries["snowman1"]->Intersects(*g_boundaries[TypeName[j]]) ||
+						g_boundaries["snowman2"]->Intersects(*g_boundaries[TypeName[j]]) || g_boundaries["snowman3"]->Intersects(*g_boundaries[TypeName[j]])) {
+						IsInteracting[j] = true;
+						phyPlayers[j].IsHide = true;
+					}
+					IsInteract[j] = false;
 				}
 			}
-
 
 			UpdateBlock(blocks);
 			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
@@ -807,6 +821,8 @@ void ProcessClients()
 				players[i].anim = phyPlayers[i].GetAnimType();
 				players[i].pos = phyPlayers[i].m_pos;
 				players[i].dir = phyPlayers[i].dir;
+				players[i].IsHide = phyPlayers[i].IsHide;
+
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
 				if (TypeName[i] == "Penguin") {
 					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
@@ -814,6 +830,7 @@ void ProcessClients()
 				else {
 					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
 				}
+
 			}
 			SendPos(*players);
 			SendAnim(*players);

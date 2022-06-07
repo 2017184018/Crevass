@@ -71,6 +71,7 @@ struct Pro_Player {
 	char dir;
 	char anim;
 	char Character_type;
+	bool IsHide;
 };
 
 struct Block {
@@ -99,6 +100,7 @@ struct sc_packet_game_start {
 	char type;
 	Pro_Player players[3];
 	int iglooLocation[2];
+	int SnowmanLocation[4];
 	Block blocks[25];
 };
 

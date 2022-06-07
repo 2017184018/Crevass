@@ -686,3 +686,11 @@ void Character::SetAnimationKeyState(PlayerState keyState)
 	m_KeyState = keyState;
 }
 
+void Character::SetHide(bool hide)
+{
+	IsHide = hide;
+}
+
+bool Character::GetHide()const {
+	return IsHide;
+}

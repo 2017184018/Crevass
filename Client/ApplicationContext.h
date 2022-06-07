@@ -9,6 +9,7 @@ namespace Core {
 	extern GameObject* wave;
 	extern UINT iglooIndex[2];
 	extern 	MainFramework* g_pFramework;
+	extern int SNUM;
 }
 
 class Character;
@@ -80,6 +81,7 @@ public:
 
 	//void DisplayUI(std::string mapName);
 	//void HiddenUI(std::string mapName);
+
 
 public:
 	//void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);

@@ -380,7 +380,7 @@ void ApplicationContext::CreateBackground()
 		top->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//139~144	밧줄
+	//139~143	밧줄
 	for (int i = 0; i < 5; ++i) {
 		GameObject* top = CreateObject<GameObject>("lifeline", "lifeline" + std::to_string(i));
 		top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
@@ -402,7 +402,7 @@ void ApplicationContext::CreateBackground()
 		top->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//145~148	산
+	//144~147	산
 	for (int i = 0; i < 4; ++i) {
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("mountain", "mountain" + std::to_string(i));
@@ -432,7 +432,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//149	텐트
+	//148	텐트
 	{
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("tent", "tent" + std::to_string(0));
@@ -456,7 +456,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//150 카약
+	//149 카약
 	{
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("kayak", "kayak" + std::to_string(0));
@@ -479,7 +479,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//151~152	패들
+	//150~151	패들
 	for (int i = 0; i < 2; ++i) {
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("kayakpaddle", "kayakpaddle" + std::to_string(i));
@@ -502,7 +502,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//153~192	돌
+	//152~191	돌
 	for (int i = 0; i < 25; ++i) {
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("rock_0", "rock_0" + std::to_string(i));
@@ -558,7 +558,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//193	이글루
+	//192	이글루
 	{
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("igloo", "igloo" + std::to_string(2));
@@ -582,7 +582,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//194~197	텐트 생선
+	//193~196	텐트 생선
 	for (int i = 0; i < 4; ++i) {
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("fish", "fish" + std::to_string(i));
@@ -608,7 +608,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//198 썰매
+	//197 썰매
 	{
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("sled", "sled" + std::to_string(0));
@@ -632,7 +632,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//199~209 물고기 걸이, 물고기
+	//198~208 물고기 걸이, 물고기
 	{
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("fishrack", "fishrack" + std::to_string(0));
@@ -683,9 +683,7 @@ void ApplicationContext::CreateBackground()
 
 void ApplicationContext::CreateSnowmans()
 {
-	int RandomLocation[2] = { -1,-1 };
-
-	for (int i = 0; i < 2; ++i) {		//210~213
+	for (int i = 0; i < 4; ++i) {		//209~212
 		GameObject* instancingObj = CreateObject<GameObject>("snowman", "snowman" + std::to_string(i));
 		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["snowman"].get();
 		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -699,6 +697,7 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->m_World._22 = SCALE * 3 / 5.0;
 		instancingObj->m_World._33 = SCALE * 3 / 5.0;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+		++SNUM;
 	}
 }
 

@@ -35,6 +35,15 @@ void LoadBBs(std::string filepath) {
 				BB->Extents.z = tmpz;
 			}
 		}
+		else if (meshname == "snowman") {
+			for (int i = 0; i < 4; ++i) {
+				g_boundaries[meshname + std::to_string(i)] = BB;
+				BB = new DirectX::BoundingBox;
+				BB->Extents.x = tmpx;
+				BB->Extents.y = tmpy;
+				BB->Extents.z = tmpz;
+			}
+		}
 		else {
 			g_boundaries[meshname] = BB;
 			//cout << meshname <<": " << g_boundaries[meshname]->Extents.x << ", " << g_boundaries[meshname]->Extents.y << ", "

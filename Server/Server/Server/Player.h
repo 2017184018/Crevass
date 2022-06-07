@@ -42,6 +42,7 @@ public:
 	bool is_reset = false;
 	float ResetTimeCount = 0.0f;
 
+	bool IsHide = false;
 public:
 	char dir = 0;
 	char anim = 0;
