@@ -14,6 +14,10 @@ namespace Graphics
 
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
+
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ShadowOpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedShadowOpaquePSO;
+
 }
 
 namespace Core

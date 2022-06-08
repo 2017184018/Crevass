@@ -2,6 +2,7 @@
 #include "GraphicsRenderer.h"
 #include "GameTimer.h"
 
+#include "GameCore.h"
 #include "CommandContext.h"
 
 #include "GameObject.h"
@@ -29,6 +30,10 @@ using namespace Graphics;
 
 void GraphicsRenderer::Initialize()
 {
+	//Build Resource
+	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 2048, 2048);
+
+
 	m_CbvSrvDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	Core::mBlurFilter = std::make_unique<BlurFilter>(g_Device.Get(),
@@ -135,7 +140,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvHeapDesc.NumDescriptors = m_Textures.size() + blurDescriptorCount;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	ThrowIfFailed(g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
+	ThrowIfFailed(Core::g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
 
 	//
 	// Fill out the heap with actual descriptors.
@@ -328,6 +333,27 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	g_Device->CreateShaderResourceView(lobby5.Get(), &srvDesc, hDescriptor);
 
 	mSkyTexHeapIndex = 0;
+
+
+	mShadowMapHeapIndex = (UINT)m_Textures.size() + 1;
+
+	// GetCpuSrv
+	auto cpuSrv = CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	cpuSrv.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+
+	// GetGpuSrv
+	auto gpuSrv = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	gpuSrv.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+
+	//GetDsv
+	auto dsv = CD3DX12_CPU_DESCRIPTOR_HANDLE(GameCore::GetApp()->mDsvHeap->GetCPUDescriptorHandleForHeapStart());
+	dsv.Offset(1, GameCore::GetApp()->mDsvDescriptorSize);
+
+	//mShadowMap->BuildDescriptors(
+	//	cpuSrv,
+	//	gpuSrv,
+	//	dsv);
+
 
 	Core::mBlurFilter->BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_Textures.size(), m_CbvSrvDescriptorSize),

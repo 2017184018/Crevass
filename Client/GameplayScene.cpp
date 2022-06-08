@@ -353,8 +353,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
 
-	//meterial
-	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
 
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
@@ -371,30 +369,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
-	/*if (tmp1 == -1 && tmp2 == -1) {
-		m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-	}
-	else {
-		if (tmp1 != -1) {
-			if (m_Users[m_PlayerID]->GetPosition().y > 10 && m_Users[m_PlayerID]->bJump == false && DestructionCnt[tmp1] != 3) {
-				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
-					AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp1))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
-			}
-			else {
-				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-			}
-		}
-		else {
-			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y >= 50 &&
-				m_Users[m_PlayerID]->bJump == false && !IsFall[m_PlayerID]) {
-				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
-					AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
-			}
-			else {
-				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-			}
-		}
-	}*/
+	//여기가 문제일수도 있음 
+	//meterial
+	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
+
+
+	///*Shadow*/
+	//GraphicsContext::GetApp()->UpdateShadowTransform();
+	//GraphicsContext::GetApp()->UpdateShadowPassCB();
 }
 
 void GameplayScene::Render()
@@ -444,6 +426,33 @@ void GameplayScene::Render()
 	// Transition to PRESENT state.
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
+
+	///*Shadow*/
+	//GraphicsContext::GetApp()->SetResourceShadowPassCB();
+	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
+	///*Shadow Props*/
+	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	//{
+	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	//}
+
+	///*Shadow ThunderBolt*/
+	//GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[std::to_string(OBJECT_TYPE_THUNDERBOLT)], AppContext->m_RItemsVec);
+
+	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedShadowOpaquePSO.Get());
+	///*Shadow Characters*/
+	//for (auto& p : m_Users)
+	//{
+	//	if (!p.second) continue;
+
+	//	if (p.second->m_TransformType == TransformType::Character)
+	//		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
+	//	else
+	//		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
+	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	//}
+
+	//GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
 }
 
 void GameplayScene::Fall(int num) {

@@ -14,7 +14,7 @@ public:
 	CD3DX12_GPU_DESCRIPTOR_HANDLE Srv()const;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE Dsv()const;
 
-	D3D12_VIEWPORT Vieport()const;
+	D3D12_VIEWPORT Viewport()const;
 	D3D12_RECT ScissorRect()const;
 
 	void BuildDescriptors(

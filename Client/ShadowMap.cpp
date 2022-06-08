@@ -39,7 +39,8 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE ShadowMap::Dsv() const
 	return mhCpuDsv;
 }
 
-D3D12_VIEWPORT ShadowMap::Vieport() const
+
+D3D12_VIEWPORT ShadowMap::Viewport() const
 {
 	return mViewport;
 }

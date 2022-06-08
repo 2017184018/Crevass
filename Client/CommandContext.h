@@ -1,7 +1,6 @@
 #pragma once
 #include "Singleton.h"
 #include "UploadBuffer.h"
-#include "ShadowMap.h"
 #include "Waves.h"
 
 
@@ -54,7 +53,14 @@ public:
 
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
+	void UpdateShadowPassCB();
+	void UpdateShadowTransform();
+
+
 	void DrawRenderItems(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems);
+
+	void SetResourceShadowPassCB();
+	void ShadowTransitionResourceBarrier();
 
 	void SetPipelineState(ID3D12PipelineState* PSO);
 	void SetGraphicsRootSignature(ID3D12RootSignature* RootSignature);
@@ -62,8 +68,6 @@ public:
 	ID3D12PipelineState* GetPipelineState() { return m_CurPipelineState; };
 
 public:
-	std::unique_ptr<ShadowMap> mShadowMap;
-
 	ShaderResource::PassConstants mMainPassCB;
 	ShaderResource::PassConstants mShadowPassCB;
 
@@ -75,4 +79,24 @@ public:
 	UINT passCount; UINT materialCount; UINT skinnedObjectCount;
 	std::unique_ptr<UploadBuffer<Vertex>> WavesVB = nullptr;
 	UINT VertexCount;
+
+private:
+	DirectX::BoundingSphere mSceneBounds;
+
+	// 임시 Light변수
+	float mLightNearZ = 0.0f;
+	float mLightFarZ = 0.0f;
+	XMFLOAT3 mLightPosW;
+	XMFLOAT4X4 mLightView = MathHelper::Identity4x4();
+	XMFLOAT4X4 mLightProj = MathHelper::Identity4x4();
+	XMFLOAT4X4 mShadowTransform = MathHelper::Identity4x4();
+
+	float mLightRotationAngle = 0.0f;
+	XMFLOAT3 mBaseLightDirections[3] = {
+		XMFLOAT3(0.57735f, -0.57735f, 0.57735f),
+		XMFLOAT3(-0.57735f, -0.57735f, 0.57735f),
+		XMFLOAT3(0.0f, -0.707f, -0.707f)
+	};
+	XMFLOAT3 mRotatedLightDirections[3];
+
 };

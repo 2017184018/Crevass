@@ -27,6 +27,7 @@ namespace Graphics
 
 class GameCore : public TemplateSingleton<GameCore>
 {
+	friend class GraphicsRenderer;
 	GraphicsRenderer* m_GraphicsRenderer;
 	GraphicsContext* m_GraphicsContext;
 

@@ -6,9 +6,16 @@
 #include "Camera.h"
 #include "GeometryMesh.h"
 #include "SkinnedModelInstance.h"
+#include "Character.h"
+#include "CharacterParts.h"
+#include "CREVASS.h"
+#include "GraphicsRenderer.h"
+#include "ShadowMap.h"
 void GraphicsContext::Initialize()
 {
-	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 2048,2048);
+	// TEST SceneBounds
+	mSceneBounds.Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mSceneBounds.Radius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
 
 	for (int i = 0; i < skinnedObjectCount; ++i)
 	{
@@ -171,6 +178,86 @@ void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance
 	m_SkinnedCBs[skinnedCBIndex]->CopyData(0, skinnedConstants);
 }
 
+void GraphicsContext::UpdateShadowPassCB()
+{
+	XMMATRIX view = XMLoadFloat4x4(&mLightView);
+	XMMATRIX proj = XMLoadFloat4x4(&mLightProj);
+
+	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
+	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
+	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
+	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
+
+	UINT w = GraphicsRenderer::GetApp()->mShadowMap->Width();
+	UINT h = GraphicsRenderer::GetApp()->mShadowMap->Height();
+
+	XMStoreFloat4x4(&mShadowPassCB.View, XMMatrixTranspose(view));
+	XMStoreFloat4x4(&mShadowPassCB.InvView, XMMatrixTranspose(invView));
+	XMStoreFloat4x4(&mShadowPassCB.Proj, XMMatrixTranspose(proj));
+	XMStoreFloat4x4(&mShadowPassCB.InvProj, XMMatrixTranspose(invProj));
+	XMStoreFloat4x4(&mShadowPassCB.ViewProj, XMMatrixTranspose(viewProj));
+	XMStoreFloat4x4(&mShadowPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
+	mShadowPassCB.EyePosW = mLightPosW;
+	mShadowPassCB.RenderTargetSize = XMFLOAT2((float)w, (float)h);
+	mShadowPassCB.InvRenderTargetSize = XMFLOAT2(1.0f / w, 1.0f / h);
+	mShadowPassCB.NearZ = mLightNearZ;
+	mShadowPassCB.FarZ = mLightFarZ;
+
+	auto currPassCB = PassCB.get();
+	currPassCB->CopyData(0, mShadowPassCB);
+}
+
+void GraphicsContext::UpdateShadowTransform()
+{
+
+	mLightRotationAngle += 0.1f * Core::g_GameTimer->DeltaTime();
+
+	XMMATRIX R = DirectX::XMMatrixRotationY(mLightRotationAngle);
+	for (int i = 0; i < 3; ++i)
+	{
+		XMVECTOR lightDir = XMLoadFloat3(&mBaseLightDirections[i]);
+		lightDir = XMVector3TransformNormal(lightDir, R);
+		XMStoreFloat3(&mRotatedLightDirections[i], lightDir);
+	}
+
+	// Only the first "main" light casts a shadow.
+	XMVECTOR lightDir = DirectX::XMLoadFloat3(&mRotatedLightDirections[0]);
+	XMVECTOR lightPos = -2.0f * mSceneBounds.Radius * lightDir;
+	XMVECTOR targetPos = DirectX::XMLoadFloat3(&mSceneBounds.Center);
+	XMVECTOR lightUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMMATRIX lightView = DirectX::XMMatrixLookAtLH(lightPos, targetPos, lightUp);
+
+	XMStoreFloat3(&mLightPosW, lightPos);
+
+	// Transform bounding sphere to light space.
+	XMFLOAT3 sphereCenterLS;
+	XMStoreFloat3(&sphereCenterLS, XMVector3TransformCoord(targetPos, lightView));
+
+	// Ortho frustum in light space encloses scene.
+	float l = sphereCenterLS.x - mSceneBounds.Radius;
+	float b = sphereCenterLS.y - mSceneBounds.Radius;
+	float n = sphereCenterLS.z - mSceneBounds.Radius;
+	float r = sphereCenterLS.x + mSceneBounds.Radius;
+	float t = sphereCenterLS.y + mSceneBounds.Radius;
+	float f = sphereCenterLS.z + mSceneBounds.Radius;
+
+	mLightNearZ = n;
+	mLightFarZ = f;
+	XMMATRIX lightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+
+	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
+	XMMATRIX T(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
+
+	XMMATRIX S = lightView * lightProj * T;
+	XMStoreFloat4x4(&mLightView, lightView);
+	XMStoreFloat4x4(&mLightProj, lightProj);
+	XMStoreFloat4x4(&mShadowTransform, S);
+}
+
 void GraphicsContext::DrawRenderItems(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems)
 {
 	const std::map<std::string, UINT>& info = objInfo->GetinstanceKeymap();
@@ -198,6 +285,36 @@ void GraphicsContext::DrawRenderItems(ObjectInfo* objInfo, const std::vector<Gam
 
 		Core::g_CommandList->DrawIndexedInstanced(ri->IndexCount, info.size(), ri->StartIndexLocation, ri->BaseVertexLocation, 0);
 	}
+}
+
+void GraphicsContext::SetResourceShadowPassCB()
+{
+	Core::g_CommandList->RSSetViewports(1, &GraphicsRenderer::GetApp()->mShadowMap->Viewport());
+	Core::g_CommandList->RSSetScissorRects(1, &GraphicsRenderer::GetApp()->mShadowMap->ScissorRect());
+
+	// Change to DEPTH_WRITE.
+	Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GraphicsRenderer::GetApp()->mShadowMap->Resource(),
+		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+
+	// Clear the back buffer and depth buffer.
+	Core::g_CommandList->ClearDepthStencilView(GraphicsRenderer::GetApp()->mShadowMap->Dsv(),
+		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	// Specify the buffers we are going to render to.
+	Core::g_CommandList->OMSetRenderTargets(0, nullptr, false, &GraphicsRenderer::GetApp()->mShadowMap->Dsv());
+
+	// Bind the pass constant buffer for the shadow map pass.
+	UINT passCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ShaderResource::PassConstants));
+	auto passCB = PassCB->Resource();
+	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
+	Core::g_CommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);
+}
+
+void GraphicsContext::ShadowTransitionResourceBarrier()
+{
+	// Change back to GENERIC_READ so we can read the texture in a shader.
+	Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GraphicsRenderer::GetApp()->mShadowMap->Resource(),
+		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
 void GraphicsContext::SetPipelineState(ID3D12PipelineState* PSO)
