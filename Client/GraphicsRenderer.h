@@ -49,7 +49,7 @@ private:
 
 	void BuildPostProcessRootSignature();
 
-	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
+	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GetStaticSamplers();
 
 public:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RenderRS;
@@ -67,9 +67,12 @@ public:
 
 	std::unordered_map<std::string, std::unique_ptr<Texture>> m_Textures;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_SrvDescriptorHeap = nullptr;
-	UINT m_CbvSrvDescriptorSize = 0;
-	UINT mSkyTexHeapIndex = 0;
 
+	UINT mSkyTexHeapIndex = 0;
 	UINT mShadowMapHeapIndex = 0;
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE mNullSrv;
+	UINT mNullCubeSrvIndex = 0;
+	UINT mNullTexSrvIndex = 0;
 };
 

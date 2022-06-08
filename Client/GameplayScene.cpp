@@ -370,13 +370,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//여기가 문제일수도 있음 
+	
+
+	///*Shadow*/
+	GraphicsContext::GetApp()->UpdateShadowTransform();
+	GraphicsContext::GetApp()->UpdateShadowPassCB();
+
 	//meterial
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
 
-
-	///*Shadow*/
-	//GraphicsContext::GetApp()->UpdateShadowTransform();
-	//GraphicsContext::GetApp()->UpdateShadowPassCB();
 }
 
 void GameplayScene::Render()
@@ -427,32 +429,41 @@ void GameplayScene::Render()
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
 
-	///*Shadow*/
-	//GraphicsContext::GetApp()->SetResourceShadowPassCB();
-	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
-	///*Shadow Props*/
-	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	//{
-	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	//}
+	/*Shadow*/
+	GraphicsContext::GetApp()->SetResourceShadowPassCB();
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
 
-	///*Shadow ThunderBolt*/
-	//GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[std::to_string(OBJECT_TYPE_THUNDERBOLT)], AppContext->m_RItemsVec);
+	/*Shadow Props*/
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 
-	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedShadowOpaquePSO.Get());
-	///*Shadow Characters*/
-	//for (auto& p : m_Users)
-	//{
-	//	if (!p.second) continue;
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["mountain"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["tent"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["kayak"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["kayakpaddle"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["rock_0"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["rock_1"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["igloo"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fish"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
 
-	//	if (p.second->m_TransformType == TransformType::Character)
-	//		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
-	//	else
-	//		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
-	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
-	//}
+	/*Shadow Characters*/
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+			GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 
-	//GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap[p.second->GetType()], AppContext->m_RItemsVec);
+	}
+
+	GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
 }
 
 void GameplayScene::Fall(int num) {

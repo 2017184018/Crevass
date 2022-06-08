@@ -140,12 +140,16 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
 	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
 
+	XMMATRIX shadowTransform = XMLoadFloat4x4(&mShadowTransform);
+
 	XMStoreFloat4x4(&mMainPassCB.View, XMMatrixTranspose(view));
 	XMStoreFloat4x4(&mMainPassCB.InvView, XMMatrixTranspose(invView));
 	XMStoreFloat4x4(&mMainPassCB.Proj, XMMatrixTranspose(proj));
 	XMStoreFloat4x4(&mMainPassCB.InvProj, XMMatrixTranspose(invProj));
 	XMStoreFloat4x4(&mMainPassCB.ViewProj, XMMatrixTranspose(viewProj));
 	XMStoreFloat4x4(&mMainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
+	XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
+
 	mMainPassCB.EyePosW = camera.GetPosition3f();
 	mMainPassCB.RenderTargetSize = XMFLOAT2((float)Core::g_DisplayWidth, (float)Core::g_DisplayHeight);
 	mMainPassCB.InvRenderTargetSize = XMFLOAT2(1.0f / Core::g_DisplayWidth, 1.0f / Core::g_DisplayHeight);
@@ -153,9 +157,12 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 	mMainPassCB.FarZ = 1000.0f;
 	mMainPassCB.TotalTime = Core::g_GameTimer->TotalTime();
 	mMainPassCB.DeltaTime = Core::g_GameTimer->DeltaTime();
-	mMainPassCB.AmbientLight = { 0.25f, 0.25f, 0.35f, 1.0f };
-	mMainPassCB.Lights[0].Direction = { 0.57735f, -0.57735f, 0.57735f };
-	mMainPassCB.Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
+	mMainPassCB.AmbientLight = { 0.25f, 0.25f, 0.25f, 1.0f };
+	mMainPassCB.Lights[0].Direction = mRotatedLightDirections[0];
+	mMainPassCB.Lights[0].Strength = { 0.9f, 0.8f, 0.7f };
+
+	/*mMainPassCB.Lights[0].Direction = { 0.57735f, -0.57735f, 0.57735f };
+	mMainPassCB.Lights[0].Strength = { 0.8f, 0.8f, 0.8f };*/
 	//mMainPassCB.Lights[1].Direction = { -0.57735f, -0.57735f, 0.57735f };
 	//mMainPassCB.Lights[1].Strength = { 0.4f, 0.4f, 0.4f };
 	//mMainPassCB.Lights[2].Direction = { 0.0f, -0.707f, -0.707f };
@@ -204,7 +211,7 @@ void GraphicsContext::UpdateShadowPassCB()
 	mShadowPassCB.FarZ = mLightFarZ;
 
 	auto currPassCB = PassCB.get();
-	currPassCB->CopyData(0, mShadowPassCB);
+	currPassCB->CopyData(1, mShadowPassCB);
 }
 
 void GraphicsContext::UpdateShadowTransform()
@@ -296,6 +303,8 @@ void GraphicsContext::SetResourceShadowPassCB()
 	Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GraphicsRenderer::GetApp()->mShadowMap->Resource(),
 		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 
+	UINT passCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ShaderResource::PassConstants));
+
 	// Clear the back buffer and depth buffer.
 	Core::g_CommandList->ClearDepthStencilView(GraphicsRenderer::GetApp()->mShadowMap->Dsv(),
 		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
@@ -304,9 +313,8 @@ void GraphicsContext::SetResourceShadowPassCB()
 	Core::g_CommandList->OMSetRenderTargets(0, nullptr, false, &GraphicsRenderer::GetApp()->mShadowMap->Dsv());
 
 	// Bind the pass constant buffer for the shadow map pass.
-	UINT passCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ShaderResource::PassConstants));
-	auto passCB = PassCB->Resource();
-	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
+	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
+	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress();
 	Core::g_CommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);
 }
 

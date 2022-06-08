@@ -23,8 +23,8 @@ struct VertexIn
 	float3 PosL    : POSITION;
     float3 NormalL : NORMAL;
 	float2 TexC    : TEXCOORD;
-	//float3 TangentL : TANGENT;
-   //float3 BinormalL : BINORMAL;
+	float3 TangentL : TANGENT;
+   float3 BinormalL : BINORMAL;
 
 #ifdef SKINNED
 	float3 BoneWeights : WEIGHTS;
@@ -36,12 +36,12 @@ struct VertexIn
 struct VertexOut
 {
 	float4 PosH    : SV_POSITION;
-    float3 PosW    : POSITION;
-    float3 NormalW : NORMAL;
+	float4 ShadowPosH : POSITION0;
+	float3 PosW    : POSITION1;
+	float3 NormalW : NORMAL;
 	float2 TexC    : TEXCOORD;
-	//float3 TangentL : TANGENT;
-   //float3 BinormalL : BINORMAL;
-   
+	float3 TangentW : TANGENT;
+	float3 BinormalW : BINORMAL;
 
 	// nointerpolation is used so the index is not interpolated 
 	// across the triangle.
@@ -100,6 +100,9 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 	float4 texC = mul(float4(vin.TexC, 0.0f, 1.0f), TexTransform);
 	vout.TexC = mul(texC, matData.MatTransform).xy;
 	
+	 // Generate projective tex-coords to project shadow map onto scene.
+    vout.ShadowPosH = mul(posW, gShadowTransform);
+
     return vout;
 }
 
@@ -125,9 +128,12 @@ float4 PS(VertexOut pin) : SV_Target
     // Light terms.
     float4 ambient = gAmbientLight*diffuseAlbedo;
 
+	// Only the first light casts a shadow.
+	float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
+	shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
+
     const float shininess = 1.0f - roughness;
     Material mat = { diffuseAlbedo, fresnelR0, shininess };
-    float3 shadowFactor = 1.0f;
     float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
         pin.NormalW, toEyeW, shadowFactor);
 
@@ -165,9 +171,13 @@ float4 PenguinPS(VertexOut pin) : SV_Target
 	// Light terms.
 	float4 ambient = gAmbientLight * diffuseAlbedo;
 
+	// Only the first light casts a shadow.
+	float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
+	shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
+
 	const float shininess = 1.0f - roughness;
 	Material mat = { diffuseAlbedo, fresnelR0, shininess };
-	float3 shadowFactor = 1.0f;
+	
 	float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
 		pin.NormalW, toEyeW, shadowFactor);
 
