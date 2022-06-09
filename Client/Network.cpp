@@ -288,6 +288,14 @@ void Network::ProcessPacket(char* packet_buffer)
 		m_pGameInfo->DeletePlayerInfo(packet.id);
 		break;
 	}
+	case SC_TIME:
+	{
+		sc_packet_time packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		std::cout << "time= " << (packet.time) / 3600 << "min " << ((packet.time) % 3600) / 60 << "sec" << endl;
+		break;
+	}
+
 	case SC_GAMEOVER:
 	{
 		std::cout << "game over" << std::endl;

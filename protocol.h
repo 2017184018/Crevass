@@ -13,6 +13,7 @@
 #define SC_RESET			10
 #define SC_GAMEOVER			11
 #define SC_BLOCK			12
+#define SC_TIME				13
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -156,6 +157,12 @@ struct sc_packet_block
 	short size;
 	char type;
 	Block blocks[25];
+};
+struct sc_packet_time
+{
+	short size;
+	char type;
+	int time;
 };
 
 /* Client to Server */

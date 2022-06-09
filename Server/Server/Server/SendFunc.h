@@ -253,3 +253,13 @@ void SendBlockPacket(Block& blocks) {
 
 	SendPacket(&packet);
 }
+
+void SendTime(int time)
+{
+	sc_packet_time packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_TIME;
+	packet.time = time;
+
+	SendPacket(&packet);
+}

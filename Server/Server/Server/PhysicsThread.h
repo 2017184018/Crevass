@@ -25,6 +25,8 @@ bool IsInteract[3] = { false,false,false };		//상호작용 키 눌렀는지
 bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 
+int CalcTime = 0;
+
 void Update(vector<Player>& player)
 {
 	float speed = 1.0f * 1.5f;
@@ -396,18 +398,19 @@ void ProcessClients()
 
 	//using frame = duration<int32_t, ratio<1, FPS>>;
 	//using ms = duration<float, milli>;
-
 	//time_point<steady_clock> fpsTimer(steady_clock::now());
 	//frame FramePerSec{};
+
 	while (true)
 	{
 		auto cur_Time = chrono::high_resolution_clock::now();
 		elapsedTime += FpFloatMilliseconds(cur_Time - prev_Time).count();
 		deltaT = FpFloatMilliseconds(cur_Time - prev_Time).count();
 		prev_Time = cur_Time;
+
 		//FramePerSec = duration_cast<frame>(steady_clock::now() - fpsTimer);
 
-		if (/*FramePerSec.count() >= 1*/elapsedTime > 16)
+		if (/*FramePerSec.count() >= 1*/elapsedTime > 1000.0f/60.0f)
 		{
 			g_MsgQueueLock.lock();
 			phyMsgQueue = g_MsgQueue;
@@ -880,12 +883,15 @@ void ProcessClients()
 			SendAnim(*players);
 
 
-			//for (int i = 0; i < numOfCls; ++i)
-			//{
-			//}
 			//fpsTimer = steady_clock::now();
 			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
 			elapsedTime = 0;
+			CalcTime += 1;
+
+			if (CalcTime % 60 == 0)
+			{
+				SendTime(CalcTime);
+			}
 		}
 	}
 	phyPlayers.clear();
