@@ -528,7 +528,7 @@ void ProcessClients()
 						}
 						break;
 					case KEY_JUMP:
-						if (phyPlayers[phyMsg.id].m_pos.y > -100)
+						if (phyPlayers[phyMsg.id].m_pos.y > -100 && phyPlayers[phyMsg.id].SnowmanNum == -1)
 							phyPlayers[phyMsg.id].is_jump = true;
 						break;
 					case KEY_INTERACT:
@@ -722,23 +722,23 @@ void ProcessClients()
 			}
 			Update(phyPlayers);
 
+			for (int i = 0; i < 2; ++i) {
+				g_boundaries["igloo" + std::to_string(i)]->Extents.x = OriginIglooExtens.x * 2.0 / 10.0;
+				g_boundaries["igloo" + std::to_string(i)]->Extents.y = OriginIglooExtens.y * 2.0 / 10.0 + 0.05;
+				g_boundaries["igloo" + std::to_string(i)]->Extents.z = OriginIglooExtens.z * 2.0 / 10.0;
+				g_boundaries["igloo" + std::to_string(i)]->Center.x = TempiglooLocation[i] / 3 * 400;
+				g_boundaries["igloo" + std::to_string(i)]->Center.y = blocks[TempiglooLocation[i] / 3 * 10 + TempiglooLocation[i] % 3 * 2].pos.y + 60;
+				g_boundaries["igloo" + std::to_string(i)]->Center.z = TempiglooLocation[i] % 3 * 400;
+			}
+			for (int i = 0; i < 4; ++i) {
+				g_boundaries["snowman" + std::to_string(i)]->Extents.x = OriginSnowmanExtens.x * (0.6 );
+				g_boundaries["snowman" + std::to_string(i)]->Extents.y = OriginSnowmanExtens.y * (0.6 );
+				g_boundaries["snowman" + std::to_string(i)]->Extents.z = OriginSnowmanExtens.z * (0.6 );
+				g_boundaries["snowman" + std::to_string(i)]->Center.x = TempSnowmanLocation[i] / 5 * 200;
+				g_boundaries["snowman" + std::to_string(i)]->Center.y = blocks[TempSnowmanLocation[i]].pos.y + 20;
+				g_boundaries["snowman" + std::to_string(i)]->Center.z = TempSnowmanLocation[i] % 5 * 200;
+			}
 			for (int j = 0; j < numOfCls; ++j) {		//상호작용
-				for (int i = 0; i < 2; ++i) {
-					g_boundaries["igloo" + std::to_string(i)]->Extents.x = OriginIglooExtens.x * 2.0 / 10.0;
-					g_boundaries["igloo" + std::to_string(i)]->Extents.y = OriginIglooExtens.y * 2.0 / 10.0 + 0.05;
-					g_boundaries["igloo" + std::to_string(i)]->Extents.z = OriginIglooExtens.z * 2.0 / 10.0;
-					g_boundaries["igloo" + std::to_string(i)]->Center.x = TempiglooLocation[i] / 3 * 400;
-					g_boundaries["igloo" + std::to_string(i)]->Center.y = blocks[TempiglooLocation[i] / 3 * 10 + TempiglooLocation[i] % 3 * 2].pos.y + 60;
-					g_boundaries["igloo" + std::to_string(i)]->Center.z = TempiglooLocation[i] % 3 * 400;
-				}
-				for (int i = 0; i < 4; ++i) {
-					g_boundaries["snowman" + std::to_string(i)]->Extents.x = OriginSnowmanExtens.x * (0.6 - blocks[TempSnowmanLocation[i]].destuctioncnt * 0.1);
-					g_boundaries["snowman" + std::to_string(i)]->Extents.y = OriginSnowmanExtens.y * (0.6 - blocks[TempSnowmanLocation[i]].destuctioncnt * 0.1);
-					g_boundaries["snowman" + std::to_string(i)]->Extents.z = OriginSnowmanExtens.z * (0.6 - blocks[TempSnowmanLocation[i]].destuctioncnt * 0.1);
-					g_boundaries["snowman" + std::to_string(i)]->Center.x = TempSnowmanLocation[i] / 5 * 200;
-					g_boundaries["snowman" + std::to_string(i)]->Center.y = blocks[TempSnowmanLocation[i]].pos.y + 20;
-					g_boundaries["snowman" + std::to_string(i)]->Center.z = TempSnowmanLocation[i] % 5 * 200;
-				}
 				if (IsInteract[j]) {
 					if (g_boundaries["igloo0"]->Intersects(*g_boundaries[TypeName[j]])) {
 						IsInteracting[j] = true;
@@ -757,6 +757,7 @@ void ProcessClients()
 							phyPlayers[j].SnowmanNum = -1 - phyPlayers[j].SnowmanNum;
 							HideInSnowman[0] = !HideInSnowman[0];
 						}
+						cout << "dsds" << endl;
 					}
 					else if (g_boundaries["snowman1"]->Intersects(*g_boundaries[TypeName[j]])) {
 						if (!HideInSnowman[1] || phyPlayers[j].SnowmanNum == 1) {
@@ -849,6 +850,12 @@ void ProcessClients()
 					phyPlayers[i].m_pos.x = TempSnowmanLocation[phyPlayers[i].SnowmanNum] / 5 * 200;
 					phyPlayers[i].m_pos.y = blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].pos.y + 60;
 					phyPlayers[i].m_pos.z = TempSnowmanLocation[phyPlayers[i].SnowmanNum] % 5 * 200;
+				}
+				if (blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].destuctioncnt == 3) {
+					IsInteracting[i] = false;
+					phyPlayers[i].IsHide = false;
+					HideInSnowman[phyPlayers[i].SnowmanNum] = false;
+					phyPlayers[i].SnowmanNum = -1;
 				}
 			}
 

@@ -297,8 +297,8 @@ void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 		XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
 		XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
 
-		ofstream out{ "bb.txt",ios::app };
-		out << meshName << " " << bounds.Extents.x<<" " << bounds.Extents.y << " " << bounds.Extents.z << endl;
+		//ofstream out{ "bb.txt",ios::app };
+		//out << meshName << " " << bounds.Extents.x<<" " << bounds.Extents.y << " " << bounds.Extents.z << endl;
 
 	SubmeshGeometry submesh;
 	submesh.IndexCount = indices.size();

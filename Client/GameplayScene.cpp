@@ -300,31 +300,33 @@ void GameplayScene::Update(const float& fDeltaTime)
 				scale = 0;
 			}
 
-			static float rota = 0;
-			static bool direct = true;
+			//static float rota = 0;
+			//static bool direct = true;
 			if (SnowmanIndex[i] % 5 == 1 || SnowmanIndex[i] % 5 == 3) {
-				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 5 / 6 + rota));
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 5 / 6));
 			}
 			else {
-				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 7 / 6 - rota));
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 7 / 6));
 			}
-			static int cnt = 0;
+			/*static int cnt = 0;
 			if (direct) {
-				if (rota < 1 / 9.0) {
-					rota += 0.003;
-				}
-				else {
-					direct = false;
+				if (cnt < 3) {
+					if (rota < 1 / 9.0) {
+						rota += 0.003;
+					}
+					else {
+						direct = false;
+					}
 				}
 			}
 			else {
-				if (rota > -1 / 9.0) {
+				if (rota > -1/9.0) {
 					rota -= 0.003;
 				}
 				else {
 					direct = true;
 				}
-			}
+			}*/
 			if (SnowmanIndex[i] % 5) {
 				AppContext->m_RItemsVec[209 + i]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._41 - 20;
 			}
@@ -498,13 +500,13 @@ void GameplayScene::Render()
 				ty[1] = true;
 			}
 			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
-				ty[1] = true;
+				ty[2] = true;
 			}
 			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
-				ty[1] = true;
+				ty[3] = true;
 			}
 			else {
-				ty[1] = true;
+				ty[4] = true;
 			}
 		}
 		else {
@@ -515,13 +517,13 @@ void GameplayScene::Render()
 				ty[1] = false;
 			}
 			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
-				ty[1] = false;
+				ty[2] = false;
 			}
 			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
-				ty[1] = false;
+				ty[3] = false;
 			}
 			else {
-				ty[1] = false;
+				ty[4] = false;
 			}
 		}
 	}
