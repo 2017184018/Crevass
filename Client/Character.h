@@ -103,6 +103,9 @@ public:
 
 	void SetHide(bool hide);
 	bool GetHide()const;
+
+	void SetSnowmanNum(int num);
+	int GetSnowmanNum()const;
 public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;
@@ -125,4 +128,5 @@ private:
 	float m_Roll;
 
 	bool IsHide;
+	int SnowmanNum;
 };

@@ -233,6 +233,7 @@ void Network::ProcessPacket(char* packet_buffer)
 			PlayerPos[i] = packet.players[i].pos;
 			dir[i] = packet.players[i].dir;
 			PlayerHide[i] = packet.players[i].IsHide;
+			PlayerSnowmanHide[i] = packet.players[i].SnowmanNum;
 		}
 	//	cout << packet.players[0].pos.x << endl;
 		//if (m_pGameInfo->m_ClientID == 0)
@@ -404,4 +405,9 @@ void Network::SetCharacterReset(int num)
 bool Network::GetPlayerHide(int num)const
 {
 	return PlayerHide[num];
+}
+
+int Network::GetPlayerSnowmanNum(int num)const
+{
+	return PlayerSnowmanHide[num];
 }

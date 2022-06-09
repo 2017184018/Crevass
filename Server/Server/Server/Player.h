@@ -43,6 +43,7 @@ public:
 	float ResetTimeCount = 0.0f;
 
 	bool IsHide = false;
+	int SnowmanNum = -1;
 public:
 	char dir = 0;
 	char anim = 0;

@@ -694,3 +694,12 @@ void Character::SetHide(bool hide)
 bool Character::GetHide()const {
 	return IsHide;
 }
+
+void Character::SetSnowmanNum(int num)
+{
+	SnowmanNum = num;
+}
+
+int Character::GetSnowmanNum()const {
+	return SnowmanNum;
+}

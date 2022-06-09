@@ -80,7 +80,7 @@ bool GameplayScene::Enter()
 	for (int i = 0; i < 2; ++i) {
 		float scale = 2.0f / 10.0f;
 		iglooIndex[i] = iglooLocaArray[g_pFramework->m_pNetwork->GetiglooLocation(i)];
-		if (iglooIndex[i] % 4) {		
+		if (iglooIndex[i] % 4) {
 			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(scale, scale + 0.05, scale) * XMMatrixRotationY(3.14 * 5 / 6));
 		}
 		else {
@@ -112,17 +112,16 @@ void GameplayScene::Exit()
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
+
+	static bool one[5]{ true,true,true,true,true };
+	static bool two[5]{ true,true,true,true,true };
+	static bool Small[5]{ false,false,false,false,false };
+
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
-		static bool one = true;
-		if (m_Users[i]->GetHide()) {
-			if (one) {
-				m_Users[i]->Scale(0.01, 0.01, 0.01);
-				one = false;
-				//움직이면 풀리게
-			}
-		}
+		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
+
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 		if (i != m_PlayerID) {//애니메이션은 나는 제외 
@@ -301,13 +300,31 @@ void GameplayScene::Update(const float& fDeltaTime)
 				scale = 0;
 			}
 
+			static float rota = 0;
+			static bool direct = true;
 			if (SnowmanIndex[i] % 5 == 1 || SnowmanIndex[i] % 5 == 3) {
-				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 5 / 6));
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 5 / 6 + rota));
 			}
 			else {
-				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 7 / 6));
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 7 / 6 - rota));
 			}
-
+			static int cnt = 0;
+			if (direct) {
+				if (rota < 1 / 9.0) {
+					rota += 0.003;
+				}
+				else {
+					direct = false;
+				}
+			}
+			else {
+				if (rota > -1 / 9.0) {
+					rota -= 0.003;
+				}
+				else {
+					direct = true;
+				}
+			}
 			if (SnowmanIndex[i] % 5) {
 				AppContext->m_RItemsVec[209 + i]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._41 - 20;
 			}
@@ -471,11 +488,53 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+	bool ty[5]{ false,false,false,false,false };
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
+		if (m_Users[i]->GetHide()) {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
+				ty[0] = true;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
+				ty[1] = true;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
+				ty[1] = true;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
+				ty[1] = true;
+			}
+			else {
+				ty[1] = true;
+			}
+		}
+		else {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
+				ty[0] = false;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
+				ty[1] = false;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
+				ty[1] = false;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
+				ty[1] = false;
+			}
+			else {
+				ty[1] = false;
+			}
+		}
+	}
+	if (!ty[0])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	if (!ty[1])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
+	if (!ty[2])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
+	if (!ty[3])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+	if (!ty[4])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);

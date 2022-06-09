@@ -51,11 +51,13 @@ public:
 	void SetCharacterReset(int num);
 
 	bool GetPlayerHide(int num)const;
+	int GetPlayerSnowmanNum(int num)const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];
 	char Player_Type[3];
 	bool PlayerHide[3];
+	int PlayerSnowmanHide[3];
 
 	int iglooLocation[2];
 	int SnowmanLocation[4];

@@ -23,6 +23,7 @@ DirectX::XMFLOAT3 temp(0.f, 0.f, 0.f);
 bool dir_switch[3];
 bool IsInteract[3] = { false,false,false };		//상호작용 키 눌렀는지
 bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
+bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 
 void Update(vector<Player>& player)
 {
@@ -749,10 +750,37 @@ void ProcessClients()
 						phyPlayers[j].m_pos = g_boundaries["igloo0"]->Center;
 						IsInteracting[j] = false;
 					}
-					else if (g_boundaries["snowman0"]->Intersects(*g_boundaries[TypeName[j]]) || g_boundaries["snowman1"]->Intersects(*g_boundaries[TypeName[j]]) ||
-						g_boundaries["snowman2"]->Intersects(*g_boundaries[TypeName[j]]) || g_boundaries["snowman3"]->Intersects(*g_boundaries[TypeName[j]])) {
-						IsInteracting[j] = true;
-						phyPlayers[j].IsHide = true;
+					else if (g_boundaries["snowman0"]->Intersects(*g_boundaries[TypeName[j]])) {
+						if (!HideInSnowman[0] || phyPlayers[j].SnowmanNum == 0) {
+							IsInteracting[j] = !IsInteracting[j];
+							phyPlayers[j].IsHide = !phyPlayers[j].IsHide;
+							phyPlayers[j].SnowmanNum = -1 - phyPlayers[j].SnowmanNum;
+							HideInSnowman[0] = !HideInSnowman[0];
+						}
+					}
+					else if (g_boundaries["snowman1"]->Intersects(*g_boundaries[TypeName[j]])) {
+						if (!HideInSnowman[1] || phyPlayers[j].SnowmanNum == 1) {
+							IsInteracting[j] = !IsInteracting[j];
+							phyPlayers[j].IsHide = !phyPlayers[j].IsHide;
+							phyPlayers[j].SnowmanNum = -phyPlayers[j].SnowmanNum;
+							HideInSnowman[1] = !HideInSnowman[1];
+						}
+					}
+					else if (g_boundaries["snowman2"]->Intersects(*g_boundaries[TypeName[j]])) {
+						if (!HideInSnowman[2] || phyPlayers[j].SnowmanNum == 2) {
+							IsInteracting[j] = !IsInteracting[j];
+							phyPlayers[j].IsHide = !phyPlayers[j].IsHide;
+							phyPlayers[j].SnowmanNum = 1 - phyPlayers[j].SnowmanNum;
+							HideInSnowman[2] = !HideInSnowman[2];
+						}
+					}
+					else if (g_boundaries["snowman3"]->Intersects(*g_boundaries[TypeName[j]])) {
+						if (!HideInSnowman[3] || phyPlayers[j].SnowmanNum == 3) {
+							IsInteracting[j] = !IsInteracting[j];
+							phyPlayers[j].IsHide = !phyPlayers[j].IsHide;
+							phyPlayers[j].SnowmanNum = 2 - phyPlayers[j].SnowmanNum;
+							HideInSnowman[3] = !HideInSnowman[3];
+						}
 					}
 					IsInteract[j] = false;
 				}
@@ -816,12 +844,21 @@ void ProcessClients()
 			}
 			//   Update(phyPlayers);
 
+			for (int i = 0; i < numOfCls; ++i) {	//눈사람에 숨어을때 위치 동기화
+				if (phyPlayers[i].SnowmanNum >= 0) {
+					phyPlayers[i].m_pos.x = TempSnowmanLocation[phyPlayers[i].SnowmanNum] / 5 * 200;
+					phyPlayers[i].m_pos.y = blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].pos.y + 60;
+					phyPlayers[i].m_pos.z = TempSnowmanLocation[phyPlayers[i].SnowmanNum] % 5 * 200;
+				}
+			}
+
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				players[i].anim = phyPlayers[i].GetAnimType();
 				players[i].pos = phyPlayers[i].m_pos;
 				players[i].dir = phyPlayers[i].dir;
 				players[i].IsHide = phyPlayers[i].IsHide;
+				players[i].SnowmanNum = phyPlayers[i].SnowmanNum;
 
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
 				if (TypeName[i] == "Penguin") {

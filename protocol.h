@@ -72,6 +72,7 @@ struct Pro_Player {
 	char anim;
 	char Character_type;
 	bool IsHide;
+	int SnowmanNum;
 };
 
 struct Block {
