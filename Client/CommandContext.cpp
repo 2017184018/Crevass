@@ -14,8 +14,8 @@
 void GraphicsContext::Initialize()
 {
 	// TEST SceneBounds
-	mSceneBounds.Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mSceneBounds.Radius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
+	mSceneBounds.Center = XMFLOAT3(2500.0f,0.0f, 2500.0f);
+	mSceneBounds.Radius = sqrtf(1800.0f * 1800.0f + 1800.0f * 1800.0f);
 
 	for (int i = 0; i < skinnedObjectCount; ++i)
 	{
@@ -38,6 +38,7 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 
 void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
 {
+	if (!objInfo) return;
 
 	const std::map<std::string, UINT>& info = objInfo->GetinstanceKeymap();
 
@@ -134,6 +135,7 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 {
 	XMMATRIX view = camera.GetView();
 	XMMATRIX proj = camera.GetProj();
+	XMMATRIX ortho = camera.GetOrtho();
 
 	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
 	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
@@ -148,13 +150,14 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 	XMStoreFloat4x4(&mMainPassCB.InvProj, XMMatrixTranspose(invProj));
 	XMStoreFloat4x4(&mMainPassCB.ViewProj, XMMatrixTranspose(viewProj));
 	XMStoreFloat4x4(&mMainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
+	XMStoreFloat4x4(&mMainPassCB.Ortho, XMMatrixTranspose(ortho));
 	XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
 
 	mMainPassCB.EyePosW = camera.GetPosition3f();
 	mMainPassCB.RenderTargetSize = XMFLOAT2((float)Core::g_DisplayWidth, (float)Core::g_DisplayHeight);
 	mMainPassCB.InvRenderTargetSize = XMFLOAT2(1.0f / Core::g_DisplayWidth, 1.0f / Core::g_DisplayHeight);
 	mMainPassCB.NearZ = 1.0f;
-	mMainPassCB.FarZ = 1000.0f;
+	mMainPassCB.FarZ = 10000.0f;
 	mMainPassCB.TotalTime = Core::g_GameTimer->TotalTime();
 	mMainPassCB.DeltaTime = Core::g_GameTimer->DeltaTime();
 	mMainPassCB.AmbientLight = { 0.25f, 0.25f, 0.25f, 1.0f };
@@ -216,8 +219,7 @@ void GraphicsContext::UpdateShadowPassCB()
 
 void GraphicsContext::UpdateShadowTransform()
 {
-
-	mLightRotationAngle += 0.1f * Core::g_GameTimer->DeltaTime();
+	mLightRotationAngle += 0.2f * Core::g_GameTimer->DeltaTime();
 
 	XMMATRIX R = DirectX::XMMatrixRotationY(mLightRotationAngle);
 	for (int i = 0; i < 3; ++i)
@@ -314,7 +316,7 @@ void GraphicsContext::SetResourceShadowPassCB()
 
 	// Bind the pass constant buffer for the shadow map pass.
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
-	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress();
+	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
 	Core::g_CommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);
 }
 

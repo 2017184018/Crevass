@@ -73,17 +73,22 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 
 	float3 posL = float3(0.0f, 0.0f, 0.0f);
 	float3 normalL = float3(0.0f, 0.0f, 0.0f);
+	float3 tangentL = float3(0.0f, 0.0f, 0.0f);
+	float3 binormalL = float3(0.0f, 0.0f, 0.0f);
 
 	for (int i = 0; i < 4; i++)
 	{
 		posL += weights[i] * mul(float4(vin.PosL, 1.0f), gBoneTransforms[vin.BoneIndices[i]]).xyz;
 		normalL += weights[i] * mul(vin.NormalL, (float3x3)gBoneTransforms[vin.BoneIndices[i]]);
-	
+		tangentL += weights[i] * mul(vin.TangentL.xyz, (float3x3) gBoneTransforms[vin.BoneIndices[i]]);
+		binormalL += weights[i] * mul(vin.BinormalL, (float3x3)gBoneTransforms[vin.BoneIndices[i]]);
+
 	}
 
 	vin.PosL = posL;
 	vin.NormalL = normalL; 
-
+	vin.TangentL.xyz = tangentL;
+	vin.BinormalL = binormalL;
 #endif
 
     // Transform to world space.
@@ -92,6 +97,8 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 
     // Assumes nonuniform scaling; otherwise, need to use inverse-transpose of world matrix.
 	vout.NormalW = mul(vin.NormalL, (float3x3)world);
+	vout.TangentW = mul(vin.TangentL, (float3x3) world);
+	vout.BinormalW = mul(vin.BinormalL, (float3x3) world);
 
     // Transform to homogeneous clip space.
 	vout.PosH = mul(posW, gViewProj);
@@ -132,12 +139,12 @@ float4 PS(VertexOut pin) : SV_Target
 	float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
 	shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
 
-    const float shininess = 1.0f - roughness;
-    Material mat = { diffuseAlbedo, fresnelR0, shininess };
-    float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
-        pin.NormalW, toEyeW, shadowFactor);
+	const float shininess = 1.0f - roughness;
+	Material mat = { diffuseAlbedo, fresnelR0, shininess };
+	float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
+		pin.NormalW, toEyeW, shadowFactor);
 
-    float4 litColor = ambient + directLight;
+	float4 litColor = ambient + directLight;
 
 	// Add in specular reflections.
 	float3 r = reflect(-toEyeW, pin.NormalW);
@@ -145,9 +152,10 @@ float4 PS(VertexOut pin) : SV_Target
 	float3 fresnelFactor = SchlickFresnel(fresnelR0, pin.NormalW, r);
 	litColor.rgb += shininess * fresnelFactor * reflectionColor.rgb;
 
-    // Common convention to take alpha from diffuse albedo.
-    litColor.a = diffuseAlbedo.a;
-    return litColor;
+	// Common convention to take alpha from diffuse albedo.
+	litColor.a = diffuseAlbedo.a;
+
+	return litColor;
 }
 
 float4 PenguinPS(VertexOut pin) : SV_Target
@@ -171,17 +179,16 @@ float4 PenguinPS(VertexOut pin) : SV_Target
 	// Light terms.
 	float4 ambient = gAmbientLight * diffuseAlbedo;
 
-	// Only the first light casts a shadow.
-	float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
-	shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
+    // Only the first light casts a shadow.
+    float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
+    shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
+    
+    const float shininess = 1.0f - roughness;
+    Material mat = { diffuseAlbedo, fresnelR0, shininess };
+    float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
+        pin.NormalW, toEyeW, shadowFactor);
 
-	const float shininess = 1.0f - roughness;
-	Material mat = { diffuseAlbedo, fresnelR0, shininess };
-	
-	float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
-		pin.NormalW, toEyeW, shadowFactor);
-
-	float4 litColor = ambient + directLight;
+    float4 litColor = ambient + directLight;
 
 	// Add in specular reflections.
 	float3 r = reflect(-toEyeW, pin.NormalW);
@@ -189,8 +196,8 @@ float4 PenguinPS(VertexOut pin) : SV_Target
 	float3 fresnelFactor = SchlickFresnel(fresnelR0, pin.NormalW, r);
 	litColor.rgb += shininess * fresnelFactor * reflectionColor.rgb;
 
-	// Common convention to take alpha from diffuse albedo.
-	litColor.a = diffuseAlbedo.a;
+    // Common convention to take alpha from diffuse albedo.
+    litColor.a = diffuseAlbedo.a;
 
 	return litColor;
 }

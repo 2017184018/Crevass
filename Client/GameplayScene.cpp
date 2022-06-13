@@ -25,7 +25,7 @@ void GameplayScene::Initialize()
 {
 	m_SceneController = new GameplayController(this);
 
-	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
+	AppContext->CreateSkycube("sky", "sky0", "snowcube1024"); 
 	AppContext->CreateBlocks();
 	AppContext->CreateSnowmans();
 	AppContext->CreateWave();
@@ -370,14 +370,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
 	//여기가 문제일수도 있음 
-	
 
 	///*Shadow*/
 	GraphicsContext::GetApp()->UpdateShadowTransform();
 	GraphicsContext::GetApp()->UpdateShadowPassCB();
 
+
 	//meterial
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
+
 
 }
 
@@ -416,18 +417,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 
-	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
-		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 
-	//Prepare to copy blurred output to the back buffer.
-	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-		D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
-
-	g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
-
-	// Transition to PRESENT state.
-	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
 
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
@@ -455,15 +445,32 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
 
 	/*Shadow Characters*/
+
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedShadowOpaquePSO.Get());
+
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
-			GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 
+			//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
+		
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap[p.second->GetType()], AppContext->m_RItemsVec);
 	}
 
 	GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
+
+	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
+		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
+
+	//Prepare to copy blurred output to the back buffer.
+	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+		D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+
+	g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
+
+	// Transition to PRESENT state.
+	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
 }
 
 void GameplayScene::Fall(int num) {

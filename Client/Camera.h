@@ -11,6 +11,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+namespace Core
+{
+	extern int g_DisplayWidth;
+	extern int g_DisplayHeight;
+}
+
 class Character;
 class Camera
 {
@@ -76,9 +82,11 @@ public:
 	// Get View/Proj matrices.
 	DirectX::XMMATRIX GetView()const;
 	DirectX::XMMATRIX GetProj()const;
+	DirectX::XMMATRIX GetOrtho()const;
 
 	DirectX::XMFLOAT4X4 GetView4x4f()const;
 	DirectX::XMFLOAT4X4 GetProj4x4f()const;
+	DirectX::XMFLOAT4X4 GetOrtho4x4f()const;
 
 	// Strafe/Walk the camera a distance d.
 	void Strafe(float d);
@@ -117,6 +125,7 @@ private:
 	// Cache View/Proj matrices.
 	DirectX::XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	DirectX::XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+	DirectX::XMFLOAT4X4 mOrtho = MathHelper::Identity4x4();
 };
 
 #endif // CAMERA_H

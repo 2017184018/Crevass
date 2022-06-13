@@ -32,8 +32,10 @@ void GraphicsRenderer::Initialize()
 {
 	//Build Resource
 	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 2048, 2048);
+	UINT m_CbvSrvSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	cout << "size ---"<< m_CbvSrvSize <<endl;
 
-	Core::mBlurFilter = std::make_unique<BlurFilter>(g_Device.Get(),
+	Core::mBlurFilter = std::make_unique<BlurFilter>(Core::g_Device.Get(),
 		g_DisplayWidth, g_DisplayHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	LoadTextures();
@@ -61,11 +63,15 @@ void GraphicsRenderer::RenderGraphics()
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
 	g_CommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 
+	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+
 	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	skyTexDescriptor.Offset(mSkyTexHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 	g_CommandList->SetGraphicsRootDescriptorTable(3, skyTexDescriptor);
 
-	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE shadowTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	shadowTexDescriptor.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+	g_CommandList->SetGraphicsRootDescriptorTable(6, shadowTexDescriptor);
 }
 
 void GraphicsRenderer::LoadTextures()
@@ -134,8 +140,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		// Create the SRV heap.
 		//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	//의심 1
-	srvHeapDesc.NumDescriptors = m_Textures.size() + blurDescriptorCount;
+	srvHeapDesc.NumDescriptors = m_Textures.size()*2 + blurDescriptorCount;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(Core::g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
@@ -145,215 +150,66 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	//
 	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
+	
+	std::vector<ComPtr<ID3D12Resource>> tex2DList =
+	{
+	m_Textures["ice"]->Resource,
+	m_Textures["Penguin"]->Resource,
+    m_Textures["water"]->Resource,
+	m_Textures["husky"]->Resource,
+	m_Textures["heart"]->Resource,
+	m_Textures["heartline"]->Resource,
+	m_Textures["rope"]->Resource,
+	m_Textures["lobby"]->Resource,
+	m_Textures["arctic"]->Resource,
+	m_Textures["ArcticFox"]->Resource,
+	m_Textures["PolarBear"]->Resource,
+	m_Textures["Seal"]->Resource,
+	m_Textures["lobby1"]->Resource,
+	m_Textures["lobby2"]->Resource,
+	m_Textures["lobby3"]->Resource,
+	m_Textures["lobby4"]->Resource,
+	m_Textures["lobby5"]->Resource
+	};
+
 	auto snowcube1024 = m_Textures["snowcube1024"]->Resource;
-	auto ice = m_Textures["ice"]->Resource;
-	auto Penguin = m_Textures["Penguin"]->Resource;
-	auto water = m_Textures["water"]->Resource;
-	auto husky = m_Textures["husky"]->Resource;
-	auto heart = m_Textures["heart"]->Resource;
-	auto heartline = m_Textures["heartline"]->Resource;
-	auto rope = m_Textures["rope"]->Resource;
-	auto lobby = m_Textures["lobby"]->Resource;
-	auto arctic = m_Textures["arctic"]->Resource;
-	auto ArcticFox = m_Textures["ArcticFox"]->Resource;
-	auto PolarBear = m_Textures["PolarBear"]->Resource;
-	auto Seal = m_Textures["Seal"]->Resource;
-	auto lobby1 = m_Textures["lobby1"]->Resource;
-	auto lobby2 = m_Textures["lobby2"]->Resource;
-	auto lobby3 = m_Textures["lobby3"]->Resource;
-	auto lobby4 = m_Textures["lobby4"]->Resource;
-	auto lobby5 = m_Textures["lobby5"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-	// �Թ�ü�� TECTURECUBE
-	srvDesc.Format = snowcube1024->GetDesc().Format;
+	// skyCube
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.TextureCube.MostDetailedMip = 0;
 	srvDesc.TextureCube.MipLevels = snowcube1024->GetDesc().MipLevels;
 	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+	srvDesc.Format = snowcube1024->GetDesc().Format;
+	Core::g_Device->CreateShaderResourceView(snowcube1024.Get(), &srvDesc, hDescriptor);
+	//hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 
-	g_Device->CreateShaderResourceView(snowcube1024.Get(), &srvDesc, hDescriptor);
-
-	// next descriptor
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = ice->GetDesc().Format;
+	// Textures
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = ice->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(ice.Get(), &srvDesc, hDescriptor);
 
-	// next descriptor
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+	for (UINT i = 0; i < (UINT)tex2DList.size(); ++i)
+	{
+		hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 
-	srvDesc.Format = Penguin->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = Penguin->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(Penguin.Get(), &srvDesc, hDescriptor);
+		srvDesc.Format = tex2DList[i]->GetDesc().Format;
+		srvDesc.Texture2D.MipLevels = tex2DList[i]->GetDesc().MipLevels;
+		Core::g_Device->CreateShaderResourceView(tex2DList[i].Get(), &srvDesc, hDescriptor);
 
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = water->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = water->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(water.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = husky->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = husky->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(husky.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = heart->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = heart->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(heart.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = heartline->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = heartline->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(heartline.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = rope->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = rope->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(rope.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = lobby->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = lobby->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(lobby.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = arctic->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = arctic->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(arctic.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = ArcticFox->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = ArcticFox->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(ArcticFox.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = PolarBear->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = PolarBear->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(PolarBear.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = Seal->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = Seal->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(Seal.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = lobby1->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = lobby1->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(lobby1.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = lobby2->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = lobby2->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(lobby2.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = lobby3->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = lobby3->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(lobby3.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = lobby4->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = lobby4->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(lobby4.Get(), &srvDesc, hDescriptor);
-
-	hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	srvDesc.Format = lobby5->GetDesc().Format;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = lobby5->GetDesc().MipLevels;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(lobby5.Get(), &srvDesc, hDescriptor);
+		// next descriptor
+	}
 
 	mSkyTexHeapIndex = 0;
-	mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
-	mNullCubeSrvIndex = mShadowMapHeapIndex + 1;
-	mNullTexSrvIndex = m_Textures.size() + mNullCubeSrvIndex + 1;
+	mShadowMapHeapIndex = (UINT)tex2DList.size() + 1;
 
 	auto srvCpuStart = m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	auto srvGpuStart = m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 	auto dsvCpuStart = GameCore::GetApp()->mDsvHeap->GetCPUDescriptorHandleForHeapStart();
 	
-	// NullSrv
-	auto nullSrv = CD3DX12_CPU_DESCRIPTOR_HANDLE(srvCpuStart, mNullCubeSrvIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-	mNullSrv = CD3DX12_GPU_DESCRIPTOR_HANDLE(srvGpuStart, mNullCubeSrvIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	Core::g_Device->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
-	nullSrv.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-
-	// Nulltex
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = 1;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	Core::g_Device->CreateShaderResourceView(nullptr, &srvDesc, hDescriptor);
+	
 
 	mShadowMap->BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(srvCpuStart, mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
@@ -421,12 +277,15 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 void GraphicsRenderer::BuildRootSignatures()
 {
 	CD3DX12_DESCRIPTOR_RANGE skyboxTable;
-	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0, 0);
+	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, m_Textures.size(), 2, 0);		//�ؽ��� ��
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,17, 2, 0);		//�ؽ��� ��
 
-	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
+	CD3DX12_DESCRIPTOR_RANGE texTable2;
+	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);
+
+	CD3DX12_ROOT_PARAMETER slotRootParameter[7];
 
 	// ���� �� : ���󵵰� �����Ϳ��� ���� ���� ������ �����Ѵ�.
 	/* Shader Register*/
@@ -443,11 +302,12 @@ void GraphicsRenderer::BuildRootSignatures()
 	slotRootParameter[3].InitAsDescriptorTable(1, &skyboxTable, D3D12_SHADER_VISIBILITY_PIXEL);
 	slotRootParameter[4].InitAsDescriptorTable(1, &textureTable, D3D12_SHADER_VISIBILITY_PIXEL);
 	slotRootParameter[5].InitAsConstantBufferView(1);
+	slotRootParameter[6].InitAsDescriptorTable(1, &texTable2, D3D12_SHADER_VISIBILITY_PIXEL); // shadow
 
 	auto staticSamplers = GetStaticSamplers();
 
 	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(6, slotRootParameter,
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(7, slotRootParameter,
 		(UINT)staticSamplers.size(), staticSamplers.data(),
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -558,8 +418,8 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO)));
 
 	//
-		// PSO for shadow map pass.
-		//
+	// PSO for shadow map pass.
+	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC smapPsoDesc = opaquePsoDesc;
 	smapPsoDesc.RasterizerState.DepthBias = 100000;
 	smapPsoDesc.RasterizerState.DepthBiasClamp = 0.0f;
@@ -594,7 +454,6 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 		m_Shaders["shadowOpaquePS"]->GetBufferSize()
 	};
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedSmapPsoDesc, IID_PPV_ARGS(&g_SkinnedShadowOpaquePSO)));
-
 
 	//
 	// PSO for horizontal blur

@@ -47,7 +47,7 @@ Texture2D gShadowMap : register(t1);
 
 // Texture2DArray와는 달리 이 배열에는 크기와 형식이
 // 다른 텍스처들을 담을 수 있다. 따라서 좀 더 유연하다.
-Texture2D gDiffuseMap[3] : register(t2);
+Texture2D gDiffuseMap[17] : register(t2);
 
 // 재질 자료를 space1에 배정한다. 따라서 위의 텍스처 배열과는 겹치지 않는다.
 // 위의 텍스처 배열은 space0의 레지스터 t0, t1,,, t7을 차지한다.
@@ -71,6 +71,7 @@ cbuffer cbPass : register(b0)
 	float4x4 gInvProj;
 	float4x4 gViewProj;
 	float4x4 gInvViewProj;
+	float4x4 gOrtho;
 	float4x4 gShadowTransform;
 	float3 gEyePosW;
 	float cbPerObjectPad1;

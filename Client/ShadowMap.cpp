@@ -8,18 +8,18 @@ ShadowMap::ShadowMap(ID3D12Device* device, UINT width, UINT height)
 	mWidth = width;
 	mHeight = height;
 
-	mViewport = { 0.0f, 0.0f, (float)width, (float)height, 0.0f,1.0f };
-	mScissorRect = { 0,0, (int)width, (int)height };
+	mViewport = { 0.0f, 0.0f, (float)width, (float)height, 0.0f, 1.0f };
+	mScissorRect = { 0, 0, (int)width, (int)height };
 
 	BuildResource();
 }
 
-UINT ShadowMap::Width() const
+UINT ShadowMap::Width()const
 {
 	return mWidth;
 }
 
-UINT ShadowMap::Height() const
+UINT ShadowMap::Height()const
 {
 	return mHeight;
 }
@@ -29,28 +29,29 @@ ID3D12Resource* ShadowMap::Resource()
 	return mShadowMap.Get();
 }
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE ShadowMap::Srv() const
+CD3DX12_GPU_DESCRIPTOR_HANDLE ShadowMap::Srv()const
 {
-	return  mhGpuSrv;
+	return mhGpuSrv;
 }
 
-CD3DX12_CPU_DESCRIPTOR_HANDLE ShadowMap::Dsv() const
+CD3DX12_CPU_DESCRIPTOR_HANDLE ShadowMap::Dsv()const
 {
 	return mhCpuDsv;
 }
 
-
-D3D12_VIEWPORT ShadowMap::Viewport() const
+D3D12_VIEWPORT ShadowMap::Viewport()const
 {
 	return mViewport;
 }
 
-D3D12_RECT ShadowMap::ScissorRect() const
+D3D12_RECT ShadowMap::ScissorRect()const
 {
 	return mScissorRect;
 }
 
-void ShadowMap::BuildDescriptors(CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv, CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv, CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuDsv)
+void ShadowMap::BuildDescriptors(CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
+	CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
+	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuDsv)
 {
 	// Save references to the descriptors. 
 	mhCpuSrv = hCpuSrv;
@@ -104,6 +105,7 @@ void ShadowMap::BuildResource()
 	// cannot be bound as an UnorderedAccessView, or cast to a format that
 	// could be bound as an UnorderedAccessView.  Therefore this format 
 	// does not support D3D11_BIND_UNORDERED_ACCESS.
+
 	D3D12_RESOURCE_DESC texDesc;
 	ZeroMemory(&texDesc, sizeof(D3D12_RESOURCE_DESC));
 	texDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;

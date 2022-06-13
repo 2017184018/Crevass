@@ -92,7 +92,7 @@ void CREVASS::Startup(void)
 	SceneManager::GetApp()->EnterScene(SceneType::Lobby);
 
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
-	GraphicsContext::GetApp()->passCount = 1;
+	GraphicsContext::GetApp()->passCount = 2;
 	GraphicsContext::GetApp()->skinnedObjectCount = BoneIndex::Count;
 	GraphicsContext::GetApp()->materialCount = MaterialReference::GetApp()->m_Materials.size();
 
@@ -135,9 +135,10 @@ void CREVASS::Update(float deltaT)
 	CommandCenter::GetApp()->Order(deltaT);
 
 	g_pFramework->m_pNetwork->Recv();
-	SceneManager::GetApp()->UpdateScene(deltaT);
-	m_Camera->UpdateViewMatrix();
 
+	SceneManager::GetApp()->UpdateScene(deltaT);
+
+	m_Camera->UpdateViewMatrix();
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
 }
 

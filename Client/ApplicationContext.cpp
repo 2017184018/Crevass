@@ -76,18 +76,19 @@ void ApplicationContext::CreateLobby() {
 
 void ApplicationContext::CreateSkycube(std::string skycubeName, std::string instID, std::string matName)
 {
+	
 	GameObject* skyRitem = CreateObject<GameObject>(skycubeName, instID);		//0
 	skyRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
 	skyRitem->StartIndexLocation = skyRitem->Geo->DrawArgs["sphere"].StartIndexLocation;
 	skyRitem->BaseVertexLocation = skyRitem->Geo->DrawArgs["sphere"].BaseVertexLocation;
 	skyRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	skyRitem->m_MaterialIndex = 0;
+	skyRitem->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	skyRitem->m_IsVisible = true;
 	//skyRitem->m_MaterialIndex = MeshReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
-	skyRitem->Scale(3000, 3000, 3000);
+	skyRitem->Scale(5000, 5000,5000);
 }
 
 void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName)
@@ -124,7 +125,7 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["icecube"].Bounds;
 				instancingObj->m_IsVisible = true;
-				instancingObj->m_MaterialIndex = 1;
+				instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
 				instancingObj->m_World._22 = SCALE;
@@ -146,7 +147,7 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowcube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["snowcube"].Bounds;
 				instancingObj->m_IsVisible = true;
-				instancingObj->m_MaterialIndex = 1;
+				instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
 				instancingObj->m_World._22 = SCALE;
@@ -167,7 +168,7 @@ void ApplicationContext::CreateBlocks()
 			top->StartIndexLocation = top->Geo->DrawArgs["snow_top"].StartIndexLocation;
 			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
 			top->m_IsVisible = true;
-			top->m_MaterialIndex = 1;
+			top->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 			top->m_World = MathHelper::Identity4x4();
 			top->m_World._11 = SCALE;
 			top->m_World._22 = SCALE;
@@ -189,7 +190,7 @@ void ApplicationContext::CreateBlocks()
 			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icicle"].StartIndexLocation;
 			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icicle"].BaseVertexLocation;
 			instancingObj->m_IsVisible = true;
-			instancingObj->m_MaterialIndex = 1;
+			instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 			instancingObj->m_World = MathHelper::Identity4x4();
 			instancingObj->m_World._11 = SCALE * 7.5 / 10.0;
 			instancingObj->m_World._22 = SCALE;
@@ -214,7 +215,7 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
-		instancingObj->m_MaterialIndex = 1;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		instancingObj->m_World._11 = SCALE * 3 / 5.0;

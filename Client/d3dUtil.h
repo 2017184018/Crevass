@@ -114,6 +114,7 @@ namespace ShaderResource
 		DirectX::XMFLOAT4X4 InvProj = MathHelper::Identity4x4();
 		DirectX::XMFLOAT4X4 ViewProj = MathHelper::Identity4x4();
 		DirectX::XMFLOAT4X4 InvViewProj = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 Ortho = MathHelper::Identity4x4();
 		DirectX::XMFLOAT4X4 ShadowTransform = MathHelper::Identity4x4();
 
 		DirectX::XMFLOAT3 EyePosW = { 0.0f, 0.0f, 0.0f };

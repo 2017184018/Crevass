@@ -42,7 +42,7 @@ public:
 	std::map<std::string, std::unique_ptr<SkinnedModelInstance>> m_SkinnedModelInsts;
 
 	// Mesh Material Reference를 합치자
-	std::unordered_map<std::string, std::unique_ptr<Material>>	m_Materials;
+	//std::unordered_map<std::string, std::unique_ptr<Material>>	m_Materials;
 	
 	std::vector<std::string> mSkinnedTextureNames;
 }; 
