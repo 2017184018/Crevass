@@ -865,7 +865,33 @@ void ProcessClients()
 						g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
 						for (int j = 0; j < 5; ++j) {
 							if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
-								
+								phyPlayers[i].is_hitted = true;
+								float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
+								float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
+								if (SubX < -9) {
+									if (SubZ < -9)
+										phyPlayers[i].hitted_dir = 1;
+									else if (SubZ >= -9 && SubZ < 9)
+										phyPlayers[i].hitted_dir = 2;
+									else if (SubZ >= 9)
+										phyPlayers[i].hitted_dir = 3;
+								}
+								else 	if (SubX >= -9 && SubX <= 9) {
+									if (SubZ < -9)
+										phyPlayers[i].hitted_dir = 0;
+									else if (SubZ >= -9 && SubZ < 9)
+										phyPlayers[i].hitted_dir = 0;
+									else if (SubZ >= 9)
+										phyPlayers[i].hitted_dir = 4;
+								}
+								else 	if (SubX > 9) {
+									if (SubZ < -9)
+										phyPlayers[i].hitted_dir = 7;
+									else if (SubZ >= -9 && SubZ < 9)
+										phyPlayers[i].hitted_dir = 6;
+									else if (SubZ >= 9)
+										phyPlayers[i].hitted_dir = 5;
+								}
 							}
 						}
 					}

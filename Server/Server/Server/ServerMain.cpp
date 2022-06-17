@@ -48,9 +48,9 @@ void LoadBBs(std::string filepath) {
 			for (int i = 0; i < 5; ++i) {
 				g_boundaries["hail" + std::to_string(i)] = BB;
 				BB = new DirectX::BoundingBox;
-				BB->Extents.x = tmpx;
-				BB->Extents.y = tmpy;
-				BB->Extents.z = tmpz;
+				BB->Extents.x = tmpx * 3;
+				BB->Extents.y = tmpy * 3;
+				BB->Extents.z = tmpz * 3;
 			}
 		}
 		else {
@@ -93,14 +93,14 @@ int main()
 	{
 		client_sock = accept(listen_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (client_sock == INVALID_SOCKET) ErrDisplay("accept()");
-			
+
 		// 3인이 이미 서버에 접속해 있으면, 4번째로 접속을 요청하는 클라이언트부터 접속을 허용하지 않음. 
 		if (numOfCls == MAXPLAYER || g_isPlaying == true) {
 			closesocket(client_sock);
 			continue;
 		}
 
-		for (int i = 0; i < MAXPLAYER; ++i) 
+		for (int i = 0; i < MAXPLAYER; ++i)
 		{
 			g_ConnectedClsLock.lock();
 			if (false == g_connectedCls[i].is_connected) {
@@ -142,7 +142,7 @@ int main()
 				SendReadyPacket(user_id, i, g_playerReadyInfo[i].ready);	//mutex 필요
 				g_PlayerReadyInfoLock.unlock();
 				SendReadyPacket(i, user_id, 0);	//0넣은 이유 mutex안쓰려고
-				g_ConnectedClsLock.lock();				
+				g_ConnectedClsLock.lock();
 			}
 			g_ConnectedClsLock.unlock();
 		}

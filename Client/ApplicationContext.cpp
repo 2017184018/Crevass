@@ -714,9 +714,9 @@ void ApplicationContext::CreateHail()
 		instancingObj->m_MaterialIndex = 11;
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		instancingObj->m_World._11 = 1;
-		instancingObj->m_World._22 = 1;
-		instancingObj->m_World._33 = 1;
+		instancingObj->m_World._11 = 1.5;
+		instancingObj->m_World._22 = 1.5;
+		instancingObj->m_World._33 = 1.5;
 
 		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * -0.4));
 
