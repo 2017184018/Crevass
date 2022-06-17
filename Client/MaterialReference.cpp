@@ -156,6 +156,15 @@ void MaterialReference::BuildMaterials()
 	lobby5->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	lobby5->Roughness = 1.0f;
 
+	auto bricks0 = std::make_unique<Material>();
+	bricks0->Name = "bricks0";
+	bricks0->MatCBIndex = 0;
+	bricks0->DiffuseSrvHeapIndex = 0;
+	bricks0->NormalSrvHeapIndex = 1;
+	bricks0->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	bricks0->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	bricks0->Roughness = 0.3f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -174,4 +183,5 @@ void MaterialReference::BuildMaterials()
 	m_Materials["lobby3"] = std::move(lobby3);
 	m_Materials["lobby4"] = std::move(lobby4);
 	m_Materials["lobby5"] = std::move(lobby5);
+	m_Materials["bricks0"] = std::move(bricks0);
 }

@@ -93,14 +93,27 @@ void ApplicationContext::CreateSkycube(std::string skycubeName, std::string inst
 
 void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName)
 {
-	GameObject* item = CreateObject<GameObject>(boundsName, boundsInstName);
+	/*GameObject* item = CreateObject<GameObject>(boundsName, boundsInstName);
 	item->Geo = MeshReference::GetApp()->m_GeometryMesh[boundsName].get();
 	item->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	item->IndexCount = item->Geo->DrawArgs[boundsName].IndexCount;
 	item->StartIndexLocation = item->Geo->DrawArgs[boundsName].StartIndexLocation;
 	item->BaseVertexLocation = item->Geo->DrawArgs[boundsName].BaseVertexLocation;
 	item->m_IsVisible = false;
-	item->m_MaterialIndex = 1;
+	item->m_MaterialIndex = 1;*/
+
+	GameObject* quadRitem = CreateObject<GameObject>("quad", "quad");
+	quadRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+	quadRitem->IndexCount = quadRitem->Geo->DrawArgs["quad"].IndexCount;
+	quadRitem->StartIndexLocation = quadRitem->Geo->DrawArgs["quad"].StartIndexLocation;
+	quadRitem->BaseVertexLocation = quadRitem->Geo->DrawArgs["quad"].BaseVertexLocation;
+	quadRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	quadRitem->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["bricks0"]->DiffuseSrvHeapIndex;
+	quadRitem->m_World = MathHelper::Identity4x4();
+	quadRitem->m_TexTransform = MathHelper::Identity4x4();
+	quadRitem->m_IsVisible = true;
+
+	cout << "hihihi" << endl;
 }
 
 bool BlockCheck(int idx) {

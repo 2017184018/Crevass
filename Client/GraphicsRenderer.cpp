@@ -15,6 +15,7 @@ namespace Graphics
 {
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_DebugPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
 
@@ -32,17 +33,15 @@ void GraphicsRenderer::Initialize()
 {
 	//Build Resource
 	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 2048, 2048);
-	UINT m_CbvSrvSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	cout << "size ---"<< m_CbvSrvSize <<endl;
 
 	Core::mBlurFilter = std::make_unique<BlurFilter>(Core::g_Device.Get(),
 		g_DisplayWidth, g_DisplayHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
-
 	LoadTextures();
+	BuildDescriptorHeaps();
+
+	BuildShaderAndInputLayout();
 	BuildRootSignatures();
 	BuildPostProcessRootSignature();
-	BuildDescriptorHeaps();
-	BuildShaderAndInputLayout();
 	BuildPipelineStateObjects();
 }
 
@@ -251,6 +250,8 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_0");
 	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_0");
 
+	m_Shaders["debugVS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["debugPS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
 	
 	m_Instancing_InputLayout =
 	{
@@ -455,6 +456,23 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	};
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedSmapPsoDesc, IID_PPV_ARGS(&g_SkinnedShadowOpaquePSO)));
 
+	// PSO for debug layer.
+   //
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC debugPsoDesc = opaquePsoDesc;
+	debugPsoDesc.pRootSignature = m_RenderRS.Get();
+	debugPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["debugVS"]->GetBufferPointer()),
+		m_Shaders["debugVS"]->GetBufferSize()
+	};
+	debugPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["debugPS"]->GetBufferPointer()),
+		m_Shaders["debugPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&debugPsoDesc, IID_PPV_ARGS(&g_DebugPSO)));
+
+
 	//
 	// PSO for horizontal blur
 	//
@@ -467,6 +485,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	};
 	horzBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(g_Device->CreateComputePipelineState(&horzBlurPSO, IID_PPV_ARGS(&HorBlur)));
+
 
 	//
 	// PSO for vertical blur

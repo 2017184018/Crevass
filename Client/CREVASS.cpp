@@ -135,10 +135,9 @@ void CREVASS::Update(float deltaT)
 	CommandCenter::GetApp()->Order(deltaT);
 
 	g_pFramework->m_pNetwork->Recv();
-
 	SceneManager::GetApp()->UpdateScene(deltaT);
-
 	m_Camera->UpdateViewMatrix();
+
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
 }
 
