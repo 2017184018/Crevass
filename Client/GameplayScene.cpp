@@ -31,6 +31,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateWave();
 	AppContext->CreateBackground();
 	AppContext->CreateSnowmans();
+	AppContext->CreateHail();
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
 	for (int i = 0; i < 25; ++i) {
@@ -182,6 +183,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	}
 
+	{		//우박 hail
+		for (int i = 0; i < 5; ++i) {
+			AppContext->m_RItemsVec[213 + i]->SetPosition(g_pFramework->m_pNetwork->GetHailPos(i));
+
+		}
+	}
+
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
@@ -189,44 +197,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		p.second->Update(fDeltaTime);
 	}
-
-	/*float speed = 100 * fDeltaTime;
-	if (m_Users[m_PlayerID]) {
-		static float YSave = 30;
-		static bool IsFirst = true;
-		static float HighY = YSave + 40;
-		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
-			if (IsFirst) {
-				if (m_Users[m_PlayerID]->GetPosition().y > 30)
-					YSave = 30;
-				else
-					YSave = m_Users[m_PlayerID]->GetPosition().y;
-				IsFirst = false;
-				HighY = YSave + 40;
-			}
-			Gravity = 0.1;
-			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
-		}
-
-		if (m_Users[m_PlayerID]->GetPosition().y > HighY) {
-			m_Users[m_PlayerID]->is_Inair = false;
-		}
-
-		if (!m_Users[m_PlayerID]->is_Inair)
-			Gravity += 0.05;
-
-		if (tmp1 != -1) {
-			YSave = 30;
-		}
-
-		if (m_Users[m_PlayerID]->GetPosition().y <= YSave && m_Users[m_PlayerID]->bJump == true) {
-			m_Users[m_PlayerID]->bJump = false;
-			YSave = 30;
-			IsFirst = true;
-			HighY = YSave + 40;
-			Gravity = 0.1;
-		}
-	}*/
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
@@ -236,7 +206,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			{
 				m_Users[i]->m_PlayerController->Fall();
 				Fall(i);
-				//cout << "fall" << endl;
 			}
 		}
 	}

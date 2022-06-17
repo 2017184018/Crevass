@@ -70,6 +70,7 @@ public:
 	void CreateWave();
 	void CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex /*Character 종류(역할)*/);
 	void CreateBackground();
+	void CreateHail();
 
 	void DisplayProps(std::string mapName);
 	void HiddenBlocks();

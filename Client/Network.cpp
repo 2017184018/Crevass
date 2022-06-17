@@ -235,11 +235,11 @@ void Network::ProcessPacket(char* packet_buffer)
 			PlayerHide[i] = packet.players[i].IsHide;
 			PlayerSnowmanHide[i] = packet.players[i].SnowmanNum;
 		}
-	//	cout << packet.players[0].pos.x << endl;
-		//if (m_pGameInfo->m_ClientID == 0)
-		//	OtherPlayerPos = packet.players[1].pos;
-		//else
-		//	OtherPlayerPos = packet.players[0].pos;
+		//	cout << packet.players[0].pos.x << endl;
+			//if (m_pGameInfo->m_ClientID == 0)
+			//	OtherPlayerPos = packet.players[1].pos;
+			//else
+			//	OtherPlayerPos = packet.players[0].pos;
 		break;
 	}
 	case SC_BLOCK:
@@ -295,7 +295,15 @@ void Network::ProcessPacket(char* packet_buffer)
 		std::cout << "time= " << (packet.time) / 3600 << "min " << ((packet.time) % 3600) / 60 << "sec" << endl;
 		break;
 	}
-
+	case SC_HAIL:
+	{
+		sc_packet_hail packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		for (int i = 0; i < 5; ++i) {
+			HailPos[i] = packet.pos[i];
+		}
+		break;
+	}
 	case SC_GAMEOVER:
 	{
 		std::cout << "game over" << std::endl;
@@ -307,10 +315,10 @@ void Network::ProcessPacket(char* packet_buffer)
 		else
 			m_pGameInfo->m_WinnerID = 0;
 		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
-		if(m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
-		MessageBox(nullptr,L"You Win", L"Game Over!", MB_OK);
-		else if(m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
-		MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
+		if (m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
+			MessageBox(nullptr, L"You Win", L"Game Over!", MB_OK);
+		else if (m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
+			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
 
 		break;
 	}
@@ -372,7 +380,12 @@ int Network::GetPlayerDir(int num)const
 
 DirectX::XMFLOAT3 Network::GetBlockPos(int num)const
 {
-	return BlockPos[num]; 
+	return BlockPos[num];
+}
+
+DirectX::XMFLOAT3 Network::GetHailPos(int num) const
+{
+	return HailPos[num];
 }
 
 int Network::GetBlockDestructionCnt(int num)const {

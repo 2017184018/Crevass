@@ -37,9 +37,9 @@ std::string ApplicationContext::FindAnimName(int animCode) const
 	case ANIM_ATTACK:
 		animName = "Attack";
 		break;
-	//case ANIM_RUNNING:
-	//	animName = "Running";
-	//	break;
+		//case ANIM_RUNNING:
+		//	animName = "Running";
+		//	break;
 	case ANIM_JUMP:
 		animName = "jump";
 		break;
@@ -64,7 +64,7 @@ void ApplicationContext::CreateLobby() {
 	top->m_IsVisible = true;
 	top->m_MaterialIndex = 8;
 	top->m_World = MathHelper::Identity4x4();
-	top->m_World._11 = 200*1.43;
+	top->m_World._11 = 200 * 1.43;
 	top->m_World._22 = 1;
 	top->m_World._33 = 150 * 1.43;
 	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
@@ -224,7 +224,7 @@ void ApplicationContext::Createigloos()
 	}
 }
 
-void ApplicationContext::CreateWave	()
+void ApplicationContext::CreateWave()
 {
 	//78
 	GameObject* Sea = CreateObject<GameObject>("Sea", "Sea0");
@@ -696,6 +696,30 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->m_World._11 = SCALE * 3 / 5.0;
 		instancingObj->m_World._22 = SCALE * 3 / 5.0;
 		instancingObj->m_World._33 = SCALE * 3 / 5.0;
+		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+		++SNUM;
+	}
+}
+
+void ApplicationContext::CreateHail()
+{
+	//213~217
+	for (int i = 0; i < 5; ++i) {
+		GameObject* instancingObj = CreateObject<GameObject>("rock_1", "rock_1" + std::to_string(i + 15));
+		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["rock_1"].get();
+		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["rock_1"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["rock_1"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["rock_1"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = 11;
+		instancingObj->m_IsVisible = true;
+		instancingObj->m_World = MathHelper::Identity4x4();
+		instancingObj->m_World._11 = 1;
+		instancingObj->m_World._22 = 1;
+		instancingObj->m_World._33 = 1;
+
+		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * -0.4));
+
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		++SNUM;
 	}

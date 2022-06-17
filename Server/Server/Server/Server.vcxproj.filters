@@ -31,6 +31,9 @@
     <Filter Include="UtilFunc">
       <UniqueIdentifier>{250c0119-02d8-4948-9820-e6e28a0b0556}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Hail">
+      <UniqueIdentifier>{b024e9ee-c64f-40da-b1aa-ccdb20a766d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ServerMain.cpp">
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Hail.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="PhysicsThread.h">
       <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Hail.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

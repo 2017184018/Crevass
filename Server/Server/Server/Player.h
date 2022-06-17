@@ -44,6 +44,9 @@ public:
 
 	bool IsHide = false;
 	int SnowmanNum = -1;
+
+	int CurrentBlockNum = -1;
+	int TimeWhileBlock = 0;
 public:
 	char dir = 0;
 	char anim = 0;

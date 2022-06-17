@@ -36,6 +36,7 @@ public:
 
 	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
 	DirectX::XMFLOAT3 GetBlockPos(int num)const;
+	DirectX::XMFLOAT3 GetHailPos(int num)const;
 	int GetiglooLocation(int num)const;
 	int GetSnowmanLocation(int num)const;
 	int GetPlayerDir(int num)const;
@@ -52,6 +53,7 @@ public:
 
 	bool GetPlayerHide(int num)const;
 	int GetPlayerSnowmanNum(int num)const;
+
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];
@@ -70,6 +72,8 @@ private:
 
 	bool IsFall[3]{ false,false,false };
 	bool isReset[3]{ false, false, false };
+
+	DirectX::XMFLOAT3 HailPos[5];
 public:
 	GameInfo* m_pGameInfo;
 };

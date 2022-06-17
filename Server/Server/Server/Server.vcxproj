@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Hail.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ServerMain.cpp" />
@@ -146,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="define.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="Hail.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PhysicsThread.h" />

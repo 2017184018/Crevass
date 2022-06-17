@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Global.h"
+#include "Hail.h"
 #include <random>
 
 random_device rd1;
@@ -260,6 +261,16 @@ void SendTime(int time)
 	packet.size = sizeof(packet);
 	packet.type = SC_TIME;
 	packet.time = time;
+
+	SendPacket(&packet);
+}
+
+void SendHail(Hail& hails) {
+	sc_packet_hail packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_HAIL;
+	for(int i=0;i<5;++i)
+	packet.pos[i] = (&hails)[i].GetPos();
 
 	SendPacket(&packet);
 }

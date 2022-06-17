@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Global.h"
+#include "Hail.h"
 #include <string>
 #include <random>
 
@@ -24,6 +25,7 @@ bool dir_switch[3];
 bool IsInteract[3] = { false,false,false };		//상호작용 키 눌렀는지
 bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
+Hail hails[5];
 
 int CalcTime = 0;
 
@@ -410,7 +412,7 @@ void ProcessClients()
 
 		//FramePerSec = duration_cast<frame>(steady_clock::now() - fpsTimer);
 
-		if (/*FramePerSec.count() >= 1*/elapsedTime > 1000.0f/60.0f)
+		if (/*FramePerSec.count() >= 1*/elapsedTime > 1000.0f / 60.0f)
 		{
 			g_MsgQueueLock.lock();
 			phyMsgQueue = g_MsgQueue;
@@ -734,9 +736,9 @@ void ProcessClients()
 				g_boundaries["igloo" + std::to_string(i)]->Center.z = TempiglooLocation[i] % 3 * 400;
 			}
 			for (int i = 0; i < 4; ++i) {
-				g_boundaries["snowman" + std::to_string(i)]->Extents.x = OriginSnowmanExtens.x * (0.6 );
-				g_boundaries["snowman" + std::to_string(i)]->Extents.y = OriginSnowmanExtens.y * (0.6 );
-				g_boundaries["snowman" + std::to_string(i)]->Extents.z = OriginSnowmanExtens.z * (0.6 );
+				g_boundaries["snowman" + std::to_string(i)]->Extents.x = OriginSnowmanExtens.x * (0.6);
+				g_boundaries["snowman" + std::to_string(i)]->Extents.y = OriginSnowmanExtens.y * (0.6);
+				g_boundaries["snowman" + std::to_string(i)]->Extents.z = OriginSnowmanExtens.z * (0.6);
 				g_boundaries["snowman" + std::to_string(i)]->Center.x = TempSnowmanLocation[i] / 5 * 200;
 				g_boundaries["snowman" + std::to_string(i)]->Center.y = blocks[TempSnowmanLocation[i]].pos.y + 20;
 				g_boundaries["snowman" + std::to_string(i)]->Center.z = TempSnowmanLocation[i] % 5 * 200;
@@ -760,7 +762,6 @@ void ProcessClients()
 							phyPlayers[j].SnowmanNum = -1 - phyPlayers[j].SnowmanNum;
 							HideInSnowman[0] = !HideInSnowman[0];
 						}
-						cout << "dsds" << endl;
 					}
 					else if (g_boundaries["snowman1"]->Intersects(*g_boundaries[TypeName[j]])) {
 						if (!HideInSnowman[1] || phyPlayers[j].SnowmanNum == 1) {
@@ -800,6 +801,10 @@ void ProcessClients()
 							tmp1[j] = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;
+							if (phyPlayers[j].CurrentBlockNum != i) {
+								phyPlayers[j].CurrentBlockNum = i;
+								phyPlayers[j].TimeWhileBlock = 0;
+							}
 							if (!BlockIn) {
 								IsShake[i] = true;
 								IsDown[i] = true;
@@ -821,6 +826,10 @@ void ProcessClients()
 							phyPlayers[j].is_jump = false;
 							IsShake[i] = true;
 							IsDown[i] = true;
+							if (phyPlayers[j].CurrentBlockNum != i) {
+								phyPlayers[j].CurrentBlockNum = i;
+								phyPlayers[j].TimeWhileBlock = 0;
+							}
 						}
 						if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]]))) {  // or 물에 떨어지면
 							IsDown[tmp2[j]] = false;
@@ -845,7 +854,28 @@ void ProcessClients()
 				{
 					phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
 				}
+				if (phyPlayers[i].CurrentBlockNum != -1) {
+					if (phyPlayers[i].TimeWhileBlock >= 180) {		//한 블록에 3초 이상
+						float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
+						hails[i].SetPos(
+							phyPlayers[i].CurrentBlockNum / 5 * 200 + hails[i].GetVelo().x * time + 0.5 * hails[i].GetAccel().x * time * time,
+							200 + hails[i].GetVelo().y * time + 0.5 * hails[i].GetAccel().y * time * time,
+							phyPlayers[i].CurrentBlockNum % 5 * 200 + hails[i].GetVelo().z * time + 0.5 * hails[i].GetAccel().z * time * time
+						);
+						g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
+						for (int j = 0; j < 5; ++j) {
+							if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
+								
+							}
+						}
+					}
+					else if (phyPlayers[i].TimeWhileBlock == 0) {
+						hails[i].SetPos(-1000, -1000, -1000);
+					}
+					phyPlayers[i].TimeWhileBlock += 1;
+				}
 			}
+			SendHail(*hails);
 			//   Update(phyPlayers);
 
 			for (int i = 0; i < numOfCls; ++i) {	//눈사람에 숨어을때 위치 동기화

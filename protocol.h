@@ -14,6 +14,7 @@
 #define SC_GAMEOVER			11
 #define SC_BLOCK			12
 #define SC_TIME				13
+#define SC_HAIL				14
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -163,6 +164,12 @@ struct sc_packet_time
 	short size;
 	char type;
 	int time;
+};
+struct sc_packet_hail
+{
+	short size;
+	char type;
+	DirectX::XMFLOAT3 pos[5];
 };
 
 /* Client to Server */
