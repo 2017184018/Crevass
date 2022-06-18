@@ -85,6 +85,7 @@ void GraphicsRenderer::LoadTextures()
 		"lobby3",
 		"lobby4",
 		"lobby5",
+		"waterdrop",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -107,6 +108,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/lobby3.dds",
 		L"./Textures/lobby4.dds",
 		L"./Textures/lobby5.dds",
+		L"./Textures/waterdrop.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -157,6 +159,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	auto lobby3 = m_Textures["lobby3"]->Resource;
 	auto lobby4 = m_Textures["lobby4"]->Resource;
 	auto lobby5 = m_Textures["lobby5"]->Resource;
+	auto waterdrop = m_Textures["waterdrop"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -323,6 +326,15 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	srvDesc.Texture2D.MipLevels = lobby5->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	g_Device->CreateShaderResourceView(lobby5.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	srvDesc.Format = waterdrop->GetDesc().Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = waterdrop->GetDesc().MipLevels;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	g_Device->CreateShaderResourceView(waterdrop.Get(), &srvDesc, hDescriptor);
 
 	mSkyTexHeapIndex = 0;
 

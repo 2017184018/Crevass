@@ -162,6 +162,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
+		if (DestructionCnt[i] == 0) {
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 1;
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 1;
+			AppContext->m_RItemsVec[i + 51]->m_World._11 = 7.5 / 10.0;
+			AppContext->m_RItemsVec[i + 51]->m_World._22 = 1;
+			AppContext->m_RItemsVec[i + 51]->m_World._33 = 7.5 / 10.0;
+		}
 		if (DestructionCnt[i] == 1) {
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;

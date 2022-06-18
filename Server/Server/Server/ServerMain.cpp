@@ -18,39 +18,48 @@ void LoadBBs(std::string filepath) {
 		float tmpy = BB->Extents.y;
 		float tmpz = BB->Extents.z;
 		if (meshname == "icecube" || meshname == "snowcube") {
-			for (int i = 0; i < 25; ++i) {
-				g_boundaries[meshname + std::to_string(i)] = BB;
+			g_boundaries[meshname + std::to_string(0)] = BB;
+			for (int i = 1; i < 25; ++i) {
 				BB = new DirectX::BoundingBox;
 				BB->Extents.x = tmpx;
 				BB->Extents.y = tmpy;
 				BB->Extents.z = tmpz;
+				g_boundaries[meshname + std::to_string(i)] = BB;
 			}
 		}
 		else if (meshname == "igloo") {
-			for (int i = 0; i < 2; ++i) {
-				g_boundaries[meshname + std::to_string(i)] = BB;
+			g_boundaries[meshname + std::to_string(0)] = BB;
+			for (int i = 1; i < 2; ++i) {
 				BB = new DirectX::BoundingBox;
 				BB->Extents.x = tmpx;
 				BB->Extents.y = tmpy;
 				BB->Extents.z = tmpz;
+				g_boundaries[meshname + std::to_string(i)] = BB;
 			}
 		}
 		else if (meshname == "snowman") {
-			for (int i = 0; i < 4; ++i) {
-				g_boundaries[meshname + std::to_string(i)] = BB;
+			g_boundaries[meshname + std::to_string(0)] = BB;
+			for (int i = 1; i < 4; ++i) {
 				BB = new DirectX::BoundingBox;
 				BB->Extents.x = tmpx;
 				BB->Extents.y = tmpy;
 				BB->Extents.z = tmpz;
+				g_boundaries[meshname + std::to_string(i)] = BB;
 			}
 		}
 		else if (meshname == "rock_1") {
-			for (int i = 0; i < 5; ++i) {
-				g_boundaries["hail" + std::to_string(i)] = BB;
+			BB->Center = DirectX::XMFLOAT3(-1000, -1000, -1000);
+			BB->Extents.x = tmpx * 3;
+			BB->Extents.y = tmpy * 3;
+			BB->Extents.z = tmpz * 3;
+			g_boundaries["hail" + std::to_string(0)] = BB;
+			for (int i = 1; i < 5; ++i) {
 				BB = new DirectX::BoundingBox;
+				BB->Center = DirectX::XMFLOAT3(-1000, -1000, -1000);
 				BB->Extents.x = tmpx * 3;
 				BB->Extents.y = tmpy * 3;
 				BB->Extents.z = tmpz * 3;
+				g_boundaries["hail" + std::to_string(i)] = BB;
 			}
 		}
 		else {

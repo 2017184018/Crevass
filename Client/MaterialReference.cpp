@@ -156,6 +156,13 @@ void MaterialReference::BuildMaterials()
 	lobby5->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	lobby5->Roughness = 1.0f;
 
+	auto waterdrop = std::make_unique<Material>();
+	waterdrop->MatCBIndex = 18;
+	waterdrop->DiffuseSrvHeapIndex = 18;
+	waterdrop->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	waterdrop->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	waterdrop->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -174,4 +181,5 @@ void MaterialReference::BuildMaterials()
 	m_Materials["lobby3"] = std::move(lobby3);
 	m_Materials["lobby4"] = std::move(lobby4);
 	m_Materials["lobby5"] = std::move(lobby5);
+	m_Materials["waterdrop"] = std::move(waterdrop);
 }

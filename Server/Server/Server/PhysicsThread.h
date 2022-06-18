@@ -8,6 +8,8 @@
 random_device rd;
 default_random_engine dre(rd());
 uniform_int_distribution<> uid{ 0,2 };
+uniform_int_distribution<> uid2{ 0,1 };
+uniform_int_distribution<> uid3{ 0,3 };
 
 bool IsRight[25];
 UINT ShakeCnt[25];
@@ -20,12 +22,12 @@ int tmp2[3] = { -1,-1,-1 };
 string TypeName[3];
 bool IsFall[3] = { false,false,false };
 Block blocks[25];
-DirectX::XMFLOAT3 temp(0.f, 0.f, 0.f);
 bool dir_switch[3];
 bool IsInteract[3] = { false,false,false };		//상호작용 키 눌렀는지
 bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 Hail hails[5];
+DirectX::XMFLOAT3 OriginBlockExtents;
 
 int CalcTime = 0;
 
@@ -321,6 +323,14 @@ void UpdateBlock(Block* object) {
 			if (object[i].destuctioncnt == 3) {
 				g_boundaries["icecube" + std::to_string(i)]->Center = DirectX::XMFLOAT3(-0, -1000, 0);
 				g_boundaries["icecube" + std::to_string(i)]->Extents = DirectX::XMFLOAT3(0, 0, 0);
+				object[i].pos.y = -100;
+			}
+		}
+		if (object[i].destuctioncnt == 0) {
+			if (BlockCheck(i)) {
+				if (object[i].pos.y < -30) {
+					object[i].pos.y += 1;
+				}
 			}
 		}
 	}
@@ -373,7 +383,7 @@ void ProcessClients()
 		IsDown[i] = true;
 		IsShake[i] = false;
 	}
-
+	OriginBlockExtents = g_boundaries["icecube0"]->Extents;
 	auto OriginSnowmanExtens = g_boundaries["snowman0"]->Extents;
 	auto OriginIglooExtens = g_boundaries["igloo0"]->Extents;
 
@@ -791,59 +801,215 @@ void ProcessClients()
 				}
 			}
 
-			UpdateBlock(blocks);
-			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
-				for (int i = 0; i < 25; ++i) {
-					if (BlockCheck(i)) {
-						if (blocks[i].destuctioncnt != 3)
-							g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
-						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
-							tmp1[j] = i;
-							phyPlayers[j].gravity = 0.0f;
-							phyPlayers[j].is_jump = false;
-							if (phyPlayers[j].CurrentBlockNum != i) {
-								phyPlayers[j].CurrentBlockNum = i;
-								phyPlayers[j].TimeWhileBlock = 0;
+			{		//블록 block
+				UpdateBlock(blocks);
+				for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
+					for (int i = 0; i < 25; ++i) {
+						if (BlockCheck(i)) {
+							if (blocks[i].destuctioncnt != 3)
+								g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
+							if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
+								tmp1[j] = i;
+								phyPlayers[j].gravity = 0.0f;
+								phyPlayers[j].is_jump = false;
+								if (phyPlayers[j].CurrentBlockNum != i) {
+									phyPlayers[j].CurrentBlockNum = i;
+									phyPlayers[j].TimeWhileBlock = 0;
+								}
+								if (!BlockIn) {
+									IsShake[i] = true;
+									IsDown[i] = true;
+									BlockIn = true;
+								}
 							}
-							if (!BlockIn) {
+							if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
+								BlockIn = false;
+								//if (!phyPlayers[j].is_jump)
+								//   Gravity += 0.05;
+								tmp1[j] = -1;
+							}
+						}
+						else {
+							g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
+							if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
+								tmp2[j] = i;
+								phyPlayers[j].gravity = 0.0f;
+								phyPlayers[j].is_jump = false;
 								IsShake[i] = true;
 								IsDown[i] = true;
-								BlockIn = true;
+								if (phyPlayers[j].CurrentBlockNum != i) {
+									phyPlayers[j].CurrentBlockNum = i;
+									phyPlayers[j].TimeWhileBlock = 0;
+								}
 							}
-						}
-						if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
-							BlockIn = false;
-							//if (!phyPlayers[j].is_jump)
-							//   Gravity += 0.05;
-							tmp1[j] = -1;
+							if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]]))) {  // or 물에 떨어지면
+								IsDown[tmp2[j]] = false;
+
+								cout << j << "check" << endl;
+								//if (!phyPlayers[j].is_jump)
+								//   Gravity += 0.05;
+								tmp2[j] = -1;
+							}
 						}
 					}
-					else {
-						g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
-						if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
-							tmp2[j] = i;
-							phyPlayers[j].gravity = 0.0f;
-							phyPlayers[j].is_jump = false;
-							IsShake[i] = true;
-							IsDown[i] = true;
-							if (phyPlayers[j].CurrentBlockNum != i) {
-								phyPlayers[j].CurrentBlockNum = i;
-								phyPlayers[j].TimeWhileBlock = 0;
-							}
+				}
+				//블록 재생성
+				{		// 꼭지점
+					if (blocks[9].destuctioncnt == 3 && blocks[3].destuctioncnt == 3) {
+						int tmp = uid2(dre);
+						if (tmp == 0) {
+							blocks[3].destuctioncnt = 0;
+							g_boundaries["icecube3"]->Center = blocks[3].pos;
+							g_boundaries["icecube3"]->Extents = OriginBlockExtents;
 						}
-						if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]]))) {  // or 물에 떨어지면
-							IsDown[tmp2[j]] = false;
-
-							cout << j << "check" << endl;
-							//if (!phyPlayers[j].is_jump)
-							//   Gravity += 0.05;
-							tmp2[j] = -1;
+						else if (tmp == 1) {
+							blocks[9].destuctioncnt = 0;
+							g_boundaries["icecube9"]->Center = blocks[9].pos;
+							g_boundaries["icecube9"]->Extents = OriginBlockExtents;
+						}
+					}
+					if (blocks[1].destuctioncnt == 3 && blocks[5].destuctioncnt == 3) {
+						int tmp = uid(dre);
+						if (tmp == 0) {
+							blocks[1].destuctioncnt = 0;
+							g_boundaries["icecube1"]->Center = blocks[1].pos;
+							g_boundaries["icecube1"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[5].destuctioncnt = 0;
+							g_boundaries["icecube5"]->Center = blocks[5].pos;
+							g_boundaries["icecube5"]->Extents = OriginBlockExtents;
+						}
+					}
+					if (blocks[19].destuctioncnt == 3 && blocks[23].destuctioncnt == 3) {
+						int tmp = uid(dre);
+						if (tmp == 0) {
+							blocks[23].destuctioncnt = 0;
+							g_boundaries["icecube23"]->Center = blocks[23].pos;
+							g_boundaries["icecube23"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[19].destuctioncnt = 0;
+							g_boundaries["icecube19"]->Center = blocks[19].pos;
+							g_boundaries["icecube19"]->Extents = OriginBlockExtents;
+						}
+					}
+					if (blocks[21].destuctioncnt == 3 && blocks[15].destuctioncnt == 3) {
+						int tmp = uid(dre);
+						if (tmp == 0) {
+							blocks[21].destuctioncnt = 0;
+							g_boundaries["icecube21"]->Center = blocks[21].pos;
+							g_boundaries["icecube21"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[15].destuctioncnt = 0;
+							g_boundaries["icecube15"]->Center = blocks[15].pos;
+							g_boundaries["icecube15"]->Extents = OriginBlockExtents;
+						}
+					}
+				}
+				{		//변
+					if (blocks[9].destuctioncnt == 3 && blocks[13].destuctioncnt == 3 && blocks[19].destuctioncnt == 3) {
+						int tmp = uid(dre);
+						if (tmp == 0) {
+							blocks[13].destuctioncnt = 0;
+							g_boundaries["icecube13"]->Center = blocks[13].pos;
+							g_boundaries["icecube13"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[9].destuctioncnt = 0;
+							g_boundaries["icecube9"]->Center = blocks[9].pos;
+							g_boundaries["icecube9"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 2) {
+							blocks[19].destuctioncnt = 0;
+							g_boundaries["icecube19"]->Center = blocks[19].pos;
+							g_boundaries["icecube19"]->Extents = OriginBlockExtents;
+						}
+					}
+					if (blocks[1].destuctioncnt == 3 && blocks[7].destuctioncnt == 3 && blocks[3].destuctioncnt == 3) {
+						int tmp = uid(dre);
+						if (tmp == 0) {
+							blocks[3].destuctioncnt = 0;
+							g_boundaries["icecube3"]->Center = blocks[3].pos;
+							g_boundaries["icecube3"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[1].destuctioncnt = 0;
+							g_boundaries["icecube1"]->Center = blocks[1].pos;
+							g_boundaries["icecube1"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 2) {
+							blocks[7].destuctioncnt = 0;
+							g_boundaries["icecube7"]->Center = blocks[7].pos;
+							g_boundaries["icecube7"]->Extents = OriginBlockExtents;
+						}
+					}
+					if (blocks[21].destuctioncnt == 3 && blocks[17].destuctioncnt == 3 && blocks[23].destuctioncnt == 3) {
+						int tmp = uid(dre);
+						if (tmp == 0) {
+							blocks[23].destuctioncnt = 0;
+							g_boundaries["icecube23"]->Center = blocks[23].pos;
+							g_boundaries["icecube23"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[21].destuctioncnt = 0;
+							g_boundaries["icecube21"]->Center = blocks[21].pos;
+							g_boundaries["icecube21"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 2) {
+							blocks[17].destuctioncnt = 0;
+							g_boundaries["icecube17"]->Center = blocks[17].pos;
+							g_boundaries["icecube17"]->Extents = OriginBlockExtents;
+						}
+					}
+					if (blocks[5].destuctioncnt == 3 && blocks[11].destuctioncnt == 3 && blocks[15].destuctioncnt == 3) {
+						int tmp = uid(dre);
+						if (tmp == 0) {
+							blocks[5].destuctioncnt = 0;
+							g_boundaries["icecube5"]->Center = blocks[5].pos;
+							g_boundaries["icecube5"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[11].destuctioncnt = 0;
+							g_boundaries["icecube11"]->Center = blocks[11].pos;
+							g_boundaries["icecube11"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 2) {
+							blocks[15].destuctioncnt = 0;
+							g_boundaries["icecube15"]->Center = blocks[15].pos;
+							g_boundaries["icecube15"]->Extents = OriginBlockExtents;
+						}
+					}
+					SendBlockPacket(*blocks);
+				}
+				{		//중앙
+					if (blocks[7].destuctioncnt == 3 && blocks[11].destuctioncnt == 3
+						&& blocks[13].destuctioncnt == 3 && blocks[17].destuctioncnt == 3) {
+						int tmp = uid3(dre);
+						if (tmp == 0) {
+							blocks[11].destuctioncnt = 0;
+							g_boundaries["icecube11"]->Center = blocks[11].pos;
+							g_boundaries["icecube11"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 1) {
+							blocks[7].destuctioncnt = 0;
+							g_boundaries["icecube7"]->Center = blocks[7].pos;
+							g_boundaries["icecube7"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 2) {
+							blocks[13].destuctioncnt = 0;
+							g_boundaries["icecube13"]->Center = blocks[13].pos;
+							g_boundaries["icecube13"]->Extents = OriginBlockExtents;
+						}
+						else if (tmp == 3) {
+							blocks[17].destuctioncnt = 0;
+							g_boundaries["icecube17"]->Center = blocks[17].pos;
+							g_boundaries["icecube17"]->Extents = OriginBlockExtents;
 						}
 					}
 				}
 			}
-			SendBlockPacket(*blocks);
-
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
@@ -854,51 +1020,53 @@ void ProcessClients()
 				{
 					phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
 				}
-				if (phyPlayers[i].CurrentBlockNum != -1) {
-					if (phyPlayers[i].TimeWhileBlock >= 180) {		//한 블록에 3초 이상
-						float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
-						hails[i].SetPos(
-							phyPlayers[i].CurrentBlockNum / 5 * 200 + hails[i].GetVelo().x * time + 0.5 * hails[i].GetAccel().x * time * time,
-							200 + hails[i].GetVelo().y * time + 0.5 * hails[i].GetAccel().y * time * time,
-							phyPlayers[i].CurrentBlockNum % 5 * 200 + hails[i].GetVelo().z * time + 0.5 * hails[i].GetAccel().z * time * time
-						);
-						g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
-						for (int j = 0; j < 5; ++j) {
-							if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
-								phyPlayers[i].is_hitted = true;
-								float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
-								float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
-								if (SubX < -9) {
-									if (SubZ < -9)
-										phyPlayers[i].hitted_dir = 1;
-									else if (SubZ >= -9 && SubZ < 9)
-										phyPlayers[i].hitted_dir = 2;
-									else if (SubZ >= 9)
-										phyPlayers[i].hitted_dir = 3;
-								}
-								else 	if (SubX >= -9 && SubX <= 9) {
-									if (SubZ < -9)
-										phyPlayers[i].hitted_dir = 0;
-									else if (SubZ >= -9 && SubZ < 9)
-										phyPlayers[i].hitted_dir = 0;
-									else if (SubZ >= 9)
-										phyPlayers[i].hitted_dir = 4;
-								}
-								else 	if (SubX > 9) {
-									if (SubZ < -9)
-										phyPlayers[i].hitted_dir = 7;
-									else if (SubZ >= -9 && SubZ < 9)
-										phyPlayers[i].hitted_dir = 6;
-									else if (SubZ >= 9)
-										phyPlayers[i].hitted_dir = 5;
+				{		//우박 hail
+					if (phyPlayers[i].CurrentBlockNum != -1) {
+						if (phyPlayers[i].TimeWhileBlock >= 180) {		//한 블록에 3초 이상
+							float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
+							hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
+							g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
+							for (int j = 0; j < 5; ++j) {
+								if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
+									phyPlayers[i].is_hitted = true;
+									float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
+									float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
+									if (SubX < -9) {
+										if (SubZ < -9)
+											phyPlayers[i].hitted_dir = 1;
+										else if (SubZ >= -9 && SubZ < 9)
+											phyPlayers[i].hitted_dir = 2;
+										else if (SubZ >= 9)
+											phyPlayers[i].hitted_dir = 3;
+									}
+									else 	if (SubX >= -9 && SubX <= 9) {
+										if (SubZ < -9)
+											phyPlayers[i].hitted_dir = 0;
+										else if (SubZ >= -9 && SubZ < 9)
+											phyPlayers[i].hitted_dir = 0;
+										else if (SubZ >= 9)
+											phyPlayers[i].hitted_dir = 4;
+									}
+									else 	if (SubX > 9) {
+										if (SubZ < -9)
+											phyPlayers[i].hitted_dir = 7;
+										else if (SubZ >= -9 && SubZ < 9)
+											phyPlayers[i].hitted_dir = 6;
+										else if (SubZ >= 9)
+											phyPlayers[i].hitted_dir = 5;
+									}
 								}
 							}
+							if (hails[i].GetPos().y <= -90) {
+								hails[i].SetPos(-1000, -1000, -1000);
+							}
+
 						}
+						else if (phyPlayers[i].TimeWhileBlock == 0) {
+							hails[i].SetPos(-1000, -1000, -1000);
+						}
+						phyPlayers[i].TimeWhileBlock += 1;
 					}
-					else if (phyPlayers[i].TimeWhileBlock == 0) {
-						hails[i].SetPos(-1000, -1000, -1000);
-					}
-					phyPlayers[i].TimeWhileBlock += 1;
 				}
 			}
 			SendHail(*hails);
