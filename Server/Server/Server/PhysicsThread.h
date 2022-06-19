@@ -323,7 +323,7 @@ void UpdateBlock(Block* object) {
 			if (object[i].destuctioncnt == 3) {
 				g_boundaries["icecube" + std::to_string(i)]->Center = DirectX::XMFLOAT3(-0, -1000, 0);
 				g_boundaries["icecube" + std::to_string(i)]->Extents = DirectX::XMFLOAT3(0, 0, 0);
-				object[i].pos.y = -100;
+				object[i].pos.y = -150;
 			}
 		}
 		if (object[i].destuctioncnt == 0) {
@@ -660,7 +660,7 @@ void ProcessClients()
 				}
 				else {
 					if (tmp1[i] != -1) {
-						if (phyPlayers[i].m_pos.y > 10 && phyPlayers[i].is_jump == false && blocks[tmp1[i]].destuctioncnt != 3 && phyPlayers[i].m_pos.y <= 30) {   //점프 이상하면 마지막 조건 지우기
+						if (phyPlayers[i].m_pos.y > 10 && phyPlayers[i].is_jump == false && blocks[tmp1[i]].destuctioncnt != 3 && phyPlayers[i].m_pos.y <= 30) { 
 							phyPlayers[i].m_pos.y = blocks[tmp1[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
@@ -672,7 +672,7 @@ void ProcessClients()
 					else {
 						if (phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y >= 50 &&
 							phyPlayers[i].is_jump == false && !IsFall[i] && phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y <= 70)
-						{//점프 이상하면 마지막 조건 지우기
+						{ 
 							phyPlayers[i].m_pos.y = blocks[tmp2[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
@@ -688,16 +688,17 @@ void ProcessClients()
 					IsFall[i] = true;
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
+					phyPlayers[i].gravity = 0.0f;
 					SendFall(i);
 					phyPlayers[i].is_reset = true;
 				}
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
-				if (TypeName[i] == "Penguin") {
-					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-				}
-				else {
-					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-				}
+				/*			if (TypeName[i] == "Penguin") {
+								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+							}
+							else {
+								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+							}*/
 			}
 
 			for (int i = 0; i < numOfCls; ++i)
@@ -725,12 +726,12 @@ void ProcessClients()
 
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[TypeName[i]]->Center = phyPlayers[i].m_pos;
-						if (TypeName[i] == "Penguin") {
-							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-						}
-						else {
-							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-						}
+						/*	if (TypeName[i] == "Penguin") {
+								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+							}
+							else {
+								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+							}*/
 						SendReset(i);
 					}
 				}
@@ -757,12 +758,12 @@ void ProcessClients()
 				if (IsInteract[j]) {
 					if (g_boundaries["igloo0"]->Intersects(*g_boundaries[TypeName[j]])) {
 						IsInteracting[j] = true;
-						phyPlayers[j].m_pos = g_boundaries["igloo1"]->Center;
+						phyPlayers[j].m_pos = DirectX::XMFLOAT3(g_boundaries["igloo1"]->Center.x, g_boundaries["igloo1"]->Center.y + 10, g_boundaries["igloo1"]->Center.z);
 						IsInteracting[j] = false;
 					}
 					else if (g_boundaries["igloo1"]->Intersects(*g_boundaries[TypeName[j]])) {
 						IsInteracting[j] = true;
-						phyPlayers[j].m_pos = g_boundaries["igloo0"]->Center;
+						phyPlayers[j].m_pos = DirectX::XMFLOAT3(g_boundaries["igloo0"]->Center.x, g_boundaries["igloo0"]->Center.y + 10, g_boundaries["igloo0"]->Center.z);
 						IsInteracting[j] = false;
 					}
 					else if (g_boundaries["snowman0"]->Intersects(*g_boundaries[TypeName[j]])) {
@@ -801,215 +802,237 @@ void ProcessClients()
 				}
 			}
 
-			{		//블록 block
-				UpdateBlock(blocks);
-				for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
-					for (int i = 0; i < 25; ++i) {
-						if (BlockCheck(i)) {
-							if (blocks[i].destuctioncnt != 3)
-								g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
-							if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
-								tmp1[j] = i;
-								phyPlayers[j].gravity = 0.0f;
-								phyPlayers[j].is_jump = false;
-								if (phyPlayers[j].CurrentBlockNum != i) {
-									phyPlayers[j].CurrentBlockNum = i;
-									phyPlayers[j].TimeWhileBlock = 0;
-								}
-								if (!BlockIn) {
-									IsShake[i] = true;
-									IsDown[i] = true;
-									BlockIn = true;
-								}
+			//블록 block
+			UpdateBlock(blocks);
+			for (int j = 0; j < numOfCls; ++j) { //블록 충돌체크
+				for (int i = 0; i < 25; ++i) {
+					if (BlockCheck(i)) {
+						if (blocks[i].destuctioncnt != 3)
+							g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
+						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
+							tmp1[j] = i;
+							phyPlayers[j].gravity = 0.0f;
+							phyPlayers[j].is_jump = false;
+							if (phyPlayers[j].CurrentBlockNum != i) {
+								phyPlayers[j].CurrentBlockNum = i;
+								phyPlayers[j].TimeWhileBlock = 0;
 							}
-							if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
-								BlockIn = false;
-								//if (!phyPlayers[j].is_jump)
-								//   Gravity += 0.05;
-								tmp1[j] = -1;
-							}
-						}
-						else {
-							g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
-							if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]])) {
-								tmp2[j] = i;
-								phyPlayers[j].gravity = 0.0f;
-								phyPlayers[j].is_jump = false;
+							if (!BlockIn) {
 								IsShake[i] = true;
 								IsDown[i] = true;
-								if (phyPlayers[j].CurrentBlockNum != i) {
-									phyPlayers[j].CurrentBlockNum = i;
-									phyPlayers[j].TimeWhileBlock = 0;
-								}
+								BlockIn = true;
 							}
-							if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]]))) {  // or 물에 떨어지면
-								IsDown[tmp2[j]] = false;
+						}
+						if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
+							BlockIn = false;
+							//if (!phyPlayers[j].is_jump)
+							//   Gravity += 0.05;
+							tmp1[j] = -1;
+						}
+					}
+					else {
+						g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
+						/*if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= blocks[i].pos.y + 60)*/
+						if(tmp2[j] == -1&& 
+							phyPlayers[j].m_pos.x-10<=blocks[i].pos.x+54 && phyPlayers[j].m_pos.x+10 >= blocks[i].pos.x - 54 &&
+							phyPlayers[j].m_pos.z-10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z+10 >= blocks[i].pos.z- 54 &&
+							phyPlayers[j].m_pos.y<=30)
+						{
+							tmp2[j] = i;
+							phyPlayers[j].gravity = 0.0f;
+							phyPlayers[j].is_jump = false;
+							IsShake[i] = true;
+							IsDown[i] = true;
+							if (phyPlayers[j].CurrentBlockNum != i) {
+								phyPlayers[j].CurrentBlockNum = i;
+								phyPlayers[j].TimeWhileBlock = 0;
+							}
+						}
+						/*if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]])))*/
+						if(tmp2[j] != -1  &&
+							!(phyPlayers[j].m_pos.x-10 <= blocks[tmp2[j]].pos.x + 54 && phyPlayers[j].m_pos.x+10 >= blocks[tmp2[j]].pos.x - 54 &&
+							phyPlayers[j].m_pos.z-10 <= blocks[tmp2[j]].pos.z + 54 && phyPlayers[j].m_pos.z+10 >= blocks[tmp2[j]].pos.z - 54 &&
+							phyPlayers[j].m_pos.y <= 40))
+						{
+							IsDown[tmp2[j]] = false;
 
-								cout << j << "check" << endl;
-								//if (!phyPlayers[j].is_jump)
-								//   Gravity += 0.05;
-								tmp2[j] = -1;
-							}
-						}
-					}
-				}
-				//블록 재생성
-				{		// 꼭지점
-					if (blocks[9].destuctioncnt == 3 && blocks[3].destuctioncnt == 3) {
-						int tmp = uid2(dre);
-						if (tmp == 0) {
-							blocks[3].destuctioncnt = 0;
-							g_boundaries["icecube3"]->Center = blocks[3].pos;
-							g_boundaries["icecube3"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[9].destuctioncnt = 0;
-							g_boundaries["icecube9"]->Center = blocks[9].pos;
-							g_boundaries["icecube9"]->Extents = OriginBlockExtents;
-						}
-					}
-					if (blocks[1].destuctioncnt == 3 && blocks[5].destuctioncnt == 3) {
-						int tmp = uid(dre);
-						if (tmp == 0) {
-							blocks[1].destuctioncnt = 0;
-							g_boundaries["icecube1"]->Center = blocks[1].pos;
-							g_boundaries["icecube1"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[5].destuctioncnt = 0;
-							g_boundaries["icecube5"]->Center = blocks[5].pos;
-							g_boundaries["icecube5"]->Extents = OriginBlockExtents;
-						}
-					}
-					if (blocks[19].destuctioncnt == 3 && blocks[23].destuctioncnt == 3) {
-						int tmp = uid(dre);
-						if (tmp == 0) {
-							blocks[23].destuctioncnt = 0;
-							g_boundaries["icecube23"]->Center = blocks[23].pos;
-							g_boundaries["icecube23"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[19].destuctioncnt = 0;
-							g_boundaries["icecube19"]->Center = blocks[19].pos;
-							g_boundaries["icecube19"]->Extents = OriginBlockExtents;
-						}
-					}
-					if (blocks[21].destuctioncnt == 3 && blocks[15].destuctioncnt == 3) {
-						int tmp = uid(dre);
-						if (tmp == 0) {
-							blocks[21].destuctioncnt = 0;
-							g_boundaries["icecube21"]->Center = blocks[21].pos;
-							g_boundaries["icecube21"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[15].destuctioncnt = 0;
-							g_boundaries["icecube15"]->Center = blocks[15].pos;
-							g_boundaries["icecube15"]->Extents = OriginBlockExtents;
-						}
-					}
-				}
-				{		//변
-					if (blocks[9].destuctioncnt == 3 && blocks[13].destuctioncnt == 3 && blocks[19].destuctioncnt == 3) {
-						int tmp = uid(dre);
-						if (tmp == 0) {
-							blocks[13].destuctioncnt = 0;
-							g_boundaries["icecube13"]->Center = blocks[13].pos;
-							g_boundaries["icecube13"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[9].destuctioncnt = 0;
-							g_boundaries["icecube9"]->Center = blocks[9].pos;
-							g_boundaries["icecube9"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 2) {
-							blocks[19].destuctioncnt = 0;
-							g_boundaries["icecube19"]->Center = blocks[19].pos;
-							g_boundaries["icecube19"]->Extents = OriginBlockExtents;
-						}
-					}
-					if (blocks[1].destuctioncnt == 3 && blocks[7].destuctioncnt == 3 && blocks[3].destuctioncnt == 3) {
-						int tmp = uid(dre);
-						if (tmp == 0) {
-							blocks[3].destuctioncnt = 0;
-							g_boundaries["icecube3"]->Center = blocks[3].pos;
-							g_boundaries["icecube3"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[1].destuctioncnt = 0;
-							g_boundaries["icecube1"]->Center = blocks[1].pos;
-							g_boundaries["icecube1"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 2) {
-							blocks[7].destuctioncnt = 0;
-							g_boundaries["icecube7"]->Center = blocks[7].pos;
-							g_boundaries["icecube7"]->Extents = OriginBlockExtents;
-						}
-					}
-					if (blocks[21].destuctioncnt == 3 && blocks[17].destuctioncnt == 3 && blocks[23].destuctioncnt == 3) {
-						int tmp = uid(dre);
-						if (tmp == 0) {
-							blocks[23].destuctioncnt = 0;
-							g_boundaries["icecube23"]->Center = blocks[23].pos;
-							g_boundaries["icecube23"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[21].destuctioncnt = 0;
-							g_boundaries["icecube21"]->Center = blocks[21].pos;
-							g_boundaries["icecube21"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 2) {
-							blocks[17].destuctioncnt = 0;
-							g_boundaries["icecube17"]->Center = blocks[17].pos;
-							g_boundaries["icecube17"]->Extents = OriginBlockExtents;
-						}
-					}
-					if (blocks[5].destuctioncnt == 3 && blocks[11].destuctioncnt == 3 && blocks[15].destuctioncnt == 3) {
-						int tmp = uid(dre);
-						if (tmp == 0) {
-							blocks[5].destuctioncnt = 0;
-							g_boundaries["icecube5"]->Center = blocks[5].pos;
-							g_boundaries["icecube5"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[11].destuctioncnt = 0;
-							g_boundaries["icecube11"]->Center = blocks[11].pos;
-							g_boundaries["icecube11"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 2) {
-							blocks[15].destuctioncnt = 0;
-							g_boundaries["icecube15"]->Center = blocks[15].pos;
-							g_boundaries["icecube15"]->Extents = OriginBlockExtents;
-						}
-					}
-					SendBlockPacket(*blocks);
-				}
-				{		//중앙
-					if (blocks[7].destuctioncnt == 3 && blocks[11].destuctioncnt == 3
-						&& blocks[13].destuctioncnt == 3 && blocks[17].destuctioncnt == 3) {
-						int tmp = uid3(dre);
-						if (tmp == 0) {
-							blocks[11].destuctioncnt = 0;
-							g_boundaries["icecube11"]->Center = blocks[11].pos;
-							g_boundaries["icecube11"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 1) {
-							blocks[7].destuctioncnt = 0;
-							g_boundaries["icecube7"]->Center = blocks[7].pos;
-							g_boundaries["icecube7"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 2) {
-							blocks[13].destuctioncnt = 0;
-							g_boundaries["icecube13"]->Center = blocks[13].pos;
-							g_boundaries["icecube13"]->Extents = OriginBlockExtents;
-						}
-						else if (tmp == 3) {
-							blocks[17].destuctioncnt = 0;
-							g_boundaries["icecube17"]->Center = blocks[17].pos;
-							g_boundaries["icecube17"]->Extents = OriginBlockExtents;
+							tmp2[j] = -1;
 						}
 					}
 				}
 			}
+
+			for (int i = 0; i < numOfCls; ++i) {	//눈사람에 숨어을때 위치 동기화
+				if (phyPlayers[i].SnowmanNum >= 0) {
+					phyPlayers[i].m_pos.x = TempSnowmanLocation[phyPlayers[i].SnowmanNum] / 5 * 200;
+					phyPlayers[i].m_pos.y = blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].pos.y + 60;
+					phyPlayers[i].m_pos.z = TempSnowmanLocation[phyPlayers[i].SnowmanNum] % 5 * 200;
+				}
+				if (blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].destuctioncnt == 3) {
+					IsInteracting[i] = false;
+					phyPlayers[i].IsHide = false;
+					HideInSnowman[phyPlayers[i].SnowmanNum] = false;
+					phyPlayers[i].SnowmanNum = -1;
+				}
+			}
+
+			//블록 재생성
+			{		// 꼭지점
+				if (blocks[9].destuctioncnt == 3 && blocks[3].destuctioncnt == 3) {
+					int tmp = uid2(dre);
+					if (tmp == 0) {
+						blocks[3].destuctioncnt = 0;
+						g_boundaries["icecube3"]->Center = blocks[3].pos;
+						g_boundaries["icecube3"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[9].destuctioncnt = 0;
+						g_boundaries["icecube9"]->Center = blocks[9].pos;
+						g_boundaries["icecube9"]->Extents = OriginBlockExtents;
+					}
+				}
+				if (blocks[1].destuctioncnt == 3 && blocks[5].destuctioncnt == 3) {
+					int tmp = uid(dre);
+					if (tmp == 0) {
+						blocks[1].destuctioncnt = 0;
+						g_boundaries["icecube1"]->Center = blocks[1].pos;
+						g_boundaries["icecube1"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[5].destuctioncnt = 0;
+						g_boundaries["icecube5"]->Center = blocks[5].pos;
+						g_boundaries["icecube5"]->Extents = OriginBlockExtents;
+					}
+				}
+				if (blocks[19].destuctioncnt == 3 && blocks[23].destuctioncnt == 3) {
+					int tmp = uid(dre);
+					if (tmp == 0) {
+						blocks[23].destuctioncnt = 0;
+						g_boundaries["icecube23"]->Center = blocks[23].pos;
+						g_boundaries["icecube23"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[19].destuctioncnt = 0;
+						g_boundaries["icecube19"]->Center = blocks[19].pos;
+						g_boundaries["icecube19"]->Extents = OriginBlockExtents;
+					}
+				}
+				if (blocks[21].destuctioncnt == 3 && blocks[15].destuctioncnt == 3) {
+					int tmp = uid(dre);
+					if (tmp == 0) {
+						blocks[21].destuctioncnt = 0;
+						g_boundaries["icecube21"]->Center = blocks[21].pos;
+						g_boundaries["icecube21"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[15].destuctioncnt = 0;
+						g_boundaries["icecube15"]->Center = blocks[15].pos;
+						g_boundaries["icecube15"]->Extents = OriginBlockExtents;
+					}
+				}
+			}
+			{		//변
+				if (blocks[9].destuctioncnt == 3 && blocks[13].destuctioncnt == 3 && blocks[19].destuctioncnt == 3) {
+					int tmp = uid(dre);
+					if (tmp == 0) {
+						blocks[13].destuctioncnt = 0;
+						g_boundaries["icecube13"]->Center = blocks[13].pos;
+						g_boundaries["icecube13"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[9].destuctioncnt = 0;
+						g_boundaries["icecube9"]->Center = blocks[9].pos;
+						g_boundaries["icecube9"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 2) {
+						blocks[19].destuctioncnt = 0;
+						g_boundaries["icecube19"]->Center = blocks[19].pos;
+						g_boundaries["icecube19"]->Extents = OriginBlockExtents;
+					}
+				}
+				if (blocks[1].destuctioncnt == 3 && blocks[7].destuctioncnt == 3 && blocks[3].destuctioncnt == 3) {
+					int tmp = uid(dre);
+					if (tmp == 0) {
+						blocks[3].destuctioncnt = 0;
+						g_boundaries["icecube3"]->Center = blocks[3].pos;
+						g_boundaries["icecube3"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[1].destuctioncnt = 0;
+						g_boundaries["icecube1"]->Center = blocks[1].pos;
+						g_boundaries["icecube1"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 2) {
+						blocks[7].destuctioncnt = 0;
+						g_boundaries["icecube7"]->Center = blocks[7].pos;
+						g_boundaries["icecube7"]->Extents = OriginBlockExtents;
+					}
+				}
+				if (blocks[21].destuctioncnt == 3 && blocks[17].destuctioncnt == 3 && blocks[23].destuctioncnt == 3) {
+					int tmp = uid(dre);
+					if (tmp == 0) {
+						blocks[23].destuctioncnt = 0;
+						g_boundaries["icecube23"]->Center = blocks[23].pos;
+						g_boundaries["icecube23"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[21].destuctioncnt = 0;
+						g_boundaries["icecube21"]->Center = blocks[21].pos;
+						g_boundaries["icecube21"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 2) {
+						blocks[17].destuctioncnt = 0;
+						g_boundaries["icecube17"]->Center = blocks[17].pos;
+						g_boundaries["icecube17"]->Extents = OriginBlockExtents;
+					}
+				}
+				if (blocks[5].destuctioncnt == 3 && blocks[11].destuctioncnt == 3 && blocks[15].destuctioncnt == 3) {
+					int tmp = uid(dre);
+					if (tmp == 0) {
+						blocks[5].destuctioncnt = 0;
+						g_boundaries["icecube5"]->Center = blocks[5].pos;
+						g_boundaries["icecube5"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[11].destuctioncnt = 0;
+						g_boundaries["icecube11"]->Center = blocks[11].pos;
+						g_boundaries["icecube11"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 2) {
+						blocks[15].destuctioncnt = 0;
+						g_boundaries["icecube15"]->Center = blocks[15].pos;
+						g_boundaries["icecube15"]->Extents = OriginBlockExtents;
+					}
+				}
+				SendBlockPacket(*blocks);
+			}
+			{		//중앙
+				if (blocks[7].destuctioncnt == 3 && blocks[11].destuctioncnt == 3
+					&& blocks[13].destuctioncnt == 3 && blocks[17].destuctioncnt == 3) {
+					int tmp = uid3(dre);
+					if (tmp == 0) {
+						blocks[11].destuctioncnt = 0;
+						g_boundaries["icecube11"]->Center = blocks[11].pos;
+						g_boundaries["icecube11"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 1) {
+						blocks[7].destuctioncnt = 0;
+						g_boundaries["icecube7"]->Center = blocks[7].pos;
+						g_boundaries["icecube7"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 2) {
+						blocks[13].destuctioncnt = 0;
+						g_boundaries["icecube13"]->Center = blocks[13].pos;
+						g_boundaries["icecube13"]->Extents = OriginBlockExtents;
+					}
+					else if (tmp == 3) {
+						blocks[17].destuctioncnt = 0;
+						g_boundaries["icecube17"]->Center = blocks[17].pos;
+						g_boundaries["icecube17"]->Extents = OriginBlockExtents;
+					}
+				}
+			}
+
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
@@ -1072,19 +1095,7 @@ void ProcessClients()
 			SendHail(*hails);
 			//   Update(phyPlayers);
 
-			for (int i = 0; i < numOfCls; ++i) {	//눈사람에 숨어을때 위치 동기화
-				if (phyPlayers[i].SnowmanNum >= 0) {
-					phyPlayers[i].m_pos.x = TempSnowmanLocation[phyPlayers[i].SnowmanNum] / 5 * 200;
-					phyPlayers[i].m_pos.y = blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].pos.y + 60;
-					phyPlayers[i].m_pos.z = TempSnowmanLocation[phyPlayers[i].SnowmanNum] % 5 * 200;
-				}
-				if (blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].destuctioncnt == 3) {
-					IsInteracting[i] = false;
-					phyPlayers[i].IsHide = false;
-					HideInSnowman[phyPlayers[i].SnowmanNum] = false;
-					phyPlayers[i].SnowmanNum = -1;
-				}
-			}
+
 
 			for (int i = 0; i < numOfCls; ++i)
 			{

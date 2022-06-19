@@ -49,18 +49,30 @@ void LoadBBs(std::string filepath) {
 		}
 		else if (meshname == "rock_1") {
 			BB->Center = DirectX::XMFLOAT3(-1000, -1000, -1000);
-			BB->Extents.x = tmpx * 3;
-			BB->Extents.y = tmpy * 3;
-			BB->Extents.z = tmpz * 3;
+			BB->Extents.x = tmpx * 2.5;
+			BB->Extents.y = tmpy * 2.5;
+			BB->Extents.z = tmpz * 2.5;
 			g_boundaries["hail" + std::to_string(0)] = BB;
 			for (int i = 1; i < 5; ++i) {
 				BB = new DirectX::BoundingBox;
 				BB->Center = DirectX::XMFLOAT3(-1000, -1000, -1000);
-				BB->Extents.x = tmpx * 3;
-				BB->Extents.y = tmpy * 3;
-				BB->Extents.z = tmpz * 3;
+				BB->Extents.x = tmpx * 2.5;
+				BB->Extents.y = tmpy * 2.5;
+				BB->Extents.z = tmpz * 2.5;
 				g_boundaries["hail" + std::to_string(i)] = BB;
 			}
+		}
+		else if (meshname == "Seal") {
+			BB->Extents.x = tmpx * 15;
+			BB->Extents.y = tmpy * 15;
+			BB->Extents.z = tmpz * 15;
+			g_boundaries[meshname] = BB;
+		}
+		else if (meshname == "ArcticFox" || meshname == "husky"|| meshname == "Penguin"|| meshname == "PolarBear") {
+			BB->Extents.x = tmpx * 20;
+			BB->Extents.y = tmpy * 20;
+			BB->Extents.z = tmpz * 20;
+			g_boundaries[meshname] = BB;
 		}
 		else {
 			g_boundaries[meshname] = BB;
@@ -156,7 +168,7 @@ int main()
 			g_ConnectedClsLock.unlock();
 		}
 		// RecvThread 생성
-		thread RecvThread(Receiver, user_id);
+		thread RecvThread(Receiver, user_id);			//조정필요
 		RecvThread.detach();
 
 	}

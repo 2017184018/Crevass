@@ -121,7 +121,7 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 	m_GeometryMesh["geo"] = std::move(geo);
 }
 
-void MeshReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName,BoundingBox BB)
+void MeshReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName, BoundingBox BB)
 {
 	/*BoundingBox B2;
 	B2.Extents = XMFLOAT3(10.0, 30.0, 12.0);*/
@@ -175,12 +175,12 @@ void MeshReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graphics
 	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
 	geo->IndexBufferByteSize = ibByteSize;
 
-	geo->DrawArgs[meshName +"BB"] = boxSubmesh;
+	geo->DrawArgs[meshName + "BB"] = boxSubmesh;
 
 	m_GeometryMesh[meshName + "BB"] = std::move(geo);
 }
 
-void MeshReference::BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves *wave)
+void MeshReference::BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves* wave)
 {
 	std::vector<std::uint16_t> indices(3 * wave->TriangleCount()); // 3 indices per face
 	assert(wave->VertexCount() < 0x0000ffff);
@@ -281,30 +281,30 @@ void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 	BoundingBox bounds;
 
 
-		XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
-		XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
-		XMVECTOR vMin = XMLoadFloat3(&vMinf3);
-		XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
+	XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+	XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+	XMVECTOR vMin = XMLoadFloat3(&vMinf3);
+	XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
 
-		for (auto& p : vertices)
-		{
-			XMVECTOR P = XMLoadFloat3(&p.Pos);
+	for (auto& p : vertices)
+	{
+		XMVECTOR P = XMLoadFloat3(&p.Pos);
 
-			vMin = XMVectorMin(vMin, P);
-			vMax = XMVectorMax(vMax, P);
-		}
+		vMin = XMVectorMin(vMin, P);
+		vMax = XMVectorMax(vMax, P);
+	}
 
-		XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
-		XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
 
-		//ofstream out{ "bb.txt",ios::app };
-		//out << meshName << " " << bounds.Extents.x<<" " << bounds.Extents.y << " " << bounds.Extents.z << endl;
+	//ofstream out{ "bb.txt",ios::app };
+	//out << meshName << " " << bounds.Extents.x<<" " << bounds.Extents.y << " " << bounds.Extents.z << endl;
 
 	SubmeshGeometry submesh;
 	submesh.IndexCount = indices.size();
 	submesh.StartIndexLocation = 0;
 	submesh.BaseVertexLocation = 0;
-    submesh.Bounds = bounds;
+	submesh.Bounds = bounds;
 
 	geo->DrawArgs[meshName] = submesh;
 	m_GeometryMesh[meshName] = std::move(geo);
@@ -370,8 +370,13 @@ void MeshReference::BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsComma
 	}
 
 	BoundingBox bounds;
-	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax)*20);
-	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin)*20);
+	//XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax) * 20);
+	//XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin) * 20);
+	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+
+	//ofstream out{ "bb.txt",ios::app };
+	//out << meshName << " " << bounds.Extents.x << " " << bounds.Extents.z << " " << bounds.Extents.y << endl;
 
 	SubmeshGeometry submesh;
 	submesh.IndexCount = indices.size();
