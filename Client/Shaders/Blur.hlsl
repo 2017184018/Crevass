@@ -88,6 +88,6 @@ void VertBlurCS(int3 groupThreadID : SV_GroupThreadID,
 
 		blurColor += weights[i + gBlurRadius] * gCache[k];
 	}
-
+//	blurColor.x += 0.05;
 	gOutput[dispatchThreadID.xy] = blurColor;
 }

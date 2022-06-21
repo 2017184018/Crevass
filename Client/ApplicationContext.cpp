@@ -725,6 +725,29 @@ void ApplicationContext::CreateHail()
 	}
 }
 
+void ApplicationContext::CreateWaterDrop()
+{
+	//218
+	GameObject* top = CreateObject<GameObject>("waterdrop", "waterdrop0");
+	top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+	top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	top->IndexCount = top->Geo->DrawArgs["grid"].IndexCount;
+	top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
+	top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
+	top->m_IsVisible = true;
+	top->m_MaterialIndex = 18;
+	top->m_World = MathHelper::Identity4x4();
+	top->m_World._11 = 200 * 1.43;
+	top->m_World._22 = 100;
+	top->m_World._33 = 150 * 1.43;
+	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+	top->m_World._41 = 400;
+	top->m_World._42 = 100;
+	top->m_World._43 = 400;
+	top->m_TexTransform = MathHelper::Identity4x4();
+	++SNUM;
+}
+
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {
 	Character* chr = CreateObject<Character>(meshName, instID);

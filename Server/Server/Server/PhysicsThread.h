@@ -660,7 +660,7 @@ void ProcessClients()
 				}
 				else {
 					if (tmp1[i] != -1) {
-						if (phyPlayers[i].m_pos.y > 10 && phyPlayers[i].is_jump == false && blocks[tmp1[i]].destuctioncnt != 3 && phyPlayers[i].m_pos.y <= 30) { 
+						if (phyPlayers[i].m_pos.y > 10 && phyPlayers[i].is_jump == false && blocks[tmp1[i]].destuctioncnt != 3 && phyPlayers[i].m_pos.y <= 30) {
 							phyPlayers[i].m_pos.y = blocks[tmp1[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
@@ -672,7 +672,7 @@ void ProcessClients()
 					else {
 						if (phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y >= 50 &&
 							phyPlayers[i].is_jump == false && !IsFall[i] && phyPlayers[i].m_pos.y - blocks[tmp2[i]].pos.y <= 70)
-						{ 
+						{
 							phyPlayers[i].m_pos.y = blocks[tmp2[i]].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
 						}
@@ -833,10 +833,10 @@ void ProcessClients()
 					else {
 						g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
 						/*if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= blocks[i].pos.y + 60)*/
-						if(tmp2[j] == -1&& 
-							phyPlayers[j].m_pos.x-10<=blocks[i].pos.x+54 && phyPlayers[j].m_pos.x+10 >= blocks[i].pos.x - 54 &&
-							phyPlayers[j].m_pos.z-10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z+10 >= blocks[i].pos.z- 54 &&
-							phyPlayers[j].m_pos.y<=30)
+						if (tmp2[j] == -1 &&
+							phyPlayers[j].m_pos.x - 10 <= blocks[i].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[i].pos.x - 54 &&
+							phyPlayers[j].m_pos.z - 10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[i].pos.z - 54 &&
+							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60)
 						{
 							tmp2[j] = i;
 							phyPlayers[j].gravity = 0.0f;
@@ -849,10 +849,10 @@ void ProcessClients()
 							}
 						}
 						/*if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]])))*/
-						if(tmp2[j] != -1  &&
-							!(phyPlayers[j].m_pos.x-10 <= blocks[tmp2[j]].pos.x + 54 && phyPlayers[j].m_pos.x+10 >= blocks[tmp2[j]].pos.x - 54 &&
-							phyPlayers[j].m_pos.z-10 <= blocks[tmp2[j]].pos.z + 54 && phyPlayers[j].m_pos.z+10 >= blocks[tmp2[j]].pos.z - 54 &&
-							phyPlayers[j].m_pos.y <= 40))
+						if (tmp2[j] != -1 &&
+							!(phyPlayers[j].m_pos.x - 10 <= blocks[tmp2[j]].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[tmp2[j]].pos.x - 54 &&
+								phyPlayers[j].m_pos.z - 10 <= blocks[tmp2[j]].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[tmp2[j]].pos.z - 54 &&
+								phyPlayers[j].m_pos.y <= blocks[tmp2[j]].pos.y + 70))
 						{
 							IsDown[tmp2[j]] = false;
 

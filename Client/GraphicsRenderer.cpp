@@ -364,9 +364,6 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
-	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_0");
-	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_0");
-
 	m_Instancing_InputLayout =
 	{
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -387,6 +384,8 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 68, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
+	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_1");
+	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_1");
 }
 
 void GraphicsRenderer::BuildRootSignatures()
@@ -500,7 +499,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["skinnedVS"]->GetBufferPointer()),
 		m_Shaders["skinnedVS"]->GetBufferSize()
-	}; 
+	};
 	skinnedOpaquePsoDesc.PS =
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["opaquePS"]->GetBufferPointer()),
