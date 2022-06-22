@@ -329,7 +329,16 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
 	}
-
+	{	//waterdrop
+		for (int i = 0; i < 4; ++i) {
+			AppContext->m_RItemsVec[218 + i]->m_World._41 = m_Users[m_PlayerID]->GetPosition().x + (100 * (i / 2) - 50);
+			AppContext->m_RItemsVec[218 + i]->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 330;
+			if (i == 0 || i == 3)
+				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 85;
+			else
+				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
+		}
+	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
 	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);

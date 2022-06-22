@@ -28,6 +28,7 @@ bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 Hail hails[5];
 DirectX::XMFLOAT3 OriginBlockExtents;
+bool IsSkillPushed[3] = { false,false,false };		//스킬 키 눌렀는지
 
 int CalcTime = 0;
 
@@ -549,8 +550,10 @@ void ProcessClients()
 					case KEY_INTERACT:
 						IsInteract[phyMsg.id] = true;
 						break;
+					case KEY_SKILL:
+						IsSkillPushed[phyMsg.id] = true;
+						break;
 					}
-
 				}
 
 				//Update(phyPlayers);
@@ -868,7 +871,7 @@ void ProcessClients()
 					phyPlayers[i].m_pos.y = blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].pos.y + 60;
 					phyPlayers[i].m_pos.z = TempSnowmanLocation[phyPlayers[i].SnowmanNum] % 5 * 200;
 				}
-				if (blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].destuctioncnt == 3) {
+				if (blocks[TempSnowmanLocation[phyPlayers[i].SnowmanNum]].destuctioncnt == 3 || (phyPlayers[i].SnowmanNum >= 0 && phyPlayers[i].is_hitted)) {
 					IsInteracting[i] = false;
 					phyPlayers[i].IsHide = false;
 					HideInSnowman[phyPlayers[i].SnowmanNum] = false;
@@ -1050,7 +1053,7 @@ void ProcessClients()
 							hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
 							g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
 							for (int j = 0; j < 5; ++j) {
-								if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]])) {
+								if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]]) && phyPlayers[i].SnowmanNum == -1) {
 									phyPlayers[i].is_hitted = true;
 									float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
 									float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
@@ -1095,7 +1098,42 @@ void ProcessClients()
 			SendHail(*hails);
 			//   Update(phyPlayers);
 
+			{	//skill
+				for (int i = 0; i < numOfCls; ++i) {
+					if (IsSkillPushed[i]) {
+						static UINT SkillCoolTime = 0;
+						if (TypeName[i] == "Penguin") {
+							if (phyPlayers[i].m_pos.y <= 200) {
+								cout << "Penguin" << endl;
+								phyPlayers[i].gravity = 0.0f;
+								phyPlayers[i].m_pos.y +=0.1f;
+							}
+						}
+						else if (TypeName[i] == "husky") {
+							cout << "husky" << endl;
 
+						}
+						else if (TypeName[i] == "ArcticFox") {
+							cout << "ArcticFox" << endl;
+
+						}
+						else if (TypeName[i] == "Seal") {
+							cout << "Seal" << endl;
+
+						}
+						else if (TypeName[i] == "PolarBear") {
+							cout << "PolarBear" << endl;
+
+						}
+						SkillCoolTime += 1;
+						if (SkillCoolTime >= 300) {
+							IsSkillPushed[i] = false;
+							SkillCoolTime = 0;
+						}
+					}
+
+				}
+			}
 
 			for (int i = 0; i < numOfCls; ++i)
 			{

@@ -26,6 +26,23 @@ void MaterialReference::Update(float t) {
 
 	waterMat->MatTransform(3, 0) = tu;
 	waterMat->MatTransform(3, 1) = tv;
+
+	auto waterdropMat = m_Materials["waterdrop"].get();
+
+	tu = waterdropMat->MatTransform(3, 0);
+	tv = waterdropMat->MatTransform(3, 1);
+
+	tu += 0.05f * t;
+	tv -= 0.05f * t;
+
+	if (tu >= 1.0f)
+		tu -= 1.0f;
+
+	if (tv <= 0.0f)
+		tv += 1.0f;
+
+	waterdropMat->MatTransform(3, 0) = tu;
+	waterdropMat->MatTransform(3, 1) = tv;
 }
 
 void MaterialReference::BuildMaterials()

@@ -14,6 +14,7 @@
 #define KEY_ATTACK      8
 #define KEY_JUMP	    9  
 #define KEY_INTERACT	    10
+#define KEY_SKILL	    11
 
 #define ANIM_IDLE		0
 #define ANIM_MOVE		1
