@@ -191,111 +191,224 @@ void Receiver(char id)
 		}
 		case CS_READY_PENGUIN:
 		{
+			bool OverlapCheck = false;
 			g_PlayerReadyInfoLock.lock();
-			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (g_initialPos[i].Character_type == CHARACTER_PENGUIN)
+				{
+					std::cout << "can't ready penguin" << std::endl;
+					OverlapCheck = true;
+					break;
+				}
+			}
+
+			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
-			for (auto& cl : g_clients)
-				SendReadyPenguin(cl.first, id, ready);
-
-			if (CheckGameStart())
+			if (OverlapCheck == false)
 			{
+				if ((int)g_playerReadyInfo[id].ready == 0)
+				{
+					g_initialPos[id].Character_type = CHARACTER_PENGUIN;
+				}
+				else
+				{
+					g_initialPos[id].Character_type = -1;
+				}
+				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+				for (auto& cl : g_clients)
+					SendReadyPenguin(cl.first, id, ready);
+				if (CheckGameStart())
+				{
 
-				SendGameStartPacket();
-				g_isPlaying = true;
-				g_initialPos[id].Character_type = CHARACTER_PENGUIN;
-				// Physics Thread ����
-				std::cout << "physics thread ����!" << std::endl;
-				thread PhysicsThread(ProcessClients);
-				PhysicsThread.detach();
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
 			}
 			break;
 		}
 		case CS_READY_HUSKY:
 		{
+			bool OverlapCheck = false;
 			g_PlayerReadyInfoLock.lock();
-			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (g_initialPos[i].Character_type == CHARACTER_HUSKY)
+				{
+					std::cout << "can't ready husky" << std::endl;
+					OverlapCheck = true;
+					break;
+				}
+			}
+
+			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
-			for (auto& cl : g_clients)
-				SendReadyHusky(cl.first, id, ready);
-
-			if (CheckGameStart())
+			if (OverlapCheck == false)
 			{
-				SendGameStartPacket();
-				g_isPlaying = true;
-				g_initialPos[id].Character_type = CHARACTER_HUSKY;
+				if ((int)g_playerReadyInfo[id].ready == 0)
+				{
+					g_initialPos[id].Character_type = CHARACTER_HUSKY;
+				}
+				else
+				{
+					g_initialPos[id].Character_type = -1;
+				}
 
-				// Physics Thread ����
-				std::cout << "physics thread ����!" << std::endl;
-				thread PhysicsThread(ProcessClients);
-				PhysicsThread.detach();
+				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+				for (auto& cl : g_clients)
+					SendReadyHusky(cl.first, id, ready);
+				//g_initialPos[id].Character_type = CHARACTER_HUSKY;
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
 			}
 			break;
 		}
 		case CS_READY_POLARBEAR:
 		{
+			bool OverlapCheck = false;
 			g_PlayerReadyInfoLock.lock();
-			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (g_initialPos[i].Character_type == CHARACTER_POLARBEAR)
+				{
+					std::cout << "can't ready polarbear" << std::endl;
+					OverlapCheck = true;
+					break;
+				}
+			}
+
+			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
-			for (auto& cl : g_clients)
-				SendReadyBear(cl.first, id, ready);
-
-			if (CheckGameStart())
+			if (OverlapCheck == false)
 			{
-				SendGameStartPacket();
-				g_isPlaying = true;
-				g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
+				if ((int)g_playerReadyInfo[id].ready == 0)
+				{
+					g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
+				}
+				else
+				{
+					g_initialPos[id].Character_type = -1;
+				}
 
-				// Physics Thread ����
-				std::cout << "physics thread ����!" << std::endl;
-				thread PhysicsThread(ProcessClients);
-				PhysicsThread.detach();
+				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+				for (auto& cl : g_clients)
+					SendReadyBear(cl.first, id, ready);
+				//g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
 			}
 			break;
 		}
 		case CS_READY_FOX:
 		{
+			bool OverlapCheck = false;
 			g_PlayerReadyInfoLock.lock();
-			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (g_initialPos[i].Character_type == CHARACTER_ARCTICFOX)
+				{
+					std::cout << "can't ready fox" << std::endl;
+					OverlapCheck = true;
+					break;
+				}
+			}
+
+			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
-			for (auto& cl : g_clients)
-				SendReadyFox(cl.first, id, ready);
-
-			if (CheckGameStart())
+			if (OverlapCheck == false)
 			{
-				SendGameStartPacket();
-				g_isPlaying = true;
-				g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
+				if ((int)g_playerReadyInfo[id].ready == 0)
+				{
+					g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
+				}
+				else
+				{
+					g_initialPos[id].Character_type = -1;
+				}
 
-				// Physics Thread ����
-				std::cout << "physics thread ����!" << std::endl;
-				thread PhysicsThread(ProcessClients);
-				PhysicsThread.detach();
+				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+				for (auto& cl : g_clients)
+					SendReadyFox(cl.first, id, ready);
+				//g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
 			}
 			break;
 		}
 		case CS_READY_SEAL:
 		{
+			bool OverlapCheck = false;
 			g_PlayerReadyInfoLock.lock();
-			char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (g_initialPos[i].Character_type == CHARACTER_SEAL)
+				{
+					std::cout << "can't ready seal" << std::endl;
+					OverlapCheck = true;
+					break;
+				}
+			}
+
+			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
-			for (auto& cl : g_clients)
-				SendReadySeal(cl.first, id, ready);
-
-			if (CheckGameStart())
+			if (OverlapCheck == false)
 			{
-				SendGameStartPacket();
-				g_isPlaying = true;
-				g_initialPos[id].Character_type = CHARACTER_SEAL;
+				if ((int)g_playerReadyInfo[id].ready == 0)
+				{
+					g_initialPos[id].Character_type = CHARACTER_SEAL;
+				}
+				else
+				{
+					g_initialPos[id].Character_type = -1;
+				}
 
-				// Physics Thread ����
-				std::cout << "physics thread ����!" << std::endl;
-				thread PhysicsThread(ProcessClients);
-				PhysicsThread.detach();
+				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+				for (auto& cl : g_clients)
+					SendReadySeal(cl.first, id, ready);
+				//g_initialPos[id].Character_type = CHARACTER_SEAL;
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
 			}
 			break;
 		}
