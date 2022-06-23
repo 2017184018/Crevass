@@ -139,6 +139,7 @@ void CREVASS::Update(float deltaT)
 	m_Camera->UpdateViewMatrix();
 
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
+	
 }
 
 void CREVASS::RenderScene(void)

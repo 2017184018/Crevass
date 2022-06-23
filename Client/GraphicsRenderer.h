@@ -70,9 +70,7 @@ public:
 
 	UINT mSkyTexHeapIndex = 0;
 	UINT mShadowMapHeapIndex = 0;
+	UINT mBlurHeapIndex = 0;
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mNullSrv;
-	UINT mNullCubeSrvIndex = 0;
-	UINT mNullTexSrvIndex = 0;
 };
 

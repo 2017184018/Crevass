@@ -423,7 +423,7 @@ void GameplayScene::Render()
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
-	cout << "안녕!" << endl;
+
 	/*Shadow Props*/
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
@@ -453,7 +453,7 @@ void GameplayScene::Render()
 	{
 		if (!p.second) continue;
 
-			//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
+			GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 		
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap[p.second->GetType()], AppContext->m_RItemsVec);
 	}

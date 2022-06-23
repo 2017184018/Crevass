@@ -203,7 +203,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 
 	mSkyTexHeapIndex = 0;
 	mShadowMapHeapIndex = (UINT)tex2DList.size() + 1;
-
+	mBlurHeapIndex = mShadowMapHeapIndex + 1;
 	auto srvCpuStart = m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	auto srvGpuStart = m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 	auto dsvCpuStart = GameCore::GetApp()->mDsvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -217,8 +217,8 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 
 
 	Core::mBlurFilter->BuildDescriptors(
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_Textures.size(), GameCore::GetApp()->mCbvSrvUavDescriptorSize),
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), m_Textures.size(), GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
 		GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 }
 

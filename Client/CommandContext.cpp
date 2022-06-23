@@ -14,8 +14,8 @@
 void GraphicsContext::Initialize()
 {
 	// TEST SceneBounds
-	mSceneBounds.Center = XMFLOAT3(2500.0f,0.0f, 2500.0f);
-	mSceneBounds.Radius = sqrtf(1800.0f * 1800.0f + 1800.0f * 1800.0f);
+	mSceneBounds.Center = XMFLOAT3(500.0f,0.0f, 500.0f);
+	mSceneBounds.Radius = sqrtf(1500.0f * 1500.0f + 1500.0f * 1500.0f);
 
 	for (int i = 0; i < skinnedObjectCount; ++i)
 	{
