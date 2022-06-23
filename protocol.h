@@ -13,6 +13,8 @@
 #define SC_RESET			10
 #define SC_GAMEOVER			11
 #define SC_BLOCK			12
+#define SC_TIME				13
+#define SC_HAIL				14
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -33,6 +35,8 @@
 #define CS_PLAYER_JUMP				11
 #define CS_PLAYER_ATTACK			12
 #define CS_PLAYER_LOSE				13
+#define CS_PLAYER_INTERACT				14
+#define CS_PLAYER_SKILL				15
 
 #define CS_READY_PENGUIN				17
 #define CS_READY_HUSKY				18
@@ -70,6 +74,8 @@ struct Pro_Player {
 	char dir;
 	char anim;
 	char Character_type;
+	bool IsHide;
+	int SnowmanNum;
 };
 
 struct Block {
@@ -97,7 +103,8 @@ struct sc_packet_game_start {
 	short size;
 	char type;
 	Pro_Player players[3];
-	int SnowmanLocation[2];
+	int iglooLocation[2];
+	int SnowmanLocation[4];
 	Block blocks[25];
 };
 
@@ -152,6 +159,18 @@ struct sc_packet_block
 	short size;
 	char type;
 	Block blocks[25];
+};
+struct sc_packet_time
+{
+	short size;
+	char type;
+	int time;
+};
+struct sc_packet_hail
+{
+	short size;
+	char type;
+	DirectX::XMFLOAT3 pos[5];
 };
 
 /* Client to Server */

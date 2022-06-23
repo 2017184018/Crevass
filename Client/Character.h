@@ -100,6 +100,12 @@ public:
 	virtual void Scale(float x, float y, float z) override;
 	void pushed_back(float up, float back, float speed,float hit_angle);
 	void SetAnimationKeyState(PlayerState keyState);
+
+	void SetHide(bool hide);
+	bool GetHide()const;
+
+	void SetSnowmanNum(int num);
+	int GetSnowmanNum()const;
 public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;
@@ -121,5 +127,6 @@ private:
 	float m_Yaw;
 	float m_Roll;
 
-
+	bool IsHide;
+	int SnowmanNum;
 };

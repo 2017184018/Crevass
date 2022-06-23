@@ -45,8 +45,10 @@ namespace Core
 
 	std::unique_ptr<Waves> mWaves;
 	GameObject* wave;
-	UINT SnowmanIndex[2];
+	UINT iglooIndex[2];
+	UINT SnowmanIndex[4];
 	bool Inactive = false;
+	int SNUM=210;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)

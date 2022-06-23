@@ -95,6 +95,7 @@ void GraphicsRenderer::LoadTextures()
 		"lobby3",
 		"lobby4",
 		"lobby5",
+		"waterdrop",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -117,6 +118,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/lobby3.dds",
 		L"./Textures/lobby4.dds",
 		L"./Textures/lobby5.dds",
+		L"./Textures/waterdrop.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -168,9 +170,9 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	m_Textures["lobby2"]->Resource,
 	m_Textures["lobby3"]->Resource,
 	m_Textures["lobby4"]->Resource,
-	m_Textures["lobby5"]->Resource
+	m_Textures["lobby5"]->Resource,
+	m_Textures["waterdrop"]->Resource
 	};
-
 	auto snowcube1024 = m_Textures["snowcube1024"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -216,6 +218,18 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(dsvCpuStart, 1, GameCore::GetApp()->mDsvDescriptorSize));
 
 
+	//hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+
+	//srvDesc.Format = waterdrop->GetDesc().Format;
+	//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	//srvDesc.Texture2D.MostDetailedMip = 0;
+	//srvDesc.Texture2D.MipLevels = waterdrop->GetDesc().MipLevels;
+	//srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	//g_Device->CreateShaderResourceView(waterdrop.Get(), &srvDesc, hDescriptor);
+
+	//mSkyTexHeapIndex = 0;
+
+
 	Core::mBlurFilter->BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
@@ -252,7 +266,7 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 
 	m_Shaders["debugVS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["debugPS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
-	
+
 	m_Instancing_InputLayout =
 	{
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -273,6 +287,8 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 68, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
+	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_1");
+	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_1");
 }
 
 void GraphicsRenderer::BuildRootSignatures()
@@ -390,7 +406,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["skinnedVS"]->GetBufferPointer()),
 		m_Shaders["skinnedVS"]->GetBufferSize()
-	}; 
+	};
 	skinnedOpaquePsoDesc.PS =
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["opaquePS"]->GetBufferPointer()),

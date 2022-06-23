@@ -212,6 +212,9 @@ void Network::ProcessPacket(char* packet_buffer)
 		}
 		for (int i = 0; i < 2; ++i)
 		{
+			iglooLocation[i] = packet.iglooLocation[i];
+		}
+		for (int i = 0; i < 4; ++i) {
 			SnowmanLocation[i] = packet.SnowmanLocation[i];
 		}
 		for (int i = 0; i < 25; ++i) {
@@ -229,12 +232,14 @@ void Network::ProcessPacket(char* packet_buffer)
 		{
 			PlayerPos[i] = packet.players[i].pos;
 			dir[i] = packet.players[i].dir;
+			PlayerHide[i] = packet.players[i].IsHide;
+			PlayerSnowmanHide[i] = packet.players[i].SnowmanNum;
 		}
-	//	cout << packet.players[0].pos.x << endl;
-		//if (m_pGameInfo->m_ClientID == 0)
-		//	OtherPlayerPos = packet.players[1].pos;
-		//else
-		//	OtherPlayerPos = packet.players[0].pos;
+		//	cout << packet.players[0].pos.x << endl;
+			//if (m_pGameInfo->m_ClientID == 0)
+			//	OtherPlayerPos = packet.players[1].pos;
+			//else
+			//	OtherPlayerPos = packet.players[0].pos;
 		break;
 	}
 	case SC_BLOCK:
@@ -283,6 +288,22 @@ void Network::ProcessPacket(char* packet_buffer)
 		m_pGameInfo->DeletePlayerInfo(packet.id);
 		break;
 	}
+	case SC_TIME:
+	{
+		sc_packet_time packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		std::cout << "time= " << (packet.time) / 3600 << "min " << ((packet.time) % 3600) / 60 << "sec" << endl;
+		break;
+	}
+	case SC_HAIL:
+	{
+		sc_packet_hail packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		for (int i = 0; i < 5; ++i) {
+			HailPos[i] = packet.pos[i];
+		}
+		break;
+	}
 	case SC_GAMEOVER:
 	{
 		std::cout << "game over" << std::endl;
@@ -294,10 +315,10 @@ void Network::ProcessPacket(char* packet_buffer)
 		else
 			m_pGameInfo->m_WinnerID = 0;
 		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
-		if(m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
-		MessageBox(nullptr,L"You Win", L"Game Over!", MB_OK);
-		else if(m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
-		MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
+		if (m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
+			MessageBox(nullptr, L"You Win", L"Game Over!", MB_OK);
+		else if (m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
+			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
 
 		break;
 	}
@@ -342,6 +363,11 @@ DirectX::XMFLOAT3 Network::GetPlayerPos(int num)const
 	return PlayerPos[num];
 }
 
+int Network::GetiglooLocation(int num)const
+{
+	return iglooLocation[num];
+}
+
 int Network::GetSnowmanLocation(int num)const
 {
 	return SnowmanLocation[num];
@@ -354,7 +380,12 @@ int Network::GetPlayerDir(int num)const
 
 DirectX::XMFLOAT3 Network::GetBlockPos(int num)const
 {
-	return BlockPos[num]; 
+	return BlockPos[num];
+}
+
+DirectX::XMFLOAT3 Network::GetHailPos(int num) const
+{
+	return HailPos[num];
 }
 
 int Network::GetBlockDestructionCnt(int num)const {
@@ -390,4 +421,14 @@ bool Network::GetCharacterReset(int num)const
 void Network::SetCharacterReset(int num)
 {
 	isReset[num] = false;
+}
+
+bool Network::GetPlayerHide(int num)const
+{
+	return PlayerHide[num];
+}
+
+int Network::GetPlayerSnowmanNum(int num)const
+{
+	return PlayerSnowmanHide[num];
 }

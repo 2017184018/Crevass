@@ -26,6 +26,23 @@ void MaterialReference::Update(float t) {
 
 	waterMat->MatTransform(3, 0) = tu;
 	waterMat->MatTransform(3, 1) = tv;
+
+	auto waterdropMat = m_Materials["waterdrop"].get();
+
+	tu = waterdropMat->MatTransform(3, 0);
+	tv = waterdropMat->MatTransform(3, 1);
+
+	tu += 0.05f * t;
+	tv -= 0.05f * t;
+
+	if (tu >= 1.0f)
+		tu -= 1.0f;
+
+	if (tv <= 0.0f)
+		tv += 1.0f;
+
+	waterdropMat->MatTransform(3, 0) = tu;
+	waterdropMat->MatTransform(3, 1) = tv;
 }
 
 void MaterialReference::BuildMaterials()
@@ -165,6 +182,13 @@ void MaterialReference::BuildMaterials()
 	bricks0->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	bricks0->Roughness = 0.3f;
 
+	auto waterdrop = std::make_unique<Material>();
+	waterdrop->MatCBIndex = 18;
+	waterdrop->DiffuseSrvHeapIndex = 18;
+	waterdrop->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	waterdrop->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	waterdrop->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -184,4 +208,5 @@ void MaterialReference::BuildMaterials()
 	m_Materials["lobby4"] = std::move(lobby4);
 	m_Materials["lobby5"] = std::move(lobby5);
 	m_Materials["bricks0"] = std::move(bricks0);
+	m_Materials["waterdrop"] = std::move(waterdrop);
 }

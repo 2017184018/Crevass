@@ -27,9 +27,12 @@ void GameplayScene::Initialize()
 
 	AppContext->CreateSkycube("sky", "sky0", "snowcube1024"); 
 	AppContext->CreateBlocks();
-	AppContext->CreateSnowmans();
+	AppContext->Createigloos();
 	AppContext->CreateWave();
 	AppContext->CreateBackground();
+	AppContext->CreateSnowmans();
+	AppContext->CreateHail();
+	AppContext->CreateWaterDrop();
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	for (int i = 0; i < 25; ++i) {
 		//IsShake[i] = false;
@@ -76,13 +79,18 @@ bool GameplayScene::Enter()
 		m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
 	}
 	for (int i = 0; i < 2; ++i) {
-		SnowmanIndex[i] = SnowmanLocaArray[g_pFramework->m_pNetwork->GetSnowmanLocation(i)];
-		if (SnowmanIndex[i] % 4) {		//방향 오류, 가끔 게임 스타트 패킷을 2번 받는 듯
-			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(3.0f / 5.0f, 3.0f / 5.0f, 3.0f / 5.0f) * XMMatrixRotationY(3.14 * 5 / 6));
+		float scale = 2.0f / 10.0f;
+		iglooIndex[i] = iglooLocaArray[g_pFramework->m_pNetwork->GetiglooLocation(i)];
+		if (iglooIndex[i] % 4) {
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(scale, scale + 0.05, scale) * XMMatrixRotationY(3.14 * 5 / 6));
 		}
 		else {
-			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(3.0f / 5.0f, 3.0f / 5.0f, 3.0f / 5.0f) * XMMatrixRotationY(3.14 * 7 / 6));
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(scale, scale + 0.05, scale) * XMMatrixRotationY(3.14 * 7 / 6));
 		}
+	}
+	for (int i = 0; i < 4; ++i) {
+		float scale = 3.0f / 5.0f;
+		SnowmanIndex[i] = g_pFramework->m_pNetwork->GetSnowmanLocation(i);
 	}
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -105,8 +113,15 @@ void GameplayScene::Exit()
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
+
+	static bool one[5]{ true,true,true,true,true };
+	static bool two[5]{ true,true,true,true,true };
+	static bool Small[5]{ false,false,false,false,false };
+
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
+		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
+		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
 
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
@@ -147,6 +162,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
+		if (DestructionCnt[i] == 0) {
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 1;
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
+			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
+			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 1;
+			AppContext->m_RItemsVec[i + 51]->m_World._11 = 7.5 / 10.0;
+			AppContext->m_RItemsVec[i + 51]->m_World._22 = 1;
+			AppContext->m_RItemsVec[i + 51]->m_World._33 = 7.5 / 10.0;
+		}
 		if (DestructionCnt[i] == 1) {
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;
@@ -168,6 +194,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	}
 
+	{		//우박 hail
+		for (int i = 0; i < 5; ++i) {
+			AppContext->m_RItemsVec[213 + i]->SetPosition(g_pFramework->m_pNetwork->GetHailPos(i));
+
+		}
+	}
+
 	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
@@ -175,44 +208,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		p.second->Update(fDeltaTime);
 	}
-
-	/*float speed = 100 * fDeltaTime;
-	if (m_Users[m_PlayerID]) {
-		static float YSave = 30;
-		static bool IsFirst = true;
-		static float HighY = YSave + 40;
-		if (m_Users[m_PlayerID]->bJump == true && (m_Users[m_PlayerID]->is_Inair == true)) {
-			if (IsFirst) {
-				if (m_Users[m_PlayerID]->GetPosition().y > 30)
-					YSave = 30;
-				else
-					YSave = m_Users[m_PlayerID]->GetPosition().y;
-				IsFirst = false;
-				HighY = YSave + 40;
-			}
-			Gravity = 0.1;
-			m_Users[m_PlayerID]->Move(DIR_UP, speed * 2, true);
-		}
-
-		if (m_Users[m_PlayerID]->GetPosition().y > HighY) {
-			m_Users[m_PlayerID]->is_Inair = false;
-		}
-
-		if (!m_Users[m_PlayerID]->is_Inair)
-			Gravity += 0.05;
-
-		if (tmp1 != -1) {
-			YSave = 30;
-		}
-
-		if (m_Users[m_PlayerID]->GetPosition().y <= YSave && m_Users[m_PlayerID]->bJump == true) {
-			m_Users[m_PlayerID]->bJump = false;
-			YSave = 30;
-			IsFirst = true;
-			HighY = YSave + 40;
-			Gravity = 0.1;
-		}
-	}*/
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
@@ -222,7 +217,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			{
 				m_Users[i]->m_PlayerController->Fall();
 				Fall(i);
-				//cout << "fall" << endl;
 			}
 		}
 	}
@@ -253,25 +247,76 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	{
+		//syncro igloo
+		if (iglooIndex[0] % 4) {
+			AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * iglooIndex[0] + 1]->m_World._41 - 20;
+		}
+		else {
+			AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * iglooIndex[0] + 1]->m_World._41 + 20;
+		}
+		AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * iglooIndex[0] + 1]->m_World._42 + 60;
+		AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * iglooIndex[0] + 1]->m_World._43 + 20;
+
+		if (iglooIndex[1] % 4) {
+			AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * iglooIndex[1] + 1]->m_World._41 - 20;
+		}
+		else {
+			AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * iglooIndex[1] + 1]->m_World._41 + 20;
+		}
+
+		AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * iglooIndex[1] + 1]->m_World._42 + 60;
+		AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * iglooIndex[1] + 1]->m_World._43 + 20;
+	}
+
+	{
 		//syncro snowman
-		if (SnowmanIndex[0] % 4) {
-			AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 - 20;
-		}
-		else {
-			AppContext->m_RItemsVec[76]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._41 + 20;
-		}
-		AppContext->m_RItemsVec[76]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._42 + 20;
-		AppContext->m_RItemsVec[76]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[0] + 1]->m_World._43 + 20;
+		for (int i = 0; i < 4; ++i) {
 
-		if (SnowmanIndex[1] % 4) {
-			AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 - 20;
-		}
-		else {
-			AppContext->m_RItemsVec[77]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._41 + 20;
-		}
+			float scale = 0;
+			if (DestructionCnt[SnowmanIndex[i]] < 3) {
+				scale = 0.6 - DestructionCnt[SnowmanIndex[i]] * 0.1;
+			}
+			else {
+				scale = 0;
+			}
 
-		AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._42 + 20;
-		AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[1] + 1]->m_World._43 + 20;
+			//static float rota = 0;
+			//static bool direct = true;
+			if (SnowmanIndex[i] % 5 == 1 || SnowmanIndex[i] % 5 == 3) {
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 5 / 6));
+			}
+			else {
+				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 7 / 6));
+			}
+			/*static int cnt = 0;
+			if (direct) {
+				if (cnt < 3) {
+					if (rota < 1 / 9.0) {
+						rota += 0.003;
+					}
+					else {
+						direct = false;
+					}
+				}
+			}
+			else {
+				if (rota > -1/9.0) {
+					rota -= 0.003;
+				}
+				else {
+					direct = true;
+				}
+			}*/
+			if (SnowmanIndex[i] % 5) {
+				AppContext->m_RItemsVec[209 + i]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._41 - 20;
+			}
+			else {
+				AppContext->m_RItemsVec[209 + i]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._41 - 20;
+			}
+			AppContext->m_RItemsVec[209 + i]->m_World._42 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._42 + 20;
+			AppContext->m_RItemsVec[209 + i]->m_World._43 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._43 + 20;
+
+		}
 	}
 
 	for (int i = 0; i < 5; ++i) {	//life
@@ -283,7 +328,16 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
 	}
-
+	{	//waterdrop
+		for (int i = 0; i < 4; ++i) {
+			AppContext->m_RItemsVec[218 + i]->m_World._41 = m_Users[m_PlayerID]->GetPosition().x + (100 * (i / 2) - 50);
+			AppContext->m_RItemsVec[218 + i]->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 330;
+			if (i == 0 || i == 3)
+				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 85;
+			else
+				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
+		}
+	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
 	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);
@@ -314,9 +368,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 			tmpidx = -1;
 		}
 		else if (time >= 2.9) {
-//			m_Users[m_PlayerID]->is_fall = false;
-//			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
-	//		Gravity = 0.01;
+			//			m_Users[m_PlayerID]->is_fall = false;
+			//			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
+				//		Gravity = 0.01;
 		}
 		else if (time < 0.03) {
 			if (FallZ < 4) FallZ = 4;
@@ -351,6 +405,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["fish"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["waterdrop"], AppContext->m_RItemsVec);
 
 
 	/*Characters*/
@@ -403,18 +458,62 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fish"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
-	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
+
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["waterdrop"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+	bool ty[5]{ false,false,false,false,false };
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
+		if (m_Users[i]->GetHide()) {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
+				ty[0] = true;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
+				ty[1] = true;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
+				ty[2] = true;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
+				ty[3] = true;
+			}
+			else {
+				ty[4] = true;
+			}
+		}
+		else {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
+				ty[0] = false;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
+				ty[1] = false;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
+				ty[2] = false;
+			}
+			else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
+				ty[3] = false;
+			}
+			else {
+				ty[4] = false;
+			}
+		}
+	}
+	if (!ty[0])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	if (!ty[1])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
+	if (!ty[2])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
+	if (!ty[3])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+	if (!ty[4])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 
 	//debug
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());

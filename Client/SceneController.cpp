@@ -9,6 +9,7 @@
 #include "MainFramework.h"
 #include "Network.h"
 
+
 using namespace Core;
 
 LobbyController::LobbyController(LobbyScene* myScene) :
@@ -30,7 +31,7 @@ void LobbyController::HandleInput(const float deltaT)
 	}
 	if (InputHandler::IsKeyUp('B'))
 	{
-		switch (AppContext->m_RItemsVec[210]->m_MaterialIndex) {
+		switch (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex) {
 		case 8:
 		case 13:
 			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);	
@@ -55,11 +56,11 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool one = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
 			if (one) {
-				if (AppContext->m_RItemsVec[210]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[210]->m_MaterialIndex == 17) {
-					AppContext->m_RItemsVec[210]->m_MaterialIndex = 13;
+				if (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 17) {
+					AppContext->m_RItemsVec[SNUM]->m_MaterialIndex = 13;
 				}
 				else {
-					++AppContext->m_RItemsVec[210]->m_MaterialIndex;
+					++AppContext->m_RItemsVec[SNUM]->m_MaterialIndex;
 				}
 				one = false;
 			}
@@ -71,11 +72,11 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool one2 = true;
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
 			if (one2) {
-				if (AppContext->m_RItemsVec[210]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[210]->m_MaterialIndex == 13) {
-					AppContext->m_RItemsVec[210]->m_MaterialIndex = 17;
+				if (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 13) {
+					AppContext->m_RItemsVec[SNUM]->m_MaterialIndex = 17;
 				}
 				else {
-					--AppContext->m_RItemsVec[210]->m_MaterialIndex;
+					--AppContext->m_RItemsVec[SNUM]->m_MaterialIndex;
 				}
 				one2 = false;
 			}

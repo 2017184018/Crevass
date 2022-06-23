@@ -37,9 +37,9 @@ std::string ApplicationContext::FindAnimName(int animCode) const
 	case ANIM_ATTACK:
 		animName = "Attack";
 		break;
-	//case ANIM_RUNNING:
-	//	animName = "Running";
-	//	break;
+		//case ANIM_RUNNING:
+		//	animName = "Running";
+		//	break;
 	case ANIM_JUMP:
 		animName = "jump";
 		break;
@@ -64,7 +64,7 @@ void ApplicationContext::CreateLobby() {
 	top->m_IsVisible = true;
 	top->m_MaterialIndex = 8;
 	top->m_World = MathHelper::Identity4x4();
-	top->m_World._11 = 200*1.43;
+	top->m_World._11 = 200 * 1.43;
 	top->m_World._22 = 1;
 	top->m_World._33 = 150 * 1.43;
 	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
@@ -217,38 +217,30 @@ void ApplicationContext::CreateBlocks()
 	}
 }
 
-void ApplicationContext::CreateSnowmans()
+void ApplicationContext::Createigloos()
 {
 	int RandomLocation[2] = { -1,-1 };
 
 	for (int i = 0; i < 2; ++i) {		//76, 77
-		GameObject* instancingObj = CreateObject<GameObject>("snowman", "snowman" + std::to_string(i));
-		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["snowman"].get();
+		GameObject* instancingObj = CreateObject<GameObject>("igloo", "igloo" + std::to_string(i));
+		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["igloo"].get();
 		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
 		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
 		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
+
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["igloo"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["igloo"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["igloo"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
+
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		instancingObj->m_World._11 = SCALE * 3 / 5.0;
-		instancingObj->m_World._22 = SCALE * 3 / 5.0;
-		instancingObj->m_World._33 = SCALE * 3 / 5.0;
-
-		/*if (SnowmanIndex[i] % 4) {
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 5 / 6));
-			int distance = SCALE * 200;
-			instancingObj->m_World._41 =  SnowmanIndex[i] / 5 * distance - 15.0f;
-			instancingObj->m_World._42 = 20;
-			instancingObj->m_World._43 =  SnowmanIndex[i] % 5 * distance + 15.0f;
-		}
-		else {
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.14 * 7 / 6));
-			int distance = SCALE * 200;
-			instancingObj->m_World._41 =  SnowmanIndex[i] / 5 * distance + 15.0f;
-			instancingObj->m_World._42 = 20;
-			instancingObj->m_World._43 =  SnowmanIndex[i] % 5 * distance; +15.0f;
-		}*/
+		instancingObj->m_World._11 = SCALE * 1 / 10.0;
+		instancingObj->m_World._22 = SCALE * 1 / 10.0;
+		instancingObj->m_World._33 = SCALE * 1 / 10.0;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 }
@@ -409,7 +401,7 @@ void ApplicationContext::CreateBackground()
 		top->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//139~144	밧줄
+	//139~143	밧줄
 	for (int i = 0; i < 5; ++i) {
 		GameObject* top = CreateObject<GameObject>("lifeline", "lifeline" + std::to_string(i));
 		top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
@@ -431,7 +423,7 @@ void ApplicationContext::CreateBackground()
 		top->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//145~148	산
+	//144~147	산
 	for (int i = 0; i < 4; ++i) {
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("mountain", "mountain" + std::to_string(i));
@@ -461,7 +453,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//149	텐트
+	//148	텐트
 	{
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("tent", "tent" + std::to_string(0));
@@ -485,7 +477,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//150 카약
+	//149 카약
 	{
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("kayak", "kayak" + std::to_string(0));
@@ -508,7 +500,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//151~152	패들
+	//150~151	패들
 	for (int i = 0; i < 2; ++i) {
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("kayakpaddle", "kayakpaddle" + std::to_string(i));
@@ -531,7 +523,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//153~192	돌
+	//152~191	돌
 	for (int i = 0; i < 25; ++i) {
 		GameObject* instancingObj;
 		instancingObj = CreateObject<GameObject>("rock_0", "rock_0" + std::to_string(i));
@@ -587,10 +579,10 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//193	이글루
+	//192	이글루
 	{
 		GameObject* instancingObj2;
-		instancingObj2 = CreateObject<GameObject>("igloo", "igloo" + std::to_string(0));
+		instancingObj2 = CreateObject<GameObject>("igloo", "igloo" + std::to_string(2));
 		instancingObj2->Geo = MeshReference::GetApp()->m_GeometryMesh["igloo"].get();
 		instancingObj2->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		instancingObj2->IndexCount = instancingObj2->Geo->DrawArgs["igloo"].IndexCount;
@@ -611,7 +603,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//194~197	텐트 생선
+	//193~196	텐트 생선
 	for (int i = 0; i < 4; ++i) {
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("fish", "fish" + std::to_string(i));
@@ -637,7 +629,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//198 썰매
+	//197 썰매
 	{
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("sled", "sled" + std::to_string(0));
@@ -661,7 +653,7 @@ void ApplicationContext::CreateBackground()
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
-	//199~209 물고기 걸이, 물고기
+	//198~208 물고기 걸이, 물고기
 	{
 		GameObject* instancingObj2;
 		instancingObj2 = CreateObject<GameObject>("fishrack", "fishrack" + std::to_string(0));
@@ -710,6 +702,72 @@ void ApplicationContext::CreateBackground()
 	}
 }
 
+void ApplicationContext::CreateSnowmans()
+{
+	for (int i = 0; i < 4; ++i) {		//209~212
+		GameObject* instancingObj = CreateObject<GameObject>("snowman", "snowman" + std::to_string(i));
+		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["snowman"].get();
+		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = 1;
+		instancingObj->m_IsVisible = true;
+		instancingObj->m_World = MathHelper::Identity4x4();
+		instancingObj->m_World._11 = SCALE * 3 / 5.0;
+		instancingObj->m_World._22 = SCALE * 3 / 5.0;
+		instancingObj->m_World._33 = SCALE * 3 / 5.0;
+		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+		++SNUM;
+	}
+}
+
+void ApplicationContext::CreateHail()
+{
+	//213~217
+	for (int i = 0; i < 5; ++i) {
+		GameObject* instancingObj = CreateObject<GameObject>("rock_1", "rock_1" + std::to_string(i + 15));
+		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["rock_1"].get();
+		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["rock_1"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["rock_1"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["rock_1"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = 11;
+		instancingObj->m_IsVisible = true;
+		instancingObj->m_World = MathHelper::Identity4x4();
+		instancingObj->m_World._11 = 1.5;
+		instancingObj->m_World._22 = 1.5;
+		instancingObj->m_World._33 = 1.5;
+
+		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * -0.4));
+
+		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+		++SNUM;
+	}
+}
+
+void ApplicationContext::CreateWaterDrop()
+{
+	//218~221
+	for (int i = 0; i < 4; ++i) {
+		GameObject* top = CreateObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i));
+		top->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+		top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		top->IndexCount = top->Geo->DrawArgs["grid"].IndexCount;
+		top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
+		top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
+		top->m_IsVisible = true;
+		top->m_MaterialIndex = 18;
+		top->m_World = MathHelper::Identity4x4();
+		top->m_World._11 = 100 * 1.43;
+		top->m_World._22 = 100;
+		top->m_World._33 = 75 * 1.43;
+		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * i / 2.0));
+
+		top->m_TexTransform = MathHelper::Identity4x4();
+		++SNUM;
+	}
+}
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {

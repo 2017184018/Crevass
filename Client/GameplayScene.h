@@ -37,6 +37,7 @@ namespace Core
 
 	extern std::unique_ptr<Waves> mWaves;
 	extern GameObject* wave;
+	extern UINT iglooIndex[2];
 	extern UINT SnowmanIndex[2];
 	extern MainFramework* g_pFramework;
 }
@@ -65,7 +66,7 @@ public:
 	//bool IsDown[25];		//내려가는 중인지
 
 
-	UINT SnowmanLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
+	UINT iglooLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
 	bool IsFall[3] = { 0, };		// 블러링, 높은 물결
 

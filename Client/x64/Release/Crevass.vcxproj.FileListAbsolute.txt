@@ -1,2 +1,3 @@
 C:\Users\N-Main\Documents\Crevass\Client\x64\Release\Crevass.exe
 C:\Users\USER\Documents\Crevass\Client\x64\Release\Crevass.exe
+C:\Users\오성훈\Desktop\git\GitHub\Crevass\Client\x64\Release\Crevass.exe

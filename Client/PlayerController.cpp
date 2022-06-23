@@ -244,8 +244,15 @@ void PlayerController::OnKeyPressed()
 		}
 
 		if (InputHandler::IsKeyDown('S')) {
-			MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
+		//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
 			
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_INTERACT);
+		}
+
+		if (InputHandler::IsKeyDown('D')) {
+			//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
+
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_SKILL);
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {
@@ -356,6 +363,8 @@ void PlayerController::OnKeyReleased()
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Attack));
 		}
 		if (InputHandler::IsKeyUp('S')) {
+		}
+		if (InputHandler::IsKeyUp('D')) {
 		}
 		break;
 	}

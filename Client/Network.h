@@ -3,7 +3,7 @@
 #include "GameInfo.h"
 #define SERVERIP "127.0.0.1"
 //#define SERVERIP "192.168.35.175"
-//#define SERVERIP "172.20.10.7"
+
 
 class Network
 {
@@ -36,6 +36,8 @@ public:
 
 	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
 	DirectX::XMFLOAT3 GetBlockPos(int num)const;
+	DirectX::XMFLOAT3 GetHailPos(int num)const;
+	int GetiglooLocation(int num)const;
 	int GetSnowmanLocation(int num)const;
 	int GetPlayerDir(int num)const;
 	int GetBlockDestructionCnt(int num) const;
@@ -48,12 +50,19 @@ public:
 
 	bool GetCharacterReset(int num)const;
 	void SetCharacterReset(int num);
+
+	bool GetPlayerHide(int num)const;
+	int GetPlayerSnowmanNum(int num)const;
+
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];
 	char Player_Type[3];
+	bool PlayerHide[3];
+	int PlayerSnowmanHide[3];
 
-	int SnowmanLocation[2];
+	int iglooLocation[2];
+	int SnowmanLocation[4];
 	char dir[3];
 
 	DirectX::XMFLOAT3 BlockPos[25];
@@ -63,6 +72,8 @@ private:
 
 	bool IsFall[3]{ false,false,false };
 	bool isReset[3]{ false, false, false };
+
+	DirectX::XMFLOAT3 HailPos[5];
 public:
 	GameInfo* m_pGameInfo;
 };

@@ -18,13 +18,61 @@ void LoadBBs(std::string filepath) {
 		float tmpy = BB->Extents.y;
 		float tmpz = BB->Extents.z;
 		if (meshname == "icecube" || meshname == "snowcube") {
-			for (int i = 0; i < 25; ++i) {
-				g_boundaries[meshname + std::to_string(i)] = BB;
+			g_boundaries[meshname + std::to_string(0)] = BB;
+			for (int i = 1; i < 25; ++i) {
 				BB = new DirectX::BoundingBox;
 				BB->Extents.x = tmpx;
 				BB->Extents.y = tmpy;
 				BB->Extents.z = tmpz;
+				g_boundaries[meshname + std::to_string(i)] = BB;
 			}
+		}
+		else if (meshname == "igloo") {
+			g_boundaries[meshname + std::to_string(0)] = BB;
+			for (int i = 1; i < 2; ++i) {
+				BB = new DirectX::BoundingBox;
+				BB->Extents.x = tmpx;
+				BB->Extents.y = tmpy;
+				BB->Extents.z = tmpz;
+				g_boundaries[meshname + std::to_string(i)] = BB;
+			}
+		}
+		else if (meshname == "snowman") {
+			g_boundaries[meshname + std::to_string(0)] = BB;
+			for (int i = 1; i < 4; ++i) {
+				BB = new DirectX::BoundingBox;
+				BB->Extents.x = tmpx;
+				BB->Extents.y = tmpy;
+				BB->Extents.z = tmpz;
+				g_boundaries[meshname + std::to_string(i)] = BB;
+			}
+		}
+		else if (meshname == "rock_1") {
+			BB->Center = DirectX::XMFLOAT3(-1000, -1000, -1000);
+			BB->Extents.x = tmpx * 2.5;
+			BB->Extents.y = tmpy * 2.5;
+			BB->Extents.z = tmpz * 2.5;
+			g_boundaries["hail" + std::to_string(0)] = BB;
+			for (int i = 1; i < 5; ++i) {
+				BB = new DirectX::BoundingBox;
+				BB->Center = DirectX::XMFLOAT3(-1000, -1000, -1000);
+				BB->Extents.x = tmpx * 2.5;
+				BB->Extents.y = tmpy * 2.5;
+				BB->Extents.z = tmpz * 2.5;
+				g_boundaries["hail" + std::to_string(i)] = BB;
+			}
+		}
+		else if (meshname == "Seal") {
+			BB->Extents.x = tmpx * 15;
+			BB->Extents.y = tmpy * 15;
+			BB->Extents.z = tmpz * 15;
+			g_boundaries[meshname] = BB;
+		}
+		else if (meshname == "ArcticFox" || meshname == "husky"|| meshname == "Penguin"|| meshname == "PolarBear") {
+			BB->Extents.x = tmpx * 20;
+			BB->Extents.y = tmpy * 20;
+			BB->Extents.z = tmpz * 20;
+			g_boundaries[meshname] = BB;
 		}
 		else {
 			g_boundaries[meshname] = BB;
@@ -66,14 +114,14 @@ int main()
 	{
 		client_sock = accept(listen_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (client_sock == INVALID_SOCKET) ErrDisplay("accept()");
-			
+
 		// 3인이 이미 서버에 접속해 있으면, 4번째로 접속을 요청하는 클라이언트부터 접속을 허용하지 않음. 
 		if (numOfCls == MAXPLAYER || g_isPlaying == true) {
 			closesocket(client_sock);
 			continue;
 		}
 
-		for (int i = 0; i < MAXPLAYER; ++i) 
+		for (int i = 0; i < MAXPLAYER; ++i)
 		{
 			g_ConnectedClsLock.lock();
 			if (false == g_connectedCls[i].is_connected) {
@@ -115,12 +163,12 @@ int main()
 				SendReadyPacket(user_id, i, g_playerReadyInfo[i].ready);	//mutex 필요
 				g_PlayerReadyInfoLock.unlock();
 				SendReadyPacket(i, user_id, 0);	//0넣은 이유 mutex안쓰려고
-				g_ConnectedClsLock.lock();				
+				g_ConnectedClsLock.lock();
 			}
 			g_ConnectedClsLock.unlock();
 		}
 		// RecvThread 생성
-		thread RecvThread(Receiver, user_id);
+		thread RecvThread(Receiver, user_id);			//조정필요
 		RecvThread.detach();
 
 	}

@@ -686,3 +686,20 @@ void Character::SetAnimationKeyState(PlayerState keyState)
 	m_KeyState = keyState;
 }
 
+void Character::SetHide(bool hide)
+{
+	IsHide = hide;
+}
+
+bool Character::GetHide()const {
+	return IsHide;
+}
+
+void Character::SetSnowmanNum(int num)
+{
+	SnowmanNum = num;
+}
+
+int Character::GetSnowmanNum()const {
+	return SnowmanNum;
+}
