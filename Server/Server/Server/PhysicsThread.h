@@ -15,10 +15,10 @@ bool IsRight[25];
 UINT ShakeCnt[25];
 bool IsDown[25];
 bool IsShake[25];
-int tmp1[3] = { -1,-1,-1 };
+int tmp1[3] = { -1,-1,-1 };		//현재 밟고 있는 icecube
 bool BlockIn = false;
 float Gravity = 0.1;
-int tmp2[3] = { -1,-1,-1 };
+int tmp2[3] = { -1,-1,-1 };		//밟고 있는 snowcube
 string TypeName[3];
 bool IsFall[3] = { false,false,false };
 Block blocks[25];
@@ -91,7 +91,7 @@ void Update(vector<Player>& player)
 					saveX = -speed;
 				}
 				if (player[i].GetKeyD())
-				{
+				{		//5*speed
 					player[i].m_pos.x += speed;
 					player[i].dir = DIR_RIGHT;
 					saveX = speed;
@@ -337,6 +337,13 @@ void UpdateBlock(Block* object) {
 	}
 }
 
+void PolarbearSkill(int tmp) {
+	if (BlockCheck(tmp) && blocks[tmp].destuctioncnt != 3) {
+		IsShake[tmp] = true;
+		IsDown[tmp] = true;
+	}
+}
+
 void ProcessClients()
 {
 	g_player_lock.lock();
@@ -396,7 +403,7 @@ void ProcessClients()
 
 	for (int i = 0; i < numOfCls; ++i)
 	{
-		temp = { players[i].pos.x, players[i].pos.y,players->pos.z };
+		temp = { players[i].pos.x, players[i].pos.y,players[i].pos.z };
 		phyPlayers.emplace_back(Player());
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
@@ -1100,18 +1107,33 @@ void ProcessClients()
 
 			{	//skill
 				for (int i = 0; i < numOfCls; ++i) {
-					if (IsSkillPushed[i]) {
+					if (IsSkillPushed[i] && phyPlayers[i].SnowmanNum == -1) {
 						static UINT SkillCoolTime = 0;
 						if (TypeName[i] == "Penguin") {
 							if (phyPlayers[i].m_pos.y <= 200) {
 								cout << "Penguin" << endl;
 								phyPlayers[i].gravity = 0.0f;
-								phyPlayers[i].m_pos.y +=0.1f;
+								phyPlayers[i].m_pos.y += 2.0f;
+								phyPlayers[i].is_jump = true;
 							}
 						}
 						else if (TypeName[i] == "husky") {
 							cout << "husky" << endl;
-
+							static_cast<int>(phyPlayers[i].dir);
+							phyPlayers[i].SetKeyD(true);
+							if (phyPlayers[i].m_pos.y <= 30) {
+								phyPlayers[i].m_pos.y += 2.0f;
+							}
+							/*	if (phyPlayers[i].m_pos.y >= 25) {
+									if (SkillCoolTime >= 30) {
+										phyPlayers[i].m_pos.x += 3.0f;
+										phyPlayers[i].m_pos.y = 31.0f;
+									}
+								}
+								else {
+									IsSkillPushed[i] = false;
+									SkillCoolTime = 0;
+								}*/
 						}
 						else if (TypeName[i] == "ArcticFox") {
 							cout << "ArcticFox" << endl;
@@ -1119,11 +1141,40 @@ void ProcessClients()
 						}
 						else if (TypeName[i] == "Seal") {
 							cout << "Seal" << endl;
-
+							phyPlayers[i].is_hitted = false;
 						}
 						else if (TypeName[i] == "PolarBear") {
 							cout << "PolarBear" << endl;
-
+							if (tmp1[i] != -1 || tmp2[i] != -1) {
+								int TempBlockIdx = max(tmp1[i], tmp2[i]);
+								PolarbearSkill(TempBlockIdx);
+								if (TempBlockIdx % 5 != 0) {
+									PolarbearSkill(TempBlockIdx - 1);
+									if (TempBlockIdx / 5 != 0) {
+										PolarbearSkill(TempBlockIdx - 6);
+									}
+								}
+								if (TempBlockIdx % 5 != 4) {
+									PolarbearSkill(TempBlockIdx + 1);
+									if (TempBlockIdx / 5 != 4) {
+										PolarbearSkill(TempBlockIdx + 6);
+									}
+								}
+								if (TempBlockIdx / 5 != 0) {
+									PolarbearSkill(TempBlockIdx - 5);
+									if (TempBlockIdx % 5 != 4) {
+										PolarbearSkill(TempBlockIdx - 4);
+									}
+								}
+								if (TempBlockIdx / 5 != 4) {
+									PolarbearSkill(TempBlockIdx + 5);
+									if (TempBlockIdx % 5 != 0) {
+										PolarbearSkill(TempBlockIdx + 4);
+									}
+								}
+							}
+							IsSkillPushed[i] = false;
+							SkillCoolTime = 0;
 						}
 						SkillCoolTime += 1;
 						if (SkillCoolTime >= 300) {
@@ -1131,7 +1182,9 @@ void ProcessClients()
 							SkillCoolTime = 0;
 						}
 					}
-
+					else {
+						IsSkillPushed[i] = false;
+					}
 				}
 			}
 
