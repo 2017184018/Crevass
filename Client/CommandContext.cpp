@@ -153,7 +153,7 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera, Light* light)
 	mMainPassCB.RenderTargetSize = XMFLOAT2((float)Core::g_DisplayWidth, (float)Core::g_DisplayHeight);
 	mMainPassCB.InvRenderTargetSize = XMFLOAT2(1.0f / Core::g_DisplayWidth, 1.0f / Core::g_DisplayHeight);
 	mMainPassCB.NearZ = 1.0f;
-	mMainPassCB.FarZ = 10000.0f;
+	mMainPassCB.FarZ = 5000.0f;
 	mMainPassCB.TotalTime = Core::g_GameTimer->TotalTime();
 	mMainPassCB.DeltaTime = Core::g_GameTimer->DeltaTime();
 	mMainPassCB.AmbientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
