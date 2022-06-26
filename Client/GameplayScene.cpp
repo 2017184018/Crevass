@@ -525,8 +525,8 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 
 	//debug
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);
+	/*GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);*/
 
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
@@ -560,8 +560,6 @@ void GameplayScene::Render()
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
-
-			GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 		
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap[p.second->GetType()], AppContext->m_RItemsVec);
 	}
