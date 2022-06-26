@@ -32,7 +32,7 @@ using namespace Graphics;
 void GraphicsRenderer::Initialize()
 {
 	//Build Resource
-	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 2048, 2048);
+	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 3500, 3500);
 
 	Core::mBlurFilter = std::make_unique<BlurFilter>(Core::g_Device.Get(),
 		g_DisplayWidth, g_DisplayHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
