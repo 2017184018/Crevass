@@ -13,10 +13,6 @@
 #include "ShadowMap.h"
 void GraphicsContext::Initialize()
 {
-	// TEST SceneBounds
-	mSceneBounds.Center = XMFLOAT3(500.0f,0.0f, 500.0f);
-	mSceneBounds.Radius = sqrtf(1500.0f * 1500.0f + 1500.0f * 1500.0f);
-
 	for (int i = 0; i < skinnedObjectCount; ++i)
 	{
 		m_SkinnedCBs[i] = std::make_unique<UploadBuffer<ShaderResource::SkinnedConstants>>(Core::g_Device.Get(), 1, true);
@@ -131,7 +127,7 @@ void GraphicsContext::UpdateMaterialBuffer(std::unordered_map<std::string, std::
 	}
 }
 
-void GraphicsContext::UpdateMainPassCB(Camera& camera)
+void GraphicsContext::UpdateMainPassCB(Camera& camera, Light* light)
 {
 	XMMATRIX view = camera.GetView();
 	XMMATRIX proj = camera.GetProj();
@@ -160,10 +156,13 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera)
 	mMainPassCB.FarZ = 10000.0f;
 	mMainPassCB.TotalTime = Core::g_GameTimer->TotalTime();
 	mMainPassCB.DeltaTime = Core::g_GameTimer->DeltaTime();
-	mMainPassCB.AmbientLight = { 0.25f, 0.25f, 0.25f, 1.0f };
-	mMainPassCB.Lights[0].Direction = mRotatedLightDirections[0];
-	mMainPassCB.Lights[0].Strength = { 0.9f, 0.8f, 0.7f };
+	mMainPassCB.AmbientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
+	// Directional Light
+	mMainPassCB.Lights[0].Direction = light->Direction;
+	mMainPassCB.Lights[0].Strength = light->Strength;
 
+	//mMainPassCB.Lights[0].Direction = mRotatedLightDirections[0];
+	//mMainPassCB.Lights[0].Strength = { 0.9f, 0.8f, 0.7f };
 	/*mMainPassCB.Lights[0].Direction = { 0.57735f, -0.57735f, 0.57735f };
 	mMainPassCB.Lights[0].Strength = { 0.8f, 0.8f, 0.8f };*/
 	//mMainPassCB.Lights[1].Direction = { -0.57735f, -0.57735f, 0.57735f };
@@ -190,6 +189,9 @@ void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance
 
 void GraphicsContext::UpdateShadowPassCB()
 {
+
+	
+
 	XMMATRIX view = XMLoadFloat4x4(&mLightView);
 	XMMATRIX proj = XMLoadFloat4x4(&mLightProj);
 
@@ -217,22 +219,22 @@ void GraphicsContext::UpdateShadowPassCB()
 	currPassCB->CopyData(1, mShadowPassCB);
 }
 
-void GraphicsContext::UpdateShadowTransform()
+void GraphicsContext::UpdateShadowTransform(Light* light, DirectX::BoundingSphere sceneBounds)
 {
-	mLightRotationAngle += 0.2f * Core::g_GameTimer->DeltaTime();
+	
+	//mLightRotationAngle = 0.2f * Core::g_GameTimer->DeltaTime();
 
-	XMMATRIX R = DirectX::XMMatrixRotationY(mLightRotationAngle);
-	for (int i = 0; i < 3; ++i)
-	{
-		XMVECTOR lightDir = XMLoadFloat3(&mBaseLightDirections[i]);
-		lightDir = XMVector3TransformNormal(lightDir, R);
-		XMStoreFloat3(&mRotatedLightDirections[i], lightDir);
-	}
+	//XMMATRIX R = DirectX::XMMatrixRotationY(mLightRotationAngle);
+	//for (int i = 0; i < 1; i++) {
+	//	XMVECTOR lightDir = XMLoadFloat3(&light->Direction);
+	//	lightDir = XMVector3TransformNormal(lightDir, R);
+	//	XMStoreFloat3(&light->Direction, lightDir);
+	//}
 
 	// Only the first "main" light casts a shadow.
-	XMVECTOR lightDir = DirectX::XMLoadFloat3(&mRotatedLightDirections[0]);
-	XMVECTOR lightPos = -2.0f * mSceneBounds.Radius * lightDir;
-	XMVECTOR targetPos = DirectX::XMLoadFloat3(&mSceneBounds.Center);
+	XMVECTOR lightDir = DirectX::XMLoadFloat3(&light->Direction);
+	XMVECTOR lightPos = -2.0f * sceneBounds.Radius * lightDir;
+	XMVECTOR targetPos = DirectX::XMLoadFloat3(&sceneBounds.Center);
 	XMVECTOR lightUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMMATRIX lightView = DirectX::XMMatrixLookAtLH(lightPos, targetPos, lightUp);
 
@@ -243,12 +245,12 @@ void GraphicsContext::UpdateShadowTransform()
 	XMStoreFloat3(&sphereCenterLS, XMVector3TransformCoord(targetPos, lightView));
 
 	// Ortho frustum in light space encloses scene.
-	float l = sphereCenterLS.x - mSceneBounds.Radius;
-	float b = sphereCenterLS.y - mSceneBounds.Radius;
-	float n = sphereCenterLS.z - mSceneBounds.Radius;
-	float r = sphereCenterLS.x + mSceneBounds.Radius;
-	float t = sphereCenterLS.y + mSceneBounds.Radius;
-	float f = sphereCenterLS.z + mSceneBounds.Radius;
+	float l = sphereCenterLS.x - sceneBounds.Radius;
+	float b = sphereCenterLS.y - sceneBounds.Radius;
+	float n = sphereCenterLS.z - sceneBounds.Radius;
+	float r = sphereCenterLS.x + sceneBounds.Radius;
+	float t = sphereCenterLS.y + sceneBounds.Radius;
+	float f = sphereCenterLS.z + sceneBounds.Radius;
 
 	mLightNearZ = n;
 	mLightFarZ = f;

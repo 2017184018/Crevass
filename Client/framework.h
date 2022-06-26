@@ -73,6 +73,9 @@ enum BoneIndex { Husky = 0, Penguin, Seal, Fox, PolarBear, Count};
 enum class SceneType { /*Title*/ Lobby, GamePlay, GameResult, Count};
 enum class CameraType { First, Third, Free };
 
+// Light Name
+#define LIGHT_NAME_DIRECTIONAL "Directional" 
+
 // Move & Rotate
 #define DIR_FORWARD					0x01
 #define DIR_BACKWARD				0x02

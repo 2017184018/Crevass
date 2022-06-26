@@ -108,6 +108,18 @@ void GameplayController::HandleInput(const float deltaT)
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
 		SceneManager::GetApp()->ChangeScene();
 	}
+
+	//if (InputHandler::IsOverlap(VK_UP))
+	//{
+	//	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x += 0.01f;
+	//	cout << CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x << endl;
+	//}
+	//if (InputHandler::IsOverlap(VK_DOWN))
+	//{
+	//	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x -= 0.01f;
+	//	cout << CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x << endl;
+	//}
+
 }
 
 

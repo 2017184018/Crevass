@@ -46,6 +46,11 @@ void GameplayScene::Initialize()
 bool GameplayScene::Enter()
 {
 	cout << "GamePlay Scene" << endl;
+	/* Create SceneBounds for Shadow */
+	m_SceneBounds.Center = XMFLOAT3(500.f, 0.0f, 500.f);
+	m_SceneBounds.Radius = sqrtf(1200.f * 1200.f + 1200.f * 1200.f);
+	/* Light Setting */
+	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.27735f, -0.81735f, 1.07735 };
 
 	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 	//나 
@@ -208,6 +213,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		p.second->Update(fDeltaTime);
 	}
+
+	// SceneBounds Update
+	m_SceneBounds.Center = { m_Users[m_PlayerID]->GetPosition().x, 0 , m_Users[m_PlayerID]->GetPosition().z };
+
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
@@ -426,7 +435,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	//여기가 문제일수도 있음 
 
 	///*Shadow*/
-	GraphicsContext::GetApp()->UpdateShadowTransform();
+	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
 	GraphicsContext::GetApp()->UpdateShadowPassCB();
 
 

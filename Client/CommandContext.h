@@ -48,13 +48,13 @@ public:
 	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems);
 	
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
-	void UpdateMainPassCB(Camera& camera);
+	void UpdateMainPassCB(Camera& camera, Light* light);
 	void UpdateWave(Waves* wave, GameObject *waveobject);
 
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
 	void UpdateShadowPassCB();
-	void UpdateShadowTransform();
+	void UpdateShadowTransform(Light* light, DirectX::BoundingSphere sceneBounds);
 
 
 	void DrawRenderItems(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems);
@@ -81,8 +81,6 @@ public:
 	UINT VertexCount;
 
 private:
-	DirectX::BoundingSphere mSceneBounds;
-
 	// 임시 Light변수
 	float mLightNearZ = 0.0f;
 	float mLightFarZ = 0.0f;
@@ -92,11 +90,6 @@ private:
 	XMFLOAT4X4 mShadowTransform = MathHelper::Identity4x4();
 
 	float mLightRotationAngle = 0.0f;
-	XMFLOAT3 mBaseLightDirections[3] = {
-		XMFLOAT3(0.57735f, -0.57735f, 0.57735f),
-		XMFLOAT3(-0.57735f, -0.57735f, 0.57735f),
-		XMFLOAT3(0.0f, -0.707f, -0.707f)
-	};
 	XMFLOAT3 mRotatedLightDirections[3];
 
 };

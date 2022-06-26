@@ -21,6 +21,10 @@ using namespace Core;
 
 void CREVASS::Startup(void)
 {
+	//Lights
+	m_Lights[LIGHT_NAME_DIRECTIONAL] = std::make_unique<Light>();
+	m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.57735f, -0.81735f, -1.07735 };
+	m_Lights[LIGHT_NAME_DIRECTIONAL]->Strength = { 0.9f, 0.8f, 0.7f };
 
 	//g_pFramework->m_pNetwork->Send(CS_READY);
 	//g_pFramework->m_pNetwork->Recv();
@@ -136,9 +140,10 @@ void CREVASS::Update(float deltaT)
 
 	g_pFramework->m_pNetwork->Recv();
 	SceneManager::GetApp()->UpdateScene(deltaT);
+	// PassCB
 	m_Camera->UpdateViewMatrix();
+	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera, m_Lights[LIGHT_NAME_DIRECTIONAL].get());
 
-	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
 	
 }
 

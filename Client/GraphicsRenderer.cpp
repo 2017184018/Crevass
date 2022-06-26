@@ -217,19 +217,6 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(srvGpuStart, mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(dsvCpuStart, 1, GameCore::GetApp()->mDsvDescriptorSize));
 
-
-	//hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
-
-	//srvDesc.Format = waterdrop->GetDesc().Format;
-	//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	//srvDesc.Texture2D.MostDetailedMip = 0;
-	//srvDesc.Texture2D.MipLevels = waterdrop->GetDesc().MipLevels;
-	//srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	//g_Device->CreateShaderResourceView(waterdrop.Get(), &srvDesc, hDescriptor);
-
-	//mSkyTexHeapIndex = 0;
-
-
 	Core::mBlurFilter->BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),

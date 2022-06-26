@@ -49,7 +49,7 @@ private:
 
 public:
 	Camera* m_Camera;
-
+	std::map<std::string, std::unique_ptr<Light>> m_Lights;
 public:
 	MeshReference* m_MeshRef;
 	MaterialReference* m_MaterialRef;

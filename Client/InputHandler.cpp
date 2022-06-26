@@ -34,4 +34,8 @@ namespace InputHandler
 		}
 		return false;
 	}
+	bool IsOverlap(int key)
+	{
+		return (GetAsyncKeyState(key) & 0x8000);
+	}
 }

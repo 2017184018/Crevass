@@ -34,5 +34,6 @@ public:
 protected:
 	std::string m_SceneName;
 	Controller* m_SceneController;
+	DirectX::BoundingSphere m_SceneBounds;
 };
 
