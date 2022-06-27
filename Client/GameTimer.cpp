@@ -5,122 +5,120 @@
 #include "GameTimer.h"
 
 GameTimer::GameTimer()
-	: mSecondsPerCount(0.0), mDeltaTime(-1.0), mBaseTime(0),
-	mPausedTime(0), mPrevTime(0), mCurrTime(0), mStopped(false)
 {
-	__int64 countsPerSec;
-	QueryPerformanceFrequency((LARGE_INTEGER*)& countsPerSec);
-	mSecondsPerCount = 1.0 / (double)countsPerSec;
+	::QueryPerformanceFrequency((LARGE_INTEGER*)&m_nPerformanceFrequencyPerSec);
+	::QueryPerformanceCounter((LARGE_INTEGER*)&m_nLastPerformanceCounter);
+	m_fTimeScale = 1.0 / (double)m_nPerformanceFrequencyPerSec;
+
+	m_nBasePerformanceCounter = m_nLastPerformanceCounter;
+	m_nPausedPerformanceCounter = 0;
+	m_nStopPerformanceCounter = 0;
+
+	m_nSampleCount = 0;
+	m_nCurrentFrameRate = 0;
+	m_nFramesPerSecond = 0;
+	m_fFPSTimeElapsed = 0.0f;
+
+	m_bStopped = false;
 }
 
-// Returns the total time elapsed since Reset() was called, NOT counting any
-// time when the clock is stopped.
-float GameTimer::TotalTime()const
+float GameTimer::TotalTime() const
 {
-	// If we are stopped, do not count the time that has passed since we stopped.
-	// Moreover, if we previously already had a pause, the distance 
-	// mStopTime - mBaseTime includes paused time, which we do not want to count.
-	// To correct this, we can subtract the paused time from mStopTime:  
-	//
-	//                     |<--paused time-->|
-	// ----*---------------*-----------------*------------*------------*------> time
-	//  mBaseTime       mStopTime        startTime     mStopTime    mCurrTime
-
-	if (mStopped)
-	{
-		return (float)(((mStopTime - mPausedTime) - mBaseTime) * mSecondsPerCount);
-	}
-
-	// The distance mCurrTime - mBaseTime includes paused time,
-	// which we do not want to count.  To correct this, we can subtract 
-	// the paused time from mCurrTime:  
-	//
-	//  (mCurrTime - mPausedTime) - mBaseTime 
-	//
-	//                     |<--paused time-->|
-	// ----*---------------*-----------------*------------*------> time
-	//  mBaseTime       mStopTime        startTime     mCurrTime
-
-	else
-	{
-		return (float)(((mCurrTime - mPausedTime) - mBaseTime) * mSecondsPerCount);
-	}
+	if (m_bStopped) return(float(((m_nStopPerformanceCounter - m_nPausedPerformanceCounter) - m_nBasePerformanceCounter) * m_fTimeScale));
+	return(float(((m_nCurrentPerformanceCounter - m_nPausedPerformanceCounter) - m_nBasePerformanceCounter) * m_fTimeScale));
 }
 
 float GameTimer::DeltaTime()const
 {
-	return (float)mDeltaTime;
+	return(m_fTimeElapsed);
+}
+
+unsigned long GameTimer::FrameRate(LPTSTR lpszString, int nCharacters)
+{
+	if (lpszString)
+	{
+		_itow_s(m_nCurrentFrameRate, lpszString, nCharacters, 10);
+		wcscat_s(lpszString, nCharacters, _T(" FPS)"));
+	}
+
+	return(m_nCurrentFrameRate);
 }
 
 void GameTimer::Reset()
 {
-	__int64 currTime;
-	QueryPerformanceCounter((LARGE_INTEGER*)& currTime);
+	__int64 nPerformanceCounter;
+	::QueryPerformanceCounter((LARGE_INTEGER*)&nPerformanceCounter);
 
-	mBaseTime = currTime;
-	mPrevTime = currTime;
-	mStopTime = 0;
-	mStopped = false;
+	m_nBasePerformanceCounter = nPerformanceCounter;
+	m_nLastPerformanceCounter = nPerformanceCounter;
+	m_nStopPerformanceCounter = 0;
+	m_bStopped = false;
 }
 
 void GameTimer::Start()
 {
-	__int64 startTime;
-	QueryPerformanceCounter((LARGE_INTEGER*)& startTime);
-
-
-	// Accumulate the time elapsed between stop and start pairs.
-	//
-	//                     |<-------d------->|
-	// ----*---------------*-----------------*------------> time
-	//  mBaseTime       mStopTime        startTime     
-
-	if (mStopped)
+	__int64 nPerformanceCounter;
+	::QueryPerformanceCounter((LARGE_INTEGER*)&nPerformanceCounter);
+	if (m_bStopped)
 	{
-		mPausedTime += (startTime - mStopTime);
-
-		mPrevTime = startTime;
-		mStopTime = 0;
-		mStopped = false;
+		m_nPausedPerformanceCounter += (nPerformanceCounter - m_nStopPerformanceCounter);
+		m_nLastPerformanceCounter = nPerformanceCounter;
+		m_nStopPerformanceCounter = 0;
+		m_bStopped = false;
 	}
 }
 
 void GameTimer::Stop()
 {
-	if (!mStopped)
+	if (!m_bStopped)
 	{
-		__int64 currTime;
-		QueryPerformanceCounter((LARGE_INTEGER*)& currTime);
-
-		mStopTime = currTime;
-		mStopped = true;
+		::QueryPerformanceCounter((LARGE_INTEGER*)&m_nStopPerformanceCounter);
+		m_bStopped = true;
 	}
 }
 
-void GameTimer::Tick()
+void GameTimer::Tick(const float fLockFPS)
 {
-	if (mStopped)
+	if (m_bStopped)
 	{
-		mDeltaTime = 0.0;
+		m_fTimeElapsed = 0.0f;
 		return;
 	}
+	float fTimeElapsed;
 
-	__int64 currTime;
-	QueryPerformanceCounter((LARGE_INTEGER*)& currTime);
-	mCurrTime = currTime;
+	::QueryPerformanceCounter((LARGE_INTEGER*)&m_nCurrentPerformanceCounter);
+	fTimeElapsed = float((m_nCurrentPerformanceCounter - m_nLastPerformanceCounter) * m_fTimeScale);
 
-	// Time difference between this frame and the previous.
-	mDeltaTime = (mCurrTime - mPrevTime) * mSecondsPerCount;
-
-	// Prepare for next frame.
-	mPrevTime = mCurrTime;
-
-	// Force nonnegative.  The DXSDK's CDXUTTimer mentions that if the 
-	// processor goes into a power save mode or we get shuffled to another
-	// processor, then mDeltaTime can be negative.
-	if (mDeltaTime < 0.0)
+	if (fLockFPS > 0.0f)
 	{
-		mDeltaTime = 0.0;
+		while (fTimeElapsed < (1.0f / fLockFPS))
+		{
+			::QueryPerformanceCounter((LARGE_INTEGER*)&m_nCurrentPerformanceCounter);
+			fTimeElapsed = float((m_nCurrentPerformanceCounter - m_nLastPerformanceCounter) * m_fTimeScale);
+		}
 	}
+
+	m_nLastPerformanceCounter = m_nCurrentPerformanceCounter;
+
+	if (fabsf(fTimeElapsed - m_fTimeElapsed) < 1.0f)
+	{
+		::memmove(&m_fFrameTime[1], m_fFrameTime, (MAX_SAMPLE_COUNT - 1) * sizeof(float));
+		m_fFrameTime[0] = fTimeElapsed;
+		if (m_nSampleCount < MAX_SAMPLE_COUNT) m_nSampleCount++;
+	}
+
+	m_nFramesPerSecond++;
+	m_fFPSTimeElapsed += fTimeElapsed;
+	if (m_fFPSTimeElapsed > 1.0f)
+	{
+		m_nCurrentFrameRate = m_nFramesPerSecond;
+		m_nFramesPerSecond = 0;
+		m_fFPSTimeElapsed = 0.0f;
+	}
+
+	m_fTimeElapsed = 0.0f;
+	for (ULONG i = 0; i < m_nSampleCount; i++) m_fTimeElapsed += m_fFrameTime[i];
+	if (m_nSampleCount > 0) m_fTimeElapsed /= m_nSampleCount;
 }
+
 
