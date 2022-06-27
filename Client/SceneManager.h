@@ -31,6 +31,7 @@ public:
 
 	void	UpdateScene(const float& deltaT);
 	void	RenderScene();
+	void	RenderUI();
 
 	Scene* GetCurScene() const;
 

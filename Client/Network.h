@@ -31,7 +31,7 @@ public:
 
 	int		m_Retval;
 	char	m_Buffer[BUFSIZE];
-
+	int m_timer;
 	char* ptr;
 
 	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
@@ -54,6 +54,7 @@ public:
 	bool GetPlayerHide(int num)const;
 	int GetPlayerSnowmanNum(int num)const;
 
+	int Gettime()const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
 	int PlayerAnim[3];

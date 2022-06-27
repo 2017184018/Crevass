@@ -73,6 +73,25 @@ void GraphicsRenderer::RenderGraphics()
 	g_CommandList->SetGraphicsRootDescriptorTable(6, shadowTexDescriptor);
 }
 
+void GraphicsRenderer::ExecuteBlurEffects()
+{
+	if (m_SwitchBlur) {
+		mBlurFilter->Execute(Core::g_CommandList.Get(), mPostProcessRootSignature.Get(),
+			HorBlur.Get(), VerBlur.Get(), GameCore::GetApp()->CurrentBackBuffer(), 4);
+
+		//Prepare to copy blurred output to the back buffer.
+		Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GameCore::GetApp()->CurrentBackBuffer(),
+			D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		Core::g_CommandList->CopyResource(GameCore::GetApp()->CurrentBackBuffer(), mBlurFilter->Output());
+	}
+}
+
+void GraphicsRenderer::ExecuteResizeBlur()
+{
+	mBlurFilter->OnResize(Core::g_DisplayWidth, Core::g_DisplayHeight);
+}
+
 void GraphicsRenderer::LoadTextures()
 {
 	std::vector<std::string> texNames =

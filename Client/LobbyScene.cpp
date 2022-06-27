@@ -11,6 +11,10 @@ void LobbyScene::Initialize()
 	AppContext->CreateLobby();
 }
 
+void LobbyScene::OnResize()
+{
+}
+
 bool LobbyScene::Enter()
 {
 	cout << "Lobby Scene" << endl;
@@ -38,4 +42,8 @@ void LobbyScene::Update(const float& fDeltaTime)
 void LobbyScene::Render()
 {
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby"], AppContext->m_RItemsVec);
+}
+
+void LobbyScene::RenderUI()
+{
 }

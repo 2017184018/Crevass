@@ -6,6 +6,10 @@ void GameresultScene::Initialize()
 	m_SceneController = new GameresultController(this);
 }
 
+void GameresultScene::OnResize()
+{
+}
+
 bool GameresultScene::Enter()
 {
 	cout << "Gameresult Scene" << endl;
@@ -23,5 +27,9 @@ void GameresultScene::Update(const float& fDeltaTime)
 }
 
 void GameresultScene::Render()
+{
+}
+
+void GameresultScene::RenderUI()
 {
 }

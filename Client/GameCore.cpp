@@ -28,6 +28,9 @@ namespace Core
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> g_CommandList;
 	//Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> g_UICommandList;
 
+	Microsoft::WRL::ComPtr<ID2D1DeviceContext2> g_D2dDeviceContext;
+	Microsoft::WRL::ComPtr<IDWriteFactory> g_DWriteFactory;
+
 	int g_DisplayWidth = 800;
 	int g_DisplayHeight = 600;
 	D3D_DRIVER_TYPE g_d3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
@@ -176,7 +179,26 @@ bool GameCore::UpdateCore(IGameApp& game)
 		PreparePresent();
 		m_GraphicsRenderer->RenderGraphics();
 		game.RenderScene();
-		ExecuteCommandLists();
+		m_GraphicsRenderer->ExecuteBlurEffects();
+
+		g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
+			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+		// Done recording commands.
+		ThrowIfFailed(g_CommandList->Close());
+
+		// Add the command list to the queue for execution.
+		ID3D12CommandList* cmdsLists[] = { g_CommandList.Get() };
+		g_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+		// D3D11On12 Device Rendering
+		D3D11DevicePopulateCommandList(game);
+
+		// swap the back and front buffers
+		ThrowIfFailed(mSwapChain->Present(0, 0));
+		mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
+
+		FlushCommandQueue();
 	}
 	else
 	{
@@ -350,6 +372,28 @@ void GameCore::PreparePresent()
 	g_CommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 }
 
+void GameCore::D3D11DevicePopulateCommandList(IGameApp& game)
+{
+	// Acquire our wrapped render target resource for the current back buffer.
+	m_D3d11On12Device->AcquireWrappedResources(m_WrappedBackBuffers[mCurrBackBuffer].GetAddressOf(), 1);
+
+	// Render text directly to the back buffer.
+	g_D2dDeviceContext->SetTarget(m_D2dRenderTargets[mCurrBackBuffer].Get());
+	g_D2dDeviceContext->BeginDraw();
+
+	game.RenderUI();
+
+	ThrowIfFailed(g_D2dDeviceContext->EndDraw());
+
+	// Release our wrapped render target resource. Releasing 
+	// transitions the back buffer resource to the state specified
+	// as the OutState when the wrapped resource was created.
+	m_D3d11On12Device->ReleaseWrappedResources(m_WrappedBackBuffers[mCurrBackBuffer].GetAddressOf(), 1);
+
+	// Flush to submit the 11 command list to the shared command queue.
+	m_D3d11DeviceContext->Flush();
+}
+
 void GameCore::ExecuteCommandLists()
 {
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
@@ -397,6 +441,36 @@ void GameCore::OnMouseMove(WPARAM btnState, int x, int y)
 
 	//mLastMousePos.x = x;
 	//mLastMousePos.y = y;
+}
+
+void GameCore::MoveToNextFrame()
+{
+	// swap the back and front buffers
+	ThrowIfFailed(mSwapChain->Present(0, 0));
+	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
+}
+
+void GameCore::D3D11DevicePreparePresent()
+{
+	// Acquire our wrapped render target resource for the current back buffer.
+	m_D3d11On12Device->AcquireWrappedResources(m_WrappedBackBuffers[mCurrBackBuffer].GetAddressOf(), 1);
+
+	// Render text directly to the back buffer.
+	g_D2dDeviceContext->SetTarget(m_D2dRenderTargets[mCurrBackBuffer].Get());
+	g_D2dDeviceContext->BeginDraw();
+}
+
+void GameCore::D3D11DeviceExecuteCommandList()
+{
+	ThrowIfFailed(g_D2dDeviceContext->EndDraw());
+
+	// Release our wrapped render target resource. Releasing 
+	// transitions the back buffer resource to the state specified
+	// as the OutState when the wrapped resource was created.
+	m_D3d11On12Device->ReleaseWrappedResources(m_WrappedBackBuffers[mCurrBackBuffer].GetAddressOf(), 1);
+
+	// Flush to submit the 11 command list to the shared command queue.
+	m_D3d11DeviceContext->Flush();
 }
 
 void GameCore::InitMainWindow()
@@ -479,6 +553,10 @@ void GameCore::InitMainWindow()
 
 void GameCore::InitDirect3D()
 {
+	UINT dxgiFactoryFlags = 0;
+	UINT d3d11DeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+	D2D1_FACTORY_OPTIONS d2dFactoryOptions = {};
+
 #if defined(DEBUG) || defined(_DEBUG) 
 	// Enable the D3D12 debug layer.
 	{
@@ -539,6 +617,8 @@ void GameCore::InitDirect3D()
 	CreateCommandObjects();
 	CreateRtvAndDsvDescriptorHeaps();
 	CreateSwapChain();
+
+	CreateID3D11On12Device(dxgiFactoryFlags, d3d11DeviceFlags, d2dFactoryOptions);
 }
 
 void GameCore::OnResize()
@@ -553,9 +633,17 @@ void GameCore::OnResize()
 	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), nullptr));
 
 	// Release the previous resources we will be recreating.
-	for (int i = 0; i < SwapChainBufferCount; ++i)
+	for (int i = 0; i < SwapChainBufferCount; ++i) {
 		mSwapChainBuffer[i].Reset();
+		m_WrappedBackBuffers[i].Reset();
+		m_D2dRenderTargets[i].Reset();
+	}
 	mDepthStencilBuffer.Reset();
+
+	// DirectX11은 리소스의 '지연된 파괴'를 하기떄문에 일반적으로 파기해야하는 경우
+// 리소스를 렌더타겟에서 완전히 바인딩 해제하고 Flush해야한다.
+	g_D2dDeviceContext->SetTarget(nullptr);
+	m_D3d11DeviceContext->Flush();
 
 	// Resize the swap chain.
 	ThrowIfFailed(mSwapChain->ResizeBuffers(
@@ -571,7 +659,29 @@ void GameCore::OnResize()
 	{
 		ThrowIfFailed(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i])));
 		g_Device->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
+
+		// Create a wrapped 11On12 resource of this back buffer.
+		D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
+		ThrowIfFailed(m_D3d11On12Device->CreateWrappedResource(
+			mSwapChainBuffer[i].Get(),
+			&d3d11Flags,
+			D3D12_RESOURCE_STATE_PRESENT,
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			IID_PPV_ARGS(&m_WrappedBackBuffers[i])
+		));
+
+		// Create a render target for D2D to draw directly to this back buffer.
+		ComPtr<IDXGISurface> surface;
+		ThrowIfFailed(m_WrappedBackBuffers[i].As(&surface));
+		ThrowIfFailed(g_D2dDeviceContext->CreateBitmapFromDxgiSurface(
+			surface.Get(),
+			&m_BitmapProperties,
+			&m_D2dRenderTargets[i]
+		));
+
 		rtvHeapHandle.Offset(1, mRtvDescriptorSize);
+
+		ThrowIfFailed(g_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_DirectCmdListAlloc)));
 	}
 
 	// Create the depth/stencil buffer and view.
@@ -645,6 +755,50 @@ void GameCore::OnResize()
 
 	if (CREVASS::GetApp()->m_Camera)
 		CREVASS::GetApp()->m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+}
+
+void GameCore::CreateID3D11On12Device(UINT dxgiFactoryFlags, UINT d3d11DeviceFlags, D2D1_FACTORY_OPTIONS d2dFactoryOptions)
+{
+	// Create an 11 device wrapped around the 12 device and share
+// 12's command queue.
+	Microsoft::WRL::ComPtr<ID3D11Device> d3d11Device;
+	ThrowIfFailed(D3D11On12CreateDevice(
+		g_Device.Get(),
+		d3d11DeviceFlags,
+		nullptr,
+		0,
+		reinterpret_cast<IUnknown**>(g_CommandQueue.GetAddressOf()),
+		1,
+		0,
+		&d3d11Device,
+		&m_D3d11DeviceContext,
+		nullptr
+	));
+
+	ThrowIfFailed(d3d11Device.As(&m_D3d11On12Device));
+
+	// Create D2D Factory
+	// Create D2D/DWrite components.
+	D2D1_DEVICE_CONTEXT_OPTIONS deviceOptions = D2D1_DEVICE_CONTEXT_OPTIONS_NONE;
+	ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory3), &d2dFactoryOptions, &m_D2dFactory));
+	ComPtr<IDXGIDevice> dxgiDevice;
+	ThrowIfFailed(m_D3d11On12Device.As(&dxgiDevice));
+	ThrowIfFailed(m_D2dFactory->CreateDevice(dxgiDevice.Get(), &m_D2dDevice));
+	ThrowIfFailed(m_D2dDevice->CreateDeviceContext(deviceOptions, &g_D2dDeviceContext));
+	ThrowIfFailed(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &g_DWriteFactory));
+
+	// Query the desktop's dpi settings, which will be used to create
+	// D2D's render targets.
+	float dpiX;
+	float dpiY;
+	dpiX = GetDpiForWindow(Core::g_hMainWnd);
+	dpiY = GetDpiForWindow(Core::g_hMainWnd);
+	m_BitmapProperties = D2D1::BitmapProperties1(
+		D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+		dpiX,
+		dpiY
+	);
 }
 
 void GameCore::CreateCommandObjects()

@@ -43,6 +43,11 @@ void GameplayScene::Initialize()
 	}
 }
 
+void GameplayScene::OnResize()
+{
+	GraphicsContext::GetApp()->OnResizeBlur();
+}
+
 bool GameplayScene::Enter()
 {
 	cout << "GamePlay Scene" << endl;
@@ -117,6 +122,9 @@ void GameplayScene::Exit()
 
 void GameplayScene::Update(const float& fDeltaTime)
 {
+
+	m_Timer = 300 - g_pFramework->m_pNetwork->Gettime();
+
 	m_SceneController->Update(fDeltaTime);
 
 	static bool one[5]{ true,true,true,true,true };
@@ -242,6 +250,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			{
 				m_Users[i]->m_PlayerController->SetIsFall();
 				BlurCnt = 0;
+				GraphicsContext::GetApp()->OnBlurEffect(false);
 				IsFall[m_PlayerID] = false;
 				if (Lifecnt > 0) {
 					--Lifecnt;
@@ -362,7 +371,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static int tmpidx = -1;
 		time += fDeltaTime;
 		BlurCnt = 3;
-
+		GraphicsContext::GetApp()->OnBlurEffect(true);
 		if (time >= 3) {
 			time = 0;
 			//IsFall[m_PlayerID] = false;
@@ -564,18 +573,26 @@ void GameplayScene::Render()
 
 	GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
 
-	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
-		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
+	//mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
+	//	Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
 
-	//Prepare to copy blurred output to the back buffer.
-	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-		D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+	////Prepare to copy blurred output to the back buffer.
+	//g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+	//	D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
 
-	g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
+	//g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
 
 	// Transition to PRESENT state.
-	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
+	/*g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));*/
+}
+
+void GameplayScene::RenderUI()
+{
+	// Timer
+	GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
+	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer / 60) + L" : " + std::to_wstring(m_Timer % 60), 0, -Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
+
 }
 
 void GameplayScene::Fall(int num) {

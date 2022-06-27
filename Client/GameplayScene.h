@@ -47,6 +47,7 @@ class GameplayScene : public Scene
 {
 public:
 	virtual void Initialize() override;
+	virtual void OnResize() override;
 
 public:
 	virtual bool Enter() override;
@@ -54,6 +55,7 @@ public:
 
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
+	virtual void RenderUI() override;
 	/* ID: battleID */
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;
@@ -82,5 +84,7 @@ public:
 
 	int FallX, FallZ;
 	float Gravity = 0.1;
+
+	int m_Timer;
 };
 

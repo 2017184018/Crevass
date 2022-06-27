@@ -40,6 +40,8 @@ public:
 public:
 	void RenderGraphics();
 
+	void ExecuteBlurEffects();
+	void ExecuteResizeBlur();
 private:
 	void LoadTextures();
 	void BuildDescriptorHeaps();
@@ -71,6 +73,7 @@ public:
 	UINT mSkyTexHeapIndex = 0;
 	UINT mShadowMapHeapIndex = 0;
 	UINT mBlurHeapIndex = 0;
-
+public:
+	bool	m_SwitchBlur = false;
 };
 

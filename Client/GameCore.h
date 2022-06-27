@@ -40,7 +40,13 @@ public:
 
 public:
 	virtual void PreparePresent();
+	void D3D11DevicePopulateCommandList(IGameApp& game);
+
 	virtual void ExecuteCommandLists() ;
+	void MoveToNextFrame();
+
+	void D3D11DevicePreparePresent();
+	void D3D11DeviceExecuteCommandList();
 
 	virtual void OnMouseDown(WPARAM btnState, int x, int y);
 	virtual void OnMouseUp(WPARAM btnState, int x, int y);
@@ -51,6 +57,7 @@ private:
 	void InitDirect3D();
 	void OnResize();
 
+	void CreateID3D11On12Device(UINT dxgiFactoryFlags, UINT d3d11DeviceFlags, D2D1_FACTORY_OPTIONS d2dFactoryOptions);
 	void CreateCommandObjects();
 	void CreateSwapChain();
 	void CreateRtvAndDsvDescriptorHeaps();
@@ -92,6 +99,17 @@ private:
 	UINT mRtvDescriptorSize = 0;
 	UINT mDsvDescriptorSize = 0;
 	UINT mCbvSrvUavDescriptorSize = 0;
+
+private:
+	//D3D11On12
+	Microsoft::WRL::ComPtr<ID3D11On12Device> m_D3d11On12Device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_D3d11DeviceContext;
+
+	Microsoft::WRL::ComPtr<ID3D11Resource> m_WrappedBackBuffers[SwapChainBufferCount];
+	Microsoft::WRL::ComPtr<ID2D1Bitmap1> m_D2dRenderTargets[SwapChainBufferCount];
+	Microsoft::WRL::ComPtr<ID2D1Factory3> m_D2dFactory;
+	Microsoft::WRL::ComPtr<ID2D1Device2> m_D2dDevice;
+	D2D1_BITMAP_PROPERTIES1 m_BitmapProperties;
 
 private:
 	POINT										mLastMousePos;

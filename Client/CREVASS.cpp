@@ -40,6 +40,9 @@ void CREVASS::Startup(void)
 	m_MeshRef = MeshReference::GetApp();
 	m_MaterialRef = MaterialReference::GetApp();
 
+	// LoadFont
+	GraphicsContext::GetApp()->LoadFont(L"Verdana", 20);
+
 	BuildStream();
 
 	m_MeshRef->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
@@ -150,6 +153,12 @@ void CREVASS::Update(float deltaT)
 void CREVASS::RenderScene(void)
 {
 	SceneManager::GetApp()->RenderScene();
+}
+
+void CREVASS::RenderUI(void)
+{
+	if (m_SceneManager)
+		SceneManager::GetApp()->RenderUI();
 }
 
 void CREVASS::BuildCharacters()

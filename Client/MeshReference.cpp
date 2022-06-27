@@ -429,7 +429,6 @@ bool MeshReference::LoadMeshFile(std::vector<Vertex>& outVertexVector, std::vect
 	std::string ignore;
 	if (fileIn)
 	{
-		cout << "¿ÔÀ½" << endl;
 		fileIn >> ignore >> vertexSize;
 		fileIn >> ignore >> indexSize;
 		fileIn >> ignore >> materialSize;
