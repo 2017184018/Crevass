@@ -23,6 +23,13 @@ public:
 	char GetCharacterType();
 
 	char GetAnimType();
+
+	float GetSpeed() const;
+	float GetCrossSpeed() const;
+	float GetHittedSpeed() const;
+	void SetSpeed(float speed) ;
+	void SetCrossSpeed(float crossspeed) ;
+	void SetHittedSpeed(float crossspeed) ;
 public:
 	bool m_keyW = false;
 	bool m_keyS = false;
@@ -47,6 +54,7 @@ public:
 
 	int CurrentBlockNum = -1;
 	int TimeWhileBlock = 0;
+
 public:
 	char dir = 0;
 	char anim = 0;
@@ -55,4 +63,10 @@ public:
 	DirectX::BoundingBox BB;
 	DirectX::BoundingSphere Hit_BB;
 	char m_CharacterType;
+
+
+private:
+	float Speed = 1.0f * 1.5f;
+	float Crossspeed = cos(45) * 1.5f;
+	float Hittedspeed = 1.0f * 1.5f;
 };

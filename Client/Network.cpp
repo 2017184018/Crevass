@@ -304,6 +304,13 @@ void Network::ProcessPacket(char* packet_buffer)
 		}
 		break;
 	}
+	case SC_FOX_SKILL:
+	{
+		sc_packet_foxskill packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		FoxSkill = packet.foxskill;
+		break;
+	}
 	case SC_GAMEOVER:
 	{
 		std::cout << "game over" << std::endl;
@@ -431,4 +438,9 @@ bool Network::GetPlayerHide(int num)const
 int Network::GetPlayerSnowmanNum(int num)const
 {
 	return PlayerSnowmanHide[num];
+}
+
+bool Network::GetFoxSkill() const
+{
+	return FoxSkill;
 }

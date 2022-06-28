@@ -519,9 +519,10 @@ void GameplayScene::Render()
 			}
 		}
 	}
+
 	if (!ty[0])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
-	if (!ty[1])
+	if (!ty[1] && (!g_pFramework->m_pNetwork->GetFoxSkill() || g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX))
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
 	if (!ty[2])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);

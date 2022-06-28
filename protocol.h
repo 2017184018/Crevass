@@ -15,6 +15,7 @@
 #define SC_BLOCK			12
 #define SC_TIME				13
 #define SC_HAIL				14
+#define SC_FOX_SKILL				15
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -171,6 +172,12 @@ struct sc_packet_hail
 	short size;
 	char type;
 	DirectX::XMFLOAT3 pos[5];
+};
+struct sc_packet_foxskill
+{
+	short size;
+	char type;
+	bool foxskill;
 };
 
 /* Client to Server */

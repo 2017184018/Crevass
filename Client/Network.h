@@ -53,6 +53,7 @@ public:
 
 	bool GetPlayerHide(int num)const;
 	int GetPlayerSnowmanNum(int num)const;
+	bool GetFoxSkill()const;
 
 private:
 	DirectX::XMFLOAT3 PlayerPos[3];
@@ -74,6 +75,7 @@ private:
 	bool isReset[3]{ false, false, false };
 
 	DirectX::XMFLOAT3 HailPos[5];
+	bool FoxSkill = false;
 public:
 	GameInfo* m_pGameInfo;
 };

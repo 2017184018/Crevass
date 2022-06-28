@@ -85,3 +85,33 @@ char Player::GetAnimType()
 	else
 		return ANIM_IDLE;
 }
+
+float Player::GetSpeed() const
+{
+	return Speed;
+}
+
+float Player::GetCrossSpeed() const
+{
+	return Crossspeed;
+}
+
+void Player::SetCrossSpeed(float crossspeed)
+{
+	Crossspeed = crossspeed;
+}
+
+void Player::SetSpeed(float speed)
+{
+	Speed = speed;
+}
+
+float Player::GetHittedSpeed() const
+{
+	return Hittedspeed;
+}
+
+void Player::SetHittedSpeed(float hittedpeed)
+{
+	Hittedspeed = hittedpeed;
+}

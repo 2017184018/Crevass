@@ -34,67 +34,64 @@ int CalcTime = 0;
 
 void Update(vector<Player>& player)
 {
-	float speed = 1.0f * 1.5f;
-	//float crossspeed = sqrt(2) / 2;
-	float crossspeed = cos(45) * 1.5f;
 	for (int i = 0; i < numOfCls; ++i)
 	{
 		float saveX = 0;
 		float saveZ = 0;
 		if (player[i].is_hitted == false) {
 			if (player[i].GetKeyW() && player[i].GetKeyA()) {
-				player[i].m_pos.z += crossspeed;
-				player[i].m_pos.x -= crossspeed;
+				player[i].m_pos.z += player[i].GetCrossSpeed();
+				player[i].m_pos.x -= player[i].GetCrossSpeed();
 				player[i].dir = DIR_UP_LEFT;
-				saveX = -crossspeed;
-				saveZ = crossspeed;
+				saveX = -player[i].GetCrossSpeed();
+				saveZ = player[i].GetCrossSpeed();
 			}
 			else if (player[i].GetKeyW() && player[i].GetKeyD()) {
-				player[i].m_pos.z += crossspeed;
-				player[i].m_pos.x += crossspeed;
+				player[i].m_pos.z += player[i].GetCrossSpeed();
+				player[i].m_pos.x += player[i].GetCrossSpeed();
 				player[i].dir = DIR_UP_RIGHT;
-				saveX = crossspeed;
-				saveZ = crossspeed;
+				saveX = player[i].GetCrossSpeed();
+				saveZ = player[i].GetCrossSpeed();
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyD()) {
-				player[i].m_pos.z -= crossspeed;
-				player[i].m_pos.x += crossspeed;
+				player[i].m_pos.z -= player[i].GetCrossSpeed();
+				player[i].m_pos.x += player[i].GetCrossSpeed();
 				player[i].dir = DIR_DOWN_RIGHT;
-				saveX = crossspeed;
-				saveZ = -crossspeed;
+				saveX = player[i].GetCrossSpeed();
+				saveZ = -player[i].GetCrossSpeed();
 
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyA()) {
-				player[i].m_pos.z -= crossspeed;
-				player[i].m_pos.x -= crossspeed;
+				player[i].m_pos.z -= player[i].GetCrossSpeed();
+				player[i].m_pos.x -= player[i].GetCrossSpeed();
 				player[i].dir = DIR_DOWN_LEFT;
-				saveX = -crossspeed;
-				saveZ = -crossspeed;
+				saveX = -player[i].GetCrossSpeed();
+				saveZ = -player[i].GetCrossSpeed();
 			}
 			else {
 				if (player[i].GetKeyW())
 				{
-					player[i].m_pos.z += speed;
+					player[i].m_pos.z += player[i].GetSpeed();
 					player[i].dir = DIR_UP;
-					saveZ = speed;
+					saveZ = player[i].GetSpeed();
 				}
 				if (player[i].GetKeyS())
 				{
-					player[i].m_pos.z -= speed;
+					player[i].m_pos.z -= player[i].GetSpeed();
 					player[i].dir = DIR_DOWN;
-					saveZ = -speed;
+					saveZ = -player[i].GetSpeed();
 				}
 				if (player[i].GetKeyA())
 				{
-					player[i].m_pos.x -= speed;
+					player[i].m_pos.x -= player[i].GetSpeed();
 					player[i].dir = DIR_LEFT;
-					saveX = -speed;
+					saveX = -player[i].GetSpeed();
 				}
 				if (player[i].GetKeyD())
-				{		//5*speed
-					player[i].m_pos.x += speed;
+				{
+					player[i].m_pos.x += player[i].GetSpeed();
 					player[i].dir = DIR_RIGHT;
-					saveX = speed;
+					saveX = player[i].GetSpeed();
 				}
 			}
 		}
@@ -103,31 +100,31 @@ void Update(vector<Player>& player)
 			//위
 
 			if (static_cast<int>(player[i].hitted_dir) == 0) {
-				player[i].m_pos.z += speed;
+				player[i].m_pos.z += player[i].GetSpeed();
 				player[i].dir = DIR_DOWN;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 2)
 			{
-				player[i].m_pos.x += speed;
+				player[i].m_pos.x += player[i].GetSpeed();
 				player[i].dir = DIR_LEFT;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 4)
 			{
-				player[i].m_pos.z -= speed;
+				player[i].m_pos.z -= player[i].GetSpeed();
 				player[i].dir = DIR_UP;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 6)
 			{
-				player[i].m_pos.x -= speed;
+				player[i].m_pos.x -= player[i].GetSpeed();
 				player[i].dir = DIR_RIGHT;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 		}
 		for (int j = 0; j < numOfCls; ++j) {
-			if (i != j) {
+			if (i != j && !(TypeName[i] == "husky" && IsSkillPushed[i])) {
 				g_boundaries[TypeName[i]]->Center.x += saveX;
 				g_boundaries[TypeName[i]]->Center.z += saveZ;
 				if (g_boundaries[TypeName[i]]->Intersects(*g_boundaries[TypeName[j]])) {
@@ -169,62 +166,63 @@ void Update(vector<Player>& player)
 
 void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
 
-
-	float speed = 1.0f * 1.5f;
-	float crossspeed = cos(45) * 1.5f;
 	float saveX = 0;
 	float saveZ = 0;
 	//위
 	if (static_cast<int>(player.hitted_dir) == 0) {
-		player.m_pos.z += speed * HITTED_POWER;
+		player.m_pos.z += player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_DOWN;
-		saveZ = speed * HITTED_POWER;
+		saveZ = player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 2)
 	{
-		player.m_pos.x += speed * HITTED_POWER;
+		player.m_pos.x += player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_LEFT;
-		saveZ = speed * HITTED_POWER;
+		saveX = player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 4)
 	{
-		player.m_pos.z -= speed * HITTED_POWER;
+		player.m_pos.z -= player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_UP;
-		saveZ = speed * HITTED_POWER;
+		saveZ = -player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 6)
 	{
-		player.m_pos.x -= speed * HITTED_POWER;
+		player.m_pos.x -= player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_RIGHT;
-		saveZ = speed * HITTED_POWER;
+		saveX = -player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 1)
 	{
-		player.m_pos.x += crossspeed * HITTED_POWER;
-		player.m_pos.z += crossspeed * HITTED_POWER;
+		player.m_pos.x += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_DOWN_LEFT;
-		saveZ = speed * HITTED_POWER;
+		saveX = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 3)
 	{
-		player.m_pos.x += crossspeed * HITTED_POWER;
-		player.m_pos.z -= crossspeed * HITTED_POWER;
+		player.m_pos.x += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_UP_LEFT;
-		saveZ = speed * HITTED_POWER;
+		saveX = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 5)
 	{
-		player.m_pos.x -= crossspeed * HITTED_POWER;
-		player.m_pos.z -= crossspeed * HITTED_POWER;
+		player.m_pos.x -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_UP_RIGHT;
-		saveZ = speed * HITTED_POWER;
+		saveX = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 7)
 	{
-		player.m_pos.x -= crossspeed * HITTED_POWER;
-		player.m_pos.z += crossspeed * HITTED_POWER;
+		player.m_pos.x -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_DOWN_RIGHT;
-		saveZ = speed * HITTED_POWER;
+		saveX = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 
 	//if (anitime < 30) {
@@ -234,19 +232,19 @@ void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
 	//   player.m_pos.y -= speed;
 	//}
 
-	for (int j = 0; j < numOfCls; ++j) {
-		if (tyname_num != j) {
-			g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
-			g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
-			if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
+	//for (int j = 0; j < numOfCls; ++j) {
+	//	if (tyname_num != j) {
+	//		g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
+	//		g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
+	//		if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
 
-				player.m_pos.x -= saveX;
-				player.m_pos.z -= saveZ;
-				g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
-				g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
-			}
-		}
-	}
+	//			player.m_pos.x -= saveX;
+	//			player.m_pos.z -= saveZ;
+	//			g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
+	//			g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
+	//		}
+	//	}
+	//}
 	for (int j = 0; j < 25; ++j) {
 		if (player.m_pos.y < blocks[j].pos.y + 60) {
 			g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
@@ -1062,6 +1060,11 @@ void ProcessClients()
 							for (int j = 0; j < 5; ++j) {
 								if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]]) && phyPlayers[i].SnowmanNum == -1) {
 									phyPlayers[i].is_hitted = true;
+									if (TypeName[i] == "husky") {
+										IsSkillPushed[i] = false;
+										phyPlayers[i].SetSpeed(1.0f * 1.5f);
+										phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+									}
 									float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
 									float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
 									if (SubX < -9) {
@@ -1103,8 +1106,7 @@ void ProcessClients()
 				}
 			}
 			SendHail(*hails);
-			//   Update(phyPlayers);
-
+			//   Update(phyPlayers)
 			{	//skill
 				for (int i = 0; i < numOfCls; ++i) {
 					if (IsSkillPushed[i] && phyPlayers[i].SnowmanNum == -1) {
@@ -1119,25 +1121,84 @@ void ProcessClients()
 						}
 						else if (TypeName[i] == "husky") {
 							cout << "husky" << endl;
-							static_cast<int>(phyPlayers[i].dir);
-							phyPlayers[i].SetKeyD(true);
-							if (phyPlayers[i].m_pos.y <= 30) {
-								phyPlayers[i].m_pos.y += 2.0f;
-							}
-							/*	if (phyPlayers[i].m_pos.y >= 25) {
-									if (SkillCoolTime >= 30) {
-										phyPlayers[i].m_pos.x += 3.0f;
-										phyPlayers[i].m_pos.y = 31.0f;
+							static float HittedIdx = -1;
+							if (SkillCoolTime >= 20 && SkillCoolTime <= 80) {
+								switch (static_cast<int>(phyPlayers[i].dir)) {
+								case 0:
+									phyPlayers[i].SetKeyW(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 1:
+									phyPlayers[i].SetKeyW(true);
+									phyPlayers[i].SetKeyD(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								case 2:
+									phyPlayers[i].SetKeyD(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 3:
+									phyPlayers[i].SetKeyD(true);
+									phyPlayers[i].SetKeyS(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								case 4:
+									phyPlayers[i].SetKeyS(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 5:
+									phyPlayers[i].SetKeyS(true);
+									phyPlayers[i].SetKeyA(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								case 6:
+									phyPlayers[i].SetKeyA(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 7:
+									phyPlayers[i].SetKeyW(true);
+									phyPlayers[i].SetKeyA(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								}
+								for (int j = 0; j < numOfCls; ++j) {
+									if (i != j && g_boundaries["husky"]->Intersects(*g_boundaries[TypeName[j]])) {
+										phyPlayers[j].hitted_dir = phyPlayers[i].dir;
+										phyPlayers[j].is_hitted = true;
+										phyPlayers[j].SetHittedSpeed(3.0f * 1.5f);
+										HittedIdx = j;
 									}
 								}
-								else {
+							}
+							else if (SkillCoolTime > 80) {
+								IsSkillPushed[i] = false;
+								SkillCoolTime = 0;
+								phyPlayers[i].SetKeyW(false);
+								phyPlayers[i].SetKeyA(false);
+								phyPlayers[i].SetKeyS(false);
+								phyPlayers[i].SetKeyD(false);
+								phyPlayers[i].SetSpeed(1.0f * 1.5f);
+								phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+								if (HittedIdx != -1)
+									phyPlayers[HittedIdx].SetHittedSpeed(1.0f * 1.5f);
+								HittedIdx = -1;
+							}
+							else {
+								if (tmp2[i] != -1) {
 									IsSkillPushed[i] = false;
 									SkillCoolTime = 0;
-								}*/
+									phyPlayers[i].SetKeyW(false);
+									phyPlayers[i].SetKeyA(false);
+									phyPlayers[i].SetKeyS(false);
+									phyPlayers[i].SetKeyD(false);
+									phyPlayers[i].SetSpeed(1.0f * 1.5f);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+								}
+							}
 						}
 						else if (TypeName[i] == "ArcticFox") {
 							cout << "ArcticFox" << endl;
-
+							SendFoxSkill(true);
 						}
 						else if (TypeName[i] == "Seal") {
 							cout << "Seal" << endl;
@@ -1180,6 +1241,7 @@ void ProcessClients()
 						if (SkillCoolTime >= 300) {
 							IsSkillPushed[i] = false;
 							SkillCoolTime = 0;
+							SendFoxSkill(false);
 						}
 					}
 					else {
