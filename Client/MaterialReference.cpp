@@ -180,6 +180,13 @@ void MaterialReference::BuildMaterials()
 	waterdrop->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	waterdrop->Roughness = 1.0f;
 
+	auto TranslucentArcticFox = std::make_unique<Material>();
+	TranslucentArcticFox->MatCBIndex = 19;
+	TranslucentArcticFox->DiffuseSrvHeapIndex = 10;
+	TranslucentArcticFox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
+	TranslucentArcticFox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	TranslucentArcticFox->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -199,4 +206,8 @@ void MaterialReference::BuildMaterials()
 	m_Materials["lobby4"] = std::move(lobby4);
 	m_Materials["lobby5"] = std::move(lobby5);
 	m_Materials["waterdrop"] = std::move(waterdrop);
+
+	m_Materials["TranslucentArcticFox"] = std::move(TranslucentArcticFox);
+
+
 }

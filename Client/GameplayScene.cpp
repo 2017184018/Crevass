@@ -114,16 +114,28 @@ void GameplayScene::Exit()
 void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
-
-	static bool one[5]{ true,true,true,true,true };
-	static bool two[5]{ true,true,true,true,true };
-	static bool Small[5]{ false,false,false,false,false };
-
+	static float time = 0.0f;
+	static XMFLOAT3 huskyimagepos[4];
+	static XMFLOAT4X4 huskyimagerota[4];
+	time += fDeltaTime;
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
 		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
-
+		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.2) {
+			for (int j = 3; j >= 0; --j) {
+				if (j != 0) {
+					huskyimagepos[j] = huskyimagepos[j - 1];
+					huskyimagerota[j] = huskyimagerota[j - 1];
+				}
+				else {
+					huskyimagepos[j] = g_pFramework->m_pNetwork->GetPlayerPos(i);
+					const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
+					huskyimagerota[j] = AppContext->m_RItemsVec[info.begin()->second]->m_World;
+					time = 0.0f;
+				}
+			}
+		}
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 		if (i != m_PlayerID) {//애니메이션은 나는 제외 
@@ -339,6 +351,30 @@ void GameplayScene::Update(const float& fDeltaTime)
 				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
 		}
 	}
+
+	{
+		//huskyafterimage
+		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
+		auto i = info.begin();
+
+		++i;
+		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[1];
+		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[1].x;
+		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[1].y;
+		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[1].z;
+		++i;
+		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[2];
+		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[2].x;
+		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[2].y;
+		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[2].z;
+		++i;
+		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[3];
+		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[3].x;
+		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[3].y;
+		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[3].z;
+
+
+	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
 	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);
@@ -425,31 +461,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
-
-	/*if (tmp1 == -1 && tmp2 == -1) {
-		m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-	}
-	else {
-		if (tmp1 != -1) {
-			if (m_Users[m_PlayerID]->GetPosition().y > 10 && m_Users[m_PlayerID]->bJump == false && DestructionCnt[tmp1] != 3) {
-				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
-					AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(tmp1))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
-			}
-			else {
-				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-			}
-		}
-		else {
-			if (m_Users[m_PlayerID]->GetPosition().y - AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y >= 50 &&
-				m_Users[m_PlayerID]->bJump == false && !IsFall[m_PlayerID]) {
-				m_Users[m_PlayerID]->SetPosition(m_Users[m_PlayerID]->GetPosition().x,
-					AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(tmp2))->GetPosition().y + 60, m_Users[m_PlayerID]->GetPosition().z);
-			}
-			else {
-				m_Users[m_PlayerID]->Move(DIR_DOWN, speed, true);
-			}
-		}
-	}*/
 }
 
 void GameplayScene::Render()
@@ -522,10 +533,20 @@ void GameplayScene::Render()
 
 	if (!ty[0])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
-	if (!ty[1] && (!g_pFramework->m_pNetwork->GetFoxSkill() || g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX))
+	if (!ty[1] && !(g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) != CHARACTER_ARCTICFOX)) {
+		if (g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
+			const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
+			AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["TranslucentArcticFox"]->MatCBIndex;
+		}
+		else if (!g_pFramework->m_pNetwork->GetFoxSkill()) {
+			const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
+			AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ArcticFox"]->MatCBIndex;
+		}
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
-	if (!ty[2])
+	}
+	if (!ty[2]) {
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
+	}
 	if (!ty[3])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 	if (!ty[4])

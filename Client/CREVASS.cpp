@@ -148,13 +148,11 @@ void CREVASS::RenderScene(void)
 
 void CREVASS::BuildCharacters()
 {
-	for (int i = 0; i < 5; ++i) {
-		AppContext->CreateCharacter("husky", "husky"+std::to_string(i), "husky", BoneIndex::Husky);
-		AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin" + std::to_string(i), "Penguin", BoneIndex::Penguin);
-		AppContext->CreateCharacter("ArcticFox", "ArcticFox" + std::to_string(i), "ArcticFox", BoneIndex::Fox);
-		AppContext->CreateCharacter("PolarBear", "PolarBear" + std::to_string(i), "PolarBear", BoneIndex::PolarBear);
-		AppContext->CreateCharacter("Seal", "Seal" + std::to_string(i), "Seal", BoneIndex::Seal);
-	}
+	AppContext->CreateCharacter("husky", "husky0", "husky", BoneIndex::Husky);
+	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "Penguin", BoneIndex::Penguin);
+	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
+	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
+	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
 }
 
 void CREVASS::BuildStream() {
