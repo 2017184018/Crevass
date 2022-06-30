@@ -113,7 +113,6 @@ void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::str
 	quadRitem->m_TexTransform = MathHelper::Identity4x4();
 	quadRitem->m_IsVisible = true;
 
-	cout << "hihihi" << endl;
 }
 
 bool BlockCheck(int idx) {
@@ -769,6 +768,24 @@ void ApplicationContext::CreateWaterDrop()
 	}
 }
 
+void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY)
+{
+	GameObject* item = CreateObject<GameObject>(ui2dLayer, ui2dName);
+	item->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+	item->IndexCount = item->Geo->DrawArgs["grid"].IndexCount;
+	item->StartIndexLocation = item->Geo->DrawArgs["grid"].StartIndexLocation;
+	item->BaseVertexLocation = item->Geo->DrawArgs["grid"].BaseVertexLocation;
+	item->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	item->m_Bounds = item->Geo->DrawArgs["grid"].Bounds;
+	item->m_MaterialIndex = matIndex;
+	item->m_IsVisible = true;
+
+	item->m_positionRatio = { posX / Core::g_DisplayWidth, posY / Core::g_DisplayHeight };
+
+	item->Scale(sizeX, sizeY, 1);
+	item->SetPosition(posX, posY, 1.f);
+}
+
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {
 	Character* chr = CreateObject<Character>(meshName, instID);
@@ -866,4 +883,20 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 
 	// Update InstanceData
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[userName], AppContext->m_RItemsVec);
+}
+
+void ApplicationContext::DisplayUI(std::string mapName)
+{
+}
+
+void ApplicationContext::HiddenUI(std::string mapName)
+{
+}
+
+void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float posY)
+{
+	GameObject* item = FindObject<GameObject>("UI_2D", ui2dName);
+	item->SetPosition(posX / Core::g_DisplayWidth, posY / Core::g_DisplayHeight, 1);
+
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[ui2dName], AppContext->m_RItemsVec);
 }

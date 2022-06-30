@@ -32,6 +32,30 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
 
+void GraphicsContext::Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
+{
+    if (!objInfo) return;
+
+	const std::map<std::string, UINT>& info = objInfo->GetinstanceKeymap();
+	int visibleInstanceCount = 0;
+	for(auto& i : info)
+	{ 
+		
+		if (rItems[i.second]->m_IsVisible) {
+
+			XMFLOAT2 ratio = rItems[i.second]->m_positionRatio;
+			if (Core::g_DisplayWidth * ratio.x != rItems[i.second]->m_World._41) {
+			
+				rItems[i.second]->m_World._41 = Core::g_DisplayWidth * ratio.x;
+			}
+			if (Core::g_DisplayHeight * ratio.y != rItems[i.second]->m_World._42)
+				rItems[i.second]->m_World._42 = Core::g_DisplayHeight * ratio.y;
+		}
+	}
+
+
+}
+
 void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
 {
 	if (!objInfo) return;

@@ -17,6 +17,7 @@ namespace Graphics
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_DebugPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
 
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ShadowOpaquePSO;
@@ -280,6 +281,9 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
+	m_Shaders["uiVS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["uiPS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "PS", "ps_5_1");
+
 	m_Shaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
 	m_Shaders["shadowOpaquePS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
@@ -309,6 +313,13 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 44, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "WEIGHTS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 56, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 68, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
+	m_UI_InputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 	};
 
 	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_1");
@@ -402,6 +413,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.SampleDesc.Quality = g_4xMsaaState ? (g_4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
+	
 	//
 	// PSO for BB pass.
 	//
@@ -512,6 +524,41 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	};
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&debugPsoDesc, IID_PPV_ARGS(&g_DebugPSO)));
 
+	//
+	// PSO for UI
+	//
+	D3D12_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(D3D12_BLEND_DESC));
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = false;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC uiPsoDesc = opaquePsoDesc;
+	uiPsoDesc.InputLayout = { m_UI_InputLayout.data(), (UINT)m_UI_InputLayout.size() };
+	uiPsoDesc.BlendState = blendDesc;
+	uiPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+	uiPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	uiPsoDesc.pRootSignature = m_RenderRS.Get();
+	uiPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["uiVS"]->GetBufferPointer()),
+		m_Shaders["uiVS"]->GetBufferSize()
+	};
+	uiPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["uiPS"]->GetBufferPointer()),
+		m_Shaders["uiPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&uiPsoDesc, IID_PPV_ARGS(&g_UIPSO)));
 
 	//
 	// PSO for horizontal blur

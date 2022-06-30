@@ -51,6 +51,8 @@ public:
 public:
 	bool m_IsVisible = false;
 
+	XMFLOAT2 m_positionRatio = { 0.f, 0.f };
+
 	DirectX::XMFLOAT4X4 m_World;
 	DirectX::XMFLOAT4X4 m_TexTransform;
 

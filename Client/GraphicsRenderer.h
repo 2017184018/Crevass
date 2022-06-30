@@ -60,6 +60,7 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Instancing_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Billboard_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Skinned_InputLayout;
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_UI_InputLayout;
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_BB_InputLayout;
 

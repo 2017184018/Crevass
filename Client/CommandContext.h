@@ -53,6 +53,8 @@ public:
 public:
 	void BuildInstanceBuffer(ObjectInfo* objInfo);
 
+	void Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
+
 	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
 	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems);
 	

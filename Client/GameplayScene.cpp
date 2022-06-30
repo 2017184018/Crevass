@@ -32,8 +32,10 @@ void GameplayScene::Initialize()
 	AppContext->CreateBackground();
 	AppContext->CreateSnowmans();
 	AppContext->CreateHail();
+	AppContext->CreateUI2D("hp", "hp", 18, 0.f, 0.f, 30000.f, 15550.5f);
 	AppContext->CreateWaterDrop();
-	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
+//	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
+	
 	for (int i = 0; i < 25; ++i) {
 		//IsShake[i] = false;
 		//IsRight[i] = true;
@@ -249,7 +251,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			if (i == m_PlayerID)
 			{
 				m_Users[i]->m_PlayerController->SetIsFall();
-				BlurCnt = 0;
 				GraphicsContext::GetApp()->OnBlurEffect(false);
 				IsFall[m_PlayerID] = false;
 				if (Lifecnt > 0) {
@@ -370,7 +371,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static float time = 0;
 		static int tmpidx = -1;
 		time += fDeltaTime;
-		BlurCnt = 3;
 		GraphicsContext::GetApp()->OnBlurEffect(true);
 		if (time >= 3) {
 			time = 0;
@@ -438,6 +438,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Fox, MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
+	
+	
+	/*UI*/
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateUIPassCB(0.75f);
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
@@ -461,7 +467,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
-
+	
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
@@ -478,6 +484,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["waterdrop"], AppContext->m_RItemsVec);
+
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
@@ -537,6 +544,12 @@ void GameplayScene::Render()
 	/*GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);*/
 
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+	/* UI */
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+
+
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
@@ -573,18 +586,6 @@ void GameplayScene::Render()
 
 	GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
 
-	//mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
-	//	Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
-
-	////Prepare to copy blurred output to the back buffer.
-	//g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-	//	D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
-
-	//g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
-
-	// Transition to PRESENT state.
-	/*g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));*/
 }
 
 void GameplayScene::RenderUI()

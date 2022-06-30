@@ -72,6 +72,7 @@ public:
 	void CreateBackground();
 	void CreateHail();
 	void CreateWaterDrop();
+	void CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY);
 
 	void DisplayProps(std::string mapName);
 	void HiddenBlocks();
@@ -81,8 +82,10 @@ public:
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName);
 
-	//void DisplayUI(std::string mapName);
-	//void HiddenUI(std::string mapName);
+	void DisplayUI(std::string mapName);
+	void HiddenUI(std::string mapName);
+
+	void SetUI2DPosition(std::string ui2dName, float posX, float posY);
 
 
 public:

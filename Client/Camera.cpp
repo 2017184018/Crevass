@@ -273,7 +273,7 @@ void Camera::SetLens(float fovY, float aspect, float zn, float zf)
 	XMStoreFloat4x4(&mProj, P);
 
 	// Ortho
-	XMMATRIX O = DirectX::XMMatrixOrthographicLH(Core::g_DisplayWidth, Core::g_DisplayHeight, mNearZ, mFarZ);
+	XMMATRIX O = DirectX::XMMatrixOrthographicLH(Core::g_DisplayWidth, Core::g_DisplayHeight, 0.f, 1.f);
 	XMStoreFloat4x4(&mOrtho, O);
 
 }

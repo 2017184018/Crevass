@@ -11,7 +11,7 @@ namespace Graphics
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> 	g_DebugPSO;
-
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
 
@@ -71,9 +71,6 @@ public:
 	UINT iglooLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
 	bool IsFall[3] = { 0, };		// 블러링, 높은 물결
-
-	UINT BlurCnt = 0;
-
 
 	bool BlockIn = false;		//블록 한번만 밟게
 	int tmp1 = -1;
