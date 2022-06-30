@@ -189,6 +189,48 @@ void MaterialReference::BuildMaterials()
 	waterdrop->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	waterdrop->Roughness = 1.0f;
 
+	auto UI_hp = std::make_unique<Material>();
+	UI_hp->MatCBIndex = 19;
+	UI_hp->DiffuseSrvHeapIndex = 19;
+	UI_hp->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_hp->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_hp->Roughness = 1.0f;
+
+	auto UI_Penguin = std::make_unique<Material>();
+	UI_Penguin->MatCBIndex = 20;
+	UI_Penguin->DiffuseSrvHeapIndex = 20;
+	UI_Penguin->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Penguin->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Penguin->Roughness = 1.0f;
+
+	auto UI_Husky = std::make_unique<Material>();
+	UI_Husky->MatCBIndex = 21;
+	UI_Husky->DiffuseSrvHeapIndex = 21;
+	UI_Husky->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Husky->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Husky->Roughness = 1.0f;
+
+	auto UI_Seal= std::make_unique<Material>();
+	UI_Seal->MatCBIndex = 22;
+	UI_Seal->DiffuseSrvHeapIndex = 22;
+	UI_Seal->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Seal->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Seal->Roughness = 1.0f;
+
+	auto UI_bear = std::make_unique<Material>();
+	UI_bear->MatCBIndex = 23;
+	UI_bear->DiffuseSrvHeapIndex = 23;
+	UI_bear->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_bear->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_bear->Roughness = 1.0f;
+
+	auto UI_Fox = std::make_unique<Material>();
+	UI_Fox->MatCBIndex = 24;
+	UI_Fox->DiffuseSrvHeapIndex = 24;
+	UI_Fox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Fox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Fox->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -209,4 +251,10 @@ void MaterialReference::BuildMaterials()
 	m_Materials["lobby5"] = std::move(lobby5);
 	m_Materials["bricks0"] = std::move(bricks0);
 	m_Materials["waterdrop"] = std::move(waterdrop);
+	m_Materials["UI_Hp"] = std::move(UI_hp);
+	m_Materials["UI_Penguin"] = std::move(UI_Penguin);
+	m_Materials["UI_Husky"] = std::move(UI_Husky);
+	m_Materials["UI_Seal"] = std::move(UI_Seal);
+	m_Materials["UI_Bear"] = std::move(UI_bear);
+	m_Materials["UI_Fox"] = std::move(UI_Fox);
 }

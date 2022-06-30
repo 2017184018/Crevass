@@ -115,6 +115,12 @@ void GraphicsRenderer::LoadTextures()
 		"lobby4",
 		"lobby5",
 		"waterdrop",
+		"UI_Hp",
+		"UI_Penguin",
+		"UI_Husky",
+		"UI_Seal",
+		"UI_Bear",
+		"UI_Fox"
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -138,6 +144,12 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/lobby4.dds",
 		L"./Textures/lobby5.dds",
 		L"./Textures/waterdrop.dds",
+		L"./Textures/ingame/hp.dds",
+		L"./Textures/ingame/penguin_ui.dds",
+		L"./Textures/ingame/husky_ui.dds",
+		L"./Textures/ingame/seal_ui.dds",
+	    L"./Textures/ingame/bear_ui.dds",
+		L"./Textures/ingame/fox_ui.dds"
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -190,7 +202,13 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	m_Textures["lobby3"]->Resource,
 	m_Textures["lobby4"]->Resource,
 	m_Textures["lobby5"]->Resource,
-	m_Textures["waterdrop"]->Resource
+	m_Textures["waterdrop"]->Resource,
+	m_Textures["UI_Hp"]->Resource,
+	m_Textures["UI_Penguin"]->Resource,
+	m_Textures["UI_Husky"]->Resource,
+	m_Textures["UI_Seal"]->Resource,
+	m_Textures["UI_Bear"]->Resource,
+	m_Textures["UI_Fox"]->Resource
 	};
 	auto snowcube1024 = m_Textures["snowcube1024"]->Resource;
 
@@ -303,7 +321,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,17, 2, 0);		//�ؽ��� ��
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,23, 2, 0);		//�ؽ��� ��
 
 	CD3DX12_DESCRIPTOR_RANGE texTable2;
 	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);
