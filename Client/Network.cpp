@@ -311,6 +311,13 @@ void Network::ProcessPacket(char* packet_buffer)
 		FoxSkill = packet.foxskill;
 		break;
 	}
+	case SC_HUSKY_SKILL:
+	{
+		sc_packet_huskyskill packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		HuskySkill = packet.huskyskill;
+		break;
+	}
 	case SC_GAMEOVER:
 	{
 		std::cout << "game over" << std::endl;
@@ -443,4 +450,9 @@ int Network::GetPlayerSnowmanNum(int num)const
 bool Network::GetFoxSkill() const
 {
 	return FoxSkill;
+}
+
+bool Network::GetHuskySkill() const
+{
+	return HuskySkill;
 }

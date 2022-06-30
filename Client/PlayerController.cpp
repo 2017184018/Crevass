@@ -251,7 +251,7 @@ void PlayerController::OnKeyPressed()
 
 		if (InputHandler::IsKeyDown('D')) {
 			//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
-
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Skill), m_Owner);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_SKILL);
 		}
 
@@ -365,6 +365,7 @@ void PlayerController::OnKeyReleased()
 		if (InputHandler::IsKeyUp('S')) {
 		}
 		if (InputHandler::IsKeyUp('D')) {
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Skill));
 		}
 		break;
 	}

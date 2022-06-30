@@ -283,3 +283,12 @@ void SendFoxSkill(bool FoxSkill) {
 
 	SendPacket(&packet);
 }
+
+void SendHuskySkill(bool HuskySkill) {
+	sc_packet_huskyskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_HUSKY_SKILL;
+	packet.huskyskill = HuskySkill;
+
+	SendPacket(&packet);
+}

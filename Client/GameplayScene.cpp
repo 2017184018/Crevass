@@ -122,18 +122,25 @@ void GameplayScene::Update(const float& fDeltaTime)
 	{
 		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
 		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
-		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.2) {
-			for (int j = 3; j >= 0; --j) {
-				if (j != 0) {
-					huskyimagepos[j] = huskyimagepos[j - 1];
-					huskyimagerota[j] = huskyimagerota[j - 1];
+		if (g_pFramework->m_pNetwork->GetHuskySkill()) {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.1f) {
+				for (int j = 3; j >= 0; --j) {
+					if (j != 0) {
+						huskyimagepos[j] = huskyimagepos[j - 1];
+						huskyimagerota[j] = huskyimagerota[j - 1];
+					}
+					else {
+						huskyimagepos[j] = g_pFramework->m_pNetwork->GetPlayerPos(i);
+						const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
+						huskyimagerota[j] = AppContext->m_RItemsVec[info.begin()->second]->m_World;
+						time = 0.0f;
+					}
 				}
-				else {
-					huskyimagepos[j] = g_pFramework->m_pNetwork->GetPlayerPos(i);
-					const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
-					huskyimagerota[j] = AppContext->m_RItemsVec[info.begin()->second]->m_World;
-					time = 0.0f;
-				}
+			}
+		}
+		else {
+			for (int j = 0; j < 4; ++j) {
+				huskyimagepos[j] = XMFLOAT3(-1000, -1000, -1000);
 			}
 		}
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
@@ -157,7 +164,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
 				m_Users[i]->is_StartFallAnim = false;
 				break;
-
+			case ANIM_SKILL:
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_SKILL);
+				m_Users[i]->is_StartFallAnim = false;
+				break;
 			}
 
 		}
@@ -362,16 +372,19 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[1].x;
 		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[1].y;
 		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[1].z;
+		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage1"]->MatCBIndex;
 		++i;
 		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[2];
 		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[2].x;
 		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[2].y;
 		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[2].z;
+		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage2"]->MatCBIndex;
 		++i;
 		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[3];
 		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[3].x;
 		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[3].y;
 		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[3].z;
+		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage3"]->MatCBIndex;
 
 
 	}
@@ -533,14 +546,14 @@ void GameplayScene::Render()
 
 	if (!ty[0])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	if (!g_pFramework->m_pNetwork->GetFoxSkill()) {
+		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
+		AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ArcticFox"]->MatCBIndex;
+	}
 	if (!ty[1] && !(g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) != CHARACTER_ARCTICFOX)) {
 		if (g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
 			const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
 			AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["TranslucentArcticFox"]->MatCBIndex;
-		}
-		else if (!g_pFramework->m_pNetwork->GetFoxSkill()) {
-			const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
-			AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ArcticFox"]->MatCBIndex;
 		}
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
 	}

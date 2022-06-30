@@ -1,6 +1,6 @@
 #pragma once
 
-enum class MoveState : int { Idle = 0, Forward, Backward, LeftStrafe, RightStrafe, Jump, Attack ,Fall};
+enum class MoveState : int { Idle = 0, Forward, Backward, LeftStrafe, RightStrafe, Jump, Attack, Fall, Skill };
 
 class Character;
 class ICommand

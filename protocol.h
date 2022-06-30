@@ -16,6 +16,7 @@
 #define SC_TIME				13
 #define SC_HAIL				14
 #define SC_FOX_SKILL				15
+#define SC_HUSKY_SKILL				16
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -57,6 +58,7 @@
 #define ANIM_ATTACK			2
 #define ANIM_JUMP		    3
 #define ANIM_FALL			4
+#define ANIM_SKILL			5
 
 // player type
 #define CHARACTER_NONE 0
@@ -178,6 +180,12 @@ struct sc_packet_foxskill
 	short size;
 	char type;
 	bool foxskill;
+};
+struct sc_packet_huskyskill
+{
+	short size;
+	char type;
+	bool huskyskill;
 };
 
 /* Client to Server */

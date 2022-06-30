@@ -35,6 +35,11 @@ void Character::SetState(const float deltaT)
 			m_BlendFrame = 1.0f;
 			break;
 
+		case STATE_SKILL:
+			m_PlayerState = STATE_IDLE_TO_SKILL;
+			m_MapAnimData["Skill"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 
@@ -64,6 +69,11 @@ void Character::SetState(const float deltaT)
 			m_BlendFrame = 1.0f;
 			break;
 
+		case STATE_SKILL:
+			m_PlayerState = STATE_FORWARD_TO_SKILL;
+			m_MapAnimData["Skill"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 	case STATE_JUMP:
@@ -92,6 +102,11 @@ void Character::SetState(const float deltaT)
 			m_BlendFrame = 1.0f;
 			break;
 
+		case STATE_SKILL:
+			m_PlayerState = STATE_JUMP_TO_SKILL;
+			m_MapAnimData["Skill"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 	case STATE_ATTACK:
@@ -120,6 +135,11 @@ void Character::SetState(const float deltaT)
 			m_BlendFrame = 1.0f;
 			break;
 
+		case STATE_SKILL:
+			m_PlayerState = STATE_ATTACK_TO_SKILL;
+			m_MapAnimData["Skill"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 
@@ -149,6 +169,45 @@ void Character::SetState(const float deltaT)
 			m_BlendFrame = 1.0f;
 			break;
 
+		case STATE_SKILL:
+			m_PlayerState = STATE_FALL_TO_SKILL;
+			m_MapAnimData["Skill"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+		}
+		break;
+
+	case STATE_SKILL:
+		switch (m_KeyState)
+		{
+		case STATE_IDLE:
+			m_PlayerState = STATE_SKILL_TO_IDLE;
+			m_MapAnimData["Idle"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+		case STATE_FORWARD:
+			m_PlayerState = STATE_SKILL_TO_FORWARD;
+			m_MapAnimData["Run"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		case STATE_JUMP:
+			m_PlayerState = STATE_SKILL_TO_JUMP;
+			m_MapAnimData["Jump"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		case STATE_ATTACK:
+			m_PlayerState = STATE_SKILL_TO_ATTACK;
+			m_MapAnimData["Attack"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+
+		case STATE_FALL:
+			m_PlayerState = STATE_SKILL_TO_FALL;
+			m_MapAnimData["Fall"]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 
@@ -156,6 +215,7 @@ void Character::SetState(const float deltaT)
 	case STATE_ATTACK_TO_FORWARD:
 	case STATE_JUMP_TO_FORWARD:
 	case STATE_IDLE_TO_FORWARD:
+	case STATE_SKILL_TO_FORWARD:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_FORWARD;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -165,6 +225,7 @@ void Character::SetState(const float deltaT)
 	case STATE_ATTACK_TO_IDLE:
 	case STATE_FORWARD_TO_IDLE:
 	case STATE_JUMP_TO_IDLE:
+	case STATE_SKILL_TO_IDLE:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_IDLE;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -173,6 +234,7 @@ void Character::SetState(const float deltaT)
 	case STATE_ATTACK_TO_JUMP:
 	case STATE_FORWARD_TO_JUMP:
 	case STATE_IDLE_TO_JUMP:
+	case STATE_SKILL_TO_JUMP:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_JUMP;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -182,6 +244,7 @@ void Character::SetState(const float deltaT)
 	case STATE_JUMP_TO_ATTACK:
 	case STATE_FORWARD_TO_ATTACK:
 	case STATE_IDLE_TO_ATTACK:
+	case STATE_SKILL_TO_ATTACK:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_ATTACK;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -191,8 +254,19 @@ void Character::SetState(const float deltaT)
 	case STATE_FORWARD_TO_FALL:
 	case STATE_JUMP_TO_FALL:
 	case STATE_ATTACK_TO_FALL:
+	case STATE_SKILL_TO_FALL:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_FALL;
+		m_BlendFrame += 60.f / (1.f / deltaT);
+		break;
+
+	case STATE_IDLE_TO_SKILL:
+	case STATE_FORWARD_TO_SKILL:
+	case STATE_JUMP_TO_SKILL:
+	case STATE_ATTACK_TO_SKILL:
+	case STATE_FALL_TO_SKILL:
+		if (m_BlendFrame > m_MaxBlendFrames)
+			m_PlayerState = STATE_SKILL;
 		m_BlendFrame += 60.f / (1.f / deltaT);
 		break;
 	}
@@ -239,6 +313,13 @@ void Character::UpdateBoneTransforms()
 			m_MapAnimData["Fall"]->m_Time
 		);
 		break;
+	case Character::STATE_SKILL:
+		strState = "Skill";
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time
+		);
+		break;
 	case Character::STATE_IDLE_TO_FORWARD:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Idle"]->m_Name,
@@ -272,6 +353,15 @@ void Character::UpdateBoneTransforms()
 			m_MapAnimData["Idle"]->m_Time,
 			m_MapAnimData["Fall"]->m_Name,
 			m_MapAnimData["Fall"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_IDLE_TO_SKILL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Idle"]->m_Name,
+			m_MapAnimData["Idle"]->m_Time,
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
@@ -311,6 +401,15 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
+	case Character::STATE_FORWARD_TO_SKILL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Run"]->m_Name,
+			m_MapAnimData["Run"]->m_Time,
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
 	case Character::STATE_JUMP_TO_IDLE:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Jump"]->m_Name,
@@ -347,8 +446,15 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
-	
-	
+		case Character::STATE_JUMP_TO_SKILL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Jump"]->m_Name,
+			m_MapAnimData["Jump"]->m_Time,
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;	
 	case Character::STATE_ATTACK_TO_FORWARD:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Attack"]->m_Name,
@@ -382,6 +488,15 @@ void Character::UpdateBoneTransforms()
 			m_MapAnimData["Attack"]->m_Time,
 			m_MapAnimData["Fall"]->m_Name,
 			m_MapAnimData["Fall"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_ATTACK_TO_SKILL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Attack"]->m_Name,
+			m_MapAnimData["Attack"]->m_Time,
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
@@ -422,6 +537,60 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
+	case Character::STATE_FALL_TO_SKILL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+case Character::STATE_SKILL_TO_FORWARD:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			m_MapAnimData["Run"]->m_Name,
+			m_MapAnimData["Run"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_SKILL_TO_JUMP:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			m_MapAnimData["Jump"]->m_Name,
+			m_MapAnimData["Jump"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_SKILL_TO_IDLE:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			m_MapAnimData["Idle"]->m_Name,
+			m_MapAnimData["Idle"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_SKILL_TO_ATTACK:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			m_MapAnimData["Attack"]->m_Name,
+			m_MapAnimData["Attack"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
+	case Character::STATE_SKILL_TO_FALL:
+		m_SkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData["Skill"]->m_Name,
+			m_MapAnimData["Skill"]->m_Time,
+			m_MapAnimData["Fall"]->m_Name,
+			m_MapAnimData["Fall"]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames)
+		);
+		break;
 	}
 
 	if (strState == "")
@@ -454,6 +623,7 @@ Character::Character( std::string type, std::string id) :
 	m_MapAnimData["Jump"] = std::make_unique<AnimData>("Jump", 0.f);
 	m_MapAnimData["Attack"] = std::make_unique<AnimData>("Attack", 0.f);
 	m_MapAnimData["Fall"] = std::make_unique<AnimData>("Fall", 0.f);
+	m_MapAnimData["Skill"] = std::make_unique<AnimData>("Skill", 0.f);
 	m_MaxBlendFrames = 10.f;
 }
 

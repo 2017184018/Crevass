@@ -44,6 +44,7 @@ public:
 	float JumpTimeCount = 0.0f;
 	bool is_hitted = false;
 	float hittedTimeCount = 0.0f;
+	bool is_Skill = false;
 
 	float gravity = 0.0f;
 	bool is_reset = false;
@@ -66,7 +67,7 @@ public:
 
 
 private:
-	float Speed = 1.0f * 1.5f;
+	float Speed = 1.5f;
 	float Crossspeed = cos(45) * 1.5f;
-	float Hittedspeed = 1.0f * 1.5f;
+	float Hittedspeed = 0.5f;
 };

@@ -20,6 +20,7 @@
 #define ANIM_MOVE		1
 #define ANIM_ATTACK		2
 #define ANIM_JUMP		3
+#define ANIM_SKILL			5
 
 #define MAXPLAYER		3
 

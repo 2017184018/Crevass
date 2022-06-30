@@ -28,7 +28,7 @@ bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 Hail hails[5];
 DirectX::XMFLOAT3 OriginBlockExtents;
-bool IsSkillPushed[3] = { false,false,false };		//스킬 키 눌렀는지
+//bool IsSkillPushed[3] = { false,false,false };		//스킬 키 눌렀는지
 
 int CalcTime = 0;
 
@@ -124,7 +124,7 @@ void Update(vector<Player>& player)
 			}
 		}
 		for (int j = 0; j < numOfCls; ++j) {
-			if (i != j && !(TypeName[i] == "husky" && IsSkillPushed[i])) {
+			if (i != j && !(TypeName[i] == "husky" && player[i].is_Skill)) {
 				g_boundaries[TypeName[i]]->Center.x += saveX;
 				g_boundaries[TypeName[i]]->Center.z += saveZ;
 				if (g_boundaries[TypeName[i]]->Intersects(*g_boundaries[TypeName[j]])) {
@@ -406,7 +406,31 @@ void ProcessClients()
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
 		phyPlayers[i].Hit_BB.Radius = g_boundaries[TypeName[i]]->Extents.z / 2;
-
+		if (players[i].Character_type == CHARACTER_HUSKY) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 4.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 4.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 4.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_PENGUIN) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 2.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 2.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 2.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_ARCTICFOX) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 5.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 5.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 5.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_SEAL) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 3.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 3.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 3.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_POLARBEAR) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 1.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 1.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 1.0f);
+		}
 	}
 
 	using FpFloatMilliseconds = duration<float, milliseconds::period>;
@@ -556,7 +580,7 @@ void ProcessClients()
 						IsInteract[phyMsg.id] = true;
 						break;
 					case KEY_SKILL:
-						IsSkillPushed[phyMsg.id] = true;
+						phyPlayers[phyMsg.id].is_Skill = true;
 						break;
 					}
 				}
@@ -763,7 +787,7 @@ void ProcessClients()
 				g_boundaries["snowman" + std::to_string(i)]->Center.z = TempSnowmanLocation[i] % 5 * 200;
 			}
 			for (int j = 0; j < numOfCls; ++j) {		//상호작용
-				if (IsInteract[j]) {
+				if (IsInteract[j] && !phyPlayers[j].is_Skill) {
 					if (g_boundaries["igloo0"]->Intersects(*g_boundaries[TypeName[j]])) {
 						IsInteracting[j] = true;
 						phyPlayers[j].m_pos = DirectX::XMFLOAT3(g_boundaries["igloo1"]->Center.x, g_boundaries["igloo1"]->Center.y + 10, g_boundaries["igloo1"]->Center.z);
@@ -806,8 +830,8 @@ void ProcessClients()
 							HideInSnowman[3] = !HideInSnowman[3];
 						}
 					}
-					IsInteract[j] = false;
 				}
+				IsInteract[j] = false;
 			}
 
 			//블록 block
@@ -1061,7 +1085,7 @@ void ProcessClients()
 								if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]]) && phyPlayers[i].SnowmanNum == -1) {
 									phyPlayers[i].is_hitted = true;
 									if (TypeName[i] == "husky") {
-										IsSkillPushed[i] = false;
+										phyPlayers[j].is_Skill = false;
 										phyPlayers[i].SetSpeed(1.0f * 1.5f);
 										phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
 									}
@@ -1109,7 +1133,7 @@ void ProcessClients()
 			//   Update(phyPlayers)
 			{	//skill
 				for (int i = 0; i < numOfCls; ++i) {
-					if (IsSkillPushed[i] && phyPlayers[i].SnowmanNum == -1) {
+					if (phyPlayers[i].is_Skill && phyPlayers[i].SnowmanNum == -1) {
 						static UINT SkillCoolTime = 0;
 						if (TypeName[i] == "Penguin") {
 							if (phyPlayers[i].m_pos.y <= 200) {
@@ -1169,9 +1193,10 @@ void ProcessClients()
 										HittedIdx = j;
 									}
 								}
+								SendHuskySkill(true);
 							}
 							else if (SkillCoolTime > 80) {
-								IsSkillPushed[i] = false;
+								phyPlayers[i].is_Skill = false;
 								SkillCoolTime = 0;
 								phyPlayers[i].SetKeyW(false);
 								phyPlayers[i].SetKeyA(false);
@@ -1182,10 +1207,11 @@ void ProcessClients()
 								if (HittedIdx != -1)
 									phyPlayers[HittedIdx].SetHittedSpeed(1.0f * 1.5f);
 								HittedIdx = -1;
+								SendHuskySkill(false);
 							}
 							else {
 								if (tmp2[i] != -1) {
-									IsSkillPushed[i] = false;
+									phyPlayers[i].is_Skill = false;
 									SkillCoolTime = 0;
 									phyPlayers[i].SetKeyW(false);
 									phyPlayers[i].SetKeyA(false);
@@ -1234,18 +1260,18 @@ void ProcessClients()
 									}
 								}
 							}
-							IsSkillPushed[i] = false;
+							phyPlayers[i].is_Skill = false;
 							SkillCoolTime = 0;
 						}
 						SkillCoolTime += 1;
 						if (SkillCoolTime >= 300) {
-							IsSkillPushed[i] = false;
+							phyPlayers[i].is_Skill = false;
 							SkillCoolTime = 0;
 							SendFoxSkill(false);
 						}
 					}
 					else {
-						IsSkillPushed[i] = false;
+						phyPlayers[i].is_Skill = false;
 					}
 				}
 			}

@@ -72,6 +72,9 @@ char Player::GetAnimType()
 	if( is_jump ){
 		return ANIM_JUMP;
 	}
+	if (is_Skill) {
+		return ANIM_SKILL;
+	}
 	if (m_keyW)
 		return ANIM_MOVE;
 	else if (m_keyS)
