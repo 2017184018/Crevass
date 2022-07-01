@@ -33,6 +33,10 @@ namespace Core
 	extern UINT iglooIndex[2];
 	extern UINT SnowmanIndex[2];
 	extern MainFramework* g_pFramework;
+	extern D3D12_VIEWPORT mMinimapViewport;
+	extern D3D12_RECT mMinimapScissorRect;
+	extern D3D12_VIEWPORT mScreenViewport;
+	extern D3D12_RECT mScissorRect;
 }
 
 class Character;

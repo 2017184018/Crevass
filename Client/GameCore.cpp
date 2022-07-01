@@ -49,6 +49,11 @@ namespace Core
 	UINT SnowmanIndex[4];
 	bool Inactive = false;
 	int SNUM=210;
+
+	D3D12_VIEWPORT mScreenViewport;
+	D3D12_RECT mScissorRect;
+	D3D12_VIEWPORT mMinimapViewport;
+	D3D12_RECT mMinimapScissorRect;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)
@@ -635,7 +640,15 @@ void GameCore::OnResize()
 	mScreenViewport.MinDepth = 0.0f;
 	mScreenViewport.MaxDepth = 1.0f;
 
+	mMinimapViewport.TopLeftX = static_cast<float>(g_DisplayWidth)-200;
+	mMinimapViewport.TopLeftY = 0;
+	mMinimapViewport.Width = 200;
+	mMinimapViewport.Height = 200;
+	mMinimapViewport.MinDepth = 0.0f;
+	mMinimapViewport.MaxDepth = 1.0f;
+
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
+	mMinimapScissorRect = { g_DisplayWidth-200, 0, g_DisplayWidth, 200 };
 
 	if (mBlurFilter != nullptr)
 	{

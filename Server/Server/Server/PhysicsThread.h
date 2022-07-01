@@ -1211,14 +1211,9 @@ void ProcessClients()
 							}
 							else {
 								if (tmp2[i] != -1) {
-									phyPlayers[i].is_Skill = false;
-									SkillCoolTime = 0;
-									phyPlayers[i].SetKeyW(false);
-									phyPlayers[i].SetKeyA(false);
-									phyPlayers[i].SetKeyS(false);
-									phyPlayers[i].SetKeyD(false);
-									phyPlayers[i].SetSpeed(1.0f * 1.5f);
-									phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+									if (20 < phyPlayers[i].GetPos().y && phyPlayers[i].GetPos().y < 30) {
+										phyPlayers[i].m_pos.y = 50;
+									}
 								}
 							}
 						}

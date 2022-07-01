@@ -102,7 +102,7 @@ void PlayerController::HandleInput(const float deltaT)
 
 			tmp = 0;
 		}
-		else if(key_switch_up ==0){
+		else if (key_switch_up == 0) {
 			key_switch_up = 1;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 		}
@@ -113,7 +113,7 @@ void PlayerController::HandleInput(const float deltaT)
 			key_switch_left = 0;
 			tmp = 6;
 		}
-				else  if (key_switch_left == 0) {
+		else  if (key_switch_left == 0) {
 			key_switch_left = 1;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 		}
@@ -135,16 +135,16 @@ void PlayerController::HandleInput(const float deltaT)
 			key_switch_right = 0;
 			tmp = 2;
 		}
-		else if (key_switch_right == 0){
+		else if (key_switch_right == 0) {
 			key_switch_right = 1;
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
 		}
 
-		if ((GetAsyncKeyState(VK_RIGHT) & 0x8000 )&& (GetAsyncKeyState(VK_UP) & 0x8000)) {
+		if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && (GetAsyncKeyState(VK_UP) & 0x8000)) {
 			tmp = 1;
 		}
 
-		if ((GetAsyncKeyState(VK_DOWN) & 0x8000 )&& (GetAsyncKeyState(VK_RIGHT) & 0x8000)) {
+		if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && (GetAsyncKeyState(VK_RIGHT) & 0x8000)) {
 			tmp = 3;
 		}
 
@@ -203,7 +203,13 @@ void PlayerController::OnKeyPressed()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim|| m_Owner->is_StartFallAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim ||
+		CommandCenter::GetApp()->m_StartSkillAnim || m_Owner->is_StartFallAnim) return;
+
+	if (CommandCenter::GetApp()->IsSkillEnd) {
+		m_Owner->IsSkill = false;
+		CommandCenter::GetApp()->IsSkillEnd = false;
+	}
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
@@ -213,13 +219,13 @@ void PlayerController::OnKeyPressed()
 		if (InputHandler::IsKeyDown('A')) {
 			//HIT박스 위치 업데이트 
 			if (m_Owner->m_CurrentAngle == 0) {
-				
+
 				m_Owner->m_HitBox.Center = m_Owner->GetPosition();
 				m_Owner->m_HitBox.Center.z += m_Owner->m_HitBox.Extents.z;
 				//AppContext->FindObject<GameObject>("huskyBB", "huskyBB0")->SetPosition(m_Owner->m_HitBox.Center);
 
 			}
-			else if(m_Owner->m_CurrentAngle == 90)
+			else if (m_Owner->m_CurrentAngle == 90)
 			{
 				m_Owner->m_HitBox.Center = m_Owner->GetPosition();
 				m_Owner->m_HitBox.Center.x += m_Owner->m_HitBox.Extents.z;
@@ -240,12 +246,12 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->m_StartAttackAnim = true;
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_ATTACK);
-			
+
 		}
 
 		if (InputHandler::IsKeyDown('S')) {
-		//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
-			
+			//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
+
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_INTERACT);
 		}
 
@@ -253,29 +259,35 @@ void PlayerController::OnKeyPressed()
 			//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Skill), m_Owner);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_SKILL);
+			CommandCenter::GetApp()->m_StartSkillAnim = true;
+			m_Owner->IsSkill = true;
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			if (!m_Owner->IsSkill)
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 0;
 		}
 
 		if (InputHandler::IsKeyDown(VK_LEFT)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
+			if (!m_Owner->IsSkill)
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 6;
 		}
 
 		if (InputHandler::IsKeyDown(VK_DOWN)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
+			if (!m_Owner->IsSkill)
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 4;
 		}
 
 		if (InputHandler::IsKeyDown(VK_RIGHT)) {
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
+			if (!m_Owner->IsSkill)
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 2;
 		}
@@ -316,7 +328,8 @@ void PlayerController::OnKeyReleased()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim || m_Owner->is_StartFallAnim) return;
+	if (CommandCenter::GetApp()->m_StartJumpAnim || CommandCenter::GetApp()->m_StartAttackAnim || CommandCenter::GetApp()->m_StartFallAnim ||
+		CommandCenter::GetApp()->m_StartSkillAnim || m_Owner->is_StartFallAnim) return;
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
@@ -325,42 +338,42 @@ void PlayerController::OnKeyReleased()
 		if (InputHandler::IsKeyUp(VK_UP))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
+			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_UP);
 
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp(VK_LEFT))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
+			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_LEFT_UP);
 
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp(VK_DOWN))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
+			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_DOWN_UP);
 
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp(VK_RIGHT))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
-		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
-			//g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
+			//	g_pFramework->m_pNetwork->Send(CS_PLAYER_RIGHT_UP);
+				//g_pFramework->m_pNetwork->Send(CS_PLAYER_IDLE);
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp('A')) {
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Attack));
+		//	CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Attack));
 		}
 		if (InputHandler::IsKeyUp('S')) {
 		}

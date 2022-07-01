@@ -140,4 +140,5 @@ private:
 
 	bool IsHide;
 	int SnowmanNum;
+	bool IsSkill = false;
 };
