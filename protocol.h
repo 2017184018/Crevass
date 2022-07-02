@@ -17,6 +17,7 @@
 #define SC_HAIL				14
 #define SC_FOX_SKILL				15
 #define SC_HUSKY_SKILL				16
+#define SC_PENGUIN_SKILL				17
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -79,6 +80,7 @@ struct Pro_Player {
 	char Character_type;
 	bool IsHide;
 	int SnowmanNum;
+	bool IsSkillCool;
 };
 
 struct Block {
@@ -186,6 +188,12 @@ struct sc_packet_huskyskill
 	short size;
 	char type;
 	bool huskyskill;
+};
+struct sc_packet_penguinskill
+{
+	short size;
+	char type;
+	bool penguinskill;
 };
 
 /* Client to Server */

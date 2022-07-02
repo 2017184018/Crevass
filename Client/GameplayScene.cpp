@@ -122,6 +122,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	{
 		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
 		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
+
 		if (g_pFramework->m_pNetwork->GetHuskySkill()) {
 			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.05f) {
 				for (int j = 3; j >= 0; --j) {
@@ -143,6 +144,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 				huskyimagepos[j] = XMFLOAT3(-1000, -1000, -1000);
 			}
 		}
+
+		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
+			m_Users[i]->m_PlayerController->SetLoop(g_pFramework->m_pNetwork->GetPenguinSkill());
+		}
+
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 		if (i != m_PlayerID) {//애니메이션은 나는 제외 
@@ -179,6 +185,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[i]->is_StartFallAnim = false;
 		}
 	}
+
+	m_Users[m_PlayerID]->m_PlayerController->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
 
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -572,7 +580,7 @@ void GameplayScene::Render()
 	if (!ty[4])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 
-	
+
 
 	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
 		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);

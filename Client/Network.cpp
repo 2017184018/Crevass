@@ -234,6 +234,7 @@ void Network::ProcessPacket(char* packet_buffer)
 			dir[i] = packet.players[i].dir;
 			PlayerHide[i] = packet.players[i].IsHide;
 			PlayerSnowmanHide[i] = packet.players[i].SnowmanNum;
+			PlayerSkillCool[i] = packet.players[i].IsSkillCool;
 		}
 		//	cout << packet.players[0].pos.x << endl;
 			//if (m_pGameInfo->m_ClientID == 0)
@@ -316,6 +317,13 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_huskyskill packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		HuskySkill = packet.huskyskill;
+		break;
+	}
+	case SC_PENGUIN_SKILL:
+	{
+		sc_packet_penguinskill packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		PenguinSkill = packet.penguinskill;
 		break;
 	}
 	case SC_GAMEOVER:
@@ -455,4 +463,14 @@ bool Network::GetFoxSkill() const
 bool Network::GetHuskySkill() const
 {
 	return HuskySkill;
+}
+
+bool Network::GetPenguinSkill() const
+{
+	return PenguinSkill;
+}
+
+bool Network::GetPlayerSkillCool(int num)const
+{
+	return PlayerSkillCool[num];
 }

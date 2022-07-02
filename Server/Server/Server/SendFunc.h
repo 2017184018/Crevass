@@ -292,3 +292,12 @@ void SendHuskySkill(bool HuskySkill) {
 
 	SendPacket(&packet);
 }
+
+void SendPenguinSkill(bool PenguinSkill) {
+	sc_packet_penguinskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_PENGUIN_SKILL;
+	packet.penguinskill = PenguinSkill;
+
+	SendPacket(&packet);
+}

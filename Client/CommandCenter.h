@@ -79,10 +79,12 @@ public:
 
 			if (m_SkillAnimTime < m_SkillDeltaT)
 			{
-				m_SkillDeltaT = 0;
-				m_StartSkillAnim = false;
-				PopCommand(static_cast<int>(MoveState::Skill));
-				IsSkillEnd = true;
+				if (!IsLoop) {
+					m_SkillDeltaT = 0;
+					m_StartSkillAnim = false;
+					PopCommand(static_cast<int>(MoveState::Skill));
+					IsSkillEnd = true;
+				}
 			}
 		}
 
@@ -113,5 +115,6 @@ public:
 	float	m_SkillDeltaT = 0;
 
 	bool IsSkillEnd = false;
+	bool IsLoop = false;
 };
 

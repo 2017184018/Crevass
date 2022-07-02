@@ -41,10 +41,13 @@ public:
 	bool is_attack = false;
 	float AttackTimeCount = 0.0f;
 	bool is_jump = false;
+	bool is_jumpanim = false;
 	float JumpTimeCount = 0.0f;
 	bool is_hitted = false;
 	float hittedTimeCount = 0.0f;
 	bool is_Skill = false;
+	bool is_Skillanim = false;
+	float SkillTimeCount = 0.0f;
 
 	float gravity = 0.0f;
 	bool is_reset = false;
@@ -64,7 +67,9 @@ public:
 	DirectX::BoundingBox BB;
 	DirectX::BoundingSphere Hit_BB;
 	char m_CharacterType;
-
+	UINT SkillTime = 0.f;
+	UINT SkillCoolTime = 0.f;
+	bool IsSkillCool = false;
 
 private:
 	float Speed = 1.5f;

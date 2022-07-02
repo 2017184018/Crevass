@@ -69,10 +69,10 @@ char Player::GetAnimType()
 	if(is_attack){
 		return ANIM_ATTACK;
 	}
-	if( is_jump ){
+	if( is_jumpanim ){
 		return ANIM_JUMP;
 	}
-	if (is_Skill) {
+	if (is_Skillanim) {
 		return ANIM_SKILL;
 	}
 	if (m_keyW)

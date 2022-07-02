@@ -575,12 +575,14 @@ void ProcessClients()
 					case KEY_JUMP:
 						if (phyPlayers[phyMsg.id].m_pos.y > -100 && phyPlayers[phyMsg.id].SnowmanNum == -1)
 							phyPlayers[phyMsg.id].is_jump = true;
+						phyPlayers[phyMsg.id].is_jumpanim = true;
 						break;
 					case KEY_INTERACT:
 						IsInteract[phyMsg.id] = true;
 						break;
 					case KEY_SKILL:
 						phyPlayers[phyMsg.id].is_Skill = true;
+						phyPlayers[phyMsg.id].is_Skillanim = true;
 						break;
 					}
 				}
@@ -630,15 +632,27 @@ void ProcessClients()
 					}
 				}
 
-				if (phyPlayers[i].is_jump == true)
+				if (phyPlayers[i].is_jumpanim == true)
 				{
 					phyPlayers[i].JumpTimeCount += 1.0f;
 					if (phyPlayers[i].JumpTimeCount > 60.0f)
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
-						//phyPlayers[i].is_jump = false;
+						phyPlayers[i].is_jumpanim = false;
 						players[i].anim = phyPlayers[i].GetAnimType();
 						//SendAnim(*players);   /
+					}
+				}
+
+				if (phyPlayers[i].is_Skillanim == true)
+				{
+					phyPlayers[i].SkillTimeCount += 1.0f;
+					if (phyPlayers[i].SkillTimeCount > 60.0f)
+					{
+						phyPlayers[i].SkillTimeCount = 0.0f;
+						if (TypeName[i] != "Penguin")
+							phyPlayers[i].is_Skillanim = false;
+						players[i].anim = phyPlayers[i].GetAnimType();
 					}
 				}
 
@@ -744,8 +758,11 @@ void ProcessClients()
 						phyPlayers[i].is_reset = false;
 						phyPlayers[i].ResetTimeCount = 0.0f;
 						phyPlayers[i].is_jump = false;
+						phyPlayers[i].is_jumpanim = false;
 						phyPlayers[i].is_hitted = false;
 						phyPlayers[i].is_attack = false;
+						phyPlayers[i].is_Skill = false;
+						phyPlayers[i].is_Skillanim = false;
 						int BlockTmpX;
 						int BlockTmpZ;
 						do {
@@ -841,10 +858,16 @@ void ProcessClients()
 					if (BlockCheck(i)) {
 						if (blocks[i].destuctioncnt != 3)
 							g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
-						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
+						if (tmp1[j] == -1 &&
+							phyPlayers[j].m_pos.x - 10 <= blocks[i].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[i].pos.x - 54 &&
+							phyPlayers[j].m_pos.z - 10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[i].pos.z - 54 &&
+							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60)
+						{
+							//	if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
 							tmp1[j] = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;
+							phyPlayers[j].is_jumpanim = false;
 							if (phyPlayers[j].CurrentBlockNum != i) {
 								phyPlayers[j].CurrentBlockNum = i;
 								phyPlayers[j].TimeWhileBlock = 0;
@@ -855,7 +878,12 @@ void ProcessClients()
 								BlockIn = true;
 							}
 						}
-						if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
+						if (tmp1[j] != -1 &&
+							!(phyPlayers[j].m_pos.x - 10 <= blocks[tmp1[j]].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[tmp1[j]].pos.x - 54 &&
+								phyPlayers[j].m_pos.z - 10 <= blocks[tmp1[j]].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[tmp1[j]].pos.z - 54 &&
+								phyPlayers[j].m_pos.y <= blocks[tmp1[j]].pos.y + 70))
+						{
+							//	if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
 							BlockIn = false;
 							//if (!phyPlayers[j].is_jump)
 							//   Gravity += 0.05;
@@ -873,6 +901,7 @@ void ProcessClients()
 							tmp2[j] = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;
+							phyPlayers[j].is_jumpanim = false;
 							IsShake[i] = true;
 							IsDown[i] = true;
 							if (phyPlayers[j].CurrentBlockNum != i) {
@@ -1086,6 +1115,7 @@ void ProcessClients()
 									phyPlayers[i].is_hitted = true;
 									if (TypeName[i] == "husky") {
 										phyPlayers[j].is_Skill = false;
+										phyPlayers[j].is_Skillanim = false;
 										phyPlayers[i].SetSpeed(1.0f * 1.5f);
 										phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
 									}
@@ -1133,20 +1163,18 @@ void ProcessClients()
 			//   Update(phyPlayers)
 			{	//skill
 				for (int i = 0; i < numOfCls; ++i) {
-					if (phyPlayers[i].is_Skill && phyPlayers[i].SnowmanNum == -1) {
-						static UINT SkillCoolTime = 0;
+					if (phyPlayers[i].is_Skill && phyPlayers[i].SnowmanNum == -1 && !phyPlayers[i].IsSkillCool) {
 						if (TypeName[i] == "Penguin") {
 							if (phyPlayers[i].m_pos.y <= 200) {
-								cout << "Penguin" << endl;
 								phyPlayers[i].gravity = 0.0f;
 								phyPlayers[i].m_pos.y += 2.0f;
 								phyPlayers[i].is_jump = true;
 							}
+							SendPenguinSkill(true);
 						}
 						else if (TypeName[i] == "husky") {
-							cout << "husky" << endl;
 							static float HittedIdx = -1;
-							if (SkillCoolTime >= 20 && SkillCoolTime <= 80) {
+							if (phyPlayers[i].SkillTime >= 10 && phyPlayers[i].SkillTime <= 80) {
 								switch (static_cast<int>(phyPlayers[i].dir)) {
 								case 0:
 									phyPlayers[i].SetKeyW(true);
@@ -1195,15 +1223,16 @@ void ProcessClients()
 								}
 								SendHuskySkill(true);
 							}
-							else if (SkillCoolTime > 80) {
+							else if (phyPlayers[i].SkillTime > 80) {
 								phyPlayers[i].is_Skill = false;
-								SkillCoolTime = 0;
+								phyPlayers[i].SkillTime = 0;
 								phyPlayers[i].SetKeyW(false);
 								phyPlayers[i].SetKeyA(false);
 								phyPlayers[i].SetKeyS(false);
 								phyPlayers[i].SetKeyD(false);
 								phyPlayers[i].SetSpeed(1.0f * 1.5f);
 								phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+								phyPlayers[i].IsSkillCool = true;
 								if (HittedIdx != -1)
 									phyPlayers[HittedIdx].SetHittedSpeed(1.0f * 1.5f);
 								HittedIdx = -1;
@@ -1256,17 +1285,29 @@ void ProcessClients()
 								}
 							}
 							phyPlayers[i].is_Skill = false;
-							SkillCoolTime = 0;
+							phyPlayers[i].SkillTime = 0;
+							phyPlayers[i].IsSkillCool = true;
 						}
-						SkillCoolTime += 1;
-						if (SkillCoolTime >= 300) {
+						phyPlayers[i].SkillTime += 1;
+						if (phyPlayers[i].SkillTime >= 300) {
 							phyPlayers[i].is_Skill = false;
-							SkillCoolTime = 0;
+							phyPlayers[i].is_Skillanim = false;
+							phyPlayers[i].SkillTime = 0;
+							phyPlayers[i].IsSkillCool = true;
 							SendFoxSkill(false);
+							SendPenguinSkill(false);
 						}
 					}
 					else {
 						phyPlayers[i].is_Skill = false;
+						phyPlayers[i].is_Skillanim = false;
+					}
+					if (phyPlayers[i].IsSkillCool) {
+						phyPlayers[i].SkillCoolTime += 1;
+						if (phyPlayers[i].SkillCoolTime >= 600) {
+							phyPlayers[i].IsSkillCool = false;
+							phyPlayers[i].SkillCoolTime = 0;
+						}
 					}
 				}
 			}
@@ -1278,14 +1319,15 @@ void ProcessClients()
 				players[i].dir = phyPlayers[i].dir;
 				players[i].IsHide = phyPlayers[i].IsHide;
 				players[i].SnowmanNum = phyPlayers[i].SnowmanNum;
+				players[i].IsSkillCool = phyPlayers[i].IsSkillCool;
 
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
-				if (TypeName[i] == "Penguin") {
-					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-				}
-				else {
-					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-				}
+				/*		if (TypeName[i] == "Penguin") {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+						}
+						else {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+						}*/
 
 			}
 			SendPos(*players);

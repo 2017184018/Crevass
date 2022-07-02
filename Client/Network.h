@@ -55,29 +55,32 @@ public:
 	int GetPlayerSnowmanNum(int num)const;
 	bool GetFoxSkill()const;
 	bool GetHuskySkill()const;
-
+	bool GetPenguinSkill()const;
+	bool GetPlayerSkillCool(int num)const;
 private:
-	DirectX::XMFLOAT3 PlayerPos[3];
-	int PlayerAnim[3];
-	char Player_Type[3];
-	bool PlayerHide[3];
-	int PlayerSnowmanHide[3];
+	DirectX::XMFLOAT3 PlayerPos[5];
+	int PlayerAnim[5];
+	char Player_Type[5];
+	bool PlayerHide[5];
+	int PlayerSnowmanHide[5];
+	bool PlayerSkillCool[5];
 
 	int iglooLocation[2];
 	int SnowmanLocation[4];
-	char dir[3];
+	char dir[5];
 
 	DirectX::XMFLOAT3 BlockPos[25];
 	int BlockDestructionCnt[25];
 
-	char CharacterType[3];
+	char CharacterType[5];
 
-	bool IsFall[3]{ false,false,false };
-	bool isReset[3]{ false, false, false };
+	bool IsFall[5]{ false,false,false,false,false };
+	bool isReset[5]{ false, false, false,false,false };
 
 	DirectX::XMFLOAT3 HailPos[5];
 	bool FoxSkill = false;
 	bool HuskySkill = false;
+	bool PenguinSkill = false;
 public:
 	GameInfo* m_pGameInfo;
 };
