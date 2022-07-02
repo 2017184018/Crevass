@@ -32,8 +32,19 @@ void GameplayScene::Initialize()
 	AppContext->CreateBackground();
 	AppContext->CreateSnowmans();
 	AppContext->CreateHail();
-	AppContext->CreateUI2D("hp", "hp", 18, 0.f, 0.f, 30000.f, 15550.5f);
 	AppContext->CreateWaterDrop();
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
+			AppContext->CreateUI2D("player_"+ std::to_string(j)+"hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -300.f + i*50.f, 180.f -j*50.f, 40.f, 20.5f);
+		}
+	}
+	//AppContext->CreateUI2D("hp" , "hp", 19, 0.f, 0.f, 50.f, 30.5f);
+	//AppContext->CreateUI2D("hp1", "hp1", 19, 100.f, 100.f, 50.f, 30.5f);
+	AppContext->CreateUI2D("ui_p", "ui_p", 20, -350.f, 180.f, 60.f, 50.f);
+	AppContext->CreateUI2D("ui_h", "ui_h", 21, -350.f, 130.f, 60.f, 50.f);
+	AppContext->CreateUI2D("ui_s", "ui_s", 22, -350.f, 80.f, 60.f, 50.f);
+	AppContext->CreateUI2D("ui_b", "ui_b", 23, -350.f, 30.f, 60.f, 50.f);
+	AppContext->CreateUI2D("ui_f", "ui_f", 24, -350.f, -20.f, 60.f, 50.f);
 //	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	
 	for (int i = 0; i < 25; ++i) {
@@ -441,8 +452,26 @@ void GameplayScene::Update(const float& fDeltaTime)
 	
 	
 	/*UI*/
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+	/*GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["hp1"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["hp1"], AppContext->m_RItemsVec);*/
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
+			GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
+			GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
+		}
+	}
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateUIPassCB(0.75f);
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
@@ -544,11 +573,20 @@ void GameplayScene::Render()
 	/*GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);*/
 
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
+			GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
 
+		}
+	}
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
 
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();

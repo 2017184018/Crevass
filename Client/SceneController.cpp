@@ -31,7 +31,7 @@ void LobbyController::HandleInput(const float deltaT)
 	}
 	if (InputHandler::IsKeyUp('B'))
 	{
-		switch (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex) {
+		switch (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex) {
 		case 8:
 		case 13:
 			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);	
@@ -55,12 +55,14 @@ void LobbyController::HandleInput(const float deltaT)
 		//8 ·Îºñ  13 Æë±Ï  14 Çã½ºÅ°  15 °õ  16¿©¿ì  17¹°°³
 		static bool one = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
+			cout << AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex << endl;
 			if (one) {
-				if (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 17) {
-					AppContext->m_RItemsVec[SNUM]->m_MaterialIndex = 13;
+				if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 17) {
+					AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 13;
+					
 				}
 				else {
-					++AppContext->m_RItemsVec[SNUM]->m_MaterialIndex;
+					++AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
 				}
 				one = false;
 			}
@@ -72,11 +74,11 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool one2 = true;
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
 			if (one2) {
-				if (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 13) {
-					AppContext->m_RItemsVec[SNUM]->m_MaterialIndex = 17;
+				if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 13) {
+					AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 17;
 				}
 				else {
-					--AppContext->m_RItemsVec[SNUM]->m_MaterialIndex;
+					--AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
 				}
 				one2 = false;
 			}

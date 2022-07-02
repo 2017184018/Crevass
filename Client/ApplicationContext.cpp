@@ -65,12 +65,12 @@ void ApplicationContext::CreateLobby() {
 	top->m_MaterialIndex = 8;
 	top->m_World = MathHelper::Identity4x4();
 	top->m_World._11 = 200 * 1.43;
-	top->m_World._22 = 1;
-	top->m_World._33 = 150 * 1.43;
-	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+	top->m_World._22 = 150 * 1.43;
+	top->m_World._33 = 1;
+	//XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 	top->m_World._41 = 180;
-	top->m_World._42 = 90;
-	top->m_World._43 = 100;
+	top->m_World._42 = 100;
+	top->m_World._43 = 90;
 	top->m_TexTransform = MathHelper::Identity4x4();
 }
 
@@ -393,7 +393,7 @@ void ApplicationContext::CreateBackground()
 		top->m_World._11 = size;
 		top->m_World._22 = size;
 		top->m_World._33 = size;
-		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+		//XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 		top->m_World._41 = (size * 1.1) * i;
 		top->m_World._42 = 300;
 		top->m_World._43 = 400;
@@ -415,7 +415,7 @@ void ApplicationContext::CreateBackground()
 		top->m_World._11 = size;
 		top->m_World._22 = size;
 		top->m_World._33 = size;
-		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+	//	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 		top->m_World._41 = (size * 1.1) * i;
 		top->m_World._42 = 300;
 		top->m_World._43 = 400;
@@ -781,7 +781,6 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 	item->m_IsVisible = true;
 
 	item->m_positionRatio = { posX / Core::g_DisplayWidth, posY / Core::g_DisplayHeight };
-
 	item->Scale(sizeX, sizeY, 1);
 	item->SetPosition(posX, posY, 1.f);
 }
