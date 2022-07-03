@@ -38,18 +38,22 @@ void GraphicsContext::Update2DPosition(ObjectInfo* objInfo, std::vector<GameObje
 
 	const std::map<std::string, UINT>& info = objInfo->GetinstanceKeymap();
 	int visibleInstanceCount = 0;
-	for(auto& i : info)
-	{ 
-		
+	for (auto& i : info)
+	{
 		if (rItems[i.second]->m_IsVisible) {
-
 			XMFLOAT2 ratio = rItems[i.second]->m_positionRatio;
-			if (Core::g_DisplayWidth * ratio.x != rItems[i.second]->m_World._41) {
-			
-				rItems[i.second]->m_World._41 = Core::g_DisplayWidth * ratio.x;
-			}
-			if (Core::g_DisplayHeight * ratio.y != rItems[i.second]->m_World._42)
-				rItems[i.second]->m_World._42 = Core::g_DisplayHeight * ratio.y;
+			XMFLOAT2 size = { rItems[i.second]->m_World._11 / 20.f, rItems[i.second]->m_World._22 / 20.f };
+			if (Core::g_DisplayWidth * ratio.x != rItems[i.second]->m_World._41 - size.x)
+				rItems[i.second]->m_World._41 = Core::g_DisplayWidth * ratio.x + size.x;
+			if (Core::g_DisplayHeight * ratio.y != rItems[i.second]->m_World._42 - size.y)
+				rItems[i.second]->m_World._42 = Core::g_DisplayHeight * ratio.y + size.y;
+
+			ratio = rItems[i.second]->m_sizeRatio;
+			if (Core::g_DisplayWidth * ratio.x != rItems[i.second]->m_World._11)
+				rItems[i.second]->m_World._11 = Core::g_DisplayWidth * ratio.x;
+
+			if (rItems[i.second]->m_World._11 * ratio.y != rItems[i.second]->m_World._22)
+				rItems[i.second]->m_World._22 = rItems[i.second]->m_World._11 * ratio.y;
 		}
 	}
 

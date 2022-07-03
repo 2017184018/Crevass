@@ -35,16 +35,16 @@ void GameplayScene::Initialize()
 	AppContext->CreateWaterDrop();
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
-			AppContext->CreateUI2D("player_"+ std::to_string(j)+"hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -300.f + i*50.f, 180.f -j*50.f, 40.f, 20.5f);
+			AppContext->CreateUI2D("player_"+ std::to_string(j)+"hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i*23.f, 180.f -j*30.f, 20.f, 10.5f);
 		}
 	}
 	//AppContext->CreateUI2D("hp" , "hp", 19, 0.f, 0.f, 50.f, 30.5f);
 	//AppContext->CreateUI2D("hp1", "hp1", 19, 100.f, 100.f, 50.f, 30.5f);
-	AppContext->CreateUI2D("ui_p", "ui_p", 20, -350.f, 180.f, 60.f, 50.f);
-	AppContext->CreateUI2D("ui_h", "ui_h", 21, -350.f, 130.f, 60.f, 50.f);
-	AppContext->CreateUI2D("ui_s", "ui_s", 22, -350.f, 80.f, 60.f, 50.f);
-	AppContext->CreateUI2D("ui_b", "ui_b", 23, -350.f, 30.f, 60.f, 50.f);
-	AppContext->CreateUI2D("ui_f", "ui_f", 24, -350.f, -20.f, 60.f, 50.f);
+	AppContext->CreateUI2D("ui_p", "ui_p", 20, -380.f, 180.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_h", "ui_h", 21, -380.f, 150.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_s", "ui_s", 22, -380.f, 120.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_b", "ui_b", 23, -380.f, 90.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
 //	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	
 	for (int i = 0; i < 25; ++i) {

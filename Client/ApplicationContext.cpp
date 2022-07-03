@@ -780,7 +780,9 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 	item->m_MaterialIndex = matIndex;
 	item->m_IsVisible = true;
 
-	item->m_positionRatio = { posX / Core::g_DisplayWidth, posY / Core::g_DisplayHeight };
+	item->m_positionRatio = { (posX - (sizeX / 20.f)) / 800.f, (posY - (sizeY / 20.f)) / 600.f };
+	item->m_sizeRatio = { sizeX / 800.f, sizeY / sizeX };
+
 	item->Scale(sizeX, sizeY, 1);
 	item->SetPosition(posX, posY, 1.f);
 }
