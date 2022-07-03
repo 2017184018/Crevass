@@ -121,7 +121,9 @@ void GraphicsRenderer::LoadTextures()
 		"UI_Husky",
 		"UI_Seal",
 		"UI_Bear",
-		"UI_Fox"
+		"UI_Fox",
+		"UI_SkillOn",
+		"UI_SkillOff"
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -150,7 +152,9 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/ingame/husky_ui.dds",
 		L"./Textures/ingame/seal_ui.dds",
 	    L"./Textures/ingame/bear_ui.dds",
-		L"./Textures/ingame/fox_ui.dds"
+		L"./Textures/ingame/fox_ui.dds",
+		L"./Textures/ingame/SkillOn_ui.dds",
+		L"./Textures/ingame/SkillOff_ui.dds"
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -209,7 +213,9 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	m_Textures["UI_Husky"]->Resource,
 	m_Textures["UI_Seal"]->Resource,
 	m_Textures["UI_Bear"]->Resource,
-	m_Textures["UI_Fox"]->Resource
+	m_Textures["UI_Fox"]->Resource,
+	m_Textures["UI_SkillOn"]->Resource,
+	m_Textures["UI_SkillOff"]->Resource
 	};
 	auto snowcube1024 = m_Textures["snowcube1024"]->Resource;
 
@@ -332,7 +338,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,23, 2, 0);		//�ؽ��� ��
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,25, 2, 0);		//�ؽ��� ��
 
 	CD3DX12_DESCRIPTOR_RANGE texTable2;
 	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);

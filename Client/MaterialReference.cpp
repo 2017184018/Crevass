@@ -222,6 +222,20 @@ void MaterialReference::BuildMaterials()
 	UI_Fox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	UI_Fox->Roughness = 1.0f;
 
+	auto UI_SkillOn = std::make_unique<Material>();
+	UI_SkillOn->MatCBIndex = 25;
+	UI_SkillOn->DiffuseSrvHeapIndex = 25;
+	UI_SkillOn->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_SkillOn->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_SkillOn->Roughness = 1.0f;
+
+	auto UI_SkillOff = std::make_unique<Material>();
+	UI_SkillOff->MatCBIndex = 26;
+	UI_SkillOff->DiffuseSrvHeapIndex = 26;
+	UI_SkillOff->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_SkillOff->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_SkillOff->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -247,4 +261,6 @@ void MaterialReference::BuildMaterials()
 	m_Materials["UI_Seal"] = std::move(UI_Seal);
 	m_Materials["UI_Bear"] = std::move(UI_bear);
 	m_Materials["UI_Fox"] = std::move(UI_Fox);
+	m_Materials["UI_SkillOn"] = std::move(UI_SkillOn);
+	m_Materials["UI_SkillOff"] = std::move(UI_SkillOff);
 }

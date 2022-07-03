@@ -45,6 +45,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_s", "ui_s", 22, -380.f, 120.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_b", "ui_b", 23, -380.f, 90.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
 //	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	
 	for (int i = 0; i < 25; ++i) {
@@ -263,6 +264,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			{
 				m_Users[i]->m_PlayerController->SetIsFall();
 				GraphicsContext::GetApp()->OnBlurEffect(false);
+
 				IsFall[m_PlayerID] = false;
 				if (Lifecnt > 0) {
 					--Lifecnt;
@@ -383,6 +385,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static int tmpidx = -1;
 		time += fDeltaTime;
 		GraphicsContext::GetApp()->OnBlurEffect(true);
+
+		//AppContext->HiddenUI("ui_SkillOn");
 		if (time >= 3) {
 			time = 0;
 			//IsFall[m_PlayerID] = false;
@@ -472,6 +476,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateUIPassCB(0.75f);
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
@@ -587,7 +593,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
-
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
@@ -631,6 +637,10 @@ void GameplayScene::RenderUI()
 	// Timer
 	GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
 	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer / 60) + L" : " + std::to_wstring(m_Timer % 60), 0, -Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
+
+	// skill cool time
+	GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
+	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer % 60), -Core::g_DisplayWidth/2.9, Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
 
 }
 

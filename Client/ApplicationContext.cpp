@@ -890,8 +890,14 @@ void ApplicationContext::DisplayUI(std::string mapName)
 {
 }
 
-void ApplicationContext::HiddenUI(std::string mapName)
+void ApplicationContext::HiddenUI(std::string uiName)
 {
+	GameObject* obj = FindObject<GameObject>(uiName, uiName);
+	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+	obj->m_IsVisible = false;
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[uiName], AppContext->m_RItemsVec);
+	cout << "fuck - " << FindObject<GameObject>(uiName, uiName)->m_IsVisible << endl;
 }
 
 void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float posY)
