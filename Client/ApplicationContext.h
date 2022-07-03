@@ -6,10 +6,9 @@
 #include "Network.h"
 
 namespace Core {
-	extern GameObject* wave;
+	extern GameObject* wave[2];
 	extern UINT iglooIndex[2];
 	extern 	MainFramework* g_pFramework;
-	extern int SNUM;
 }
 
 class Character;
@@ -72,6 +71,7 @@ public:
 	void CreateBackground();
 	void CreateHail();
 	void CreateWaterDrop();
+	void CreateMinimap();
 
 	void DisplayProps(std::string mapName);
 	void HiddenBlocks();

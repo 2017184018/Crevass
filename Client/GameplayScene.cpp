@@ -33,6 +33,9 @@ void GameplayScene::Initialize()
 	AppContext->CreateSnowmans();
 	AppContext->CreateHail();
 	AppContext->CreateWaterDrop();
+	AppContext->CreateMinimap();
+
+
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
 	for (int i = 0; i < 25; ++i) {
@@ -396,6 +399,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 
 	}
+	{
+		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
+		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["MinimapSea"]->GetinstanceKeymap();
+		AppContext->m_RItemsVec[info.begin()->second]->m_World._41 = XMVectorGetX(CameraPOS)+50;
+		AppContext->m_RItemsVec[info.begin()->second]->m_World._42 = XMVectorGetY(CameraPOS) - 100;
+		AppContext->m_RItemsVec[info.begin()->second]->m_World._43 = XMVectorGetZ(CameraPOS) + 300;
+	}
+
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
 	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);
@@ -448,6 +459,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["MinimapSea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
@@ -481,17 +493,22 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
 
-	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
+	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
+	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 }
 
 void GameplayScene::Render()
 {
-	//g_CommandList->RSSetViewports(1, &mMinimapViewport);
-	//g_CommandList->RSSetScissorRects(1, &mMinimapScissorRect);
-	//g_CommandList->RSSetViewports(1, &mScreenViewport);
-	//g_CommandList->RSSetScissorRects(1, &mScissorRect);
+	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
+	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 
-	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
+	g_CommandList->RSSetViewports(1, &mMinimapViewport);
+	g_CommandList->RSSetScissorRects(1, &mMinimapScissorRect);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["MinimapSea"], AppContext->m_RItemsVec);
+
+	g_CommandList->RSSetViewports(1, &mScreenViewport);
+	g_CommandList->RSSetScissorRects(1, &mScissorRect);
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);

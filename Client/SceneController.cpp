@@ -25,16 +25,18 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+	const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["lobby"]->GetinstanceKeymap();
+	UINT SNum = info.begin()->second;
 	if (InputHandler::IsKeyUp(VK_F1))
 	{
 		SceneManager::GetApp()->ChangeScene();
 	}
 	if (InputHandler::IsKeyUp('B'))
 	{
-		switch (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex) {
+		switch (AppContext->m_RItemsVec[SNum]->m_MaterialIndex) {
 		case 8:
 		case 13:
-			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);	
+			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
 			break;
 		case 14:
 			g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
@@ -56,11 +58,11 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool one = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
 			if (one) {
-				if (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 17) {
-					AppContext->m_RItemsVec[SNUM]->m_MaterialIndex = 13;
+				if (AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 17) {
+					AppContext->m_RItemsVec[SNum]->m_MaterialIndex = 13;
 				}
 				else {
-					++AppContext->m_RItemsVec[SNUM]->m_MaterialIndex;
+					++AppContext->m_RItemsVec[SNum]->m_MaterialIndex;
 				}
 				one = false;
 			}
@@ -72,11 +74,11 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool one2 = true;
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
 			if (one2) {
-				if (AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNUM]->m_MaterialIndex == 13) {
-					AppContext->m_RItemsVec[SNUM]->m_MaterialIndex = 17;
+				if (AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 13) {
+					AppContext->m_RItemsVec[SNum]->m_MaterialIndex = 17;
 				}
 				else {
-					--AppContext->m_RItemsVec[SNUM]->m_MaterialIndex;
+					--AppContext->m_RItemsVec[SNum]->m_MaterialIndex;
 				}
 				one2 = false;
 			}

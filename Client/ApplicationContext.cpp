@@ -244,7 +244,7 @@ void ApplicationContext::CreateWave()
 	Sea->m_World._43 = SCALE * 400;
 
 	Sea->m_TexTransform = MathHelper::Identity4x4();
-	Core::wave = Sea;
+	Core::wave[0] = Sea;
 }
 
 void ApplicationContext::CreateBackground()
@@ -692,7 +692,6 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->m_World._22 = SCALE * 3 / 5.0;
 		instancingObj->m_World._33 = SCALE * 3 / 5.0;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
-		++SNUM;
 	}
 }
 
@@ -716,7 +715,6 @@ void ApplicationContext::CreateHail()
 		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * -0.4));
 
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
-		++SNUM;
 	}
 }
 
@@ -739,8 +737,27 @@ void ApplicationContext::CreateWaterDrop()
 		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * i / 2.0));
 
 		top->m_TexTransform = MathHelper::Identity4x4();
-		++SNUM;
 	}
+}
+
+void ApplicationContext::CreateMinimap()
+{
+	GameObject* Sea = CreateObject<GameObject>("MinimapSea", "MinimapSea0");
+	Sea->Geo = MeshReference::GetApp()->m_GeometryMesh["wave"].get();
+	Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
+	Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
+	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
+	Sea->m_IsVisible = true;
+	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	Sea->m_MaterialIndex = 3;
+	Sea->m_World = MathHelper::Identity4x4();
+	Sea->m_World._11 = 1;
+	Sea->m_World._33 = 1;
+
+	XMStoreFloat4x4(&Sea->m_World, XMLoadFloat4x4(&Sea->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+	Sea->m_TexTransform = MathHelper::Identity4x4();
+	Core::wave[1] = Sea;
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
