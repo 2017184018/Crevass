@@ -406,3 +406,8 @@ void PlayerController::SetSkillCool(bool cool)
 {
 	IsSkillCool = cool;
 }
+
+bool PlayerController::GetSkillCool()
+{
+	return IsSkillCool;
+}

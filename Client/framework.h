@@ -94,4 +94,6 @@ enum class CameraType { First, Third, Free };
 #define DIR_DOWN					0x20
 
 #define CAMERA_ZNEAR 1.f
-#define CAMERA_ZFAR 2000.f
+#define CAMERA_ZFAR 10000.f
+
+//#define DEBUG_SHADOW 0x00FF0

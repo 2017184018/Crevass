@@ -46,8 +46,9 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_b", "ui_b", 23, -380.f, 90.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
-//	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
-	
+#ifdef DEBUG_SHADOW
+	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
+#endif
 	for (int i = 0; i < 25; ++i) {
 		//IsShake[i] = false;
 		//IsRight[i] = true;
@@ -67,9 +68,9 @@ bool GameplayScene::Enter()
 	cout << "GamePlay Scene" << endl;
 	/* Create SceneBounds for Shadow */
 	m_SceneBounds.Center = XMFLOAT3(500.f, 0.0f, 500.f);
-	m_SceneBounds.Radius = sqrtf(1200.f * 1200.f + 1200.f * 1200.f);
+	m_SceneBounds.Radius = sqrtf(2000.f * 2000.f + 2000.f * 2000.f);
 	/* Light Setting */
-	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.27735f, -0.81735f, 1.07735 };
+	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.47735f, -0.81735f, 1.07735 };
 
 	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 	//나 
@@ -213,7 +214,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	m_Users[m_PlayerID]->m_PlayerController->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
-
+	if (m_Users[m_PlayerID]->m_PlayerController->GetSkillCool()) {
+		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 26;
+	}
+	else if (!m_Users[m_PlayerID]->m_PlayerController->GetSkillCool()) {
+		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 25;
+	}
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -258,7 +264,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
@@ -267,7 +272,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	// SceneBounds Update
-	m_SceneBounds.Center = { m_Users[m_PlayerID]->GetPosition().x, 0 , m_Users[m_PlayerID]->GetPosition().z };
+	//m_SceneBounds.Center = { m_Users[m_PlayerID]->GetPosition().x, 0 , m_Users[m_PlayerID]->GetPosition().z };
 
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
@@ -443,7 +448,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		time += fDeltaTime;
 		GraphicsContext::GetApp()->OnBlurEffect(true);
 
-		//AppContext->HiddenUI("ui_SkillOn");
 		if (time >= 3) {
 			time = 0;
 			//IsFall[m_PlayerID] = false;
@@ -583,8 +587,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["waterdrop"], AppContext->m_RItemsVec);
 
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
-
+	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
@@ -651,12 +654,13 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 
 	//debug
-	/*GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);*/
+#ifdef DEBUG_SHADOW
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);
+#endif
 
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
-	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
 			GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
@@ -715,8 +719,8 @@ void GameplayScene::RenderUI()
 	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer / 60) + L" : " + std::to_wstring(m_Timer % 60), 0, -Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
 
 	// skill cool time
-	GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
-	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer % 60), -Core::g_DisplayWidth/2.9, Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
+	//GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
+	//GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer % 60), -Core::g_DisplayWidth/2.9, Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
 
 }
 
