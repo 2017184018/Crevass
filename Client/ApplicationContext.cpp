@@ -742,22 +742,134 @@ void ApplicationContext::CreateWaterDrop()
 
 void ApplicationContext::CreateMinimap()
 {
-	GameObject* Sea = CreateObject<GameObject>("MinimapSea", "MinimapSea0");
-	Sea->Geo = MeshReference::GetApp()->m_GeometryMesh["wave"].get();
-	Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
-	Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
-	Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
-	Sea->m_IsVisible = true;
-	Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	Sea->m_MaterialIndex = 3;
-	Sea->m_World = MathHelper::Identity4x4();
-	Sea->m_World._11 = 1;
-	Sea->m_World._33 = 1;
+	{	//222
+		GameObject* Sea = CreateObject<GameObject>("MinimapSea", "MinimapSea0");
+		Sea->Geo = MeshReference::GetApp()->m_GeometryMesh["wave"].get();
+		Sea->IndexCount = Sea->Geo->DrawArgs["wave"].IndexCount;
+		Sea->StartIndexLocation = Sea->Geo->DrawArgs["wave"].StartIndexLocation;
+		Sea->BaseVertexLocation = Sea->Geo->DrawArgs["wave"].BaseVertexLocation;
+		Sea->m_IsVisible = true;
+		Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		Sea->m_MaterialIndex = 3;
+		Sea->m_World = MathHelper::Identity4x4();
+		Sea->m_World._11 = 2;
+		Sea->m_World._33 = 2;
 
-	XMStoreFloat4x4(&Sea->m_World, XMLoadFloat4x4(&Sea->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+		XMStoreFloat4x4(&Sea->m_World, XMLoadFloat4x4(&Sea->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
 
-	Sea->m_TexTransform = MathHelper::Identity4x4();
-	Core::wave[1] = Sea;
+		Sea->m_TexTransform = MathHelper::Identity4x4();
+		Core::wave[1] = Sea;
+	}
+	float scale = SCALE * 2.0f / 11.0f;
+	int distance = scale * 200;
+
+	for (int i = 0; i < 5; ++i) {	//223~272
+		for (int j = 0; j < 5; ++j) {
+			GameObject* instancingObj;
+			if (BlockCheck(5 * i + j)) {
+				instancingObj = CreateObject<GameObject>("Minimapicecube", "Minimapicecube" + std::to_string(5 * i + j));
+				instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["icecube"].get();
+				instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+				instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icecube"].IndexCount;
+				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icecube"].StartIndexLocation;
+				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
+				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["icecube"].Bounds;
+				instancingObj->m_IsVisible = true;
+				instancingObj->m_MaterialIndex = 1;
+				instancingObj->m_World = MathHelper::Identity4x4();
+				instancingObj->m_World._11 = scale;
+				instancingObj->m_World._22 = scale;
+				instancingObj->m_World._33 = scale;
+
+				instancingObj->m_World._41 = distance * i;
+				instancingObj->m_World._42 = -30;
+				instancingObj->m_World._43 = distance * j;
+
+				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+				instancingObj->m_TexTransform = MathHelper::Identity4x4();
+
+				instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["icecube"].Bounds.Center, instancingObj->GetPosition());
+			}
+			else {
+				instancingObj = CreateObject<GameObject>("Minimapsnowcube", "Minimapsnowcube" + std::to_string(5 * i + j));
+				instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["snowcube"].get();
+				instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+				instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowcube"].IndexCount;
+				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowcube"].StartIndexLocation;
+				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowcube"].BaseVertexLocation;
+				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["snowcube"].Bounds;
+				instancingObj->m_IsVisible = true;
+				instancingObj->m_MaterialIndex = 1;
+				instancingObj->m_World = MathHelper::Identity4x4();
+				instancingObj->m_World._11 = scale;
+				instancingObj->m_World._22 = scale;
+				instancingObj->m_World._33 = scale;
+
+				instancingObj->m_World._41 = distance * i;
+				instancingObj->m_World._42 = -30;
+				instancingObj->m_World._43 = distance * j;
+
+				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+				instancingObj->m_TexTransform = MathHelper::Identity4x4();
+
+				instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["snowcube"].Bounds.Center, instancingObj->GetPosition());
+			}
+
+			float d = 800.0f / 11.0f;
+			MinimapCubePos[5 * i + j] = XMFLOAT3(
+				instancingObj->m_World._41 - d, 
+				instancingObj->m_World._42 - d, 
+				instancingObj->m_World._43 - d);
+
+			GameObject* top = CreateObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(5 * i + j));
+			top->Geo = MeshReference::GetApp()->m_GeometryMesh["snow_top"].get();
+			top->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			top->IndexCount = top->Geo->DrawArgs["snow_top"].IndexCount;
+			top->StartIndexLocation = top->Geo->DrawArgs["snow_top"].StartIndexLocation;
+			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
+			top->m_IsVisible = true;
+			top->m_MaterialIndex = 1;
+			top->m_World = MathHelper::Identity4x4();
+			top->m_World._11 = scale;
+			top->m_World._22 = scale;
+			top->m_World._33 = scale;
+			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
+			top->m_World._41 = distance * i;
+			top->m_World._42 = -30;
+			top->m_World._43 = distance * j;
+
+			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+			top->m_TexTransform = MathHelper::Identity4x4();
+		}
+	}
+
+	for (int i = 0; i < 5; ++i) {	//273~297
+		for (int j = 0; j < 5; ++j) {
+			GameObject* instancingObj = CreateObject<GameObject>("Minimapicicle", "Minimapicicle" + std::to_string(5 * i + j));
+			instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["icicle"].get();
+			instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			instancingObj->IndexCount = instancingObj->Geo->DrawArgs["icicle"].IndexCount;
+			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icicle"].StartIndexLocation;
+			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icicle"].BaseVertexLocation;
+			instancingObj->m_IsVisible = true;
+			instancingObj->m_MaterialIndex = 1;
+			instancingObj->m_World = MathHelper::Identity4x4();
+			instancingObj->m_World._11 = scale * 7.5 / 10.0;
+			instancingObj->m_World._22 = scale;
+			instancingObj->m_World._33 = scale * 7.5 / 10.0;
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
+			instancingObj->m_World._41 = distance * i;
+			instancingObj->m_World._42 = -30;
+			instancingObj->m_World._43 = distance * j;
+
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+			instancingObj->m_TexTransform = MathHelper::Identity4x4();
+		}
+	}
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)

@@ -1247,15 +1247,12 @@ void ProcessClients()
 							}
 						}
 						else if (TypeName[i] == "ArcticFox") {
-							cout << "ArcticFox" << endl;
 							SendFoxSkill(true);
 						}
 						else if (TypeName[i] == "Seal") {
-							cout << "Seal" << endl;
 							phyPlayers[i].is_hitted = false;
 						}
 						else if (TypeName[i] == "PolarBear") {
-							cout << "PolarBear" << endl;
 							if (tmp1[i] != -1 || tmp2[i] != -1) {
 								int TempBlockIdx = max(tmp1[i], tmp2[i]);
 								PolarbearSkill(TempBlockIdx);

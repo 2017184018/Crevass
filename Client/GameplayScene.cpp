@@ -191,6 +191,20 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	m_Users[m_PlayerID]->m_PlayerController->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
 
+	static bool one = true;
+	static int cnt = 0;
+	if (GetAsyncKeyState('C') & 0x8000) {
+		if (one) {
+			AppContext->m_RItemsVec[cnt + 222]->m_World._11 = 0;
+			AppContext->m_RItemsVec[cnt + 222]->m_World._22 = 0;
+			AppContext->m_RItemsVec[cnt + 222]->m_World._33 = 0;
+			one = false;
+			++cnt;
+		}
+	}
+	else {
+		one = true;
+	}
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -206,21 +220,46 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[i + 51]->m_World._11 = 7.5 / 10.0;
 			AppContext->m_RItemsVec[i + 51]->m_World._22 = 1;
 			AppContext->m_RItemsVec[i + 51]->m_World._33 = 7.5 / 10.0;
+
+			if (MinimapBlockScale.x != 0 && MinimapBlockScale.y != 0 && MinimapBlockScale.z != 0) {
+				/*	AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 = MinimapBlockScale.x;
+					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22 = MinimapBlockScale.y;
+					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33 = MinimapBlockScale.z;
+					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._11 = MinimapBlockScale.x;
+					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._22 = MinimapBlockScale.y;
+					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._33 = MinimapBlockScale.z;
+					AppContext->m_RItemsVec[i + 51 + 222]->m_World._11 = MinimapBlockScale.x * 7.5 / 10.0;
+					AppContext->m_RItemsVec[i + 51 + 222]->m_World._22 = MinimapBlockScale.y;
+					AppContext->m_RItemsVec[i + 51 + 222]->m_World._33 = MinimapBlockScale.z * 7.5 / 10.0;*/
+			}
 		}
 		if (DestructionCnt[i] == 1) {
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 0;
+
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._11 = 0;
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._22 = 0;
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._33 = 0;
 		}
 		else if (DestructionCnt[i] == 2) {
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 0;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 0;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 0;
+
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 = 0;
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22 = 0;
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33 = 0;
+
 		}
 		else if (DestructionCnt[i] == 3) {
 			AppContext->m_RItemsVec[i + 51]->m_World._11 = 0;
 			AppContext->m_RItemsVec[i + 51]->m_World._22 = 0;
 			AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
+
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._11 = 0;
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._22 = 0;
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._33 = 0;
 		}
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
@@ -399,12 +438,47 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 
 	}
-	{
-		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
-		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["MinimapSea"]->GetinstanceKeymap();
-		AppContext->m_RItemsVec[info.begin()->second]->m_World._41 = XMVectorGetX(CameraPOS)+50;
-		AppContext->m_RItemsVec[info.begin()->second]->m_World._42 = XMVectorGetY(CameraPOS) - 100;
-		AppContext->m_RItemsVec[info.begin()->second]->m_World._43 = XMVectorGetZ(CameraPOS) + 300;
+	{		//minimap
+		float FallDistance = 200;
+		const std::map<std::string, UINT>& Sea = AppContext->m_RItemsMap["MinimapSea"]->GetinstanceKeymap();
+		if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+		{
+			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+		}
+		else {
+			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 + 10;
+			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._42 + 100;
+			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43;
+		}
+
+		for (int i = 0; i < 25; ++i) {
+			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+			{
+				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+			}
+			else {
+				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+			}
+			if (AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 != 0)
+				MinimapBlockScale = XMFLOAT3(AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11,
+					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22, AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33);
+
+			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+			{
+				AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+			}
+			else {
+				AppContext->m_RItemsVec[i + 51 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+				AppContext->m_RItemsVec[i + 51 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+				AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+			}
+		}
 	}
 
 	MaterialReference::GetApp()->Update(fDeltaTime);
@@ -419,34 +493,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 	if (IsFall[m_PlayerID]) {
 		AppContext->m_RItemsVec[133 + Lifecnt]->m_MaterialIndex = 6;
 		static float time = 0;
-		static int tmpidx = -1;
 		time += fDeltaTime;
 		BlurCnt = 3;
 
 		if (time >= 3) {
 			time = 0;
-			//IsFall[m_PlayerID] = false;
-			//BlurCnt = 0;
-			//if (Lifecnt > 0) {
-			//	--Lifecnt;
-			//	if (Lifecnt == 0) {
-			//		//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-			//			//서버에 패배 전송
-			//	}
-			//}
-			tmpidx = -1;
-		}
-		else if (time >= 2.9) {
-			//			m_Users[m_PlayerID]->is_fall = false;
-			//			m_Users[m_PlayerID]->SetPosition(tmpidx / 3 * 400, 200, tmpidx % 3 * 400);
-				//		Gravity = 0.01;
 		}
 		else if (time < 0.03) {
 			if (FallZ < 4) FallZ = 4;
 			if (FallX < 4) FallX = 4;
 			if (FallZ > 123) FallZ = 123;
 			if (FallX > 123) FallX = 123;
-			tmpidx = uid(dre);
 			Core::mWaves->Disturb(FallZ, FallX, 4);
 		}
 	}
@@ -459,7 +516,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["MinimapSea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
@@ -476,6 +532,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["waterdrop"], AppContext->m_RItemsVec);
+
+	//minimap
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["MinimapSea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapicecube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapsnowcube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapicicle"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapsnow_top"], AppContext->m_RItemsVec);
+
 
 	//meterial
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
@@ -505,15 +569,19 @@ void GameplayScene::Render()
 	g_CommandList->RSSetViewports(1, &mMinimapViewport);
 	g_CommandList->RSSetScissorRects(1, &mMinimapScissorRect);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["MinimapSea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapicecube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapsnowcube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapsnow_top"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapicicle"], AppContext->m_RItemsVec);
 
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);

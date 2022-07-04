@@ -53,6 +53,7 @@ namespace Core
 	D3D12_RECT mScissorRect;
 	D3D12_VIEWPORT mMinimapViewport;
 	D3D12_RECT mMinimapScissorRect;
+	XMFLOAT3 MinimapCubePos[25];
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)
@@ -639,15 +640,15 @@ void GameCore::OnResize()
 	mScreenViewport.MinDepth = 0.0f;
 	mScreenViewport.MaxDepth = 1.0f;
 
-	mMinimapViewport.TopLeftX = static_cast<float>(g_DisplayWidth)-200;
+	mMinimapViewport.TopLeftX = static_cast<float>(g_DisplayWidth)-210;
 	mMinimapViewport.TopLeftY = 0;
-	mMinimapViewport.Width = 200;
-	mMinimapViewport.Height = 200;
+	mMinimapViewport.Width = 240;
+	mMinimapViewport.Height = 180;
 	mMinimapViewport.MinDepth = 0.0f;
 	mMinimapViewport.MaxDepth = 1.0f;
 
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
-	mMinimapScissorRect = { g_DisplayWidth-200, 0, g_DisplayWidth, 200 };
+	mMinimapScissorRect = { g_DisplayWidth-210, 0, g_DisplayWidth+30, 180 };
 
 	if (mBlurFilter != nullptr)
 	{

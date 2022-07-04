@@ -9,6 +9,7 @@ namespace Core {
 	extern GameObject* wave[2];
 	extern UINT iglooIndex[2];
 	extern 	MainFramework* g_pFramework;
+	extern	 XMFLOAT3 MinimapCubePos[25];
 }
 
 class Character;
