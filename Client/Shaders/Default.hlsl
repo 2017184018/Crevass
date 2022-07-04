@@ -24,7 +24,7 @@ struct VertexIn
 	float3 NormalL : NORMAL;
 	float2 TexC    : TEXCOORD;
 	float3 TangentL : TANGENT;
-   float3 BinormalL : BINORMAL;
+	float3 BinormalL : BINORMAL;
 
 #ifdef SKINNED
 	float3 BoneWeights : WEIGHTS;
@@ -42,7 +42,6 @@ struct VertexOut
 	float2 TexC    : TEXCOORD;
 	float3 TangentW : TANGENT;
 	float3 BinormalW : BINORMAL;
-
 
 	// nointerpolation is used so the index is not interpolated 
 	// across the triangle.
@@ -84,14 +83,12 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 		tangentL += weights[i] * mul(vin.TangentL.xyz, (float3x3) gBoneTransforms[vin.BoneIndices[i]]);
 		binormalL += weights[i] * mul(vin.BinormalL, (float3x3)gBoneTransforms[vin.BoneIndices[i]]);
 
-
 	}
 
 	vin.PosL = posL;
-	vin.NormalL = normalL; 
+	vin.NormalL = normalL;
 	vin.TangentL.xyz = tangentL;
 	vin.BinormalL = binormalL;
-
 #endif
 
 	// Transform to world space.
@@ -110,11 +107,10 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 	float4 texC = mul(float4(vin.TexC, 0.0f, 1.0f), TexTransform);
 	vout.TexC = mul(texC, matData.MatTransform).xy;
 
-	 // Generate projective tex-coords to project shadow map onto scene.
-    vout.ShadowPosH = mul(posW, gShadowTransform);
+	// Generate projective tex-coords to project shadow map onto scene.
+	vout.ShadowPosH = mul(posW, gShadowTransform);
 
-    return vout;
-
+	return vout;
 }
 
 float4 PS(VertexOut pin) : SV_Target
@@ -136,6 +132,9 @@ float4 PS(VertexOut pin) : SV_Target
 	// Vector from point being lit to eye. 
 	float3 toEyeW = normalize(gEyePosW - pin.PosW);
 
+	// Light terms.
+	float4 ambient = gAmbientLight * diffuseAlbedo;
+
 	// Only the first light casts a shadow.
 	float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
 	shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
@@ -145,7 +144,6 @@ float4 PS(VertexOut pin) : SV_Target
 	float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
 		pin.NormalW, toEyeW, shadowFactor);
 
-
 	float4 litColor = ambient + directLight;
 
 	// Add in specular reflections.
@@ -153,8 +151,6 @@ float4 PS(VertexOut pin) : SV_Target
 	float4 reflectionColor = gCubeMap.Sample(gsamLinearWrap, r);
 	float3 fresnelFactor = SchlickFresnel(fresnelR0, pin.NormalW, r);
 	litColor.rgb += shininess * fresnelFactor * reflectionColor.rgb;
-	/*int edgesize = 512;
-	litColor.rgb+=float4(1,0,1,0)*max(clamp(pow(cos(pin.TexC.x), edgesize), 0, 1), clamp(pow(cos(pin.TexC.y), edgesize), 0, 1));*/
 
 	// Common convention to take alpha from diffuse albedo.
 	litColor.a = diffuseAlbedo.a;
@@ -183,16 +179,16 @@ float4 PenguinPS(VertexOut pin) : SV_Target
 	// Light terms.
 	float4 ambient = gAmbientLight * diffuseAlbedo;
 
-    // Only the first light casts a shadow.
-    float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
-    shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
-    
-    const float shininess = 1.0f - roughness;
-    Material mat = { diffuseAlbedo, fresnelR0, shininess };
-    float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
-        pin.NormalW, toEyeW, shadowFactor);
+	// Only the first light casts a shadow.
+	float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
+	shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
 
-    float4 litColor = ambient + directLight;
+	const float shininess = 1.0f - roughness;
+	Material mat = { diffuseAlbedo, fresnelR0, shininess };
+	float4 directLight = ComputeLighting(gLights, mat, pin.PosW,
+		pin.NormalW, toEyeW, shadowFactor);
+
+	float4 litColor = ambient + directLight;
 
 	// Add in specular reflections.
 	float3 r = reflect(-toEyeW, pin.NormalW);
@@ -200,8 +196,8 @@ float4 PenguinPS(VertexOut pin) : SV_Target
 	float3 fresnelFactor = SchlickFresnel(fresnelR0, pin.NormalW, r);
 	litColor.rgb += shininess * fresnelFactor * reflectionColor.rgb;
 
-    // Common convention to take alpha from diffuse albedo.
-    litColor.a = diffuseAlbedo.a;
+	// Common convention to take alpha from diffuse albedo.
+	litColor.a = diffuseAlbedo.a;
 
 	return litColor;
 }
