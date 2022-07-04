@@ -35,8 +35,10 @@ public:
 			Jump();
 			break;
 		case static_cast<int>(MoveState::Fall):
-			
 			Fall();
+			break;
+		case static_cast<int>(MoveState::Skill):
+			Skill();
 			break;
 		}
 	}
@@ -50,5 +52,6 @@ private:
 	void Attack();
 	void Jump();
 	void Fall();
+	void Skill();
 };
 

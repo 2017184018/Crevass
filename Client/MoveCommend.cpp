@@ -48,3 +48,8 @@ void MoveCommand::Fall()
 {
 	m_Owner->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
 }
+
+void MoveCommand::Skill()
+{
+	m_Owner->SetAnimationKeyState(Character::PlayerState::STATE_SKILL);
+}

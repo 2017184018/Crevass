@@ -69,8 +69,11 @@ char Player::GetAnimType()
 	if(is_attack){
 		return ANIM_ATTACK;
 	}
-	if( is_jump ){
+	if( is_jumpanim ){
 		return ANIM_JUMP;
+	}
+	if (is_Skillanim) {
+		return ANIM_SKILL;
 	}
 	if (m_keyW)
 		return ANIM_MOVE;
@@ -84,4 +87,34 @@ char Player::GetAnimType()
 		return  ANIM_IDLE;
 	else
 		return ANIM_IDLE;
+}
+
+float Player::GetSpeed() const
+{
+	return Speed;
+}
+
+float Player::GetCrossSpeed() const
+{
+	return Crossspeed;
+}
+
+void Player::SetCrossSpeed(float crossspeed)
+{
+	Crossspeed = crossspeed;
+}
+
+void Player::SetSpeed(float speed)
+{
+	Speed = speed;
+}
+
+float Player::GetHittedSpeed() const
+{
+	return Hittedspeed;
+}
+
+void Player::SetHittedSpeed(float hittedpeed)
+{
+	Hittedspeed = hittedpeed;
 }

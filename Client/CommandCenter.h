@@ -73,6 +73,21 @@ public:
 			}
 		}
 
+		else if (m_StartSkillAnim)
+		{
+			m_SkillDeltaT += 60.f / (1.f / deltaT);
+
+			if (m_SkillAnimTime < m_SkillDeltaT)
+			{
+				if (!IsLoop) {
+					m_SkillDeltaT = 0;
+					m_StartSkillAnim = false;
+					PopCommand(static_cast<int>(MoveState::Skill));
+					IsSkillEnd = true;
+				}
+			}
+		}
+
 		m_FSM.back()->Execute();
 	}
 
@@ -94,5 +109,12 @@ public:
 	bool	m_StartFallAnim = false;
 	float	m_FallAnimTime = 76.f;
 	float	m_FallDeltaT = 0;
+
+	bool	m_StartSkillAnim = false;
+	float	m_SkillAnimTime = 80.f;
+	float	m_SkillDeltaT = 0;
+
+	bool IsSkillEnd = false;
+	bool IsLoop = false;
 };
 

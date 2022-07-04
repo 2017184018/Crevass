@@ -305,24 +305,16 @@ void ApplicationContext::CreateBackground()
 		int matidx = -1;
 		auto bonidx = BoneIndex::Count;
 		if (i / 10 == 0) {
-			//meshName = "husky";
-			//instID = "husky" + std::to_string(i + 100);
-			//matidx = 4;
-			//bonidx = BoneIndex::Husky;
-			meshName = "ArcticFox";
-			instID = "ArcticFox" + std::to_string(i + 100);
-			matidx = 10;
-			bonidx = BoneIndex::Fox;
+			meshName = "husky";
+			instID = "husky" + std::to_string(i + 100);
+			matidx = 4;
+			bonidx = BoneIndex::Husky;
 		}
 		else if (i / 10 == 1) {
-			//meshName = "Penguin_LOD0skin";
-			//instID = "Penguin_LOD0skin" + std::to_string(i + 100);
-			//matidx = 2;
-			//bonidx = BoneIndex::Penguin;
-			meshName = "Seal";
-			instID = "Seal" + std::to_string(i + 100);
-			matidx = 12;
-			bonidx = BoneIndex::Seal;
+			meshName = "Penguin_LOD0skin";
+			instID = "Penguin_LOD0skin" + std::to_string(i + 100);
+			matidx = 2;
+			bonidx = BoneIndex::Penguin;
 		}
 		else if (i / 10 == 2) {
 			meshName = "ArcticFox";
@@ -352,8 +344,11 @@ void ApplicationContext::CreateBackground()
 		chr->m_Bounds = chr->Geo->DrawArgs[meshName].Bounds;
 		chr->m_MaterialIndex = matidx;
 		chr->m_SkinnedCBIndex = bonidx;
-		chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
-		chr->m_IsVisible = false;
+		chr->m_SkinnedModelInst = NULL; MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
+		if (i < 3)
+			chr->m_IsVisible = true;
+		else
+			chr->m_IsVisible = false;
 		// 임시 스폰위치 지정
 		//chr->m_SpawnLoaction = skinnedCBIndex;
 		int XPos, ZPos;

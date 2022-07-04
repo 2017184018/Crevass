@@ -56,6 +56,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Attack");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Fall");
+	m_MeshRef->BuildSkinnedModelAnimation("husky", "Skill");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
@@ -63,6 +64,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Attack");
 	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Fall");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Skill");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "ArcticFox");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Run");
@@ -70,6 +72,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Attack");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Fall");
+	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Skill");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "PolarBear");
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Run");
@@ -77,6 +80,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Attack");
 	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Fall");
+	m_MeshRef->BuildSkinnedModelAnimation("PolarBear", "Skill");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Seal");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Run");
@@ -84,6 +88,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Jump");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Attack");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Fall");
+	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Skill");
 
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
@@ -163,13 +168,11 @@ void CREVASS::RenderUI(void)
 
 void CREVASS::BuildCharacters()
 {
-	for (int i = 0; i < 5; ++i) {
-		AppContext->CreateCharacter("husky", "husky"+std::to_string(i), "husky", BoneIndex::Husky);
-		AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin" + std::to_string(i), "Penguin", BoneIndex::Penguin);
-		AppContext->CreateCharacter("ArcticFox", "ArcticFox" + std::to_string(i), "ArcticFox", BoneIndex::Fox);
-		AppContext->CreateCharacter("PolarBear", "PolarBear" + std::to_string(i), "PolarBear", BoneIndex::PolarBear);
-		AppContext->CreateCharacter("Seal", "Seal" + std::to_string(i), "Seal", BoneIndex::Seal);
-	}
+	AppContext->CreateCharacter("husky", "husky0", "husky", BoneIndex::Husky);
+	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "Penguin", BoneIndex::Penguin);
+	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
+	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
+	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
 }
 
 void CREVASS::BuildStream() {

@@ -140,15 +140,40 @@ void GameplayScene::Update(const float& fDeltaTime)
 	m_Timer = 300 - g_pFramework->m_pNetwork->Gettime();
 
 	m_SceneController->Update(fDeltaTime);
-
-	static bool one[5]{ true,true,true,true,true };
-	static bool two[5]{ true,true,true,true,true };
-	static bool Small[5]{ false,false,false,false,false };
-
+	static float time = 0.0f;
+	static XMFLOAT3 huskyimagepos[4];
+	static XMFLOAT4X4 huskyimagerota[4];
+	time += fDeltaTime;
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
 		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
+
+		if (g_pFramework->m_pNetwork->GetHuskySkill()) {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.05f) {
+				for (int j = 3; j >= 0; --j) {
+					if (j != 0) {
+						huskyimagepos[j] = huskyimagepos[j - 1];
+						huskyimagerota[j] = huskyimagerota[j - 1];
+					}
+					else {
+						huskyimagepos[j] = g_pFramework->m_pNetwork->GetPlayerPos(i);
+						const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
+						huskyimagerota[j] = AppContext->m_RItemsVec[info.begin()->second]->m_World;
+						time = 0.0f;
+					}
+				}
+			}
+		}
+		else {
+			for (int j = 0; j < 4; ++j) {
+				huskyimagepos[j] = XMFLOAT3(-1000, -1000, -1000);
+			}
+		}
+
+		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
+			m_Users[i]->m_PlayerController->SetLoop(g_pFramework->m_pNetwork->GetPenguinSkill());
+		}
 
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
@@ -171,7 +196,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_JUMP);
 				m_Users[i]->is_StartFallAnim = false;
 				break;
-
+			case ANIM_SKILL:
+				m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_SKILL);
+				m_Users[i]->is_StartFallAnim = false;
+				break;
 			}
 
 		}
@@ -183,6 +211,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[i]->is_StartFallAnim = false;
 		}
 	}
+
+	m_Users[m_PlayerID]->m_PlayerController->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
 
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -370,6 +400,33 @@ void GameplayScene::Update(const float& fDeltaTime)
 				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
 		}
 	}
+
+	{
+		//huskyafterimage
+		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
+		auto i = info.begin();
+
+		++i;
+		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[1];
+		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[1].x;
+		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[1].y;
+		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[1].z;
+		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage1"]->MatCBIndex;
+		++i;
+		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[2];
+		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[2].x;
+		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[2].y;
+		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[2].z;
+		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage2"]->MatCBIndex;
+		++i;
+		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[3];
+		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[3].x;
+		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[3].y;
+		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[3].z;
+		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage3"]->MatCBIndex;
+
+
+	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
 	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);
@@ -497,14 +554,19 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 void GameplayScene::Render()
 {
+	//g_CommandList->RSSetViewports(1, &mMinimapViewport);
+	//g_CommandList->RSSetScissorRects(1, &mMinimapScissorRect);
+	//g_CommandList->RSSetViewports(1, &mScreenViewport);
+	//g_CommandList->RSSetScissorRects(1, &mScissorRect);
+
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
-	
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["mountain"], AppContext->m_RItemsVec);
@@ -518,11 +580,13 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
 
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["waterdrop"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
-	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
+
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
+
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
 
@@ -564,12 +628,23 @@ void GameplayScene::Render()
 			}
 		}
 	}
+
 	if (!ty[0])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
-	if (!ty[1])
+	if (!g_pFramework->m_pNetwork->GetFoxSkill()) {
+		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
+		AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ArcticFox"]->MatCBIndex;
+	}
+	if (!ty[1] && !(g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) != CHARACTER_ARCTICFOX)) {
+		if (g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
+			const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
+			AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["TranslucentArcticFox"]->MatCBIndex;
+		}
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
-	if (!ty[2])
+	}
+	if (!ty[2]) {
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
+	}
 	if (!ty[3])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 	if (!ty[4])
@@ -603,6 +678,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
+
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);

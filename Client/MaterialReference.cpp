@@ -236,6 +236,34 @@ void MaterialReference::BuildMaterials()
 	UI_SkillOff->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	UI_SkillOff->Roughness = 1.0f;
 
+	auto TranslucentArcticFox = std::make_unique<Material>();
+	TranslucentArcticFox->MatCBIndex = 27;
+	TranslucentArcticFox->DiffuseSrvHeapIndex = 10;
+	TranslucentArcticFox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
+	TranslucentArcticFox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	TranslucentArcticFox->Roughness = 1.0f;
+	
+	auto huskyimage1 = std::make_unique<Material>();
+	huskyimage1->MatCBIndex = 28;
+	huskyimage1->DiffuseSrvHeapIndex = 4;
+	huskyimage1->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.7f);
+	huskyimage1->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	huskyimage1->Roughness = 1.0f;
+
+	auto huskyimage2 = std::make_unique<Material>();
+	huskyimage2->MatCBIndex = 29;
+	huskyimage2->DiffuseSrvHeapIndex = 4;
+	huskyimage2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
+	huskyimage2->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	huskyimage2->Roughness = 1.0f;
+
+	auto huskyimage3 = std::make_unique<Material>();
+	huskyimage3->MatCBIndex = 30;
+	huskyimage3->DiffuseSrvHeapIndex = 4;
+	huskyimage3->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
+	huskyimage3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	huskyimage3->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -263,4 +291,9 @@ void MaterialReference::BuildMaterials()
 	m_Materials["UI_Fox"] = std::move(UI_Fox);
 	m_Materials["UI_SkillOn"] = std::move(UI_SkillOn);
 	m_Materials["UI_SkillOff"] = std::move(UI_SkillOff);
+	m_Materials["TranslucentArcticFox"] = std::move(TranslucentArcticFox);
+	m_Materials["huskyimage1"] = std::move(huskyimage1);
+	m_Materials["huskyimage2"] = std::move(huskyimage2);
+	m_Materials["huskyimage3"] = std::move(huskyimage3);
+
 }

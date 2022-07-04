@@ -15,6 +15,9 @@
 #define SC_BLOCK			12
 #define SC_TIME				13
 #define SC_HAIL				14
+#define SC_FOX_SKILL				15
+#define SC_HUSKY_SKILL				16
+#define SC_PENGUIN_SKILL				17
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -56,6 +59,7 @@
 #define ANIM_ATTACK			2
 #define ANIM_JUMP		    3
 #define ANIM_FALL			4
+#define ANIM_SKILL			5
 
 // player type
 #define CHARACTER_NONE 0
@@ -76,6 +80,7 @@ struct Pro_Player {
 	char Character_type;
 	bool IsHide;
 	int SnowmanNum;
+	bool IsSkillCool;
 };
 
 struct Block {
@@ -171,6 +176,24 @@ struct sc_packet_hail
 	short size;
 	char type;
 	DirectX::XMFLOAT3 pos[5];
+};
+struct sc_packet_foxskill
+{
+	short size;
+	char type;
+	bool foxskill;
+};
+struct sc_packet_huskyskill
+{
+	short size;
+	char type;
+	bool huskyskill;
+};
+struct sc_packet_penguinskill
+{
+	short size;
+	char type;
+	bool penguinskill;
 };
 
 /* Client to Server */

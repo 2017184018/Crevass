@@ -274,3 +274,30 @@ void SendHail(Hail& hails) {
 
 	SendPacket(&packet);
 }
+
+void SendFoxSkill(bool FoxSkill) {
+	sc_packet_foxskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_FOX_SKILL;
+	packet.foxskill = FoxSkill;
+
+	SendPacket(&packet);
+}
+
+void SendHuskySkill(bool HuskySkill) {
+	sc_packet_huskyskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_HUSKY_SKILL;
+	packet.huskyskill = HuskySkill;
+
+	SendPacket(&packet);
+}
+
+void SendPenguinSkill(bool PenguinSkill) {
+	sc_packet_penguinskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_PENGUIN_SKILL;
+	packet.penguinskill = PenguinSkill;
+
+	SendPacket(&packet);
+}

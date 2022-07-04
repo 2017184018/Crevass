@@ -28,73 +28,70 @@ bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 Hail hails[5];
 DirectX::XMFLOAT3 OriginBlockExtents;
-bool IsSkillPushed[3] = { false,false,false };		//스킬 키 눌렀는지
+//bool IsSkillPushed[3] = { false,false,false };		//스킬 키 눌렀는지
 
 int CalcTime = 0;
 
 void Update(vector<Player>& player)
 {
-	float speed = 1.0f * 1.5f;
-	//float crossspeed = sqrt(2) / 2;
-	float crossspeed = cos(45) * 1.5f;
 	for (int i = 0; i < numOfCls; ++i)
 	{
 		float saveX = 0;
 		float saveZ = 0;
 		if (player[i].is_hitted == false) {
 			if (player[i].GetKeyW() && player[i].GetKeyA()) {
-				player[i].m_pos.z += crossspeed;
-				player[i].m_pos.x -= crossspeed;
+				player[i].m_pos.z += player[i].GetCrossSpeed();
+				player[i].m_pos.x -= player[i].GetCrossSpeed();
 				player[i].dir = DIR_UP_LEFT;
-				saveX = -crossspeed;
-				saveZ = crossspeed;
+				saveX = -player[i].GetCrossSpeed();
+				saveZ = player[i].GetCrossSpeed();
 			}
 			else if (player[i].GetKeyW() && player[i].GetKeyD()) {
-				player[i].m_pos.z += crossspeed;
-				player[i].m_pos.x += crossspeed;
+				player[i].m_pos.z += player[i].GetCrossSpeed();
+				player[i].m_pos.x += player[i].GetCrossSpeed();
 				player[i].dir = DIR_UP_RIGHT;
-				saveX = crossspeed;
-				saveZ = crossspeed;
+				saveX = player[i].GetCrossSpeed();
+				saveZ = player[i].GetCrossSpeed();
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyD()) {
-				player[i].m_pos.z -= crossspeed;
-				player[i].m_pos.x += crossspeed;
+				player[i].m_pos.z -= player[i].GetCrossSpeed();
+				player[i].m_pos.x += player[i].GetCrossSpeed();
 				player[i].dir = DIR_DOWN_RIGHT;
-				saveX = crossspeed;
-				saveZ = -crossspeed;
+				saveX = player[i].GetCrossSpeed();
+				saveZ = -player[i].GetCrossSpeed();
 
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyA()) {
-				player[i].m_pos.z -= crossspeed;
-				player[i].m_pos.x -= crossspeed;
+				player[i].m_pos.z -= player[i].GetCrossSpeed();
+				player[i].m_pos.x -= player[i].GetCrossSpeed();
 				player[i].dir = DIR_DOWN_LEFT;
-				saveX = -crossspeed;
-				saveZ = -crossspeed;
+				saveX = -player[i].GetCrossSpeed();
+				saveZ = -player[i].GetCrossSpeed();
 			}
 			else {
 				if (player[i].GetKeyW())
 				{
-					player[i].m_pos.z += speed;
+					player[i].m_pos.z += player[i].GetSpeed();
 					player[i].dir = DIR_UP;
-					saveZ = speed;
+					saveZ = player[i].GetSpeed();
 				}
 				if (player[i].GetKeyS())
 				{
-					player[i].m_pos.z -= speed;
+					player[i].m_pos.z -= player[i].GetSpeed();
 					player[i].dir = DIR_DOWN;
-					saveZ = -speed;
+					saveZ = -player[i].GetSpeed();
 				}
 				if (player[i].GetKeyA())
 				{
-					player[i].m_pos.x -= speed;
+					player[i].m_pos.x -= player[i].GetSpeed();
 					player[i].dir = DIR_LEFT;
-					saveX = -speed;
+					saveX = -player[i].GetSpeed();
 				}
 				if (player[i].GetKeyD())
-				{		//5*speed
-					player[i].m_pos.x += speed;
+				{
+					player[i].m_pos.x += player[i].GetSpeed();
 					player[i].dir = DIR_RIGHT;
-					saveX = speed;
+					saveX = player[i].GetSpeed();
 				}
 			}
 		}
@@ -103,31 +100,31 @@ void Update(vector<Player>& player)
 			//위
 
 			if (static_cast<int>(player[i].hitted_dir) == 0) {
-				player[i].m_pos.z += speed;
+				player[i].m_pos.z += player[i].GetSpeed();
 				player[i].dir = DIR_DOWN;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 2)
 			{
-				player[i].m_pos.x += speed;
+				player[i].m_pos.x += player[i].GetSpeed();
 				player[i].dir = DIR_LEFT;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 4)
 			{
-				player[i].m_pos.z -= speed;
+				player[i].m_pos.z -= player[i].GetSpeed();
 				player[i].dir = DIR_UP;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 6)
 			{
-				player[i].m_pos.x -= speed;
+				player[i].m_pos.x -= player[i].GetSpeed();
 				player[i].dir = DIR_RIGHT;
-				saveZ = speed;
+				saveZ = player[i].GetSpeed();
 			}
 		}
 		for (int j = 0; j < numOfCls; ++j) {
-			if (i != j) {
+			if (i != j && !(TypeName[i] == "husky" && player[i].is_Skill)) {
 				g_boundaries[TypeName[i]]->Center.x += saveX;
 				g_boundaries[TypeName[i]]->Center.z += saveZ;
 				if (g_boundaries[TypeName[i]]->Intersects(*g_boundaries[TypeName[j]])) {
@@ -169,62 +166,63 @@ void Update(vector<Player>& player)
 
 void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
 
-
-	float speed = 1.0f * 1.5f;
-	float crossspeed = cos(45) * 1.5f;
 	float saveX = 0;
 	float saveZ = 0;
 	//위
 	if (static_cast<int>(player.hitted_dir) == 0) {
-		player.m_pos.z += speed * HITTED_POWER;
+		player.m_pos.z += player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_DOWN;
-		saveZ = speed * HITTED_POWER;
+		saveZ = player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 2)
 	{
-		player.m_pos.x += speed * HITTED_POWER;
+		player.m_pos.x += player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_LEFT;
-		saveZ = speed * HITTED_POWER;
+		saveX = player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 4)
 	{
-		player.m_pos.z -= speed * HITTED_POWER;
+		player.m_pos.z -= player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_UP;
-		saveZ = speed * HITTED_POWER;
+		saveZ = -player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 6)
 	{
-		player.m_pos.x -= speed * HITTED_POWER;
+		player.m_pos.x -= player.GetHittedSpeed() * HITTED_POWER;
 		player.dir = DIR_RIGHT;
-		saveZ = speed * HITTED_POWER;
+		saveX = -player.GetHittedSpeed() * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 1)
 	{
-		player.m_pos.x += crossspeed * HITTED_POWER;
-		player.m_pos.z += crossspeed * HITTED_POWER;
+		player.m_pos.x += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_DOWN_LEFT;
-		saveZ = speed * HITTED_POWER;
+		saveX = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 3)
 	{
-		player.m_pos.x += crossspeed * HITTED_POWER;
-		player.m_pos.z -= crossspeed * HITTED_POWER;
+		player.m_pos.x += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_UP_LEFT;
-		saveZ = speed * HITTED_POWER;
+		saveX = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 5)
 	{
-		player.m_pos.x -= crossspeed * HITTED_POWER;
-		player.m_pos.z -= crossspeed * HITTED_POWER;
+		player.m_pos.x -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_UP_RIGHT;
-		saveZ = speed * HITTED_POWER;
+		saveX = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 	else if (static_cast<int>(player.hitted_dir) == 7)
 	{
-		player.m_pos.x -= crossspeed * HITTED_POWER;
-		player.m_pos.z += crossspeed * HITTED_POWER;
+		player.m_pos.x -= player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		player.m_pos.z += player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 		player.dir = DIR_DOWN_RIGHT;
-		saveZ = speed * HITTED_POWER;
+		saveX = -player.GetHittedSpeed() * cos(45) * HITTED_POWER;
+		saveZ = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 
 	//if (anitime < 30) {
@@ -234,19 +232,19 @@ void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
 	//   player.m_pos.y -= speed;
 	//}
 
-	for (int j = 0; j < numOfCls; ++j) {
-		if (tyname_num != j) {
-			g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
-			g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
-			if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
+	//for (int j = 0; j < numOfCls; ++j) {
+	//	if (tyname_num != j) {
+	//		g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
+	//		g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
+	//		if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
 
-				player.m_pos.x -= saveX;
-				player.m_pos.z -= saveZ;
-				g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
-				g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
-			}
-		}
-	}
+	//			player.m_pos.x -= saveX;
+	//			player.m_pos.z -= saveZ;
+	//			g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
+	//			g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
+	//		}
+	//	}
+	//}
 	for (int j = 0; j < 25; ++j) {
 		if (player.m_pos.y < blocks[j].pos.y + 60) {
 			g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
@@ -408,7 +406,31 @@ void ProcessClients()
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
 		phyPlayers[i].Hit_BB.Radius = g_boundaries[TypeName[i]]->Extents.z / 2;
-
+		if (players[i].Character_type == CHARACTER_HUSKY) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 4.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 4.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 4.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_PENGUIN) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 2.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 2.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 2.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_ARCTICFOX) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 5.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 5.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 5.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_SEAL) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 3.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 3.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 3.0f);
+		}
+		else if (players[i].Character_type == CHARACTER_POLARBEAR) {
+			phyPlayers[i].SetSpeed(1.5f + 0.2f * 1.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 1.0f));
+			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 1.0f);
+		}
 	}
 
 	using FpFloatMilliseconds = duration<float, milliseconds::period>;
@@ -553,12 +575,14 @@ void ProcessClients()
 					case KEY_JUMP:
 						if (phyPlayers[phyMsg.id].m_pos.y > -100 && phyPlayers[phyMsg.id].SnowmanNum == -1)
 							phyPlayers[phyMsg.id].is_jump = true;
+						phyPlayers[phyMsg.id].is_jumpanim = true;
 						break;
 					case KEY_INTERACT:
 						IsInteract[phyMsg.id] = true;
 						break;
 					case KEY_SKILL:
-						IsSkillPushed[phyMsg.id] = true;
+						phyPlayers[phyMsg.id].is_Skill = true;
+						phyPlayers[phyMsg.id].is_Skillanim = true;
 						break;
 					}
 				}
@@ -608,15 +632,27 @@ void ProcessClients()
 					}
 				}
 
-				if (phyPlayers[i].is_jump == true)
+				if (phyPlayers[i].is_jumpanim == true)
 				{
 					phyPlayers[i].JumpTimeCount += 1.0f;
 					if (phyPlayers[i].JumpTimeCount > 60.0f)
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
-						//phyPlayers[i].is_jump = false;
+						phyPlayers[i].is_jumpanim = false;
 						players[i].anim = phyPlayers[i].GetAnimType();
 						//SendAnim(*players);   /
+					}
+				}
+
+				if (phyPlayers[i].is_Skillanim == true)
+				{
+					phyPlayers[i].SkillTimeCount += 1.0f;
+					if (phyPlayers[i].SkillTimeCount > 60.0f)
+					{
+						phyPlayers[i].SkillTimeCount = 0.0f;
+						if (TypeName[i] != "Penguin")
+							phyPlayers[i].is_Skillanim = false;
+						players[i].anim = phyPlayers[i].GetAnimType();
 					}
 				}
 
@@ -722,8 +758,11 @@ void ProcessClients()
 						phyPlayers[i].is_reset = false;
 						phyPlayers[i].ResetTimeCount = 0.0f;
 						phyPlayers[i].is_jump = false;
+						phyPlayers[i].is_jumpanim = false;
 						phyPlayers[i].is_hitted = false;
 						phyPlayers[i].is_attack = false;
+						phyPlayers[i].is_Skill = false;
+						phyPlayers[i].is_Skillanim = false;
 						int BlockTmpX;
 						int BlockTmpZ;
 						do {
@@ -765,7 +804,7 @@ void ProcessClients()
 				g_boundaries["snowman" + std::to_string(i)]->Center.z = TempSnowmanLocation[i] % 5 * 200;
 			}
 			for (int j = 0; j < numOfCls; ++j) {		//상호작용
-				if (IsInteract[j]) {
+				if (IsInteract[j] && !phyPlayers[j].is_Skill) {
 					if (g_boundaries["igloo0"]->Intersects(*g_boundaries[TypeName[j]])) {
 						IsInteracting[j] = true;
 						phyPlayers[j].m_pos = DirectX::XMFLOAT3(g_boundaries["igloo1"]->Center.x, g_boundaries["igloo1"]->Center.y + 10, g_boundaries["igloo1"]->Center.z);
@@ -808,8 +847,8 @@ void ProcessClients()
 							HideInSnowman[3] = !HideInSnowman[3];
 						}
 					}
-					IsInteract[j] = false;
 				}
+				IsInteract[j] = false;
 			}
 
 			//블록 block
@@ -819,10 +858,16 @@ void ProcessClients()
 					if (BlockCheck(i)) {
 						if (blocks[i].destuctioncnt != 3)
 							g_boundaries["icecube" + std::to_string(i)]->Center = blocks[i].pos;
-						if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
+						if (tmp1[j] == -1 &&
+							phyPlayers[j].m_pos.x - 10 <= blocks[i].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[i].pos.x - 54 &&
+							phyPlayers[j].m_pos.z - 10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[i].pos.z - 54 &&
+							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60)
+						{
+							//	if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
 							tmp1[j] = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;
+							phyPlayers[j].is_jumpanim = false;
 							if (phyPlayers[j].CurrentBlockNum != i) {
 								phyPlayers[j].CurrentBlockNum = i;
 								phyPlayers[j].TimeWhileBlock = 0;
@@ -833,7 +878,12 @@ void ProcessClients()
 								BlockIn = true;
 							}
 						}
-						if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
+						if (tmp1[j] != -1 &&
+							!(phyPlayers[j].m_pos.x - 10 <= blocks[tmp1[j]].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[tmp1[j]].pos.x - 54 &&
+								phyPlayers[j].m_pos.z - 10 <= blocks[tmp1[j]].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[tmp1[j]].pos.z - 54 &&
+								phyPlayers[j].m_pos.y <= blocks[tmp1[j]].pos.y + 70))
+						{
+							//	if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
 							BlockIn = false;
 							//if (!phyPlayers[j].is_jump)
 							//   Gravity += 0.05;
@@ -851,6 +901,7 @@ void ProcessClients()
 							tmp2[j] = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;
+							phyPlayers[j].is_jumpanim = false;
 							IsShake[i] = true;
 							IsDown[i] = true;
 							if (phyPlayers[j].CurrentBlockNum != i) {
@@ -1062,6 +1113,12 @@ void ProcessClients()
 							for (int j = 0; j < 5; ++j) {
 								if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[TypeName[i]]) && phyPlayers[i].SnowmanNum == -1) {
 									phyPlayers[i].is_hitted = true;
+									if (TypeName[i] == "husky") {
+										phyPlayers[j].is_Skill = false;
+										phyPlayers[j].is_Skillanim = false;
+										phyPlayers[i].SetSpeed(1.0f * 1.5f);
+										phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+									}
 									float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
 									float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
 									if (SubX < -9) {
@@ -1103,41 +1160,95 @@ void ProcessClients()
 				}
 			}
 			SendHail(*hails);
-			//   Update(phyPlayers);
-
+			//   Update(phyPlayers)
 			{	//skill
 				for (int i = 0; i < numOfCls; ++i) {
-					if (IsSkillPushed[i] && phyPlayers[i].SnowmanNum == -1) {
-						static UINT SkillCoolTime = 0;
+					if (phyPlayers[i].is_Skill && phyPlayers[i].SnowmanNum == -1 && !phyPlayers[i].IsSkillCool) {
 						if (TypeName[i] == "Penguin") {
 							if (phyPlayers[i].m_pos.y <= 200) {
-								cout << "Penguin" << endl;
 								phyPlayers[i].gravity = 0.0f;
 								phyPlayers[i].m_pos.y += 2.0f;
 								phyPlayers[i].is_jump = true;
 							}
+							SendPenguinSkill(true);
 						}
 						else if (TypeName[i] == "husky") {
-							cout << "husky" << endl;
-							static_cast<int>(phyPlayers[i].dir);
-							phyPlayers[i].SetKeyD(true);
-							if (phyPlayers[i].m_pos.y <= 30) {
-								phyPlayers[i].m_pos.y += 2.0f;
-							}
-							/*	if (phyPlayers[i].m_pos.y >= 25) {
-									if (SkillCoolTime >= 30) {
-										phyPlayers[i].m_pos.x += 3.0f;
-										phyPlayers[i].m_pos.y = 31.0f;
+							static float HittedIdx = -1;
+							if (phyPlayers[i].SkillTime >= 10 && phyPlayers[i].SkillTime <= 80) {
+								switch (static_cast<int>(phyPlayers[i].dir)) {
+								case 0:
+									phyPlayers[i].SetKeyW(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 1:
+									phyPlayers[i].SetKeyW(true);
+									phyPlayers[i].SetKeyD(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								case 2:
+									phyPlayers[i].SetKeyD(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 3:
+									phyPlayers[i].SetKeyD(true);
+									phyPlayers[i].SetKeyS(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								case 4:
+									phyPlayers[i].SetKeyS(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 5:
+									phyPlayers[i].SetKeyS(true);
+									phyPlayers[i].SetKeyA(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								case 6:
+									phyPlayers[i].SetKeyA(true);
+									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									break;
+								case 7:
+									phyPlayers[i].SetKeyW(true);
+									phyPlayers[i].SetKeyA(true);
+									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
+									break;
+								}
+								for (int j = 0; j < numOfCls; ++j) {
+									if (i != j && g_boundaries["husky"]->Intersects(*g_boundaries[TypeName[j]])) {
+										phyPlayers[j].hitted_dir = phyPlayers[i].dir;
+										phyPlayers[j].is_hitted = true;
+										phyPlayers[j].SetHittedSpeed(3.0f * 1.5f);
+										HittedIdx = j;
 									}
 								}
-								else {
-									IsSkillPushed[i] = false;
-									SkillCoolTime = 0;
-								}*/
+								SendHuskySkill(true);
+							}
+							else if (phyPlayers[i].SkillTime > 80) {
+								phyPlayers[i].is_Skill = false;
+								phyPlayers[i].SkillTime = 0;
+								phyPlayers[i].SetKeyW(false);
+								phyPlayers[i].SetKeyA(false);
+								phyPlayers[i].SetKeyS(false);
+								phyPlayers[i].SetKeyD(false);
+								phyPlayers[i].SetSpeed(1.0f * 1.5f);
+								phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+								phyPlayers[i].IsSkillCool = true;
+								if (HittedIdx != -1)
+									phyPlayers[HittedIdx].SetHittedSpeed(1.0f * 1.5f);
+								HittedIdx = -1;
+								SendHuskySkill(false);
+							}
+							else {
+								if (tmp2[i] != -1) {
+									if (20 < phyPlayers[i].GetPos().y && phyPlayers[i].GetPos().y < 30) {
+										phyPlayers[i].m_pos.y = 50;
+									}
+								}
+							}
 						}
 						else if (TypeName[i] == "ArcticFox") {
 							cout << "ArcticFox" << endl;
-
+							SendFoxSkill(true);
 						}
 						else if (TypeName[i] == "Seal") {
 							cout << "Seal" << endl;
@@ -1173,17 +1284,30 @@ void ProcessClients()
 									}
 								}
 							}
-							IsSkillPushed[i] = false;
-							SkillCoolTime = 0;
+							phyPlayers[i].is_Skill = false;
+							phyPlayers[i].SkillTime = 0;
+							phyPlayers[i].IsSkillCool = true;
 						}
-						SkillCoolTime += 1;
-						if (SkillCoolTime >= 300) {
-							IsSkillPushed[i] = false;
-							SkillCoolTime = 0;
+						phyPlayers[i].SkillTime += 1;
+						if (phyPlayers[i].SkillTime >= 300) {
+							phyPlayers[i].is_Skill = false;
+							phyPlayers[i].is_Skillanim = false;
+							phyPlayers[i].SkillTime = 0;
+							phyPlayers[i].IsSkillCool = true;
+							SendFoxSkill(false);
+							SendPenguinSkill(false);
 						}
 					}
 					else {
-						IsSkillPushed[i] = false;
+						phyPlayers[i].is_Skill = false;
+						phyPlayers[i].is_Skillanim = false;
+					}
+					if (phyPlayers[i].IsSkillCool) {
+						phyPlayers[i].SkillCoolTime += 1;
+						if (phyPlayers[i].SkillCoolTime >= 600) {
+							phyPlayers[i].IsSkillCool = false;
+							phyPlayers[i].SkillCoolTime = 0;
+						}
 					}
 				}
 			}
@@ -1195,14 +1319,15 @@ void ProcessClients()
 				players[i].dir = phyPlayers[i].dir;
 				players[i].IsHide = phyPlayers[i].IsHide;
 				players[i].SnowmanNum = phyPlayers[i].SnowmanNum;
+				players[i].IsSkillCool = phyPlayers[i].IsSkillCool;
 
 				g_boundaries[TypeName[i]]->Center = players[i].pos;
-				if (TypeName[i] == "Penguin") {
-					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-				}
-				else {
-					g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-				}
+				/*		if (TypeName[i] == "Penguin") {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
+						}
+						else {
+							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
+						}*/
 
 			}
 			SendPos(*players);
