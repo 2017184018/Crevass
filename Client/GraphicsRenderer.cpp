@@ -25,6 +25,9 @@ namespace Graphics
 
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
+
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ParticlePSO;
+
 }
 
 using namespace Core;
@@ -329,6 +332,12 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 68, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
+	m_Billboard_InputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	};
+
 	m_UI_InputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -614,8 +623,31 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	};
 	vertBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(g_Device->CreateComputePipelineState(&vertBlurPSO, IID_PPV_ARGS(&VerBlur)));
+	//
+	// PSO for billboards sprites
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC billboardsPsoDesc = opaquePsoDesc;
+	billboardsPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particleVS"]->GetBufferPointer()),
+		m_Shaders["particleVS"]->GetBufferSize()
+	};
+	billboardsPsoDesc.GS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particleGS"]->GetBufferPointer()),
+		m_Shaders["particleGS"]->GetBufferSize()
+	};
+	billboardsPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particlePS"]->GetBufferPointer()),
+		m_Shaders["particlePS"]->GetBufferSize()
+	};
 
-	
+	billboardsPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+	billboardsPsoDesc.InputLayout = { m_Billboard_InputLayout.data(), (UINT)m_Billboard_InputLayout.size() };
+	billboardsPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+
+	ThrowIfFailed(Core::g_Device->CreateGraphicsPipelineState(&billboardsPsoDesc, IID_PPV_ARGS(&g_ParticlePSO)));
 }
 
 void GraphicsRenderer::BuildPostProcessRootSignature()
