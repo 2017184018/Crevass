@@ -953,7 +953,7 @@ void ProcessClients()
 					}
 				}
 				if (blocks[1].destuctioncnt == 3 && blocks[5].destuctioncnt == 3) {
-					int tmp = uid(dre);
+					int tmp = uid2(dre);
 					if (tmp == 0) {
 						blocks[1].destuctioncnt = 0;
 						g_boundaries["icecube1"]->Center = blocks[1].pos;
@@ -966,7 +966,7 @@ void ProcessClients()
 					}
 				}
 				if (blocks[19].destuctioncnt == 3 && blocks[23].destuctioncnt == 3) {
-					int tmp = uid(dre);
+					int tmp = uid2(dre);
 					if (tmp == 0) {
 						blocks[23].destuctioncnt = 0;
 						g_boundaries["icecube23"]->Center = blocks[23].pos;
@@ -979,7 +979,7 @@ void ProcessClients()
 					}
 				}
 				if (blocks[21].destuctioncnt == 3 && blocks[15].destuctioncnt == 3) {
-					int tmp = uid(dre);
+					int tmp = uid2(dre);
 					if (tmp == 0) {
 						blocks[21].destuctioncnt = 0;
 						g_boundaries["icecube21"]->Center = blocks[21].pos;

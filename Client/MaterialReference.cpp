@@ -186,7 +186,7 @@ void MaterialReference::BuildMaterials()
 	TranslucentArcticFox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	TranslucentArcticFox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	TranslucentArcticFox->Roughness = 1.0f;
-	
+
 	auto huskyimage1 = std::make_unique<Material>();
 	huskyimage1->MatCBIndex = 20;
 	huskyimage1->DiffuseSrvHeapIndex = 4;
@@ -227,11 +227,8 @@ void MaterialReference::BuildMaterials()
 	m_Materials["lobby4"] = std::move(lobby4);
 	m_Materials["lobby5"] = std::move(lobby5);
 	m_Materials["waterdrop"] = std::move(waterdrop);
-
 	m_Materials["TranslucentArcticFox"] = std::move(TranslucentArcticFox);
 	m_Materials["huskyimage1"] = std::move(huskyimage1);
 	m_Materials["huskyimage2"] = std::move(huskyimage2);
 	m_Materials["huskyimage3"] = std::move(huskyimage3);
-
-
 }

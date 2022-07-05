@@ -816,6 +816,11 @@ void ApplicationContext::CreateMinimap()
 
 				instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["snowcube"].Bounds.Center, instancingObj->GetPosition());
 			}
+			MinimapBlockScale = XMFLOAT3(
+				instancingObj->m_World._11,
+				instancingObj->m_World._22,
+				instancingObj->m_World._33
+				);
 
 			float d = 800.0f / 11.0f;
 			MinimapCubePos[5 * i + j] = XMFLOAT3(
@@ -835,7 +840,6 @@ void ApplicationContext::CreateMinimap()
 			top->m_World._11 = scale;
 			top->m_World._22 = scale;
 			top->m_World._33 = scale;
-			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			top->m_World._41 = distance * i;
 			top->m_World._42 = -30;
 			top->m_World._43 = distance * j;
@@ -860,16 +864,32 @@ void ApplicationContext::CreateMinimap()
 			instancingObj->m_World._11 = scale * 7.5 / 10.0;
 			instancingObj->m_World._22 = scale;
 			instancingObj->m_World._33 = scale * 7.5 / 10.0;
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			instancingObj->m_World._41 = distance * i;
 			instancingObj->m_World._42 = -30;
 			instancingObj->m_World._43 = distance * j;
 
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
-
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		}
 	}
+
+	//298
+	GameObject* icon = CreateObject<GameObject>("icon", "icon0");
+	icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+	icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	icon->IndexCount = icon->Geo->DrawArgs["cylinder"].IndexCount;
+	icon->StartIndexLocation = icon->Geo->DrawArgs["cylinder"].StartIndexLocation;
+	icon->BaseVertexLocation = icon->Geo->DrawArgs["cylinder"].BaseVertexLocation;
+	icon->m_IsVisible = true;
+	icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["Seal"]->MatCBIndex;
+	icon->m_World = MathHelper::Identity4x4();
+	icon->m_World._11 = 11;
+	icon->m_World._22 = 1;
+	icon->m_World._33 = 11;
+
+	XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World)* XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+	icon->m_TexTransform = MathHelper::Identity4x4();
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)

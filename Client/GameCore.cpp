@@ -54,6 +54,7 @@ namespace Core
 	D3D12_VIEWPORT mMinimapViewport;
 	D3D12_RECT mMinimapScissorRect;
 	XMFLOAT3 MinimapCubePos[25];
+	XMFLOAT3 MinimapBlockScale;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)

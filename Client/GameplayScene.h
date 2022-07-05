@@ -38,6 +38,7 @@ namespace Core
 	extern D3D12_VIEWPORT mScreenViewport;
 	extern D3D12_RECT mScissorRect;
 	extern XMFLOAT3 MinimapCubePos[25];
+	extern XMFLOAT3 MinimapBlockScale;
 }
 
 class Character;
@@ -79,6 +80,5 @@ public:
 	UINT Lifecnt = 5;
 
 	int FallX, FallZ;
-	XMFLOAT3 MinimapBlockScale;
 };
 

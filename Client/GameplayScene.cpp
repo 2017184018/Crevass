@@ -191,25 +191,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	m_Users[m_PlayerID]->m_PlayerController->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
 
-	static bool one = true;
-	static int cnt = 0;
-	if (GetAsyncKeyState('C') & 0x8000) {
-		if (one) {
-			AppContext->m_RItemsVec[cnt + 222]->m_World._11 = 0;
-			AppContext->m_RItemsVec[cnt + 222]->m_World._22 = 0;
-			AppContext->m_RItemsVec[cnt + 222]->m_World._33 = 0;
-			one = false;
-			++cnt;
-		}
-	}
-	else {
-		one = true;
-	}
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
+		static 	XMMATRIX mat = XMLoadFloat4x4(&AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World);
 		if (DestructionCnt[i] == 0) {
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
@@ -221,50 +208,61 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[i + 51]->m_World._22 = 1;
 			AppContext->m_RItemsVec[i + 51]->m_World._33 = 7.5 / 10.0;
 
-			if (MinimapBlockScale.x != 0 && MinimapBlockScale.y != 0 && MinimapBlockScale.z != 0) {
-				/*	AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 = MinimapBlockScale.x;
-					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22 = MinimapBlockScale.y;
-					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33 = MinimapBlockScale.z;
-					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._11 = MinimapBlockScale.x;
-					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._22 = MinimapBlockScale.y;
-					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._33 = MinimapBlockScale.z;
-					AppContext->m_RItemsVec[i + 51 + 222]->m_World._11 = MinimapBlockScale.x * 7.5 / 10.0;
-					AppContext->m_RItemsVec[i + 51 + 222]->m_World._22 = MinimapBlockScale.y;
-					AppContext->m_RItemsVec[i + 51 + 222]->m_World._33 = MinimapBlockScale.z * 7.5 / 10.0;*/
-			}
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World = MathHelper::Identity4x4();
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._11 = 1.0f;
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._22 = 1.0f;
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._33 = 1.0f;
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World = MathHelper::Identity4x4();
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 = 1.0f;
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22 = 1.0f;
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33 = 1.0f;
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World = MathHelper::Identity4x4();
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._11 = 7.5 / 10.0;
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._22 = 1.0f;
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._33 = 7.5 / 10.0;
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World) * mat);
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World) * mat);
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[i + 51 + 222]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[i + 51 + 222]->m_World) * mat);
 		}
 		if (DestructionCnt[i] == 1) {
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 0;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 0;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 0;
 
-			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._11 = 0;
-			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._22 = 0;
-			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._33 = 0;
+			auto matrix = XMLoadFloat4x4(&AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World);
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World = MathHelper::Identity4x4();
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._11 = 0.0f;
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._22 = 0.0f;
+			AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._33 = 0.0f;
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World) * matrix);
 		}
 		else if (DestructionCnt[i] == 2) {
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 0;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 0;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 0;
 
-			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 = 0;
-			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22 = 0;
-			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33 = 0;
-
+			auto matrix = XMLoadFloat4x4(&AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World);
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World = MathHelper::Identity4x4();
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 = 0.0f;
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22 = 0.0f;
+			AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33 = 0.0f;
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World) * matrix);
 		}
 		else if (DestructionCnt[i] == 3) {
 			AppContext->m_RItemsVec[i + 51]->m_World._11 = 0;
 			AppContext->m_RItemsVec[i + 51]->m_World._22 = 0;
 			AppContext->m_RItemsVec[i + 51]->m_World._33 = 0;
 
-			AppContext->m_RItemsVec[i + 51 + 222]->m_World._11 = 0;
-			AppContext->m_RItemsVec[i + 51 + 222]->m_World._22 = 0;
-			AppContext->m_RItemsVec[i + 51 + 222]->m_World._33 = 0;
+			auto matrix = XMLoadFloat4x4(&AppContext->m_RItemsVec[i + 51 + 222]->m_World);
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World = MathHelper::Identity4x4();
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._11 = 0.0f;
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._22 = 0.0f;
+			AppContext->m_RItemsVec[i + 51 + 222]->m_World._33 = 0.0f;
+			XMStoreFloat4x4(&AppContext->m_RItemsVec[i + 51 + 222]->m_World, XMLoadFloat4x4(&AppContext->m_RItemsVec[i + 51 + 222]->m_World) * matrix);
 		}
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._41 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._41 = AppContext->m_RItemsVec[51 + i]->m_World._41;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
-
 	}
 
 	{		//우박 hail
@@ -461,10 +459,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
 				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
 			}
-			if (AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11 != 0)
-				MinimapBlockScale = XMFLOAT3(AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._11,
-					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._22, AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._33);
-
 			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 			{
 				AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
@@ -478,6 +472,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
 				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
 			}
+		}
+
+		const std::map<std::string, UINT>& icon = AppContext->m_RItemsMap["icon"]->GetinstanceKeymap();
+		if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+		{
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+		}
+		else {
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._42 + 100;
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._43;
 		}
 	}
 
@@ -539,6 +544,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapsnowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapicicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapsnow_top"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icon"], AppContext->m_RItemsVec);
 
 
 	//meterial
@@ -568,6 +574,7 @@ void GameplayScene::Render()
 
 	g_CommandList->RSSetViewports(1, &mMinimapViewport);
 	g_CommandList->RSSetScissorRects(1, &mMinimapScissorRect);
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["MinimapSea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapicecube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapsnowcube"], AppContext->m_RItemsVec);
@@ -576,6 +583,7 @@ void GameplayScene::Render()
 
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icon"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);

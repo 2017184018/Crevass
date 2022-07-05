@@ -16,7 +16,7 @@ void MeshReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandL
 	GeometryGenerator::MeshData box = geoGen.CreateBox(1.0f, 1.0f, 1.0f, 3);
 	GeometryGenerator::MeshData grid = geoGen.CreateGrid(1.0f, 1.0f, 128, 128);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 20);
-	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(0.5f, 0.3f, 3.0f, 20, 20);
+	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(0.5f, 0.5f, 3.0f, 20, 20);
 
 	UINT boxVertexOffset = 0;
 	UINT gridVertexOffset = (UINT)box.Vertices.size();
@@ -243,7 +243,6 @@ void MeshReference::BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList*
 
 	m_GeometryMesh["wave"] = std::move(geo);
 }
-
 
 void MeshReference::BuildStreamMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, const char* path, std::string meshName)
 {
@@ -472,7 +471,6 @@ bool MeshReference::LoadMeshFile(std::vector<Vertex>& outVertexVector, std::vect
 
 	return false;
 }
-
 
 bool MeshReference::LoadMeshFile(std::vector<CharacterVertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>* outMaterial, std::string path)
 {
