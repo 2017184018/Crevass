@@ -472,6 +472,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
 				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
 			}
+			//cout << i << ": " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 << ", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 <<
+			//	", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 << endl;
 		}
 
 		const std::map<std::string, UINT>& icon = AppContext->m_RItemsMap["icon"]->GetinstanceKeymap();
@@ -481,8 +483,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 		else {
 			AppContext->m_RItemsVec[icon.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._42 + 100;
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._43;
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 400.0f / 11.0f +20.0f + m_Users[m_PlayerID]->m_World._42;
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43-10;
 		}
 	}
 
@@ -580,10 +582,10 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapsnowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapsnow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapicicle"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icon"], AppContext->m_RItemsVec);
 
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icon"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);

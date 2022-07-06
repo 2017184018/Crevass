@@ -752,8 +752,8 @@ void ApplicationContext::CreateMinimap()
 		Sea->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		Sea->m_MaterialIndex = 3;
 		Sea->m_World = MathHelper::Identity4x4();
-		Sea->m_World._11 = 2;
-		Sea->m_World._33 = 2;
+		Sea->m_World._11 = 3;
+		Sea->m_World._33 = 3;
 
 		XMStoreFloat4x4(&Sea->m_World, XMLoadFloat4x4(&Sea->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
 
