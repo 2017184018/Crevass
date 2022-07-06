@@ -273,8 +273,12 @@ void MeshReference::BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandLi
 	for (int i = 0; i < particleCount; ++i)
 	{
 
-		particleVertices[i].pos = XMFLOAT3(0, 0, 0);
-		particleVertices[i].size = particleSize;
+		particleVertices[i].pos = XMFLOAT3(0.f,0.f,0.f);
+;		particleVertices[i].size = particleSize;
+		particleVertices[i].velocity = XMFLOAT3(MathHelper::RandF(-50.0f, 50.0f), MathHelper::RandF(200.0f, 200.0f), MathHelper::RandF(-50.0f, 50.0f));
+		particleVertices[i].Starttime = MathHelper::RandF(0.0f, 6.0f);
+		particleVertices[i].Lifetime = MathHelper::RandF(3.0f, 5.0f);
+
 		//m_ParticleVertices[i].size ,,,
 	}
 

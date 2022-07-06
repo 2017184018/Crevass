@@ -592,9 +592,7 @@ void GameplayScene::Render()
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
-
+	
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	bool ty[5]{ false,false,false,false,false };
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
@@ -660,6 +658,14 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);
 #endif
+	//sky
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
+
+	/*Particle*/
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);
+
 
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
@@ -676,10 +682,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	
-	/*Particle*/
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);
-
+	
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());

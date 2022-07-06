@@ -156,10 +156,9 @@ struct ParticleVertex
 {
 	XMFLOAT3 pos; // 월드행렬 위치에서 얼만큼 이동됬는지의 오프셋 pos 좌표
 	XMFLOAT2 size;
-	// velocity
-	// startTime
-	// leftTime
-	// lifeTime
+	XMFLOAT3 velocity;
+	float Starttime;
+	float Lifetime;
 	// period
 	// amp
 	// value

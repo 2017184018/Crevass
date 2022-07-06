@@ -4,13 +4,19 @@ struct VertexIn
 {
     float3 PosL : POSITION;
     float2 SizeW : SIZE;
+    float3 Vel : VELOCITY;
+    float StartTime : STARTTIME;
+    float LifeTime : LIFETIME;
 };
 
 struct VertexOut
 {
     float3 CenterW : POSITION;
     float2 SizeW : SIZE;
-    
+    float3 Vel : VELOCITY;
+    float StartTime : STARTTIME;
+    float LifeTime : LIFETIME;
+
     nointerpolation uint MatIndex  : MATINDEX;
 };
 
@@ -21,8 +27,9 @@ struct GeoOut
     float3 NormalW : NORMAL;
     float2 TexC : TEXCOORD;
     uint PrimID : SV_PrimitiveID;
-    
-	nointerpolation uint MatIndex  : MATINDEX;
+
+    float alpha : ALPHA;
+    nointerpolation uint MatIndex  : MATINDEX;
 };
 
 VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
@@ -40,9 +47,12 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
     // 기하쉐이더에 월드공간 좌표를 전달하기 위해 
     // 인스턴스구조체버퍼에서 월드행렬곱
     float4 posW = mul(float4(vin.PosL, 1.0f), world);
+
     vout.CenterW = posW.xyz;
-    
     vout.SizeW = vin.SizeW;
+    vout.Vel = vin.Vel;
+    vout.StartTime = vin.StartTime;
+    vout.LifeTime = vin.LifeTime;
 
     return vout;
 }
@@ -56,13 +66,32 @@ void GS(point VertexOut gin[1],
         uint primID : SV_PrimitiveID,
         inout TriangleStream<GeoOut> triStream)
 {
+    float newTime = gTotalTime - gin[0].StartTime;
+    float3 pos = gin[0].CenterW;
+    float alpha = 0.f;
+    float3 c_Gravity = float3(0, -70, 0);
+
+    if (newTime > 0) {
+        float tempTime = newTime;
+        //0~1
+        alpha = frac(tempTime / gin[0].LifeTime);
+        //0~ LifeTime
+        tempTime = alpha * gin[0].LifeTime;
+
+        pos.xyz = gin[0].CenterW.xyz + gin[0].Vel.xyz * tempTime + 0.5 * c_Gravity.xyz * tempTime * tempTime;
+    }
+    else
+    {
+        //투명하게
+        alpha = 1.f;
+    }
     //
 	// Compute the local coordinate system of the sprite relative to the world
 	// space such that the billboard is aligned with the y-axis and faces the eye.
 	// 월드공간을 기준으로 스프라이트의 로컬 좌표계를 계산
     // 빌보드가 y축으로 서고 눈을 향하도록 함
     float3 up = float3(0.0f, 1.0f, 0.0f);
-    float3 look = gEyePosW - gin[0].CenterW;
+    float3 look = gEyePosW - pos;
 	look.y = 0.0f; // y-axis aligned, so project to xz-plane
     look = normalize(look);
     float3 right = cross(up, look);
@@ -74,10 +103,10 @@ void GS(point VertexOut gin[1],
     float halfHeight = 0.5f * gin[0].SizeW.y;
     
     float4 v[4];
-    v[0] = float4(gin[0].CenterW + halfWidth * right - halfHeight * up, 1.0f);
-    v[1] = float4(gin[0].CenterW + halfWidth * right + halfHeight * up, 1.0f);
-    v[2] = float4(gin[0].CenterW - halfWidth * right - halfHeight * up, 1.0f);
-    v[3] = float4(gin[0].CenterW - halfWidth * right + halfHeight * up, 1.0f);
+    v[0] = float4(pos + halfWidth * right - halfHeight * up, 1.0f);
+    v[1] = float4(pos + halfWidth * right + halfHeight * up, 1.0f);
+    v[2] = float4(pos - halfWidth * right - halfHeight * up, 1.0f);
+    v[3] = float4(pos - halfWidth * right + halfHeight * up, 1.0f);
     
     // them as a triangle strip.
     float2 texC[4] =
@@ -105,6 +134,7 @@ void GS(point VertexOut gin[1],
         gout.PrimID = primID;
 		
         gout.MatIndex = matIndex;
+        gout.alpha = alpha;
 
         // 출력 데이터를 기존 스트림에 추가합니다.
         triStream.Append(gout);
@@ -153,6 +183,7 @@ float4 PS(GeoOut pin) : SV_Target
     
     // Common convention to take alpha from diffuse albedo.
     litColor.a = diffuseAlbedo.a;
-    
+    litColor.a -= pin.alpha;
+
     return litColor;
 }
