@@ -90,6 +90,10 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Fall");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Skill");
 
+	// Particles
+	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "testParticle", 100);
+
+
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
@@ -192,4 +196,5 @@ void CREVASS::BuildStream() {
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/igloo01_m.mesh", "igloo");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_sled_m.mesh", "sled");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fishrack01_m.mesh", "fishrack");
-}
+
+	}

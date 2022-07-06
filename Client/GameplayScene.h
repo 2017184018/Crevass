@@ -20,6 +20,8 @@ namespace Graphics
 
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ShadowOpaquePSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedShadowOpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ParticlePSO;
+
 
 }
 

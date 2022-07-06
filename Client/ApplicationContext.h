@@ -9,7 +9,7 @@ namespace Core {
 	extern GameObject* wave;
 	extern UINT iglooIndex[2];
 	extern 	MainFramework* g_pFramework;
-	extern int SNUM;
+	//extern int SNUM;
 }
 
 class Character;
@@ -73,6 +73,7 @@ public:
 	void CreateHail();
 	void CreateWaterDrop();
 	void CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY);
+	void CreateParticle(std::string particleName, std::string instID, std::string matName);
 
 	void DisplayProps(std::string mapName);
 	void HiddenBlocks();
@@ -87,6 +88,7 @@ public:
 
 	void SetUI2DPosition(std::string ui2dName, float posX, float posY);
 
+	void DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos);
 
 public:
 	//void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);

@@ -51,7 +51,7 @@ namespace Core
 	UINT iglooIndex[2];
 	UINT SnowmanIndex[4];
 	bool Inactive = false;
-	int SNUM=210;
+	//int SNUM=210;
 
 	D3D12_VIEWPORT mScreenViewport;
 	D3D12_RECT mScissorRect;

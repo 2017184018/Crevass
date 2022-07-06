@@ -5,6 +5,7 @@
 #include "CharacterParts.h"
 #include "MeshReference.h"
 #include "MaterialReference.h"
+#include "Particle.h"
 
 #include <random>
 
@@ -712,7 +713,7 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->m_World._22 = SCALE * 3 / 5.0;
 		instancingObj->m_World._33 = SCALE * 3 / 5.0;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
-		++SNUM;
+		//++SNUM;
 	}
 }
 
@@ -736,7 +737,7 @@ void ApplicationContext::CreateHail()
 		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * -0.4));
 
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
-		++SNUM;
+		//++SNUM;
 	}
 }
 
@@ -759,7 +760,7 @@ void ApplicationContext::CreateWaterDrop()
 		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * i / 2.0));
 
 		top->m_TexTransform = MathHelper::Identity4x4();
-		++SNUM;
+		//++SNUM;
 	}
 }
 
@@ -780,6 +781,21 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 
 	item->Scale(sizeX, sizeY, 1);
 	item->SetPosition(posX, posY, 1.f);
+}
+
+void ApplicationContext::CreateParticle(std::string particleName, std::string instID, std::string matName)
+{
+	Particle* particle = CreateObject<Particle>(particleName, instID);
+	particle->Geo = MeshReference::GetApp()->m_GeometryMesh[particleName].get();
+	particle->IndexCount = particle->Geo->DrawArgs[particleName].IndexCount;
+	particle->StartIndexLocation = particle->Geo->DrawArgs[particleName].StartIndexLocation;
+	particle->BaseVertexLocation = particle->Geo->DrawArgs[particleName].BaseVertexLocation;
+	particle->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	particle->m_Bounds = particle->Geo->DrawArgs[particleName].Bounds;
+	particle->SetParticleNameCount(particleName); 
+	//particle->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
+	particle->m_MaterialIndex = 25;
+	particle->m_IsVisible = false;
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
@@ -901,4 +917,16 @@ void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float
 	item->SetPosition(posX / Core::g_DisplayWidth, posY / Core::g_DisplayHeight, 1);
 
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[ui2dName], AppContext->m_RItemsVec);
+}
+
+void ApplicationContext::DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos)
+{
+	Particle* ptc = FindObject<Particle>(particleName, instID);
+	if (!ptc) return;
+
+	ptc->m_IsVisible = true;
+	ptc->m_World = MathHelper::Identity4x4();
+	ptc->m_TexTransform = MathHelper::Identity4x4();
+	ptc->SetPosition(pos);
+	// rotate
 }

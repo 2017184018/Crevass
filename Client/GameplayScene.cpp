@@ -38,14 +38,16 @@ void GameplayScene::Initialize()
 			AppContext->CreateUI2D("player_"+ std::to_string(j)+"hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i*23.f, 180.f -j*30.f, 20.f, 10.5f);
 		}
 	}
-	//AppContext->CreateUI2D("hp" , "hp", 19, 0.f, 0.f, 50.f, 30.5f);
-	//AppContext->CreateUI2D("hp1", "hp1", 19, 100.f, 100.f, 50.f, 30.5f);
 	AppContext->CreateUI2D("ui_p", "ui_p", 20, -380.f, 180.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_h", "ui_h", 21, -380.f, 150.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_s", "ui_s", 22, -380.f, 120.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_b", "ui_b", 23, -380.f, 90.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
+
+	
+	AppContext->CreateParticle("testParticle", "testParticle-1", "ui_SkillOn");
+	
 #ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 #endif
@@ -123,6 +125,9 @@ bool GameplayScene::Enter()
 		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
 	}
+
+	AppContext->DisplayParticle("testParticle", "testParticle-1", m_Users[m_PlayerID]->GetPosition());
+
 	return false;
 }
 
@@ -395,14 +400,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
 	}
+
 	{	//waterdrop
 		for (int i = 0; i < 4; ++i) {
-			AppContext->m_RItemsVec[218 + i]->m_World._41 = m_Users[m_PlayerID]->GetPosition().x + (100 * (i / 2) - 50);
-			AppContext->m_RItemsVec[218 + i]->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 330;
+			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._41 = m_Users[m_PlayerID]->GetPosition().x + (100 * (i / 2) - 50);
+			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 330;
 			if (i == 0 || i == 3)
-				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 85;
+				AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 85;
 			else
-				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
+				AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
 		}
 	}
 
@@ -517,10 +523,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 	
 	
 	/*UI*/
-	/*GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["hp"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["hp1"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["hp1"], AppContext->m_RItemsVec);*/
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
 			GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
@@ -543,7 +545,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
-	//여기가 문제일수도 있음 
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);
 
 	///*Shadow*/
 	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
@@ -673,6 +675,11 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
+	
+	/*Particle*/
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);
+
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
