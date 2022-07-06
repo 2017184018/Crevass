@@ -261,7 +261,7 @@ void MeshReference::BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList*
 	m_GeometryMesh["wave"] = std::move(geo);
 }
 
-void MeshReference::BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount)
+void MeshReference::BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particleSize)
 {
 	// 입력받아야 할 자료들
 // world, particle name
@@ -274,7 +274,7 @@ void MeshReference::BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandLi
 	{
 
 		particleVertices[i].pos = XMFLOAT3(0, 0, 0);
-		particleVertices[i].size = XMFLOAT2(200.0f, 200.0f);
+		particleVertices[i].size = particleSize;
 		//m_ParticleVertices[i].size ,,,
 	}
 

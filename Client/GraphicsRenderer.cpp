@@ -626,7 +626,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	//
 	// PSO for billboards sprites
 	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC billboardsPsoDesc = opaquePsoDesc;
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC billboardsPsoDesc = uiPsoDesc;
 	billboardsPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["particleVS"]->GetBufferPointer()),
