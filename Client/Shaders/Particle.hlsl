@@ -70,6 +70,7 @@ void GS(point VertexOut gin[1],
     float3 pos = gin[0].CenterW;
     float alpha = 0.f;
     float3 c_Gravity = float3(0, -70, 0);
+    float3 vel = gin[0].Vel.xyz;
 
     if (newTime > 0) {
         float tempTime = newTime;
@@ -78,7 +79,10 @@ void GS(point VertexOut gin[1],
         //0~ LifeTime
         tempTime = alpha * gin[0].LifeTime;
 
-        pos.xyz = gin[0].CenterW.xyz + gin[0].Vel.xyz * tempTime + 0.5 * c_Gravity.xyz * tempTime * tempTime;
+
+
+        pos.xyz = gin[0].CenterW.xyz + vel.xyz * tempTime + 0.5 * c_Gravity.xyz * tempTime * tempTime;
+
     }
     else
     {

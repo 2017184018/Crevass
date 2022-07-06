@@ -238,39 +238,47 @@ void MaterialReference::BuildMaterials()
 
 	auto TranslucentArcticFox = std::make_unique<Material>();
 	TranslucentArcticFox->MatCBIndex = 27;
-	TranslucentArcticFox->DiffuseSrvHeapIndex = 10;
+	TranslucentArcticFox->DiffuseSrvHeapIndex = 27;
 	TranslucentArcticFox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	TranslucentArcticFox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	TranslucentArcticFox->Roughness = 1.0f;
 	
 	auto huskyimage1 = std::make_unique<Material>();
 	huskyimage1->MatCBIndex = 28;
-	huskyimage1->DiffuseSrvHeapIndex = 4;
+	huskyimage1->DiffuseSrvHeapIndex = 28;
 	huskyimage1->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.7f);
 	huskyimage1->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage1->Roughness = 1.0f;
 
 	auto huskyimage2 = std::make_unique<Material>();
 	huskyimage2->MatCBIndex = 29;
-	huskyimage2->DiffuseSrvHeapIndex = 4;
+	huskyimage2->DiffuseSrvHeapIndex = 29;
 	huskyimage2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	huskyimage2->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage2->Roughness = 1.0f;
 
 	auto huskyimage3 = std::make_unique<Material>();
 	huskyimage3->MatCBIndex = 30;
-	huskyimage3->DiffuseSrvHeapIndex = 4;
+	huskyimage3->DiffuseSrvHeapIndex = 30;
 	huskyimage3->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	huskyimage3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage3->Roughness = 1.0f;
 
+	auto Particle_Ice = std::make_unique<Material>();
+	Particle_Ice->MatCBIndex = 31;
+	Particle_Ice->DiffuseSrvHeapIndex = 31;
+	Particle_Ice->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
+	Particle_Ice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	Particle_Ice->Roughness = 1.0f;
+
 	auto bricks0 = std::make_unique<Material>();
-	bricks0->MatCBIndex = 31;
-	bricks0->DiffuseSrvHeapIndex = 4;
+	bricks0->MatCBIndex = 32;
+	bricks0->DiffuseSrvHeapIndex = 32;
 	bricks0->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	bricks0->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	bricks0->Roughness = 1.0f;
 
+	
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -302,5 +310,7 @@ void MaterialReference::BuildMaterials()
 	m_Materials["huskyimage1"] = std::move(huskyimage1);
 	m_Materials["huskyimage2"] = std::move(huskyimage2);
 	m_Materials["huskyimage3"] = std::move(huskyimage3);
+	m_Materials["Particle_Ice"] = std::move(Particle_Ice);
 	m_Materials["bricks0"] = std::move(bricks0);
+	
 }
