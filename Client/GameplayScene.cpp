@@ -415,26 +415,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
 		auto i = info.begin();
 
-		++i;
-		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[1];
-		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[1].x;
-		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[1].y;
-		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[1].z;
-		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage1"]->MatCBIndex;
-		++i;
-		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[2];
-		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[2].x;
-		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[2].y;
-		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[2].z;
-		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage2"]->MatCBIndex;
-		++i;
-		AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[3];
-		AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[3].x;
-		AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[3].y;
-		AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[3].z;
-		AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage3"]->MatCBIndex;
-
-
+		for (int j = 0; j < 3; ++j) {
+			++i;
+			AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[j + 1];
+			AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[j + 1].x;
+			AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[j + 1].y;
+			AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[j + 1].z;
+			AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+		}
 	}
 	{		//minimap
 		float FallDistance = 200;
@@ -476,15 +464,37 @@ void GameplayScene::Update(const float& fDeltaTime)
 			//	", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 << endl;
 		}
 
-		const std::map<std::string, UINT>& icon = AppContext->m_RItemsMap["icon"]->GetinstanceKeymap();
+		const std::map<std::string, UINT>& icon = AppContext->m_RItemsMap["myicon"]->GetinstanceKeymap();
 		if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 		{
 			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
 		}
 		else {
 			AppContext->m_RItemsVec[icon.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 400.0f / 11.0f +20.0f + m_Users[m_PlayerID]->m_World._42;
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43-10;
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42;
+			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 10;
+		}
+
+		const std::map<std::string, UINT>& snowmanicon = AppContext->m_RItemsMap["snowmanicon"]->GetinstanceKeymap();
+		auto i = snowmanicon.begin();
+		for (int j = 0; j < 4; ++j) {
+			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+			{
+				AppContext->m_RItemsVec[i->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+			}
+			else {
+				if (DestructionCnt[SnowmanIndex[j]] < 3) {
+					AppContext->m_RItemsVec[i->second]->m_World._41 = (SnowmanIndex[j] / 5) * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
+					AppContext->m_RItemsVec[i->second]->m_World._42 = (SnowmanIndex[j] % 5) * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42+3;
+					AppContext->m_RItemsVec[i->second]->m_World._43 = (SnowmanIndex[j] % 5) * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 13;
+				}
+				else {
+					AppContext->m_RItemsVec[i->second]->m_World._41 = -1000;
+					AppContext->m_RItemsVec[i->second]->m_World._42 = -1000;
+					AppContext->m_RItemsVec[i->second]->m_World._43 = -1000;
+				}
+			}
+			++i;
 		}
 	}
 
@@ -546,7 +556,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapsnowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapicicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapsnow_top"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["myicon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowmanicon"], AppContext->m_RItemsVec);
 
 
 	//meterial
@@ -582,7 +593,8 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapsnowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapsnow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapicicle"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["myicon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowmanicon"], AppContext->m_RItemsVec);
 
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);

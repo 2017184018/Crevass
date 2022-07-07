@@ -873,23 +873,47 @@ void ApplicationContext::CreateMinimap()
 		}
 	}
 
-	//298
-	GameObject* icon = CreateObject<GameObject>("icon", "icon0");
-	icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
-	icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	icon->IndexCount = icon->Geo->DrawArgs["cylinder"].IndexCount;
-	icon->StartIndexLocation = icon->Geo->DrawArgs["cylinder"].StartIndexLocation;
-	icon->BaseVertexLocation = icon->Geo->DrawArgs["cylinder"].BaseVertexLocation;
-	icon->m_IsVisible = true;
-	icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["Seal"]->MatCBIndex;
-	icon->m_World = MathHelper::Identity4x4();
-	icon->m_World._11 = 11;
-	icon->m_World._22 = 1;
-	icon->m_World._33 = 11;
+	{
+		//298
+		GameObject* icon = CreateObject<GameObject>("myicon", "myicon0");
+		icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+		icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		icon->IndexCount = icon->Geo->DrawArgs["cylinder"].IndexCount;
+		icon->StartIndexLocation = icon->Geo->DrawArgs["cylinder"].StartIndexLocation;
+		icon->BaseVertexLocation = icon->Geo->DrawArgs["cylinder"].BaseVertexLocation;
+		icon->m_IsVisible = true;
+		icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["Seal"]->MatCBIndex;
+		icon->m_World = MathHelper::Identity4x4();
+		icon->m_World._11 = 11;
+		icon->m_World._22 = 1;
+		icon->m_World._33 = 11;
 
-	XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World)* XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+		XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
 
-	icon->m_TexTransform = MathHelper::Identity4x4();
+		icon->m_TexTransform = MathHelper::Identity4x4();
+	}
+
+	{
+		//299~302
+		for (int i = 0; i < 4; ++i) {
+			GameObject* icon = CreateObject<GameObject>("snowmanicon", "snowmanicon"+std::to_string(i));
+			icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+			icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			icon->IndexCount = icon->Geo->DrawArgs["grid"].IndexCount;
+			icon->StartIndexLocation = icon->Geo->DrawArgs["grid"].StartIndexLocation;
+			icon->BaseVertexLocation = icon->Geo->DrawArgs["grid"].BaseVertexLocation;
+			icon->m_IsVisible = true;
+			icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["snowmanicon"]->MatCBIndex;
+			icon->m_World = MathHelper::Identity4x4();
+			icon->m_World._11 = 50;
+			icon->m_World._22 = 1;
+			icon->m_World._33 = 50;
+
+			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+			icon->m_TexTransform = MathHelper::Identity4x4();
+		}
+	}
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)

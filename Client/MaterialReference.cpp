@@ -208,6 +208,13 @@ void MaterialReference::BuildMaterials()
 	huskyimage3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage3->Roughness = 1.0f;
 
+	auto snowmanicon = std::make_unique<Material>();
+	snowmanicon->MatCBIndex = 23;
+	snowmanicon->DiffuseSrvHeapIndex = 19;
+	snowmanicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	snowmanicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	snowmanicon->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -231,4 +238,5 @@ void MaterialReference::BuildMaterials()
 	m_Materials["huskyimage1"] = std::move(huskyimage1);
 	m_Materials["huskyimage2"] = std::move(huskyimage2);
 	m_Materials["huskyimage3"] = std::move(huskyimage3);
+	m_Materials["snowmanicon"] = std::move(snowmanicon);
 }
