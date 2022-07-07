@@ -236,40 +236,41 @@ void MaterialReference::BuildMaterials()
 	UI_SkillOff->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	UI_SkillOff->Roughness = 1.0f;
 
+	
+	auto Particle_Ice = std::make_unique<Material>();
+	Particle_Ice->MatCBIndex = 27;
+	Particle_Ice->DiffuseSrvHeapIndex = 27;
+	Particle_Ice->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
+	Particle_Ice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	Particle_Ice->Roughness = 1.0f;
+
 	auto TranslucentArcticFox = std::make_unique<Material>();
-	TranslucentArcticFox->MatCBIndex = 27;
-	TranslucentArcticFox->DiffuseSrvHeapIndex = 27;
+	TranslucentArcticFox->MatCBIndex = 28;
+	TranslucentArcticFox->DiffuseSrvHeapIndex = 28;
 	TranslucentArcticFox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	TranslucentArcticFox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	TranslucentArcticFox->Roughness = 1.0f;
-	
+
 	auto huskyimage1 = std::make_unique<Material>();
-	huskyimage1->MatCBIndex = 28;
-	huskyimage1->DiffuseSrvHeapIndex = 28;
+	huskyimage1->MatCBIndex = 29;
+	huskyimage1->DiffuseSrvHeapIndex = 29;
 	huskyimage1->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.7f);
 	huskyimage1->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage1->Roughness = 1.0f;
 
 	auto huskyimage2 = std::make_unique<Material>();
-	huskyimage2->MatCBIndex = 29;
-	huskyimage2->DiffuseSrvHeapIndex = 29;
+	huskyimage2->MatCBIndex = 30;
+	huskyimage2->DiffuseSrvHeapIndex = 30;
 	huskyimage2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	huskyimage2->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage2->Roughness = 1.0f;
 
 	auto huskyimage3 = std::make_unique<Material>();
-	huskyimage3->MatCBIndex = 30;
-	huskyimage3->DiffuseSrvHeapIndex = 30;
+	huskyimage3->MatCBIndex = 31;
+	huskyimage3->DiffuseSrvHeapIndex = 31;
 	huskyimage3->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	huskyimage3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage3->Roughness = 1.0f;
-
-	auto Particle_Ice = std::make_unique<Material>();
-	Particle_Ice->MatCBIndex = 31;
-	Particle_Ice->DiffuseSrvHeapIndex = 31;
-	Particle_Ice->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
-	Particle_Ice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	Particle_Ice->Roughness = 1.0f;
 
 	auto bricks0 = std::make_unique<Material>();
 	bricks0->MatCBIndex = 32;
@@ -306,11 +307,11 @@ void MaterialReference::BuildMaterials()
 	m_Materials["UI_Fox"] = std::move(UI_Fox);
 	m_Materials["UI_SkillOn"] = std::move(UI_SkillOn);
 	m_Materials["UI_SkillOff"] = std::move(UI_SkillOff);
+	m_Materials["Particle_Ice"] = std::move(Particle_Ice);
 	m_Materials["TranslucentArcticFox"] = std::move(TranslucentArcticFox);
 	m_Materials["huskyimage1"] = std::move(huskyimage1);
 	m_Materials["huskyimage2"] = std::move(huskyimage2);
 	m_Materials["huskyimage3"] = std::move(huskyimage3);
-	m_Materials["Particle_Ice"] = std::move(Particle_Ice);
 	m_Materials["bricks0"] = std::move(bricks0);
 	
 }

@@ -362,7 +362,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,30, 2, 0);		//�ؽ��� ��
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,26, 2, 0);		//�ؽ��� ��
 
 	CD3DX12_DESCRIPTOR_RANGE texTable2;
 	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);

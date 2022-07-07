@@ -793,8 +793,8 @@ void ApplicationContext::CreateParticle(std::string particleName, std::string in
 	particle->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	particle->m_Bounds = particle->Geo->DrawArgs[particleName].Bounds;
 	particle->SetParticleNameCount(particleName); 
-	//particle->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
-	particle->m_MaterialIndex = 31;
+	particle->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
+	//particle->m_MaterialIndex = 28;
 	particle->m_IsVisible = false;
 }
 

@@ -91,7 +91,7 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Skill");
 
 	// Particles
-	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "testParticle", 1000, DirectX::XMFLOAT2(100, 200),50.f,100.f,50.f, DirectX::XMFLOAT2(10, 10), DirectX::XMFLOAT2(10, 10));
+	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "testParticle", 1000, DirectX::XMFLOAT2(10, 20),50.f,100.f,50.f, DirectX::XMFLOAT2(10, 10), DirectX::XMFLOAT2(10, 10));
 
 
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);

@@ -46,7 +46,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
 
 	
-	AppContext->CreateParticle("testParticle", "testParticle-1", "ui_SkillOn");
+	AppContext->CreateParticle("testParticle", "testParticle-1", "Particle_Ice");
 	
 #ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
