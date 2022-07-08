@@ -958,6 +958,84 @@ void ApplicationContext::CreateMinimap()
 	}
 }
 
+void ApplicationContext::CreateOutline() {
+	{
+		//309~313
+		Character* husky = CreateObject<Character>("huskyOutline", "huskyOutline0");
+		husky->Geo = MeshReference::GetApp()->m_GeometryMesh["husky"].get();
+		husky->IndexCount = husky->Geo->DrawArgs["husky"].IndexCount;
+		husky->StartIndexLocation = husky->Geo->DrawArgs["husky"].StartIndexLocation;
+		husky->BaseVertexLocation = husky->Geo->DrawArgs["husky"].BaseVertexLocation;
+		husky->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		husky->m_Bounds = husky->Geo->DrawArgs["husky"].Bounds;
+		husky->m_IsVisible = true;
+		husky->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redline"]->MatCBIndex;
+		husky->m_SkinnedCBIndex = BoneIndex::Husky;
+		husky->m_SkinnedModelInst =  MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get();
+		husky->m_World = MathHelper::Identity4x4();
+		husky->m_World._11 = 21;
+		husky->m_World._22 = 21;
+		husky->m_World._33 = 21;
+		husky->m_TexTransform = MathHelper::Identity4x4();
+
+		Character* penguin = CreateObject<Character>("Penguin_LOD0skinOutline", "Penguin_LOD0skinOutline0");
+		penguin->Geo = MeshReference::GetApp()->m_GeometryMesh["Penguin_LOD0skin"].get();
+		penguin->IndexCount = penguin->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
+		penguin->StartIndexLocation = penguin->Geo->DrawArgs["Penguin_LOD0skin"].StartIndexLocation;
+		penguin->BaseVertexLocation = penguin->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
+		penguin->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		penguin->m_Bounds = penguin->Geo->DrawArgs["Penguin_LOD0skin"].Bounds;
+		penguin->m_IsVisible = true;
+		penguin->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redline"]->MatCBIndex;
+		penguin->m_SkinnedCBIndex = BoneIndex::Penguin;
+		penguin->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
+		penguin->m_World = MathHelper::Identity4x4();
+		penguin->Scale(21, 21, 21);
+
+		Character* arcticfox = CreateObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
+		arcticfox->Geo = MeshReference::GetApp()->m_GeometryMesh["ArcticFox"].get();
+		arcticfox->IndexCount = arcticfox->Geo->DrawArgs["ArcticFox"].IndexCount;
+		arcticfox->StartIndexLocation = arcticfox->Geo->DrawArgs["ArcticFox"].StartIndexLocation;
+		arcticfox->BaseVertexLocation = arcticfox->Geo->DrawArgs["ArcticFox"].BaseVertexLocation;
+		arcticfox->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		arcticfox->m_Bounds = arcticfox->Geo->DrawArgs["ArcticFox"].Bounds;
+		arcticfox->m_IsVisible = true;
+		arcticfox->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redline"]->MatCBIndex;
+		arcticfox->m_SkinnedCBIndex = BoneIndex::Fox;
+		arcticfox->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get();
+		arcticfox->m_World = MathHelper::Identity4x4();
+		arcticfox->Scale(21, 21, 21);
+
+		Character* polarbear = CreateObject<Character>("PolarBearOutline", "PolarBearOutline0");
+		polarbear->Geo = MeshReference::GetApp()->m_GeometryMesh["PolarBear"].get();
+		polarbear->IndexCount = polarbear->Geo->DrawArgs["PolarBear"].IndexCount;
+		polarbear->StartIndexLocation = polarbear->Geo->DrawArgs["PolarBear"].StartIndexLocation;
+		polarbear->BaseVertexLocation = polarbear->Geo->DrawArgs["PolarBear"].BaseVertexLocation;
+		polarbear->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		polarbear->m_Bounds = polarbear->Geo->DrawArgs["PolarBear"].Bounds;
+		polarbear->m_IsVisible = true;
+		polarbear->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redline"]->MatCBIndex;
+		polarbear->m_SkinnedCBIndex = BoneIndex::PolarBear;
+		polarbear->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get();
+		polarbear->m_World = MathHelper::Identity4x4();
+		polarbear->Scale(21, 21, 21);
+
+		Character* seal = CreateObject<Character>("SealOutline", "SealOutline0");
+		seal->Geo = MeshReference::GetApp()->m_GeometryMesh["Seal"].get();
+		seal->IndexCount = seal->Geo->DrawArgs["Seal"].IndexCount;
+		seal->StartIndexLocation = seal->Geo->DrawArgs["Seal"].StartIndexLocation;
+		seal->BaseVertexLocation = seal->Geo->DrawArgs["Seal"].BaseVertexLocation;
+		seal->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		seal->m_Bounds = seal->Geo->DrawArgs["Seal"].Bounds;
+		seal->m_IsVisible = true;
+		seal->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redline"]->MatCBIndex;
+		seal->m_SkinnedCBIndex = BoneIndex::Seal;
+		seal->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get();
+		seal->m_World = MathHelper::Identity4x4();
+		seal->Scale(16, 16, 16);
+	}
+}
+
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {
 	Character* chr = CreateObject<Character>(meshName, instID);

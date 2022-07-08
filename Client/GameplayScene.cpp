@@ -34,6 +34,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateHail();
 	AppContext->CreateWaterDrop();
 	AppContext->CreateMinimap();
+	AppContext->CreateOutline();
 
 
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
@@ -543,7 +544,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 	}
+	{	//outline
 
+	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
 	int i = MathHelper::Rand(4, Core::mWaves->RowCount() - 5);
@@ -617,6 +620,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin_LOD0skinOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ArcticFoxOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["PolarBearOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["SealOutline"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Penguin, MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Husky, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
@@ -736,6 +745,12 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 	if (!ty[4])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
+
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skinOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFoxOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["SealOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBearOutline"], AppContext->m_RItemsVec);
 
 
 

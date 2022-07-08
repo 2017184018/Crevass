@@ -74,6 +74,7 @@ public:
 	void CreateHail();
 	void CreateWaterDrop();
 	void CreateMinimap();
+	void CreateOutline();
 
 	void DisplayProps(std::string mapName);
 	void HiddenBlocks();

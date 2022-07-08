@@ -236,6 +236,20 @@ void MaterialReference::BuildMaterials()
 	redicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	redicon->Roughness = 1.0f;
 
+	auto redline = std::make_unique<Material>();
+	redline->MatCBIndex = 27;
+	redline->DiffuseSrvHeapIndex = 12;
+	redline->DiffuseAlbedo = XMFLOAT4(30.0f, 0.0f, 0.0f, 1.0f);
+	redline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	redline->Roughness = 1.0f;
+
+	auto blueline = std::make_unique<Material>();
+	blueline->MatCBIndex = 28;
+	blueline->DiffuseSrvHeapIndex = 12;
+	blueline->DiffuseAlbedo = XMFLOAT4(0.0f, 0.0f, 30.0f, 1.0f);
+	blueline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	blueline->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -263,4 +277,6 @@ void MaterialReference::BuildMaterials()
 	m_Materials["iglooicon"] = std::move(iglooicon);
 	m_Materials["blueicon"] = std::move(blueicon);
 	m_Materials["redicon"] = std::move(redicon);
+	m_Materials["redline"] = std::move(redline);
+	m_Materials["blueline"] = std::move(blueline);
 }
