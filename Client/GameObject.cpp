@@ -55,14 +55,22 @@ void GameObject::SetParticle(std::string particleName, std::string instID)
 void GameObject::BlockParticle()
 {
 	XMFLOAT3 offSet = { 0,50,0 };
-	m_Particles["testParticle"]->ParticleOnOff(true, GetPosition(), offSet);
+	AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), MathHelper::Add(GetPosition(), offSet));
 }
 
 void GameObject::Update(const float deltaT)
 {
+	//for (auto& p : m_Particles)
+	//{
+	//p.second->Update(deltaT);
+	//}
+}
+
+void GameObject::UpdateParticleTime(const float deltaT)
+{
 	for (auto& p : m_Particles)
 	{
-	p.second->Update(deltaT);
+		p.second->Update(deltaT);
 	}
 }
 

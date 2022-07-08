@@ -19,6 +19,7 @@ void Particle::Update(const float deltaT)
 {
 	if (isPlaying)
 	{
+		cout << m_ParticleTotalTime << endl;
 		m_ParticleTotalTime += deltaT;
 	}
 }
@@ -30,13 +31,6 @@ bool Particle::SetParticleNameCount(std::string meshName)
 	return false;
 }
 
-void Particle::ParticleOnOff(bool onoff, XMFLOAT3 pos, XMFLOAT3 offset)
-{
-	m_IsVisible = onoff;
-
-	if (onoff)
-		SetPosition(MathHelper::Add(pos, offset));
-}
 
 void Particle::PlayParticle()
 {

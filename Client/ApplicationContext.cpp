@@ -908,7 +908,6 @@ void ApplicationContext::HiddenUI(std::string uiName)
 	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 	obj->m_IsVisible = false;
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[uiName], AppContext->m_RItemsVec);
-	cout << "fuck - " << FindObject<GameObject>(uiName, uiName)->m_IsVisible << endl;
 }
 
 void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float posY)

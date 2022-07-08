@@ -238,6 +238,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 25;
 	}
 
+	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->BlockParticle();
+	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
+	AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->UpdateParticleTime(fDeltaTime);
+
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -248,9 +252,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
 			//cout << "how meny -" << AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->m_Particles.size() << endl;
-			AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->BlockParticle();
-			AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
-			AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->Update(fDeltaTime);
+		
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 1;

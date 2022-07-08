@@ -17,7 +17,6 @@ public:
 
 	//virtual void Update() = 0;
 public:
-	void ParticleOnOff(bool onoff, XMFLOAT3 pos, XMFLOAT3 offset);
 	
 	void PlayParticle();
 	void StopParticle();
