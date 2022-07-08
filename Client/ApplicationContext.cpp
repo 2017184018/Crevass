@@ -116,7 +116,7 @@ void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::str
 
 }
 
-bool BlockCheck(int idx) {
+bool ApplicationContext::BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
 		return false;
 	return true;
@@ -795,7 +795,7 @@ void ApplicationContext::CreateParticle(std::string particleName, std::string in
 	particle->SetParticleNameCount(particleName); 
 	particle->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	//particle->m_MaterialIndex = 28;
-	particle->m_IsVisible = false;
+	particle->m_IsVisible = true;
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)

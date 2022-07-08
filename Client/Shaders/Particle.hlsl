@@ -69,7 +69,7 @@ void GS(point VertexOut gin[1],
     float newTime = gTotalTime - gin[0].StartTime;
     float3 pos = gin[0].CenterW;
     float alpha = 0.f;
-    float3 c_Gravity = float3(0, -70, 0);
+    float3 c_Gravity = float3(0, -170, 0);
     float3 vel = gin[0].Vel.xyz;
 
     if (newTime > 0) {

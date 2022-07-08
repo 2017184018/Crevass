@@ -20,4 +20,11 @@ bool Particle::SetParticleNameCount(std::string meshName)
 	return false;
 }
 
+void Particle::ParticleOnOff(bool onoff, XMFLOAT3 pos, XMFLOAT3 offset)
+{
+	m_IsVisible = onoff;
+
+	if (onoff)
+		SetPosition(MathHelper::Add(pos, offset));
+}
 

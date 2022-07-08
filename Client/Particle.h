@@ -15,6 +15,8 @@ public:
 	bool SetParticleNameCount(std::string meshName);
 
 	//virtual void Update() = 0;
+public:
+	void ParticleOnOff(bool onoff, XMFLOAT3 pos, XMFLOAT3 offset);
 
 private:
 	std::string m_ParticleName;

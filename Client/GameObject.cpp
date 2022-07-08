@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "MeshReference.h"
+#include "ApplicationContext.h"
+#include "Particle.h"
 static unsigned int s_currentIndex = 0;
 
 GameObject::GameObject( std::string type, std::string id):
@@ -40,6 +42,20 @@ void GameObject::Rotate(float pitch, float yaw, float roll)
 		MathHelper::XMConvertToRadians(yaw),
 		MathHelper::XMConvertToRadians(roll));
 	XMStoreFloat4x4(&m_World, R * XMLoadFloat4x4(&m_World));
+}
+
+void GameObject::SetParticle(std::string particleName, std::string instID)
+{
+	Particle* particle = AppContext->FindObject<Particle>(particleName, instID);
+	if (!particle) return;
+
+	m_Particles[particleName] = particle;
+}
+
+void GameObject::BlockParticle()
+{
+	XMFLOAT3 offSet = { 0,50,0 };
+	m_Particles["testParticle"]->ParticleOnOff(true, GetPosition(), offSet);
 }
 
 void GameObject::Scale(float x, float y, float z)

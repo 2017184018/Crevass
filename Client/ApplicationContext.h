@@ -90,6 +90,7 @@ public:
 
 	void DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos);
 
+	bool BlockCheck(int idx);
 public:
 	//void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);
 

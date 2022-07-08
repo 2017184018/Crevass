@@ -44,9 +44,21 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_b", "ui_b", 23, -380.f, 90.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
+	for (int i = 0; i < 25; i++) {
+			AppContext->CreateParticle("testParticle", "testParticle" + std::to_string(i), "Particle_Ice");
+	}
 
-	
-	AppContext->CreateParticle("testParticle", "testParticle-1", "Particle_Ice");
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			if (AppContext->BlockCheck(5 * i + j))
+			{
+				AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->SetParticle("testParticle", "testParticle" + std::to_string(5 * i + j));
+			}
+			else {
+				AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->SetParticle("testParticle", "testParticle" + std::to_string(5 * i + j));
+			}
+		}
+	}
 	
 #ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
@@ -225,6 +237,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	else if (!m_Users[m_PlayerID]->m_PlayerController->GetSkillCool()) {
 		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 25;
 	}
+
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -234,6 +247,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
+			//cout << "how meny -" << AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->m_Particles.size() << endl;
+			AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->BlockParticle();
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 1;
