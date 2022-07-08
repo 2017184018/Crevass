@@ -17,7 +17,7 @@ public:
 		//// 계산한다. 최종 변환은 이후 정점 쉐이더에 전달된다.
 		//// 이러한 과정을 매 프레임 반복하면 애니매이션이 진행된다.
 		//SkinnedInfo->GetFinalTransforms(ClipName, TimePos, FinalTransforms);
-		
+
 	}
 
 	void ChangeSkinnedAnimation(std::string clipName, bool switchingAnim = true, float blendingTime = 0.4f, float blendingAnimSpeed = 2.5f);
@@ -34,7 +34,7 @@ public:
 	// 현재 애니메이션 클립
 	std::string PrevClipName = "Idle";
 	std::string ClipName;
-	
+
 
 	bool SwitchingAnim = false;
 

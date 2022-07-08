@@ -36,14 +36,14 @@ private:
 		std::vector<Material>* outMaterial,
 		std::string path);
 	bool LoadAnimationFile(SkinnedData& outSkinnedData, std::string& path, const std::string clipName);
-	
+
 public:
 	std::unordered_map<std::string, std::unique_ptr<GeometryMesh>>	m_GeometryMesh;
 	std::map<std::string, std::unique_ptr<SkinnedModelInstance>> m_SkinnedModelInsts;
 
 	// Mesh Material Reference를 합치자
 	std::unordered_map<std::string, std::unique_ptr<Material>>	m_Materials;
-	
+
 	std::vector<std::string> mSkinnedTextureNames;
-}; 
+};
 

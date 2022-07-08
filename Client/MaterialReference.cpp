@@ -215,6 +215,27 @@ void MaterialReference::BuildMaterials()
 	snowmanicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	snowmanicon->Roughness = 1.0f;
 
+	auto iglooicon = std::make_unique<Material>();
+	iglooicon->MatCBIndex = 24;
+	iglooicon->DiffuseSrvHeapIndex = 20;
+	iglooicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	iglooicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	iglooicon->Roughness = 1.0f;
+
+	auto blueicon = std::make_unique<Material>();
+	blueicon->MatCBIndex = 25;
+	blueicon->DiffuseSrvHeapIndex = 21;
+	blueicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	blueicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	blueicon->Roughness = 1.0f;
+
+	auto redicon = std::make_unique<Material>();
+	redicon->MatCBIndex = 26;
+	redicon->DiffuseSrvHeapIndex = 22;
+	redicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	redicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	redicon->Roughness = 1.0f;
+
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
 	m_Materials["Penguin"] = std::move(Penguin);
@@ -239,4 +260,7 @@ void MaterialReference::BuildMaterials()
 	m_Materials["huskyimage2"] = std::move(huskyimage2);
 	m_Materials["huskyimage3"] = std::move(huskyimage3);
 	m_Materials["snowmanicon"] = std::move(snowmanicon);
+	m_Materials["iglooicon"] = std::move(iglooicon);
+	m_Materials["blueicon"] = std::move(blueicon);
+	m_Materials["redicon"] = std::move(redicon);
 }

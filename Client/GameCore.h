@@ -39,7 +39,7 @@ public:
 
 public:
 	virtual void PreparePresent();
-	virtual void ExecuteCommandLists() ;
+	virtual void ExecuteCommandLists();
 
 	virtual void OnMouseDown(WPARAM btnState, int x, int y);
 	virtual void OnMouseUp(WPARAM btnState, int x, int y);

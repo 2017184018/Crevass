@@ -26,7 +26,7 @@ namespace Core
 
 	extern std::unique_ptr<BlurFilter> mBlurFilter;
 	extern ID3D12Resource* BackBuffer;
-		extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
+	extern ComPtr<ID3D12RootSignature> mPostProcessRootSignature;
 
 }
 

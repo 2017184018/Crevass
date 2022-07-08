@@ -5,7 +5,7 @@ class GeometryMesh;
 class GameObject
 {
 protected:
-	
+
 	//메쉬 타입
 	std::string m_Type;
 	//오브젝트 id 이름이라 생각해도됨
@@ -43,10 +43,10 @@ public:
 	virtual void Rotate(const DirectX::XMFLOAT3& axis, float angle);
 	virtual void Rotate(const DirectX::XMFLOAT4& quaternion);
 	virtual void Rotate(float pitch, float yaw, float roll);
-//public:
-//	virtual void	Initialize() {};
-//	virtual void	Update() {};
-//	virtual void	Release() {};
+	//public:
+	//	virtual void	Initialize() {};
+	//	virtual void	Update() {};
+	//	virtual void	Release() {};
 
 public:
 	bool m_IsVisible = false;
@@ -54,10 +54,10 @@ public:
 	DirectX::XMFLOAT4X4 m_World;
 	DirectX::XMFLOAT4X4 m_TexTransform;
 
-//public:
-//	std::vector<ShaderResource::InstanceData> Instances;
-//	UINT InstanceCount;
-	
+	//public:
+	//	std::vector<ShaderResource::InstanceData> Instances;
+	//	UINT InstanceCount;
+
 
 public:
 	//Material* Mat;

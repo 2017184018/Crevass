@@ -28,12 +28,12 @@ public:
 			if (cmd->GetState() == cEvent)
 				return true;
 			return false;
-			});
+		});
 	}
 
 	void Order(float deltaT)
 	{
-//		cout << m_FSM.size() << endl;
+		//		cout << m_FSM.size() << endl;
 		if (m_FSM.empty()) return;
 
 		if (m_StartAttackAnim)

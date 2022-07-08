@@ -10,7 +10,7 @@ public:
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
 	void DisposeUploaders();
-		
+
 public:
 
 	std::string Name;

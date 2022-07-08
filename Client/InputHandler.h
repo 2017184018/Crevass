@@ -12,6 +12,4 @@ namespace InputHandler
 {
 	bool IsKeyDown(int key);
 	bool IsKeyUp(int key);
-
-	
 }

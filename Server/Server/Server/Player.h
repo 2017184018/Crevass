@@ -70,7 +70,10 @@ public:
 	UINT SkillTime = 0.f;
 	UINT SkillCoolTime = 0.f;
 	bool IsSkillCool = false;
-
+	int CurrentIcecube = -1;
+	int CurrentSnowcube = -1;
+	string TypeName;
+	bool IsInteract = false;
 private:
 	float Speed = 1.5f;
 	float Crossspeed = cos(45) * 1.5f;

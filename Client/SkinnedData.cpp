@@ -225,7 +225,7 @@ void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos,
 	if (clipName == "Attack")
 		timePos *= 2.0f;
 
-	if(clipName == "Jump")
+	if (clipName == "Jump")
 		timePos *= 1.5f;
 
 	if (clipName == "Fall")
@@ -237,7 +237,7 @@ void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos,
 
 	//골격 계통구조를 흝으면서 모든 뼈대를 뿌리 공간으로 변환한다.
 	std::vector<XMFLOAT4X4> toRootTransforms(numBones);
-	
+
 	toRootTransforms[0] = toParentTransforms[0];
 
 	//자식 뼈대들의 roottranseform을 구함
@@ -259,7 +259,7 @@ void SkinnedData::GetFinalTransforms(const std::string& clipName, float timePos,
 		XMMATRIX offset = XMLoadFloat4x4(&mBoneOffsets[i]);
 		XMMATRIX toRoot = XMLoadFloat4x4(&toParentTransforms[i]);
 		XMMATRIX finalTransform = XMMatrixMultiply(offset, toRoot);
-		
+
 		XMStoreFloat4x4(&finalTransforms[i], XMMatrixTranspose(finalTransform));
 	}
 }

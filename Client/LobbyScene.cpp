@@ -26,7 +26,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 	m_SceneController->Update(fDeltaTime);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lobby"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
-	
+
 }
 
 void LobbyScene::Render()

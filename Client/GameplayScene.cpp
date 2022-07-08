@@ -338,7 +338,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[77]->m_World._42 = AppContext->m_RItemsVec[2 * iglooIndex[1] + 1]->m_World._42 + 60;
 		AppContext->m_RItemsVec[77]->m_World._43 = AppContext->m_RItemsVec[2 * iglooIndex[1] + 1]->m_World._43 + 20;
 	}
-
 	{
 		//syncro snowman
 		for (int i = 0; i < 4; ++i) {
@@ -426,75 +425,122 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 	{		//minimap
 		float FallDistance = 200;
-		const std::map<std::string, UINT>& Sea = AppContext->m_RItemsMap["MinimapSea"]->GetinstanceKeymap();
-		if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 		{
-			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
-		}
-		else {
-			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 + 10;
-			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._42 + 100;
-			AppContext->m_RItemsVec[Sea.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43;
-		}
-
-		for (int i = 0; i < 25; ++i) {
+			const std::map<std::string, UINT>& Sea = AppContext->m_RItemsMap["MinimapSea"]->GetinstanceKeymap();
 			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 			{
-				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+				AppContext->m_RItemsVec[Sea.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
 			}
 			else {
-				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
-				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
-				AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+				AppContext->m_RItemsVec[Sea.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 + 10;
+				AppContext->m_RItemsVec[Sea.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._42 + 100;
+				AppContext->m_RItemsVec[Sea.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43;
 			}
-			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
-			{
-				AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
-				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
-			}
-			else {
-				AppContext->m_RItemsVec[i + 51 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
-				AppContext->m_RItemsVec[i + 51 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
-				AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
-				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
-				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
-				AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
-			}
-			//cout << i << ": " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 << ", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 <<
-			//	", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 << endl;
 		}
-
-		const std::map<std::string, UINT>& icon = AppContext->m_RItemsMap["myicon"]->GetinstanceKeymap();
-		if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 		{
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
-		}
-		else {
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42;
-			AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 10;
-		}
-
-		const std::map<std::string, UINT>& snowmanicon = AppContext->m_RItemsMap["snowmanicon"]->GetinstanceKeymap();
-		auto i = snowmanicon.begin();
-		for (int j = 0; j < 4; ++j) {
-			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
-			{
-				AppContext->m_RItemsVec[i->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
-			}
-			else {
-				if (DestructionCnt[SnowmanIndex[j]] < 3) {
-					AppContext->m_RItemsVec[i->second]->m_World._41 = (SnowmanIndex[j] / 5) * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
-					AppContext->m_RItemsVec[i->second]->m_World._42 = (SnowmanIndex[j] % 5) * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42+3;
-					AppContext->m_RItemsVec[i->second]->m_World._43 = (SnowmanIndex[j] % 5) * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 13;
+			for (int i = 0; i < 25; ++i) {
+				if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+				{
+					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
 				}
 				else {
-					AppContext->m_RItemsVec[i->second]->m_World._41 = -1000;
-					AppContext->m_RItemsVec[i->second]->m_World._42 = -1000;
-					AppContext->m_RItemsVec[i->second]->m_World._43 = -1000;
+					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+				}
+				if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+				{
+					AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+				}
+				else {
+					AppContext->m_RItemsVec[i + 51 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+					AppContext->m_RItemsVec[i + 51 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+					AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+				}
+				//cout << i << ": " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 << ", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 <<
+				//	", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 << endl;
+			}
+		}
+		{
+			const std::map<std::string, UINT>& icon = AppContext->m_RItemsMap["myicon"]->GetinstanceKeymap();
+			if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+			{
+				AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+			}
+			else {
+				AppContext->m_RItemsVec[icon.begin()->second]->m_World._41 = m_Users[m_PlayerID]->m_World._41 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
+				AppContext->m_RItemsVec[icon.begin()->second]->m_World._42 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42 + 4;
+				AppContext->m_RItemsVec[icon.begin()->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 / 200.0f * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 14;
+			}
+		}
+		{
+			const std::map<std::string, UINT>& snowmanicon = AppContext->m_RItemsMap["snowmanicon"]->GetinstanceKeymap();
+			auto i = snowmanicon.begin();
+			for (int j = 0; j < 4; ++j) {
+				if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+				{
+					AppContext->m_RItemsVec[i->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+				}
+				else {
+					if (DestructionCnt[SnowmanIndex[j]] < 3) {
+						AppContext->m_RItemsVec[i->second]->m_World._41 = (SnowmanIndex[j] / 5) * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
+						AppContext->m_RItemsVec[i->second]->m_World._42 = (SnowmanIndex[j] % 5) * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42 + 3;
+						AppContext->m_RItemsVec[i->second]->m_World._43 = (SnowmanIndex[j] % 5) * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 13;
+					}
+					else {
+						AppContext->m_RItemsVec[i->second]->m_World._41 = -1000;
+						AppContext->m_RItemsVec[i->second]->m_World._42 = -1000;
+						AppContext->m_RItemsVec[i->second]->m_World._43 = -1000;
+					}
+				}
+				++i;
+			}
+		}
+		{
+			const std::map<std::string, UINT>& iglooicon = AppContext->m_RItemsMap["iglooicon"]->GetinstanceKeymap();
+			auto i = iglooicon.begin();
+			for (int j = 0; j < 2; ++j) {
+				if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+				{
+					AppContext->m_RItemsVec[i->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+				}
+				else {
+					AppContext->m_RItemsVec[i->second]->m_World._41 = (iglooIndex[j] / 5) * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
+					AppContext->m_RItemsVec[i->second]->m_World._42 = (iglooIndex[j] % 5) * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42 + 3;
+					AppContext->m_RItemsVec[i->second]->m_World._43 = (iglooIndex[j] % 5) * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 13;
+				}
+				++i;
+			}
+		}
+		{
+			const std::map<std::string, UINT>& enermyicon = AppContext->m_RItemsMap["enermyicon"]->GetinstanceKeymap();
+			auto tmp = enermyicon.begin();
+			for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
+				if (i != m_PlayerID) {
+					if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
+					{
+						AppContext->m_RItemsVec[tmp->second]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+					}
+					else {
+						if ((g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) ||
+							m_Users[i]->GetHide() || distance(m_Users[m_PlayerID]->GetPosition(), m_Users[i]->GetPosition()) > 400.0f) {
+							AppContext->m_RItemsVec[tmp->second]->m_World._41 = -1000;
+							AppContext->m_RItemsVec[tmp->second]->m_World._42 = -1000;
+							AppContext->m_RItemsVec[tmp->second]->m_World._43 = -1000;
+						}
+						else {
+							AppContext->m_RItemsVec[tmp->second]->m_World._41 = m_Users[i]->m_World._41 / 200.0f * 400.0f / 11.0f - 800.0f / 11.0f + m_Users[m_PlayerID]->m_World._41 + 10;
+							AppContext->m_RItemsVec[tmp->second]->m_World._42 = m_Users[i]->m_World._43 / 200.0f * 400.0f / 11.0f + 20.0f + m_Users[m_PlayerID]->m_World._42 + 3.03;
+							AppContext->m_RItemsVec[tmp->second]->m_World._43 = m_Users[i]->m_World._43 / 200.0f * 0.56f - 42.73f + m_Users[m_PlayerID]->m_World._43 - 13.03;
+						}
+					}
+					++tmp;
 				}
 			}
-			++i;
 		}
 	}
 
@@ -558,6 +604,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Minimapsnow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["myicon"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowmanicon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["iglooicon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["enermyicon"], AppContext->m_RItemsVec);
 
 
 	//meterial
@@ -595,6 +643,8 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Minimapicicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["myicon"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowmanicon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["iglooicon"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["enermyicon"], AppContext->m_RItemsVec);
 
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);
@@ -701,6 +751,11 @@ void GameplayScene::Render()
 	// Transition to PRESENT state.
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
+}
+
+float GameplayScene::distance(XMFLOAT3 a, XMFLOAT3 b)
+{
+	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2) + pow((a.z - b.z), 2));
 }
 
 void GameplayScene::Fall(int num) {

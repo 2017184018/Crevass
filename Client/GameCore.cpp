@@ -650,7 +650,7 @@ void GameCore::OnResize()
 	mMinimapViewport.MaxDepth = 1.0f;
 
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
-	mMinimapScissorRect = { static_cast<LONG>(g_DisplayWidth) * 7 / 10 +60, 0,
+	mMinimapScissorRect = { static_cast<LONG>(g_DisplayWidth) * 7 / 10 + 60, 0,
 		static_cast<LONG>(g_DisplayWidth) + static_cast<LONG>(tmp), static_cast<LONG>(g_DisplayHeight) * 3 / 10 };
 
 	if (mBlurFilter != nullptr)

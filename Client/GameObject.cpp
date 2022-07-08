@@ -3,7 +3,7 @@
 #include "MeshReference.h"
 static unsigned int s_currentIndex = 0;
 
-GameObject::GameObject( std::string type, std::string id):
+GameObject::GameObject(std::string type, std::string id) :
 	m_Type(type),
 	m_ID(id),
 	m_Index(s_currentIndex++),
@@ -11,7 +11,7 @@ GameObject::GameObject( std::string type, std::string id):
 {
 	m_World = MathHelper::Identity4x4();
 	m_TexTransform = MathHelper::Identity4x4();
-	
+
 }
 
 GameObject::~GameObject()
@@ -23,7 +23,7 @@ void GameObject::Rotate(const DirectX::XMFLOAT3& axis, float angle)
 	XMMATRIX RotMat = XMMatrixRotationAxis(XMLoadFloat3(&axis), XMConvertToRadians(angle));
 	XMMATRIX World = RotMat * XMLoadFloat4x4(&m_World);
 	XMStoreFloat4x4(&m_World, World);
-	
+
 }
 
 void GameObject::Rotate(const DirectX::XMFLOAT4& quaternion)

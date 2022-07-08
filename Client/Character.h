@@ -109,7 +109,7 @@ public:
 
 
 	virtual void Scale(float x, float y, float z) override;
-	void pushed_back(float up, float back, float speed,float hit_angle);
+	void pushed_back(float up, float back, float speed, float hit_angle);
 	void SetAnimationKeyState(PlayerState keyState);
 
 	void SetHide(bool hide);

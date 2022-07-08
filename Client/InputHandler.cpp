@@ -24,7 +24,7 @@ namespace InputHandler
 	{
 		if (GetAsyncKeyState(key) & 0x8000) {
 			KeyFlag[key] = true;
-		
+
 		}
 		else {
 			if (KeyFlag[key]) {

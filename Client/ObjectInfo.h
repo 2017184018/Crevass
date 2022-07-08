@@ -3,7 +3,7 @@
 class ObjectInfo
 {
 private:
-	
+
 	std::map<std::string, UINT> m_InstanceKeymap;
 
 public:

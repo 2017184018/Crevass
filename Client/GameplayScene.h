@@ -53,6 +53,8 @@ public:
 
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
+
+	float distance(XMFLOAT3 a, XMFLOAT3 b);
 	/* ID: battleID */
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;

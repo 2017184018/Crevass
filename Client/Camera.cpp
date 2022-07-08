@@ -87,18 +87,18 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 		xmf4x4Rotate._11 = xmf3Right.x; xmf4x4Rotate._21 = xmf3Up.x; xmf4x4Rotate._31 = xmf3Look.x;
 		xmf4x4Rotate._12 = xmf3Right.y; xmf4x4Rotate._22 = xmf3Up.y; xmf4x4Rotate._32 = xmf3Look.y;
 		xmf4x4Rotate._13 = xmf3Right.z; xmf4x4Rotate._23 = xmf3Up.z; xmf4x4Rotate._33 = xmf3Look.z;
-	
+
 		XMFLOAT3 xmf3Offset = MathHelper::TransformCoord(mOffset, xmf4x4Rotate);
 		XMFLOAT3 xmf3Position;
 		if (m_Owner->is_fall == false) {
-		 xmf3Position = MathHelper::Add(m_Owner->GetPosition(), xmf3Offset);
+			xmf3Position = MathHelper::Add(m_Owner->GetPosition(), xmf3Offset);
 		}
 		else {
 			XMFLOAT3 pos;
 			pos.x = m_Owner->GetPosition().x;
-			pos.y = m_Owner->GetPosition().y+300;
-			pos.z = m_Owner->GetPosition().z+250;
-		 xmf3Position = MathHelper::Add(pos, xmf3Offset);
+			pos.y = m_Owner->GetPosition().y + 300;
+			pos.z = m_Owner->GetPosition().z + 250;
+			xmf3Position = MathHelper::Add(pos, xmf3Offset);
 		}
 
 		XMFLOAT3 xmf3Direction = MathHelper::Subtract(xmf3Position, mPosition);
@@ -290,7 +290,7 @@ void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
 	case CameraType::Free:
 	{
 		XMVECTOR Up = { 0.f,1.f,0.f };
-		
+
 		Up = XMVector3Transform(Up, XMMatrixRotationQuaternion(XMLoadFloat4(&mRotation)));
 
 		XMFLOAT4X4 LookAtMat;

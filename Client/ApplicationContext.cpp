@@ -820,12 +820,12 @@ void ApplicationContext::CreateMinimap()
 				instancingObj->m_World._11,
 				instancingObj->m_World._22,
 				instancingObj->m_World._33
-				);
+			);
 
 			float d = 800.0f / 11.0f;
 			MinimapCubePos[5 * i + j] = XMFLOAT3(
-				instancingObj->m_World._41 - d, 
-				instancingObj->m_World._42 - d, 
+				instancingObj->m_World._41 - d,
+				instancingObj->m_World._42 - d,
 				instancingObj->m_World._43 - d);
 
 			GameObject* top = CreateObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(5 * i + j));
@@ -878,15 +878,15 @@ void ApplicationContext::CreateMinimap()
 		GameObject* icon = CreateObject<GameObject>("myicon", "myicon0");
 		icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 		icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		icon->IndexCount = icon->Geo->DrawArgs["cylinder"].IndexCount;
-		icon->StartIndexLocation = icon->Geo->DrawArgs["cylinder"].StartIndexLocation;
-		icon->BaseVertexLocation = icon->Geo->DrawArgs["cylinder"].BaseVertexLocation;
+		icon->IndexCount = icon->Geo->DrawArgs["grid"].IndexCount;
+		icon->StartIndexLocation = icon->Geo->DrawArgs["grid"].StartIndexLocation;
+		icon->BaseVertexLocation = icon->Geo->DrawArgs["grid"].BaseVertexLocation;
 		icon->m_IsVisible = true;
-		icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["Seal"]->MatCBIndex;
+		icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueicon"]->MatCBIndex;
 		icon->m_World = MathHelper::Identity4x4();
-		icon->m_World._11 = 11;
+		icon->m_World._11 = 15;
 		icon->m_World._22 = 1;
-		icon->m_World._33 = 11;
+		icon->m_World._33 = 15;
 
 		XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
 
@@ -896,7 +896,7 @@ void ApplicationContext::CreateMinimap()
 	{
 		//299~302
 		for (int i = 0; i < 4; ++i) {
-			GameObject* icon = CreateObject<GameObject>("snowmanicon", "snowmanicon"+std::to_string(i));
+			GameObject* icon = CreateObject<GameObject>("snowmanicon", "snowmanicon" + std::to_string(i));
 			icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 			icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			icon->IndexCount = icon->Geo->DrawArgs["grid"].IndexCount;
@@ -908,6 +908,48 @@ void ApplicationContext::CreateMinimap()
 			icon->m_World._11 = 50;
 			icon->m_World._22 = 1;
 			icon->m_World._33 = 50;
+
+			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+			icon->m_TexTransform = MathHelper::Identity4x4();
+		}
+	}
+	{
+		//303~304
+		for (int i = 0; i < 2; ++i) {
+			GameObject* icon = CreateObject<GameObject>("iglooicon", "iglooicon" + std::to_string(i));
+			icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+			icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			icon->IndexCount = icon->Geo->DrawArgs["grid"].IndexCount;
+			icon->StartIndexLocation = icon->Geo->DrawArgs["grid"].StartIndexLocation;
+			icon->BaseVertexLocation = icon->Geo->DrawArgs["grid"].BaseVertexLocation;
+			icon->m_IsVisible = true;
+			icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["iglooicon"]->MatCBIndex;
+			icon->m_World = MathHelper::Identity4x4();
+			icon->m_World._11 = 20;
+			icon->m_World._22 = 1;
+			icon->m_World._33 = 20;
+
+			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+
+			icon->m_TexTransform = MathHelper::Identity4x4();
+		}
+	}
+	{
+		//305~308
+		for (int i = 0; i < 4; ++i) {
+			GameObject* icon = CreateObject<GameObject>("enermyicon", "enermyicon" + std::to_string(i));
+			icon->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+			icon->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			icon->IndexCount = icon->Geo->DrawArgs["grid"].IndexCount;
+			icon->StartIndexLocation = icon->Geo->DrawArgs["grid"].StartIndexLocation;
+			icon->BaseVertexLocation = icon->Geo->DrawArgs["grid"].BaseVertexLocation;
+			icon->m_IsVisible = true;
+			icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redicon"]->MatCBIndex;
+			icon->m_World = MathHelper::Identity4x4();
+			icon->m_World._11 = 15;
+			icon->m_World._22 = 1;
+			icon->m_World._33 = 15;
 
 			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
 

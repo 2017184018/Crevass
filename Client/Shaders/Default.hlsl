@@ -138,8 +138,8 @@ float4 PS(VertexOut pin) : SV_Target
 	float4 reflectionColor = gCubeMap.Sample(gsamLinearWrap, r);
 	float3 fresnelFactor = SchlickFresnel(fresnelR0, pin.NormalW, r);
 	litColor.rgb += shininess * fresnelFactor * reflectionColor.rgb;
-	/*int edgesize = 512;
-	litColor.rgb+=float4(1,0,1,0)*max(clamp(pow(cos(pin.TexC.x), edgesize), 0, 1), clamp(pow(cos(pin.TexC.y), edgesize), 0, 1));*/
+	/*int edgesize = 16;
+	litColor.rgb+=float4(1,0,1,0)*max(clamp(pow(cos(pin.TexC.x * 2 * 3.141592), edgesize), 0, 1), clamp(pow(cos(pin.TexC.y * 2 * 3.141592), edgesize), 0, 1));*/
 
 	// Common convention to take alpha from diffuse albedo.
 	litColor.a = diffuseAlbedo.a;

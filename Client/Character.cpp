@@ -446,7 +446,7 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
-		case Character::STATE_JUMP_TO_SKILL:
+	case Character::STATE_JUMP_TO_SKILL:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Jump"]->m_Name,
 			m_MapAnimData["Jump"]->m_Time,
@@ -454,7 +454,7 @@ void Character::UpdateBoneTransforms()
 			m_MapAnimData["Skill"]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
-		break;	
+		break;
 	case Character::STATE_ATTACK_TO_FORWARD:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Attack"]->m_Name,
@@ -546,7 +546,7 @@ void Character::UpdateBoneTransforms()
 			(m_BlendFrame / m_MaxBlendFrames)
 		);
 		break;
-case Character::STATE_SKILL_TO_FORWARD:
+	case Character::STATE_SKILL_TO_FORWARD:
 		m_SkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData["Skill"]->m_Name,
 			m_MapAnimData["Skill"]->m_Time,
@@ -602,7 +602,7 @@ case Character::STATE_SKILL_TO_FORWARD:
 	}
 
 }
-Character::Character( std::string type, std::string id) :
+Character::Character(std::string type, std::string id) :
 	GameObject(type, id),
 	m_PlayerController(nullptr),
 	m_MyCamera(nullptr),
@@ -646,9 +646,9 @@ void Character::Update(const float deltaT)
 		p.second->m_Time += deltaT;
 	}
 	UpdateBoneTransforms();
-	
+
 	if (m_MyCamera != NULL) {
-	
+
 
 		CameraType cType = m_MyCamera->GetCameraType();
 
@@ -707,7 +707,7 @@ void Character::SetDir(float angle)
 {
 	int R = 360.f - m_CurrentAngle;
 
-	GameObject::Rotate(0, R+ angle, 0);
+	GameObject::Rotate(0, R + angle, 0);
 	for (auto& p : m_Parts)
 	{
 		p.second->Rotate(0, R + angle, 0);
