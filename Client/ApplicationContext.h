@@ -89,6 +89,7 @@ public:
 	void SetUI2DPosition(std::string ui2dName, float posX, float posY);
 
 	void DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos);
+	void HiddenParticle(std::string particleName, std::string instID);
 
 	bool BlockCheck(int idx);
 public:

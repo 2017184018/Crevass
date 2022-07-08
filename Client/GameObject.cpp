@@ -58,6 +58,14 @@ void GameObject::BlockParticle()
 	m_Particles["testParticle"]->ParticleOnOff(true, GetPosition(), offSet);
 }
 
+void GameObject::Update(const float deltaT)
+{
+	for (auto& p : m_Particles)
+	{
+	p.second->Update(deltaT);
+	}
+}
+
 void GameObject::Scale(float x, float y, float z)
 {
 	m_World._11 *= x;

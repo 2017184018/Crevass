@@ -17,6 +17,7 @@ struct VertexOut
     float StartTime : STARTTIME;
     float LifeTime : LIFETIME;
 
+    float ParticleTime : PARTICLETIME;
     nointerpolation uint MatIndex  : MATINDEX;
 };
 
@@ -39,6 +40,9 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 	float4x4 world = instData.World;
 	uint matIndex = instData.MaterialIndex;
     
+    // out particleTime
+    vout.ParticleTime = instData.particleTime;
+
     // Fetch the material data.
     MaterialData matData = gMaterialData[matIndex];
     vout.MatIndex = matIndex;
@@ -66,7 +70,7 @@ void GS(point VertexOut gin[1],
         uint primID : SV_PrimitiveID,
         inout TriangleStream<GeoOut> triStream)
 {
-    float newTime = gTotalTime - gin[0].StartTime;
+    float newTime = gin[0].ParticleTime - gin[0].StartTime;
     float3 pos = gin[0].CenterW;
     float alpha = 0.f;
     float3 c_Gravity = float3(0, -170, 0);

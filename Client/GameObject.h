@@ -47,9 +47,11 @@ public:
 
 	void SetParticle(std::string particleName, std::string instID);
 	void BlockParticle();
+	virtual void Update(const float deltaT);
+
 //public:
 //	virtual void	Initialize() {};
-//	virtual void	Update() {};
+
 //	virtual void	Release() {};
 
 public:

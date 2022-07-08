@@ -18,15 +18,17 @@
 // Include structures and functions for lighting.
 #include "LightingUtil.hlsl"
 
+
 struct InstanceData
 {
 	float4x4 World;
 	float4x4 TexTransform;
 	uint     MaterialIndex;
+	float	 particleTime;
 	uint     InstPad0;
 	uint     InstPad1;
-	uint     InstPad2;
 };
+
 
 
 struct MaterialData

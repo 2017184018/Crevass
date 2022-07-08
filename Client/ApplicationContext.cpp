@@ -922,11 +922,25 @@ void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float
 void ApplicationContext::DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos)
 {
 	Particle* ptc = FindObject<Particle>(particleName, instID);
-	if (!ptc) return;
-
+	if (!ptc) {  return; }
 	ptc->m_IsVisible = true;
 	ptc->m_World = MathHelper::Identity4x4();
 	ptc->m_TexTransform = MathHelper::Identity4x4();
 	ptc->SetPosition(pos);
+	ptc->PlayParticle();
 	// rotate
+}
+
+void ApplicationContext::HiddenParticle(std::string particleName, std::string instID)
+{
+	Particle* ptc = FindObject<Particle>(particleName, instID);
+	if (!ptc) return;
+
+	ZeroMemory(&ptc->m_World, sizeof(ptc->m_World));
+	ZeroMemory(&ptc->m_TexTransform, sizeof(ptc->m_TexTransform));
+	ptc->m_IsVisible = false;
+	ptc->StopParticle();
+
+	// Update InstanceData
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[particleName], m_RItemsVec);
 }

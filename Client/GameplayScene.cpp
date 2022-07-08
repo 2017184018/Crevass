@@ -138,7 +138,7 @@ bool GameplayScene::Enter()
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
 	}
 
-	AppContext->DisplayParticle("testParticle", "testParticle-1", m_Users[m_PlayerID]->GetPosition());
+	//AppContext->DisplayParticle("testParticle", "testParticle-1", m_Users[m_PlayerID]->GetPosition());
 
 	return false;
 }
@@ -249,6 +249,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
 			//cout << "how meny -" << AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->m_Particles.size() << endl;
 			AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->BlockParticle();
+			AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
+			AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->Update(fDeltaTime);
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 1;
@@ -560,7 +562,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave);
 
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec,true);
 
 	///*Shadow*/
 	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);

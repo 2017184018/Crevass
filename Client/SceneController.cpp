@@ -111,6 +111,15 @@ void GameplayController::HandleInput(const float deltaT)
 		SceneManager::GetApp()->ChangeScene();
 	}
 
+	// 파티클 루프 테스트
+	if (InputHandler::IsKeyUp('P')) {
+		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
+		AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
+	}
+	if (InputHandler::IsKeyUp('O')) {
+		AppContext->HiddenParticle("testParticle", "testParticle" + std::to_string(11));
+	}
+
 	//if (InputHandler::IsOverlap(VK_UP))
 	//{
 	//	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x += 0.01f;

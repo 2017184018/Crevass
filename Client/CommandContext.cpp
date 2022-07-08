@@ -8,6 +8,7 @@
 #include "SkinnedModelInstance.h"
 #include "Character.h"
 #include "CharacterParts.h"
+#include "Particle.h"
 #include "CREVASS.h"
 #include "GraphicsRenderer.h"
 #include "ShadowMap.h"
@@ -60,7 +61,7 @@ void GraphicsContext::Update2DPosition(ObjectInfo* objInfo, std::vector<GameObje
 
 }
 
-void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
+void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isParticle)
 {
 	if (!objInfo) return;
 
@@ -80,6 +81,14 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 				XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
 				XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(TexTransform));
 				data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+				if (isParticle) {
+					data.particleTime = dynamic_cast<Particle*>(rItems[i.second])->GetParticleTotalTime();
+					
+				}
+				else
+				{
+					data.particleTime = 0.f;
+				}
 
 				// Write the instance data to structured buffer for the visible objects.
 				m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
