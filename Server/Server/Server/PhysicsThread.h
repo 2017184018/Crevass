@@ -713,7 +713,7 @@ void ProcessClients()
 				//아이스 , 스노우 아무것도 출동하지 않을때 
 				if (phyPlayers[i].CurrentIcecube == -1 && phyPlayers[i].CurrentSnowcube == -1)
 				{
-					phyPlayers[i].gravity -= 0.02f;
+					phyPlayers[i].gravity -= 0.04f;
 				}
 			}
 
