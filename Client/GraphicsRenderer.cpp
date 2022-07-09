@@ -15,6 +15,7 @@ namespace Graphics
 {
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OutlinePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
 
@@ -383,6 +384,10 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	skinnedOpaquePsoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
 
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedOpaquePsoDesc, IID_PPV_ARGS(&g_SkinnedPSO)));
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC OulinePSO = skinnedOpaquePsoDesc;
+	OulinePSO.RasterizerState.FrontCounterClockwise = TRUE;
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&OulinePSO, IID_PPV_ARGS(&g_OutlinePSO)));
 
 	////
 	//// PSO for sky.

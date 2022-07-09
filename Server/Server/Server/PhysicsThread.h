@@ -1306,7 +1306,7 @@ void ProcessClients()
 					}
 					else {
 						phyPlayers[i].is_Skill = false;
-						phyPlayers[i].is_Skillanim = false;
+					//	phyPlayers[i].is_Skillanim = false;
 					}
 					if (phyPlayers[i].IsSkillCool) {
 						phyPlayers[i].SkillCoolTime += 1;

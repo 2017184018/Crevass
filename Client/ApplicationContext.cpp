@@ -951,6 +951,9 @@ void ApplicationContext::CreateMinimap()
 			icon->m_World._22 = 1;
 			icon->m_World._33 = 15;
 
+			icon->m_World._41 = -1000;
+			icon->m_World._42 = -1000;
+			icon->m_World._43 = -1000;
 			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
 
 			icon->m_TexTransform = MathHelper::Identity4x4();
@@ -973,10 +976,6 @@ void ApplicationContext::CreateOutline() {
 		husky->m_SkinnedCBIndex = BoneIndex::Husky;
 		husky->m_SkinnedModelInst =  MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get();
 		husky->m_World = MathHelper::Identity4x4();
-		husky->m_World._11 = 21;
-		husky->m_World._22 = 21;
-		husky->m_World._33 = 21;
-		husky->m_TexTransform = MathHelper::Identity4x4();
 
 		Character* penguin = CreateObject<Character>("Penguin_LOD0skinOutline", "Penguin_LOD0skinOutline0");
 		penguin->Geo = MeshReference::GetApp()->m_GeometryMesh["Penguin_LOD0skin"].get();
@@ -990,7 +989,6 @@ void ApplicationContext::CreateOutline() {
 		penguin->m_SkinnedCBIndex = BoneIndex::Penguin;
 		penguin->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
 		penguin->m_World = MathHelper::Identity4x4();
-		penguin->Scale(21, 21, 21);
 
 		Character* arcticfox = CreateObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
 		arcticfox->Geo = MeshReference::GetApp()->m_GeometryMesh["ArcticFox"].get();
@@ -1004,7 +1002,6 @@ void ApplicationContext::CreateOutline() {
 		arcticfox->m_SkinnedCBIndex = BoneIndex::Fox;
 		arcticfox->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get();
 		arcticfox->m_World = MathHelper::Identity4x4();
-		arcticfox->Scale(21, 21, 21);
 
 		Character* polarbear = CreateObject<Character>("PolarBearOutline", "PolarBearOutline0");
 		polarbear->Geo = MeshReference::GetApp()->m_GeometryMesh["PolarBear"].get();
@@ -1018,7 +1015,6 @@ void ApplicationContext::CreateOutline() {
 		polarbear->m_SkinnedCBIndex = BoneIndex::PolarBear;
 		polarbear->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get();
 		polarbear->m_World = MathHelper::Identity4x4();
-		polarbear->Scale(21, 21, 21);
 
 		Character* seal = CreateObject<Character>("SealOutline", "SealOutline0");
 		seal->Geo = MeshReference::GetApp()->m_GeometryMesh["Seal"].get();
@@ -1032,7 +1028,6 @@ void ApplicationContext::CreateOutline() {
 		seal->m_SkinnedCBIndex = BoneIndex::Seal;
 		seal->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get();
 		seal->m_World = MathHelper::Identity4x4();
-		seal->Scale(16, 16, 16);
 	}
 }
 

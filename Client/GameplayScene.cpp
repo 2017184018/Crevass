@@ -442,25 +442,32 @@ void GameplayScene::Update(const float& fDeltaTime)
 			for (int i = 0; i < 25; ++i) {
 				if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 				{
-					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+					if (i == 0 || i == 2 || i == 4 || i == 10 || i == 12 || i == 14 || i == 20 || i == 22 || i == 24) {
+						AppContext->FindObject<GameObject>("Minimapsnowcube", "Minimapsnowcube" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+					}
+					else {
+						AppContext->FindObject<GameObject>("Minimapicecube", "Minimapicecube" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+					}
+					AppContext->FindObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
+					AppContext->FindObject<GameObject>("Minimapicicle", "Minimapicicle" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
 				}
 				else {
-					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
-					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
-					AppContext->m_RItemsVec[2 * i + 1 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
-				}
-				if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
-				{
-					AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
-					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = m_Users[m_PlayerID]->m_World._43 - FallDistance;
-				}
-				else {
-					AppContext->m_RItemsVec[i + 51 + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
-					AppContext->m_RItemsVec[i + 51 + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
-					AppContext->m_RItemsVec[i + 51 + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
-					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
-					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
-					AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+					if (i == 0 || i == 2 || i == 4 || i == 10 || i == 12 || i == 14 || i == 20 || i == 22 || i == 24) {
+						AppContext->FindObject<GameObject>("Minimapsnowcube", "Minimapsnowcube" + std::to_string(i))->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+						AppContext->FindObject<GameObject>("Minimapsnowcube", "Minimapsnowcube" + std::to_string(i))->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+						AppContext->FindObject<GameObject>("Minimapsnowcube", "Minimapsnowcube" + std::to_string(i))->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+					}
+					else {
+						AppContext->FindObject<GameObject>("Minimapicecube", "Minimapicecube" + std::to_string(i))->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+						AppContext->FindObject<GameObject>("Minimapicecube", "Minimapicecube" + std::to_string(i))->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+						AppContext->FindObject<GameObject>("Minimapicecube", "Minimapicecube" + std::to_string(i))->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+					}
+					AppContext->FindObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(i))->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+					AppContext->FindObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(i))->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+					AppContext->FindObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(i))->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
+					AppContext->FindObject<GameObject>("Minimapicicle", "Minimapicicle" + std::to_string(i))->m_World._41 = MinimapCubePos[i].x + m_Users[m_PlayerID]->m_World._41 + 10;
+					AppContext->FindObject<GameObject>("Minimapicicle", "Minimapicicle" + std::to_string(i))->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
+					AppContext->FindObject<GameObject>("Minimapicicle", "Minimapicicle" + std::to_string(i))->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
 				}
 				//cout << i << ": " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 << ", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 <<
 				//	", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 << endl;
@@ -545,7 +552,135 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 	{	//outline
+		for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
+			if (i != m_PlayerID) {
+				if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
+					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["Penguin_LOD0skinOutline"]->GetinstanceKeymap();
+					auto tmp = myoutline.begin();
+					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+					tmpuser._11 = 1.1;
+					tmpuser._22 = 1.1;
+					tmpuser._33 = 1.1;
 
+					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
+					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+				}
+				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
+					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
+					auto tmp = myoutline.begin();
+					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+					tmpuser._11 = 1.1;
+					tmpuser._22 = 1.1;
+					tmpuser._33 = 1.1;
+
+					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
+					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+				}
+				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
+					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["huskyOutline"]->GetinstanceKeymap();
+					auto tmp = myoutline.begin();
+					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+					tmpuser._11 = 1.1;
+					tmpuser._22 = 1.1;
+					tmpuser._33 = 1.1;
+
+					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
+					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+				}
+				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
+					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["SealOutline"]->GetinstanceKeymap();
+					auto tmp = myoutline.begin();
+					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+					tmpuser._11 = 1.1;
+					tmpuser._22 = 1.1;
+					tmpuser._33 = 1.1;
+
+					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
+					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+				}
+				else {
+					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
+					auto tmp = myoutline.begin();
+					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+					tmpuser._11 = 1.1;
+					tmpuser._22 = 1.1;
+					tmpuser._33 = 1.1;
+
+					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
+					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+				}
+			}
+		}
+		if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_PENGUIN) {
+			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["Penguin_LOD0skinOutline"]->GetinstanceKeymap();
+			auto tmp = myoutline.begin();
+			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+			tmpuser._11 = 1.1;
+			tmpuser._22 = 1.1;
+			tmpuser._33 = 1.1;
+
+			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
+			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+		}
+		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
+			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
+			auto tmp = myoutline.begin();
+			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+			tmpuser._11 = 1.1;
+			tmpuser._22 = 1.1;
+			tmpuser._33 = 1.1;
+
+			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
+			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+		}
+		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_HUSKY) {
+			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["huskyOutline"]->GetinstanceKeymap();
+			auto tmp = myoutline.begin();
+			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+			tmpuser._11 = 1.1;
+			tmpuser._22 = 1.1;
+			tmpuser._33 = 1.1;
+
+			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
+			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+		}
+		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_SEAL) {
+			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["SealOutline"]->GetinstanceKeymap();
+			auto tmp = myoutline.begin();
+			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+			tmpuser._11 = 1.1;
+			tmpuser._22 = 1.1;
+			tmpuser._33 = 1.1;
+
+			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
+			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+		}
+		else {
+			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
+			auto tmp = myoutline.begin();
+			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
+			tmpuser._11 = 1.1;
+			tmpuser._22 = 1.1;
+			tmpuser._33 = 1.1;
+
+			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
+			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+		}
 	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
 
@@ -746,11 +881,17 @@ void GameplayScene::Render()
 	if (!ty[4])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skinOutline"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFoxOutline"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyOutline"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["SealOutline"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBearOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OutlinePSO.Get());
+	if (!ty[0])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skinOutline"], AppContext->m_RItemsVec);
+	if (!ty[1] && !(g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) != CHARACTER_ARCTICFOX))
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFoxOutline"], AppContext->m_RItemsVec);
+	if (!ty[2])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyOutline"], AppContext->m_RItemsVec);
+	if (!ty[3])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["SealOutline"], AppContext->m_RItemsVec);
+	if (!ty[4])
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBearOutline"], AppContext->m_RItemsVec);
 
 
 
