@@ -359,6 +359,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			//cout << "reset" << endl;
 			g_pFramework->m_pNetwork->SetCharacterReset(i);
 			g_pFramework->m_pNetwork->SetCharacterFall(i);
+			Lifecnt=g_pFramework->m_pNetwork->GetPlayerLifeCnt(i);
 			if (i == m_PlayerID)
 			{
 				m_Users[i]->m_PlayerController->SetIsFall();

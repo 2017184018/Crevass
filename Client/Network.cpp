@@ -199,6 +199,11 @@ void Network::ProcessPacket(char* packet_buffer)
 
 		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
 		{
+			PlayerLifeCnt[i] = packet.players[i].lifecnt;
+		}
+
+		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
+		{
 			Player_Type[i] = packet.players[i].Character_type;
 		}
 
@@ -278,6 +283,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_reset packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		isReset[packet.id] = true;
+		PlayerLifeCnt[packet.id] = packet.life;
 		break;
 	}
 
@@ -481,4 +487,9 @@ bool Network::GetPenguinSkill() const
 bool Network::GetPlayerSkillCool(int num)const
 {
 	return PlayerSkillCool[num];
+}
+
+int Network::GetPlayerLifeCnt(int num)const
+{
+	return PlayerLifeCnt[num];
 }
