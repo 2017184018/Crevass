@@ -755,6 +755,7 @@ void ProcessClients()
 					phyPlayers[i].gravity = 0.0f;
 					SendFall(i);
 					phyPlayers[i].is_reset = true;
+
 				}
 				g_boundaries[phyPlayers[i].TypeName]->Center = players[i].pos;
 				/*			if (TypeName[i] == "Penguin") {
@@ -790,7 +791,7 @@ void ProcessClients()
 						phyPlayers[i].m_pos.x = BlockTmpX * 400;
 						phyPlayers[i].m_pos.y = 100.0f;
 						phyPlayers[i].m_pos.z = BlockTmpZ * 400;
-
+						phyPlayers[i].lifecnt -= 1;
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;
 						/*	if (TypeName[i] == "Penguin") {
@@ -799,7 +800,8 @@ void ProcessClients()
 							else {
 								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
 							}*/
-						SendReset(i);
+						SendReset(i,phyPlayers[i].lifecnt);
+
 					}
 				}
 			}

@@ -81,6 +81,7 @@ struct Pro_Player {
 	bool IsHide;
 	int SnowmanNum;
 	bool IsSkillCool;
+	int lifecnt;
 };
 
 struct Block {
@@ -144,6 +145,7 @@ struct sc_packet_reset
 	short size;
 	char type;
 	char id;
+	char life;
 };
 struct sc_packet_hit {
 	short size;

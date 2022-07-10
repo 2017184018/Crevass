@@ -59,6 +59,8 @@ public:
 	int CurrentBlockNum = -1;
 	int TimeWhileBlock = 0;
 
+	int lifecnt = 5;
+
 public:
 	char dir = 0;
 	char anim = 0;

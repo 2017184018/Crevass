@@ -57,6 +57,7 @@ public:
 	bool GetHuskySkill()const;
 	bool GetPenguinSkill()const;
 	bool GetPlayerSkillCool(int num)const;
+	int GetPlayerLifeCnt(int num)const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[5];
 	int PlayerAnim[5];
@@ -64,6 +65,7 @@ private:
 	bool PlayerHide[5];
 	int PlayerSnowmanHide[5];
 	bool PlayerSkillCool[5];
+	int PlayerLifeCnt[5];
 
 	int iglooLocation[2];
 	int SnowmanLocation[4];

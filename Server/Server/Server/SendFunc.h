@@ -161,6 +161,7 @@ void SendGameStartPacket()
 		{
 			tempPlayer[i].id = -1;
 		}
+		tempPlayer[i].lifecnt = 5;
 	}
 
 	sc_packet_game_start packet;
@@ -227,12 +228,13 @@ void SendFall(int client)
 	SendPacket(&packet);
 }
 
-void SendReset(int client)
+void SendReset(int client,int life)
 {
 	sc_packet_reset packet;
 	packet.size = sizeof(packet);
 	packet.type = SC_RESET;
 	packet.id = client;
+	packet.life = life;
 
 	SendPacket(&packet);
 }
