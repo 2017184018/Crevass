@@ -21,6 +21,9 @@ public:
 	void BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName);
 	void BuildSkinnedModelAnimation(std::string meshName, const std::string clipName);
 	void BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves* wave);
+	void BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particleSize,
+		float VelX, float VelY, float VelZ,
+		DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime);
 
 private:
 	bool LoadSkeletonFile(SkinnedData& outSkinnedData, std::string path);
@@ -42,7 +45,6 @@ public:
 	std::map<std::string, std::unique_ptr<SkinnedModelInstance>> m_SkinnedModelInsts;
 
 	// Mesh Material Reference를 합치자
-	std::unordered_map<std::string, std::unique_ptr<Material>>	m_Materials;
 
 	std::vector<std::string> mSkinnedTextureNames;
 };

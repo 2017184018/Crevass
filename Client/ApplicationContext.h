@@ -11,6 +11,7 @@ namespace Core {
 	extern MainFramework* g_pFramework;
 	extern	 XMFLOAT3 MinimapCubePos[25];
 	extern XMFLOAT3 MinimapBlockScale;
+
 }
 
 class Character;
@@ -75,6 +76,9 @@ public:
 	void CreateWaterDrop();
 	void CreateMinimap();
 	void CreateOutline();
+	void CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY);
+	void CreateParticle(std::string particleName, std::string instID, std::string matName);
+
 
 	void DisplayProps(std::string mapName);
 	void HiddenBlocks();
@@ -84,10 +88,15 @@ public:
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName);
 
-	//void DisplayUI(std::string mapName);
-	//void HiddenUI(std::string mapName);
+	void DisplayUI(std::string mapName);
+	void HiddenUI(std::string uiName);
 
+	void SetUI2DPosition(std::string ui2dName, float posX, float posY);
 
+	void DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos);
+	void HiddenParticle(std::string particleName, std::string instID);
+
+	bool BlockCheck(int idx);
 public:
 	//void CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName);
 

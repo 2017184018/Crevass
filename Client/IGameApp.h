@@ -11,6 +11,9 @@ public:
 	virtual void Update(const float deltaT) = 0;
 
 	virtual void RenderScene(void) = 0;
+
+	// Optional UI (overlay) rendering pass.  This is LDR.  The buffer is already cleared.
+	virtual void RenderUI() {};
 };
 
 

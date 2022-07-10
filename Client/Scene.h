@@ -23,16 +23,18 @@ public:
 	virtual ~Scene();
 
 	virtual void Initialize() = 0;
-
+	virtual void OnResize() = 0;
 public:
 	virtual bool	Enter() = 0;
 	virtual void	Exit() = 0;
 
 	virtual void	Update(const float& fDeltaTime) = 0;
 	virtual void	Render() = 0;
+	virtual void	RenderUI() = 0;
 
 protected:
 	std::string m_SceneName;
 	Controller* m_SceneController;
+	DirectX::BoundingSphere m_SceneBounds;
 };
 

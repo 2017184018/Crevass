@@ -15,7 +15,7 @@ public:
 	void SetIsFall();
 	void SetLoop(bool loop);
 	void SetSkillCool(bool cool);
-
+	bool GetSkillCool();
 private:
 	virtual void HandleInput(const float deltaT) override;
 	virtual void MouseCallback() override;

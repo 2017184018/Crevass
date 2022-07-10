@@ -41,3 +41,4 @@ typedef struct tag_dir
 		up(_up), down(_down), left(_left), right(_right) {};
 	~tag_dir() = default;
 } DIRECTION;
+

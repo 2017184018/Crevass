@@ -2,6 +2,7 @@
 
 class SkinnedModelInstance;
 class GeometryMesh;
+class Particle;
 class GameObject
 {
 protected:
@@ -43,13 +44,19 @@ public:
 	virtual void Rotate(const DirectX::XMFLOAT3& axis, float angle);
 	virtual void Rotate(const DirectX::XMFLOAT4& quaternion);
 	virtual void Rotate(float pitch, float yaw, float roll);
-	//public:
-	//	virtual void	Initialize() {};
-	//	virtual void	Update() {};
-	//	virtual void	Release() {};
+
+
+	void SetParticle(std::string particleName, std::string instID);
+	void BlockParticle();
+	virtual void Update(const float deltaT);
+	void UpdateParticleTime(const float deltaT);
+
 
 public:
 	bool m_IsVisible = false;
+
+	XMFLOAT2 m_positionRatio = { 0.f, 0.f };
+	XMFLOAT2 m_sizeRatio = { 0.f, 0.f };
 
 	DirectX::XMFLOAT4X4 m_World;
 	DirectX::XMFLOAT4X4 m_TexTransform;
@@ -69,6 +76,8 @@ public:
 	int BaseVertexLocation;
 	UINT m_MaterialIndex;
 	BoundingBox m_Bounds;
+	std::map<std::string, Particle*>		m_Particles;
+
 public:
 	// Animation
 	SkinnedModelInstance* m_SkinnedModelInst;

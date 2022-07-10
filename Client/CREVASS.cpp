@@ -21,6 +21,10 @@ using namespace Core;
 
 void CREVASS::Startup(void)
 {
+	//Lights
+	m_Lights[LIGHT_NAME_DIRECTIONAL] = std::make_unique<Light>();
+	m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.57735f, -0.81735f, -1.07735 };
+	m_Lights[LIGHT_NAME_DIRECTIONAL]->Strength = { 0.9f, 0.8f, 0.7f };
 
 	//g_pFramework->m_pNetwork->Send(CS_READY);
 	//g_pFramework->m_pNetwork->Recv();
@@ -35,6 +39,9 @@ void CREVASS::Startup(void)
 	// Build Mesh & Material & Texture
 	m_MeshRef = MeshReference::GetApp();
 	m_MaterialRef = MaterialReference::GetApp();
+
+	// LoadFont
+	GraphicsContext::GetApp()->LoadFont(L"Verdana", 20);
 
 	BuildStream();
 
@@ -83,6 +90,10 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Fall");
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Skill");
 
+	// Particles
+	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "testParticle", 1000, DirectX::XMFLOAT2(5, 5),70.f,100.f,70.f, DirectX::XMFLOAT2(10, 10), DirectX::XMFLOAT2(10, 10));
+
+
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
 	m_MeshRef->BuildWaves(g_Device.Get(), g_CommandList.Get(), mWaves.get());
@@ -97,7 +108,7 @@ void CREVASS::Startup(void)
 	SceneManager::GetApp()->EnterScene(SceneType::Lobby);
 
 	GraphicsContext::GetApp()->VertexCount = mWaves->VertexCount();
-	GraphicsContext::GetApp()->passCount = 1;
+	GraphicsContext::GetApp()->passCount = 2;
 	GraphicsContext::GetApp()->skinnedObjectCount = BoneIndex::Count;
 	GraphicsContext::GetApp()->materialCount = MaterialReference::GetApp()->m_Materials.size();
 
@@ -141,14 +152,22 @@ void CREVASS::Update(float deltaT)
 
 	g_pFramework->m_pNetwork->Recv();
 	SceneManager::GetApp()->UpdateScene(deltaT);
+	// PassCB
 	m_Camera->UpdateViewMatrix();
+	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera, m_Lights[LIGHT_NAME_DIRECTIONAL].get());
 
-	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera);
+	
 }
 
 void CREVASS::RenderScene(void)
 {
 	SceneManager::GetApp()->RenderScene();
+}
+
+void CREVASS::RenderUI(void)
+{
+	if (m_SceneManager)
+		SceneManager::GetApp()->RenderUI();
 }
 
 void CREVASS::BuildCharacters()
@@ -177,4 +196,5 @@ void CREVASS::BuildStream() {
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/igloo01_m.mesh", "igloo");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_sled_m.mesh", "sled");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fishrack01_m.mesh", "fishrack");
-}
+
+	}

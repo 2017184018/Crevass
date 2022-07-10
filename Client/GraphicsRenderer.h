@@ -2,6 +2,7 @@
 #include "Singleton.h"
 #include "Camera.h"
 #include "UploadBuffer.h"
+#include "ShadowMap.h"
 #include "BlurFilter.h"
 
 class GameObject;
@@ -39,6 +40,8 @@ public:
 public:
 	void RenderGraphics();
 
+	void ExecuteBlurEffects();
+	void ExecuteResizeBlur();
 private:
 	void LoadTextures();
 	void BuildDescriptorHeaps();
@@ -48,7 +51,7 @@ private:
 
 	void BuildPostProcessRootSignature();
 
-	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GetStaticSamplers();
+	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GetStaticSamplers();
 
 public:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RenderRS;
@@ -57,14 +60,21 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Instancing_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Billboard_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Skinned_InputLayout;
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_UI_InputLayout;
 
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_BB_InputLayout;
 
 public:
 	/* GpuResource */
+	std::unique_ptr<ShadowMap> mShadowMap;
+
 	std::unordered_map<std::string, std::unique_ptr<Texture>> m_Textures;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_SrvDescriptorHeap = nullptr;
-	UINT m_CbvSrvDescriptorSize = 0;
+
 	UINT mSkyTexHeapIndex = 0;
+	UINT mShadowMapHeapIndex = 0;
+	UINT mBlurHeapIndex = 0;
+public:
+	bool	m_SwitchBlur = false;
 };
 

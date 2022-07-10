@@ -6,12 +6,13 @@ class SceneManager : public TemplateSingleton<SceneManager>
 {
 private:
 	template<class NewScene>
-	void CreateScene(SceneType sceneType, std::string sceneName)
+	void CreateScene(SceneType sceneType)
 	{
 		Scene* scene = new NewScene;
-		scene->m_SceneName = sceneName;
-		scene->Initialize();
+
 		m_Scenes[static_cast<int>(sceneType)] = scene;
+		scene->Initialize();
+
 	}
 
 public:
@@ -30,6 +31,7 @@ public:
 
 	void	UpdateScene(const float& deltaT);
 	void	RenderScene();
+	void	RenderUI();
 
 	Scene* GetCurScene() const;
 

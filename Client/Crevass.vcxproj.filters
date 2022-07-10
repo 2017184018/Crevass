@@ -1,11 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="Shaders\Blur.hlsl" />
-    <FxCompile Include="Shaders\Common.hlsl" />
-    <FxCompile Include="Shaders\Default.hlsl" />
-    <FxCompile Include="Shaders\LightingUtil.hlsl" />
-    <FxCompile Include="Shaders\Sky.hlsl" />
+    <FxCompile Include="Shaders\Shadows.hlsl" />
+    <FxCompile Include="Shaders\ShadowDebug.hlsl" />
+    <FxCompile Include="Shaders\Blur.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Common.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Default.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\UI.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Sky.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\LightingUtil.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlurFilter.cpp" />
@@ -29,7 +47,6 @@
     <ClCompile Include="MeshReference.cpp" />
     <ClCompile Include="ObjectInfo.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
@@ -47,16 +64,27 @@
     <ClCompile Include="MainFramework.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="Controller.cpp" />
-    <ClCompile Include="GameplayScene.cpp" />
-    <ClCompile Include="GameresultScene.cpp" />
     <ClCompile Include="ApplicationContext.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="SceneController.cpp" />
     <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="CommandCenter.cpp" />
     <ClCompile Include="MoveCommend.cpp" />
+    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="Scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameresultScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlurFilter.h" />
@@ -83,7 +111,6 @@
     <ClInclude Include="ObjectInfo.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SkinnedData.h" />
     <ClInclude Include="SkinnedModelinstance.h" />
@@ -110,16 +137,27 @@
     <ClInclude Include="MainFramework.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="Controller.h" />
-    <ClInclude Include="GameplayScene.h" />
-    <ClInclude Include="GameresultScene.h" />
     <ClInclude Include="ApplicationContext.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="SceneController.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="CommandCenter.h" />
     <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="Scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameresultScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />
@@ -132,6 +170,12 @@
   <ItemGroup>
     <Filter Include="Network">
       <UniqueIdentifier>{38a7624c-4a00-4067-b7c4-d52736c99d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{a36f64d2-daa1-447e-9bcd-b759708a12b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{56461ec1-b2b5-45a0-b87e-1017f9302e8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -33,7 +33,8 @@ void LobbyController::HandleInput(const float deltaT)
 	}
 	if (InputHandler::IsKeyUp('B'))
 	{
-		switch (AppContext->m_RItemsVec[SNum]->m_MaterialIndex) {
+
+		switch (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex) {
 		case 8:
 		case 13:
 			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
@@ -57,12 +58,15 @@ void LobbyController::HandleInput(const float deltaT)
 		//8 로비  13 펭귄  14 허스키  15 곰  16여우  17물개
 		static bool one = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
+			cout << AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex << endl;
 			if (one) {
-				if (AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 17) {
-					AppContext->m_RItemsVec[SNum]->m_MaterialIndex = 13;
+
+				if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 17) {
+					AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 13;
+					
 				}
 				else {
-					++AppContext->m_RItemsVec[SNum]->m_MaterialIndex;
+					++AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
 				}
 				one = false;
 			}
@@ -74,11 +78,12 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool one2 = true;
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
 			if (one2) {
-				if (AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 8 || AppContext->m_RItemsVec[SNum]->m_MaterialIndex == 13) {
-					AppContext->m_RItemsVec[SNum]->m_MaterialIndex = 17;
+
+				if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 13) {
+					AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 17;
 				}
 				else {
-					--AppContext->m_RItemsVec[SNum]->m_MaterialIndex;
+					--AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
 				}
 				one2 = false;
 			}
@@ -110,6 +115,27 @@ void GameplayController::HandleInput(const float deltaT)
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
 		SceneManager::GetApp()->ChangeScene();
 	}
+
+	// 파티클 루프 테스트
+	if (InputHandler::IsKeyUp('P')) {
+		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
+		AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
+	}
+	if (InputHandler::IsKeyUp('O')) {
+		AppContext->HiddenParticle("testParticle", "testParticle" + std::to_string(11));
+	}
+
+	//if (InputHandler::IsOverlap(VK_UP))
+	//{
+	//	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x += 0.01f;
+	//	cout << CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x << endl;
+	//}
+	//if (InputHandler::IsOverlap(VK_DOWN))
+	//{
+	//	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x -= 0.01f;
+	//	cout << CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x << endl;
+	//}
+
 }
 
 

@@ -5,6 +5,7 @@
 #include "CharacterParts.h"
 #include "MeshReference.h"
 #include "MaterialReference.h"
+#include "Particle.h"
 
 #include <random>
 
@@ -65,44 +66,57 @@ void ApplicationContext::CreateLobby() {
 	top->m_MaterialIndex = 8;
 	top->m_World = MathHelper::Identity4x4();
 	top->m_World._11 = 200 * 1.43;
-	top->m_World._22 = 1;
-	top->m_World._33 = 150 * 1.43;
-	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+	top->m_World._22 = 150 * 1.43;
+	top->m_World._33 = 1;
+	//XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 	top->m_World._41 = 180;
-	top->m_World._42 = 90;
-	top->m_World._43 = 100;
+	top->m_World._42 = 100;
+	top->m_World._43 = 90;
 	top->m_TexTransform = MathHelper::Identity4x4();
 }
 
 void ApplicationContext::CreateSkycube(std::string skycubeName, std::string instID, std::string matName)
 {
+	
 	GameObject* skyRitem = CreateObject<GameObject>(skycubeName, instID);		//0
 	skyRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
 	skyRitem->StartIndexLocation = skyRitem->Geo->DrawArgs["sphere"].StartIndexLocation;
 	skyRitem->BaseVertexLocation = skyRitem->Geo->DrawArgs["sphere"].BaseVertexLocation;
 	skyRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	skyRitem->m_MaterialIndex = 0;
+	skyRitem->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	skyRitem->m_IsVisible = true;
 	//skyRitem->m_MaterialIndex = MeshReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
-	skyRitem->Scale(3000, 3000, 3000);
+	skyRitem->Scale(5000, 5000,5000);
 }
 
 void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName)
 {
-	GameObject* item = CreateObject<GameObject>(boundsName, boundsInstName);
+	/*GameObject* item = CreateObject<GameObject>(boundsName, boundsInstName);
 	item->Geo = MeshReference::GetApp()->m_GeometryMesh[boundsName].get();
 	item->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	item->IndexCount = item->Geo->DrawArgs[boundsName].IndexCount;
 	item->StartIndexLocation = item->Geo->DrawArgs[boundsName].StartIndexLocation;
 	item->BaseVertexLocation = item->Geo->DrawArgs[boundsName].BaseVertexLocation;
 	item->m_IsVisible = false;
-	item->m_MaterialIndex = 1;
+	item->m_MaterialIndex = 1;*/
+
+	GameObject* quadRitem = CreateObject<GameObject>("quad", "quad");
+	quadRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+	quadRitem->IndexCount = quadRitem->Geo->DrawArgs["quad"].IndexCount;
+	quadRitem->StartIndexLocation = quadRitem->Geo->DrawArgs["quad"].StartIndexLocation;
+	quadRitem->BaseVertexLocation = quadRitem->Geo->DrawArgs["quad"].BaseVertexLocation;
+	quadRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	quadRitem->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["bricks0"]->DiffuseSrvHeapIndex;
+	quadRitem->m_World = MathHelper::Identity4x4();
+	quadRitem->m_TexTransform = MathHelper::Identity4x4();
+	quadRitem->m_IsVisible = true;
+
 }
 
-bool BlockCheck(int idx) {
+bool ApplicationContext::BlockCheck(int idx) {
 	if (idx == 0 || idx == 2 || idx == 4 || idx == 10 || idx == 12 || idx == 14 || idx == 20 || idx == 22 || idx == 24)
 		return false;
 	return true;
@@ -124,7 +138,7 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icecube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["icecube"].Bounds;
 				instancingObj->m_IsVisible = true;
-				instancingObj->m_MaterialIndex = 1;
+				instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
 				instancingObj->m_World._22 = SCALE;
@@ -146,7 +160,7 @@ void ApplicationContext::CreateBlocks()
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowcube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["snowcube"].Bounds;
 				instancingObj->m_IsVisible = true;
-				instancingObj->m_MaterialIndex = 1;
+				instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
 				instancingObj->m_World._22 = SCALE;
@@ -167,7 +181,7 @@ void ApplicationContext::CreateBlocks()
 			top->StartIndexLocation = top->Geo->DrawArgs["snow_top"].StartIndexLocation;
 			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
 			top->m_IsVisible = true;
-			top->m_MaterialIndex = 1;
+			top->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 			top->m_World = MathHelper::Identity4x4();
 			top->m_World._11 = SCALE;
 			top->m_World._22 = SCALE;
@@ -189,7 +203,7 @@ void ApplicationContext::CreateBlocks()
 			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["icicle"].StartIndexLocation;
 			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["icicle"].BaseVertexLocation;
 			instancingObj->m_IsVisible = true;
-			instancingObj->m_MaterialIndex = 1;
+			instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 			instancingObj->m_World = MathHelper::Identity4x4();
 			instancingObj->m_World._11 = SCALE * 7.5 / 10.0;
 			instancingObj->m_World._22 = SCALE;
@@ -211,10 +225,17 @@ void ApplicationContext::Createigloos()
 		GameObject* instancingObj = CreateObject<GameObject>("igloo", "igloo" + std::to_string(i));
 		instancingObj->Geo = MeshReference::GetApp()->m_GeometryMesh["igloo"].get();
 		instancingObj->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["snowman"].IndexCount;
+		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["snowman"].StartIndexLocation;
+		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["snowman"].BaseVertexLocation;
+		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
+
 		instancingObj->IndexCount = instancingObj->Geo->DrawArgs["igloo"].IndexCount;
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["igloo"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["igloo"].BaseVertexLocation;
 		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
+
 		instancingObj->m_IsVisible = true;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		instancingObj->m_World._11 = SCALE * 1 / 10.0;
@@ -368,7 +389,7 @@ void ApplicationContext::CreateBackground()
 		top->m_World._11 = size;
 		top->m_World._22 = size;
 		top->m_World._33 = size;
-		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+		//XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 		top->m_World._41 = (size * 1.1) * i;
 		top->m_World._42 = 300;
 		top->m_World._43 = 400;
@@ -390,7 +411,7 @@ void ApplicationContext::CreateBackground()
 		top->m_World._11 = size;
 		top->m_World._22 = size;
 		top->m_World._33 = size;
-		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+	//	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 		top->m_World._41 = (size * 1.1) * i;
 		top->m_World._42 = 300;
 		top->m_World._43 = 400;
@@ -692,6 +713,7 @@ void ApplicationContext::CreateSnowmans()
 		instancingObj->m_World._22 = SCALE * 3 / 5.0;
 		instancingObj->m_World._33 = SCALE * 3 / 5.0;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+
 	}
 }
 
@@ -715,6 +737,7 @@ void ApplicationContext::CreateHail()
 		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * -0.4));
 
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+
 	}
 }
 
@@ -737,6 +760,7 @@ void ApplicationContext::CreateWaterDrop()
 		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * i / 2.0));
 
 		top->m_TexTransform = MathHelper::Identity4x4();
+
 	}
 }
 
@@ -1028,7 +1052,42 @@ void ApplicationContext::CreateOutline() {
 		seal->m_SkinnedCBIndex = BoneIndex::Seal;
 		seal->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get();
 		seal->m_World = MathHelper::Identity4x4();
+
 	}
+}
+
+void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY)
+{
+	GameObject* item = CreateObject<GameObject>(ui2dLayer, ui2dName);
+	item->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
+	item->IndexCount = item->Geo->DrawArgs["grid"].IndexCount;
+	item->StartIndexLocation = item->Geo->DrawArgs["grid"].StartIndexLocation;
+	item->BaseVertexLocation = item->Geo->DrawArgs["grid"].BaseVertexLocation;
+	item->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	item->m_Bounds = item->Geo->DrawArgs["grid"].Bounds;
+	item->m_MaterialIndex = matIndex;
+	item->m_IsVisible = true;
+
+	item->m_positionRatio = { (posX - (sizeX / 20.f)) / 800.f, (posY - (sizeY / 20.f)) / 600.f };
+	item->m_sizeRatio = { sizeX / 800.f, sizeY / sizeX };
+
+	item->Scale(sizeX, sizeY, 1);
+	item->SetPosition(posX, posY, 1.f);
+}
+
+void ApplicationContext::CreateParticle(std::string particleName, std::string instID, std::string matName)
+{
+	Particle* particle = CreateObject<Particle>(particleName, instID);
+	particle->Geo = MeshReference::GetApp()->m_GeometryMesh[particleName].get();
+	particle->IndexCount = particle->Geo->DrawArgs[particleName].IndexCount;
+	particle->StartIndexLocation = particle->Geo->DrawArgs[particleName].StartIndexLocation;
+	particle->BaseVertexLocation = particle->Geo->DrawArgs[particleName].BaseVertexLocation;
+	particle->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	particle->m_Bounds = particle->Geo->DrawArgs[particleName].Bounds;
+	particle->SetParticleNameCount(particleName); 
+	particle->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
+	//particle->m_MaterialIndex = 28;
+	particle->m_IsVisible = true;
 }
 
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
@@ -1128,4 +1187,51 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 
 	// Update InstanceData
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[userName], AppContext->m_RItemsVec);
+}
+
+void ApplicationContext::DisplayUI(std::string mapName)
+{
+}
+
+void ApplicationContext::HiddenUI(std::string uiName)
+{
+	GameObject* obj = FindObject<GameObject>(uiName, uiName);
+	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+	obj->m_IsVisible = false;
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[uiName], AppContext->m_RItemsVec);
+}
+
+void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float posY)
+{
+	GameObject* item = FindObject<GameObject>("UI_2D", ui2dName);
+	item->SetPosition(posX / Core::g_DisplayWidth, posY / Core::g_DisplayHeight, 1);
+
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[ui2dName], AppContext->m_RItemsVec);
+}
+
+void ApplicationContext::DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos)
+{
+	Particle* ptc = FindObject<Particle>(particleName, instID);
+	if (!ptc) {  return; }
+	ptc->m_IsVisible = true;
+	ptc->m_World = MathHelper::Identity4x4();
+	ptc->m_TexTransform = MathHelper::Identity4x4();
+	ptc->SetPosition(pos);
+	ptc->PlayParticle();
+	// rotate
+}
+
+void ApplicationContext::HiddenParticle(std::string particleName, std::string instID)
+{
+	Particle* ptc = FindObject<Particle>(particleName, instID);
+	if (!ptc) return;
+
+	ZeroMemory(&ptc->m_World, sizeof(ptc->m_World));
+	ZeroMemory(&ptc->m_TexTransform, sizeof(ptc->m_TexTransform));
+	ptc->m_IsVisible = false;
+	ptc->StopParticle();
+
+	// Update InstanceData
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[particleName], m_RItemsVec);
 }

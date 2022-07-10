@@ -3,7 +3,7 @@
 #include "GameInfo.h"
 #define SERVERIP "127.0.0.1"
 //#define SERVERIP "192.168.35.175"
-//#define SERVERIP "192.168.161.72"
+
 
 class Network
 {
@@ -31,7 +31,7 @@ public:
 
 	int		m_Retval;
 	char	m_Buffer[BUFSIZE];
-
+	int m_timer;
 	char* ptr;
 
 	DirectX::XMFLOAT3 GetPlayerPos(int num)const;
@@ -53,6 +53,7 @@ public:
 
 	bool GetPlayerHide(int num)const;
 	int GetPlayerSnowmanNum(int num)const;
+	int Gettime()const;
 	bool GetFoxSkill()const;
 	bool GetHuskySkill()const;
 	bool GetPenguinSkill()const;

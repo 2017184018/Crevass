@@ -25,7 +25,7 @@ void GameplayScene::Initialize()
 {
 	m_SceneController = new GameplayController(this);
 
-	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
+	AppContext->CreateSkycube("sky", "sky0", "snowcube1024"); 
 	AppContext->CreateBlocks();
 	AppContext->Createigloos();
 	AppContext->CreateWave();
@@ -36,9 +36,36 @@ void GameplayScene::Initialize()
 	AppContext->CreateMinimap();
 	AppContext->CreateOutline();
 
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
+			AppContext->CreateUI2D("player_"+ std::to_string(j)+"hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i*23.f, 180.f -j*30.f, 20.f, 10.5f);
+		}
+	}
+	AppContext->CreateUI2D("ui_p", "ui_p", 20, -380.f, 180.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_h", "ui_h", 21, -380.f, 150.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_s", "ui_s", 22, -380.f, 120.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_b", "ui_b", 23, -380.f, 90.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
+	for (int i = 0; i < 25; i++) {
+			AppContext->CreateParticle("testParticle", "testParticle" + std::to_string(i), "Particle_Ice");
+	}
 
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			if (AppContext->BlockCheck(5 * i + j))
+			{
+				AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(5 * i + j))->SetParticle("testParticle", "testParticle" + std::to_string(5 * i + j));
+			}
+			else {
+				AppContext->FindObject<GameObject>("snowcube", "snowcube" + std::to_string(5 * i + j))->SetParticle("testParticle", "testParticle" + std::to_string(5 * i + j));
+			}
+		}
+	}
+	
+#ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
-	//AppContext->CreateDebugBoundingBox("icecubeBB", "icecubeBB0");
+#endif
 	for (int i = 0; i < 25; ++i) {
 		//IsShake[i] = false;
 		//IsRight[i] = true;
@@ -48,9 +75,19 @@ void GameplayScene::Initialize()
 	}
 }
 
+void GameplayScene::OnResize()
+{
+	GraphicsContext::GetApp()->OnResizeBlur();
+}
+
 bool GameplayScene::Enter()
 {
 	cout << "GamePlay Scene" << endl;
+	/* Create SceneBounds for Shadow */
+	m_SceneBounds.Center = XMFLOAT3(500.f, 0.0f, 500.f);
+	m_SceneBounds.Radius = sqrtf(2000.f * 2000.f + 2000.f * 2000.f);
+	/* Light Setting */
+	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.47735f, -0.81735f, 1.07735 };
 
 	m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 	//나 
@@ -103,6 +140,9 @@ bool GameplayScene::Enter()
 		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
 	}
+
+	//AppContext->DisplayParticle("testParticle", "testParticle-1", m_Users[m_PlayerID]->GetPosition());
+
 	return false;
 }
 
@@ -117,6 +157,9 @@ void GameplayScene::Exit()
 
 void GameplayScene::Update(const float& fDeltaTime)
 {
+
+	m_Timer = 300 - g_pFramework->m_pNetwork->Gettime();
+
 	m_SceneController->Update(fDeltaTime);
 	static float time = 0.0f;
 	static XMFLOAT3 huskyimagepos[4];
@@ -191,6 +234,16 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	m_Users[m_PlayerID]->m_PlayerController->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
+	if (m_Users[m_PlayerID]->m_PlayerController->GetSkillCool()) {
+		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 26;
+	}
+	else if (!m_Users[m_PlayerID]->m_PlayerController->GetSkillCool()) {
+		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 25;
+	}
+
+	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->BlockParticle();
+	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
+	AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->UpdateParticleTime(fDeltaTime);
 
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -202,6 +255,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
+			//cout << "how meny -" << AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->m_Particles.size() << endl;
+		
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 1;
@@ -273,13 +328,16 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	//cout <<"tkdlwm ==" << m_Users.size() << endl;
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
 
 		p.second->Update(fDeltaTime);
 	}
+
+	// SceneBounds Update
+	//m_SceneBounds.Center = { m_Users[m_PlayerID]->GetPosition().x, 0 , m_Users[m_PlayerID]->GetPosition().z };
+
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
@@ -304,7 +362,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			if (i == m_PlayerID)
 			{
 				m_Users[i]->m_PlayerController->SetIsFall();
-				BlurCnt = 0;
+				GraphicsContext::GetApp()->OnBlurEffect(false);
+
 				IsFall[m_PlayerID] = false;
 				if (Lifecnt > 0) {
 					--Lifecnt;
@@ -399,14 +458,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
 		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
 	}
+
 	{	//waterdrop
 		for (int i = 0; i < 4; ++i) {
-			AppContext->m_RItemsVec[218 + i]->m_World._41 = m_Users[m_PlayerID]->GetPosition().x + (100 * (i / 2) - 50);
-			AppContext->m_RItemsVec[218 + i]->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 330;
+			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._41 = m_Users[m_PlayerID]->GetPosition().x + (100 * (i / 2) - 50);
+			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 330;
 			if (i == 0 || i == 3)
-				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 85;
+				AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 85;
 			else
-				AppContext->m_RItemsVec[218 + i]->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
+				AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
 		}
 	}
 
@@ -695,7 +755,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[133 + Lifecnt]->m_MaterialIndex = 6;
 		static float time = 0;
 		time += fDeltaTime;
-		BlurCnt = 3;
+		GraphicsContext::GetApp()->OnBlurEffect(true);
 
 		if (time >= 3) {
 			time = 0;
@@ -718,7 +778,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["life"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lifeline"], AppContext->m_RItemsVec);
@@ -767,9 +827,43 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Fox, MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
+	
+	
+	/*UI*/
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
+			GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
+			GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
+		}
+	}
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateUIPassCB(0.75f);
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
+
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec,true);
+
+	///*Shadow*/
+	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
+	GraphicsContext::GetApp()->UpdateShadowPassCB();
+
+
+	//meterial
+	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
+
+
 }
 
 void GameplayScene::Render()
@@ -796,6 +890,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
 
@@ -811,16 +906,14 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fish"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["waterdrop"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
-	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecubeBB"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 
+	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
+	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
-
+	
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	bool ty[5]{ false,false,false,false,false };
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
@@ -893,20 +986,85 @@ void GameplayScene::Render()
 	if (!ty[4])
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBearOutline"], AppContext->m_RItemsVec);
 
+	//debug
+#ifdef DEBUG_SHADOW
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_DebugPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["quad"], AppContext->m_RItemsVec);
+#endif
+	//sky
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
+
+	/*Particle*/
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);
 
 
-	mBlurFilter->Execute(g_CommandList.Get(), mPostProcessRootSignature.Get(),
-		Graphics::HorBlur.Get(), Graphics::VerBlur.Get(), BackBuffer, BlurCnt);
+	/* UI */
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
+			GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
 
-	//Prepare to copy blurred output to the back buffer.
-	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-		D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+		}
+	}
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
+	
+	
+	/*Shadow*/
+	GraphicsContext::GetApp()->SetResourceShadowPassCB();
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
 
-	g_CommandList->CopyResource(BackBuffer, mBlurFilter->Output());
+	/*Shadow Props*/
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icecube"], AppContext->m_RItemsVec);		//fbx
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowman"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snow_top"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["icicle"], AppContext->m_RItemsVec);
 
-	// Transition to PRESENT state.
-	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(BackBuffer,
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT));
+
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowcube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["mountain"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["tent"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["kayak"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["kayakpaddle"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["rock_0"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["rock_1"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["igloo"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fish"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sled"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["fishrack"], AppContext->m_RItemsVec);
+
+	/*Shadow Characters*/
+
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedShadowOpaquePSO.Get());
+
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+		
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap[p.second->GetType()], AppContext->m_RItemsVec);
+	}
+
+	GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
+
+}
+
+void GameplayScene::RenderUI()
+{
+	// Timer
+	GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
+	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer / 60) + L" : " + std::to_wstring(m_Timer % 60), 0, -Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
+
+	// skill cool time
+	//GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
+	//GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer % 60), -Core::g_DisplayWidth/2.9, Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
+
 }
 
 float GameplayScene::distance(XMFLOAT3 a, XMFLOAT3 b)

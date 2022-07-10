@@ -294,6 +294,9 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_time packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		std::cout << "time= " << (packet.time) / 3600 << "min " << ((packet.time) % 3600) / 60 << "sec" << endl;
+		
+		m_timer = packet.time % 3600 / 60;
+		
 		break;
 	}
 	case SC_HAIL:
@@ -455,6 +458,11 @@ int Network::GetPlayerSnowmanNum(int num)const
 	return PlayerSnowmanHide[num];
 }
 
+int Network::Gettime() const
+{
+
+	return m_timer;
+}
 bool Network::GetFoxSkill() const
 {
 	return FoxSkill;

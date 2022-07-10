@@ -2,6 +2,7 @@
 #include "GraphicsRenderer.h"
 #include "GameTimer.h"
 
+#include "GameCore.h"
 #include "CommandContext.h"
 
 #include "GameObject.h"
@@ -16,11 +17,19 @@ namespace Graphics
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OutlinePSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_DebugPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
+
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ShadowOpaquePSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedShadowOpaquePSO;
 
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
+
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ParticlePSO;
+
 }
 
 using namespace Core;
@@ -28,16 +37,17 @@ using namespace Graphics;
 
 void GraphicsRenderer::Initialize()
 {
-	m_CbvSrvDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	//Build Resource
+	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 3500, 3500);
 
-	Core::mBlurFilter = std::make_unique<BlurFilter>(g_Device.Get(),
+	Core::mBlurFilter = std::make_unique<BlurFilter>(Core::g_Device.Get(),
 		g_DisplayWidth, g_DisplayHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
-
 	LoadTextures();
+	BuildDescriptorHeaps();
+
+	BuildShaderAndInputLayout();
 	BuildRootSignatures();
 	BuildPostProcessRootSignature();
-	BuildDescriptorHeaps();
-	BuildShaderAndInputLayout();
 	BuildPipelineStateObjects();
 }
 
@@ -58,11 +68,34 @@ void GraphicsRenderer::RenderGraphics()
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
 	g_CommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 
+	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+
 	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	skyTexDescriptor.Offset(mSkyTexHeapIndex, m_CbvSrvDescriptorSize);
+	skyTexDescriptor.Offset(mSkyTexHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 	g_CommandList->SetGraphicsRootDescriptorTable(3, skyTexDescriptor);
 
-	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE shadowTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	shadowTexDescriptor.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+	g_CommandList->SetGraphicsRootDescriptorTable(6, shadowTexDescriptor);
+}
+
+void GraphicsRenderer::ExecuteBlurEffects()
+{
+	if (m_SwitchBlur) {
+		mBlurFilter->Execute(Core::g_CommandList.Get(), mPostProcessRootSignature.Get(),
+			HorBlur.Get(), VerBlur.Get(), GameCore::GetApp()->CurrentBackBuffer(), 4);
+
+		//Prepare to copy blurred output to the back buffer.
+		Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GameCore::GetApp()->CurrentBackBuffer(),
+			D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		Core::g_CommandList->CopyResource(GameCore::GetApp()->CurrentBackBuffer(), mBlurFilter->Output());
+	}
+}
+
+void GraphicsRenderer::ExecuteResizeBlur()
+{
+	mBlurFilter->OnResize(Core::g_DisplayWidth, Core::g_DisplayHeight);
 }
 
 void GraphicsRenderer::LoadTextures()
@@ -88,10 +121,19 @@ void GraphicsRenderer::LoadTextures()
 		"lobby4",
 		"lobby5",
 		"waterdrop",
+		"UI_Hp",
+		"UI_Penguin",
+		"UI_Husky",
+		"UI_Seal",
+		"UI_Bear",
+		"UI_Fox",
+		"UI_SkillOn",
+		"UI_SkillOff",
+		"Particle_Ice",
 		"snowmanicon",
 		"iglooicon",
 		"blueicon",
-		"redicon",
+		"redicon"
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -115,10 +157,19 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/lobby4.dds",
 		L"./Textures/lobby5.dds",
 		L"./Textures/waterdrop.dds",
-		L"./Textures/snowmanicon.dds",
+		L"./Textures/ingame/hp.dds",
+		L"./Textures/ingame/penguin_ui.dds",
+		L"./Textures/ingame/husky_ui.dds",
+		L"./Textures/ingame/seal_ui.dds",
+	    L"./Textures/ingame/bear_ui.dds",
+		L"./Textures/ingame/fox_ui.dds",
+		L"./Textures/ingame/SkillOn_ui.dds",
+		L"./Textures/ingame/SkillOff_ui.dds",
+		L"./Textures/ingame/ice_particle.dds",
+	L"./Textures/snowmanicon.dds",
 		L"./Textures/iglooicon.dds",
 		L"./Textures/blueicon.dds",
-		L"./Textures/redicon.dds",
+		L"./Textures/redicon.dds"
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -141,70 +192,96 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		// Create the SRV heap.
 		//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = m_Textures.size() + blurDescriptorCount;
+	srvHeapDesc.NumDescriptors = m_Textures.size()*2 + blurDescriptorCount;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	ThrowIfFailed(g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
+	ThrowIfFailed(Core::g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
 
 	//
 	// Fill out the heap with actual descriptors.
 	//
 	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	vector<Microsoft::WRL::ComPtr<ID3D12Resource>>textures;
-	textures.push_back(m_Textures["snowcube1024"]->Resource);
-	textures.push_back(m_Textures["ice"]->Resource);
-	textures.push_back(m_Textures["Penguin"]->Resource);
-	textures.push_back(m_Textures["water"]->Resource);
-	textures.push_back(m_Textures["husky"]->Resource);
-	textures.push_back(m_Textures["heart"]->Resource);
-	textures.push_back(m_Textures["heartline"]->Resource);
-	textures.push_back(m_Textures["rope"]->Resource);
-	textures.push_back(m_Textures["lobby"]->Resource);
-	textures.push_back(m_Textures["arctic"]->Resource);
-	textures.push_back(m_Textures["ArcticFox"]->Resource);
-	textures.push_back(m_Textures["PolarBear"]->Resource);
-	textures.push_back(m_Textures["Seal"]->Resource);
-	textures.push_back(m_Textures["lobby1"]->Resource);
-	textures.push_back(m_Textures["lobby2"]->Resource);
-	textures.push_back(m_Textures["lobby3"]->Resource);
-	textures.push_back(m_Textures["lobby4"]->Resource);
-	textures.push_back(m_Textures["lobby5"]->Resource);
-	textures.push_back(m_Textures["waterdrop"]->Resource);
-	textures.push_back(m_Textures["snowmanicon"]->Resource);
-	textures.push_back(m_Textures["iglooicon"]->Resource);
-	textures.push_back(m_Textures["blueicon"]->Resource);
-	textures.push_back(m_Textures["redicon"]->Resource);
+
+	
+	std::vector<ComPtr<ID3D12Resource>> tex2DList =
+	{
+	m_Textures["ice"]->Resource,
+	m_Textures["Penguin"]->Resource,
+    m_Textures["water"]->Resource,
+	m_Textures["husky"]->Resource,
+	m_Textures["heart"]->Resource,
+	m_Textures["heartline"]->Resource,
+	m_Textures["rope"]->Resource,
+	m_Textures["lobby"]->Resource,
+	m_Textures["arctic"]->Resource,
+	m_Textures["ArcticFox"]->Resource,
+	m_Textures["PolarBear"]->Resource,
+	m_Textures["Seal"]->Resource,
+	m_Textures["lobby1"]->Resource,
+	m_Textures["lobby2"]->Resource,
+	m_Textures["lobby3"]->Resource,
+	m_Textures["lobby4"]->Resource,
+	m_Textures["lobby5"]->Resource,
+	m_Textures["waterdrop"]->Resource,
+	m_Textures["UI_Hp"]->Resource,
+	m_Textures["UI_Penguin"]->Resource,
+	m_Textures["UI_Husky"]->Resource,
+	m_Textures["UI_Seal"]->Resource,
+	m_Textures["UI_Bear"]->Resource,
+	m_Textures["UI_Fox"]->Resource,
+	m_Textures["UI_SkillOn"]->Resource,
+	m_Textures["UI_SkillOff"]->Resource,
+	m_Textures["Particle_Ice"]->Resource,
+	m_Textures["snowmanicon"]->Resource,
+	m_Textures["iglooicon"]->Resource,
+	m_Textures["blueicon"]->Resource,
+	m_Textures["redicon"]->Resource
+
+	};
+	auto snowcube1024 = m_Textures["snowcube1024"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-
-	// �Թ�ü�� TECTURECUBE
-	srvDesc.Format = textures[0]->GetDesc().Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = textures[0]->GetDesc().MipLevels;
-	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	g_Device->CreateShaderResourceView(textures[0].Get(), &srvDesc, hDescriptor);
+	srvDesc.Format = snowcube1024->GetDesc().Format;
+	Core::g_Device->CreateShaderResourceView(snowcube1024.Get(), &srvDesc, hDescriptor);
+	//hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 
-	// next descriptor
-	for (int i = 1; i < textures.size(); ++i) {
-		hDescriptor.Offset(1, m_CbvSrvDescriptorSize);
+	// Textures
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-		srvDesc.Format = textures[i]->GetDesc().Format;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = textures[i]->GetDesc().MipLevels;
-		srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-		g_Device->CreateShaderResourceView(textures[i].Get(), &srvDesc, hDescriptor);
+	for (UINT i = 0; i < (UINT)tex2DList.size(); ++i)
+	{
+		hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+
+		srvDesc.Format = tex2DList[i]->GetDesc().Format;
+		srvDesc.Texture2D.MipLevels = tex2DList[i]->GetDesc().MipLevels;
+		Core::g_Device->CreateShaderResourceView(tex2DList[i].Get(), &srvDesc, hDescriptor);
+
+		// next descriptor
 	}
 
 	mSkyTexHeapIndex = 0;
+	mShadowMapHeapIndex = (UINT)tex2DList.size() + 1;
+	mBlurHeapIndex = mShadowMapHeapIndex + 1;
+	auto srvCpuStart = m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	auto srvGpuStart = m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	auto dsvCpuStart = GameCore::GetApp()->mDsvHeap->GetCPUDescriptorHandleForHeapStart();
+	
+	
+
+	mShadowMap->BuildDescriptors(
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(srvCpuStart, mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(srvGpuStart, mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(dsvCpuStart, 1, GameCore::GetApp()->mDsvDescriptorSize));
 
 	Core::mBlurFilter->BuildDescriptors(
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_Textures.size(), m_CbvSrvDescriptorSize),
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), m_Textures.size(), m_CbvSrvDescriptorSize),
-		m_CbvSrvDescriptorSize);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 }
 
 void GraphicsRenderer::BuildShaderAndInputLayout()
@@ -227,6 +304,28 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
+	m_Shaders["uiVS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["uiPS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "PS", "ps_5_1");
+
+	m_Shaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
+	m_Shaders["shadowOpaquePS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
+	m_Shaders["shadowAlphaTestedPS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", alphaTestDefines, "PS", "ps_5_1");
+
+	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_0");
+	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_0");
+
+	m_Shaders["billBoardsVS"] = 
+
+	m_Shaders["debugVS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["debugPS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
+
+	// Billboards
+	m_Shaders["particleVS"] = d3dUtil::CompileShader(L"Shaders\\Particle.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["particleGS"] = d3dUtil::CompileShader(L"Shaders\\Particle.hlsl", nullptr, "GS", "gs_5_1");
+	m_Shaders["particlePS"] = d3dUtil::CompileShader(L"Shaders\\Particle.hlsl", nullptr, "PS", "ps_5_1");
+
+
 	m_Instancing_InputLayout =
 	{
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -247,6 +346,22 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 68, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
+	m_Billboard_InputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{"VELOCITY",0,DXGI_FORMAT_R32G32B32_FLOAT,0,20,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+		{"STARTTIME",0,DXGI_FORMAT_R32_FLOAT,0,32,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+		{"LIFETIME",0,DXGI_FORMAT_R32_FLOAT,0,36,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0}
+	};
+
+	m_UI_InputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	};
+
 	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_1");
 	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_1");
 }
@@ -257,9 +372,12 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, m_Textures.size(), 1, 0);		//�ؽ��� ��
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,30, 2, 0);		//�ؽ��� ��
 
-	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
+	CD3DX12_DESCRIPTOR_RANGE texTable2;
+	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);
+
+	CD3DX12_ROOT_PARAMETER slotRootParameter[7];
 
 	// ���� �� : ���󵵰� �����Ϳ��� ���� ���� ������ �����Ѵ�.
 	/* Shader Register*/
@@ -276,11 +394,12 @@ void GraphicsRenderer::BuildRootSignatures()
 	slotRootParameter[3].InitAsDescriptorTable(1, &skyboxTable, D3D12_SHADER_VISIBILITY_PIXEL);
 	slotRootParameter[4].InitAsDescriptorTable(1, &textureTable, D3D12_SHADER_VISIBILITY_PIXEL);
 	slotRootParameter[5].InitAsConstantBufferView(1);
+	slotRootParameter[6].InitAsDescriptorTable(1, &texTable2, D3D12_SHADER_VISIBILITY_PIXEL); // shadow
 
 	auto staticSamplers = GetStaticSamplers();
 
 	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(6, slotRootParameter,
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(7, slotRootParameter,
 		(UINT)staticSamplers.size(), staticSamplers.data(),
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -334,6 +453,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.SampleDesc.Quality = g_4xMsaaState ? (g_4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
+	
 	//
 	// PSO for BB pass.
 	//
@@ -409,6 +529,96 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO)));
 
 	//
+	// PSO for shadow map pass.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC smapPsoDesc = opaquePsoDesc;
+	smapPsoDesc.RasterizerState.DepthBias = 10000;
+	smapPsoDesc.RasterizerState.DepthBiasClamp = 0.0f;
+	smapPsoDesc.RasterizerState.SlopeScaledDepthBias = 1.0f;
+	smapPsoDesc.pRootSignature = m_RenderRS.Get();
+	smapPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["shadowVS"]->GetBufferPointer()),
+		m_Shaders["shadowVS"]->GetBufferSize()
+	};
+	smapPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["shadowOpaquePS"]->GetBufferPointer()),
+		m_Shaders["shadowOpaquePS"]->GetBufferSize()
+	};
+
+	// Shadow map pass does not have a render target.
+	smapPsoDesc.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+	smapPsoDesc.NumRenderTargets = 0;
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&smapPsoDesc, IID_PPV_ARGS(&g_ShadowOpaquePSO)));
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC skinnedSmapPsoDesc = smapPsoDesc;
+	skinnedSmapPsoDesc.InputLayout = { m_Skinned_InputLayout.data(), (UINT)m_Skinned_InputLayout.size() };
+	skinnedSmapPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["skinnedShadowVS"]->GetBufferPointer()),
+		m_Shaders["skinnedShadowVS"]->GetBufferSize()
+	};
+	skinnedSmapPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["shadowOpaquePS"]->GetBufferPointer()),
+		m_Shaders["shadowOpaquePS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedSmapPsoDesc, IID_PPV_ARGS(&g_SkinnedShadowOpaquePSO)));
+
+	// PSO for debug layer.
+   //
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC debugPsoDesc = opaquePsoDesc;
+	debugPsoDesc.pRootSignature = m_RenderRS.Get();
+	debugPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["debugVS"]->GetBufferPointer()),
+		m_Shaders["debugVS"]->GetBufferSize()
+	};
+	debugPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["debugPS"]->GetBufferPointer()),
+		m_Shaders["debugPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&debugPsoDesc, IID_PPV_ARGS(&g_DebugPSO)));
+
+	//
+	// PSO for UI
+	//
+	D3D12_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(D3D12_BLEND_DESC));
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = false;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC uiPsoDesc = opaquePsoDesc;
+	uiPsoDesc.InputLayout = { m_UI_InputLayout.data(), (UINT)m_UI_InputLayout.size() };
+	uiPsoDesc.BlendState = blendDesc;
+	uiPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+	uiPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	uiPsoDesc.pRootSignature = m_RenderRS.Get();
+	uiPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["uiVS"]->GetBufferPointer()),
+		m_Shaders["uiVS"]->GetBufferSize()
+	};
+	uiPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["uiPS"]->GetBufferPointer()),
+		m_Shaders["uiPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&uiPsoDesc, IID_PPV_ARGS(&g_UIPSO)));
+
+	//
 	// PSO for horizontal blur
 	//
 	D3D12_COMPUTE_PIPELINE_STATE_DESC horzBlurPSO = {};
@@ -420,6 +630,7 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	};
 	horzBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(g_Device->CreateComputePipelineState(&horzBlurPSO, IID_PPV_ARGS(&HorBlur)));
+
 
 	//
 	// PSO for vertical blur
@@ -433,6 +644,31 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	};
 	vertBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(g_Device->CreateComputePipelineState(&vertBlurPSO, IID_PPV_ARGS(&VerBlur)));
+	//
+	// PSO for billboards sprites
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC billboardsPsoDesc = uiPsoDesc;
+	billboardsPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particleVS"]->GetBufferPointer()),
+		m_Shaders["particleVS"]->GetBufferSize()
+	};
+	billboardsPsoDesc.GS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particleGS"]->GetBufferPointer()),
+		m_Shaders["particleGS"]->GetBufferSize()
+	};
+	billboardsPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particlePS"]->GetBufferPointer()),
+		m_Shaders["particlePS"]->GetBufferSize()
+	};
+
+	billboardsPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+	billboardsPsoDesc.InputLayout = { m_Billboard_InputLayout.data(), (UINT)m_Billboard_InputLayout.size() };
+	billboardsPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+
+	ThrowIfFailed(Core::g_Device->CreateGraphicsPipelineState(&billboardsPsoDesc, IID_PPV_ARGS(&g_ParticlePSO)));
 }
 
 void GraphicsRenderer::BuildPostProcessRootSignature()
@@ -475,7 +711,7 @@ void GraphicsRenderer::BuildPostProcessRootSignature()
 		IID_PPV_ARGS(mPostProcessRootSignature.GetAddressOf())));
 }
 
-std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GraphicsRenderer::GetStaticSamplers()
+std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GraphicsRenderer::GetStaticSamplers()
 {
 	// Applications usually only need a handful of samplers.  So just define them all up front
 	// and keep them available as part of the root signature.  
@@ -526,8 +762,19 @@ std::array<const CD3DX12_STATIC_SAMPLER_DESC, 6> GraphicsRenderer::GetStaticSamp
 		0.0f,                              // mipLODBias
 		8);                                // maxAnisotropy
 
+	const CD3DX12_STATIC_SAMPLER_DESC shadow(
+		6, // shaderRegister
+		D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressW
+		0.0f,                               // mipLODBias
+		16,                                 // maxAnisotropy
+		D3D12_COMPARISON_FUNC_LESS_EQUAL,
+		D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK);
+
 	return {
 		pointWrap, pointClamp,
 		linearWrap, linearClamp,
-		anisotropicWrap, anisotropicClamp };
+		anisotropicWrap, anisotropicClamp,shadow };
 }

@@ -8,13 +8,22 @@
 
 namespace Graphics
 {
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OutlinePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> 	g_DebugPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
 
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
+
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ShadowOpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedShadowOpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ParticlePSO;
+
+
 }
 
 namespace Core
@@ -47,6 +56,7 @@ class GameplayScene : public Scene
 {
 public:
 	virtual void Initialize() override;
+	virtual void OnResize() override;
 
 public:
 	virtual bool Enter() override;
@@ -54,8 +64,8 @@ public:
 
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
-
 	float distance(XMFLOAT3 a, XMFLOAT3 b);
+	virtual void RenderUI() override;
 	/* ID: battleID */
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;
@@ -72,9 +82,6 @@ public:
 
 	bool IsFall[3] = { 0, };		// 블러링, 높은 물결
 
-	UINT BlurCnt = 0;
-
-
 	bool BlockIn = false;		//블록 한번만 밟게
 	int tmp1 = -1;
 	int tmp2 = -1;
@@ -83,5 +90,8 @@ public:
 	UINT Lifecnt = 5;
 
 	int FallX, FallZ;
+	float Gravity = 0.1;
+
+	int m_Timer;
 };
 

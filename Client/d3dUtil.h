@@ -101,9 +101,10 @@ namespace ShaderResource
 		DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
 		DirectX::XMFLOAT4X4 TexTransform = MathHelper::Identity4x4();
 		UINT MaterialIndex;
+		float particleTime;
 		UINT InstancePad0;
 		UINT InstancePad1;
-		UINT InstancePad2;
+		//UINT InstancePad2;
 	};
 
 	struct PassConstants
@@ -114,6 +115,9 @@ namespace ShaderResource
 		DirectX::XMFLOAT4X4 InvProj = MathHelper::Identity4x4();
 		DirectX::XMFLOAT4X4 ViewProj = MathHelper::Identity4x4();
 		DirectX::XMFLOAT4X4 InvViewProj = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 Ortho = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 ShadowTransform = MathHelper::Identity4x4();
+
 		DirectX::XMFLOAT3 EyePosW = { 0.0f, 0.0f, 0.0f };
 		float cbPerObjectPad1 = 0.0f;
 		DirectX::XMFLOAT2 RenderTargetSize = { 0.0f, 0.0f };
@@ -148,6 +152,20 @@ namespace ShaderResource
 		DirectX::XMFLOAT4X4 BoneTransforms[96];
 	};
 }
+
+struct ParticleVertex
+{
+	XMFLOAT3 pos; // 월드행렬 위치에서 얼만큼 이동됬는지의 오프셋 pos 좌표
+	XMFLOAT2 size;
+	XMFLOAT3 velocity;
+	float Starttime;
+	float Lifetime;
+	// period
+	// amp
+	// value
+
+};
+
 
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)
 {

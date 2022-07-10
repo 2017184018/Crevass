@@ -49,6 +49,15 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+// D2D (for Render Text)
+#include <d2d1_3.h>
+#include <dwrite.h>
+#include <d3d11on12.h>
+
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "dwrite.lib")
+#pragma comment(lib, "d3d11.lib")
+
 using namespace std;
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
@@ -73,6 +82,9 @@ enum BoneIndex { Husky = 0, Penguin, Seal, Fox, PolarBear, Count};
 enum class SceneType { /*Title*/ Lobby, GamePlay, GameResult, Count};
 enum class CameraType { First, Third, Free };
 
+// Light Name
+#define LIGHT_NAME_DIRECTIONAL "Directional" 
+
 // Move & Rotate
 #define DIR_FORWARD					0x01
 #define DIR_BACKWARD				0x02
@@ -82,4 +94,6 @@ enum class CameraType { First, Third, Free };
 #define DIR_DOWN					0x20
 
 #define CAMERA_ZNEAR 1.f
-#define CAMERA_ZFAR 2000.f
+#define CAMERA_ZFAR 10000.f
+
+//#define DEBUG_SHADOW 0x00FF0

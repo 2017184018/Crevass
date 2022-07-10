@@ -9,15 +9,6 @@
 #include "MainFramework.h"
 
 
-//namespace Graphics
-//{
-//	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
-//	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
-//	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
-//
-//	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
-//	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
-//}
 
 namespace Core
 {
@@ -50,7 +41,7 @@ public:
 	virtual void Cleanup(void) override;
 	virtual void Update(float deltaT) override;
 	virtual void RenderScene(void) override;
-
+	virtual void RenderUI(void) override;
 
 private:
 	void BuildCharacters();
@@ -58,7 +49,7 @@ private:
 
 public:
 	Camera* m_Camera;
-
+	std::map<std::string, std::unique_ptr<Light>> m_Lights;
 public:
 	MeshReference* m_MeshRef;
 	MaterialReference* m_MaterialRef;

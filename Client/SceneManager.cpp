@@ -13,6 +13,11 @@ SceneManager::SceneManager() :
 
 SceneManager::~SceneManager()
 {
+	for (auto& s : m_Scenes)
+	{
+		SAFE_DELETE_PTR(s->m_SceneController);
+	}
+
 	for (auto& s : m_Scenes) {
 		s->Exit();
 		SAFE_DELETE_PTR(s);
@@ -22,9 +27,11 @@ SceneManager::~SceneManager()
 
 void SceneManager::InitializeScenes()
 {
-	CreateScene<GameplayScene>(SceneType::GamePlay, "GamePlay");
-	CreateScene<LobbyScene>(SceneType::Lobby, "Lobby");
-	CreateScene<GameresultScene>(SceneType::GameResult, "GameResult");
+
+	
+	CreateScene<GameplayScene>(SceneType::GamePlay);
+	CreateScene<LobbyScene>(SceneType::Lobby);
+	CreateScene<GameresultScene>(SceneType::GameResult);
 }
 
 void SceneManager::ChangeScene(SceneType sceneType)
@@ -75,6 +82,11 @@ void SceneManager::UpdateScene(const float& deltaT)
 void SceneManager::RenderScene()
 {
 	m_Scenes[m_CurScene]->Render();
+}
+
+void SceneManager::RenderUI()
+{
+	m_Scenes[m_CurScene]->RenderUI();
 }
 
 Scene* SceneManager::GetCurScene() const

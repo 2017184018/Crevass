@@ -671,7 +671,7 @@ GeometryGenerator::MeshData GeometryGenerator::CreateGrid(float width, float dep
 		{
 			float x = -halfWidth + j * dx;
 
-			meshData.Vertices[i * n + j].Position = XMFLOAT3(x, 0.0f, z);
+			meshData.Vertices[i * n + j].Position = XMFLOAT3(x, z, 0.0f);
 			meshData.Vertices[i * n + j].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 			meshData.Vertices[i * n + j].TangentU = XMFLOAT3(1.0f, 0.0f, 0.0f);
 
