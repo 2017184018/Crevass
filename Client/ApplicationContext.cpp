@@ -911,7 +911,7 @@ void ApplicationContext::CreateMinimap()
 		icon->m_World._11 = 15;
 		icon->m_World._22 = 1;
 		icon->m_World._33 = 15;
-
+		icon->Scale(10, 10, 10);
 		XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
 
 		icon->m_TexTransform = MathHelper::Identity4x4();
