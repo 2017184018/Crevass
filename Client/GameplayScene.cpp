@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 
 #include "GameObject.h"
+#include "Particle.h"
 #include "Character.h"
 #include "CharacterParts.h"
 #include "Network.h"
@@ -50,6 +51,8 @@ void GameplayScene::Initialize()
 	for (int i = 0; i < 25; i++) {
 			AppContext->CreateParticle("testParticle", "testParticle" + std::to_string(i), "Particle_Ice");
 	}
+
+	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow");
 
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -141,8 +144,8 @@ bool GameplayScene::Enter()
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
 	}
 
-	//AppContext->DisplayParticle("testParticle", "testParticle-1", m_Users[m_PlayerID]->GetPosition());
-
+	//눈 파티클 시작
+	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
 	return false;
 }
 
@@ -244,6 +247,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->BlockParticle();
 	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
 	AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->UpdateParticleTime(fDeltaTime);
+	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
+
 
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -854,7 +859,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec,true);
-
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec, true);
 	///*Shadow*/
 	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
 	GraphicsContext::GetApp()->UpdateShadowPassCB();
@@ -998,7 +1003,7 @@ void GameplayScene::Render()
 	/*Particle*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);
-
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec);
 
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());

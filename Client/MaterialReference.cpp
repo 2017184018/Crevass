@@ -244,83 +244,91 @@ void MaterialReference::BuildMaterials()
 	Particle_Ice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Particle_Ice->Roughness = 1.0f;
 
+	auto snow_particle = std::make_unique<Material>();
+	snow_particle->MatCBIndex = 28;
+	snow_particle->DiffuseSrvHeapIndex = 28;
+	snow_particle->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
+	snow_particle->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	snow_particle->Roughness = 1.0f;
+
 	auto snowmanicon = std::make_unique<Material>();
-	snowmanicon->MatCBIndex = 28;
-	snowmanicon->DiffuseSrvHeapIndex = 28;
+	snowmanicon->MatCBIndex = 29;
+	snowmanicon->DiffuseSrvHeapIndex = 29;
 	snowmanicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	snowmanicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	snowmanicon->Roughness = 1.0f;
 
 	auto iglooicon = std::make_unique<Material>();
-	iglooicon->MatCBIndex = 29;
-	iglooicon->DiffuseSrvHeapIndex = 29;
+	iglooicon->MatCBIndex = 30;
+	iglooicon->DiffuseSrvHeapIndex = 30;
 	iglooicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	iglooicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	iglooicon->Roughness = 1.0f;
 
 	auto blueicon = std::make_unique<Material>();
-	blueicon->MatCBIndex = 30;
-	blueicon->DiffuseSrvHeapIndex = 30;
+	blueicon->MatCBIndex = 31;
+	blueicon->DiffuseSrvHeapIndex = 31;
 	blueicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	blueicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	blueicon->Roughness = 1.0f;
 
 	auto redicon = std::make_unique<Material>();
-	redicon->MatCBIndex = 31;
-	redicon->DiffuseSrvHeapIndex = 31;
+	redicon->MatCBIndex = 32;
+	redicon->DiffuseSrvHeapIndex = 32;
 	redicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	redicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	redicon->Roughness = 1.0f;
 
 	auto TranslucentArcticFox = std::make_unique<Material>();
-	TranslucentArcticFox->MatCBIndex = 32;
+	TranslucentArcticFox->MatCBIndex = 33;
 	TranslucentArcticFox->DiffuseSrvHeapIndex = 10;
 	TranslucentArcticFox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	TranslucentArcticFox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	TranslucentArcticFox->Roughness = 1.0f;
 
 	auto huskyimage1 = std::make_unique<Material>();
-	huskyimage1->MatCBIndex = 33;
+	huskyimage1->MatCBIndex = 34;
 	huskyimage1->DiffuseSrvHeapIndex = 4;
 	huskyimage1->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.7f);
 	huskyimage1->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage1->Roughness = 1.0f;
 
 	auto huskyimage2 = std::make_unique<Material>();
-	huskyimage2->MatCBIndex = 34;
+	huskyimage2->MatCBIndex = 35;
 	huskyimage2->DiffuseSrvHeapIndex = 4;
 	huskyimage2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	huskyimage2->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage2->Roughness = 1.0f;
 
 	auto huskyimage3 = std::make_unique<Material>();
-	huskyimage3->MatCBIndex = 35;
+	huskyimage3->MatCBIndex = 36;
 	huskyimage3->DiffuseSrvHeapIndex = 4;
 	huskyimage3->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	huskyimage3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage3->Roughness = 1.0f;
 
 	auto redline = std::make_unique<Material>();
-	redline->MatCBIndex = 36;
+	redline->MatCBIndex = 37;
 	redline->DiffuseSrvHeapIndex = 12;
 	redline->DiffuseAlbedo = XMFLOAT4(30.0f, 0.0f, 0.0f, 1.0f);
 	redline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	redline->Roughness = 1.0f;
 
 	auto blueline = std::make_unique<Material>();
-	blueline->MatCBIndex = 37;
+	blueline->MatCBIndex = 38;
 	blueline->DiffuseSrvHeapIndex = 12;
 	blueline->DiffuseAlbedo = XMFLOAT4(0.0f, 0.0f, 30.0f, 1.0f);
 	blueline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	blueline->Roughness = 1.0f;
 
 	auto bricks0 = std::make_unique<Material>();
-	bricks0->MatCBIndex = 38;
+	bricks0->MatCBIndex = 39;
 	bricks0->DiffuseSrvHeapIndex = 34;
 	bricks0->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	bricks0->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	bricks0->Roughness = 1.0f;
 
+	
 	
 	m_Materials["snowcube1024"] = std::move(sky);
 	m_Materials["ice"] = std::move(ice);
@@ -350,6 +358,7 @@ void MaterialReference::BuildMaterials()
 	m_Materials["UI_SkillOn"] = std::move(UI_SkillOn);
 	m_Materials["UI_SkillOff"] = std::move(UI_SkillOff);
 	m_Materials["Particle_Ice"] = std::move(Particle_Ice);
+	m_Materials["Particle_snow"] = std::move(snow_particle);
 	m_Materials["iglooicon"] = std::move(iglooicon);
 	m_Materials["blueicon"] = std::move(blueicon);
 	m_Materials["TranslucentArcticFox"] = std::move(TranslucentArcticFox);

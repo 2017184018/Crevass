@@ -120,6 +120,8 @@ void GameplayController::HandleInput(const float deltaT)
 	if (InputHandler::IsKeyUp('P')) {
 		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
 		AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
+		
+		
 	}
 	if (InputHandler::IsKeyUp('O')) {
 		AppContext->HiddenParticle("testParticle", "testParticle" + std::to_string(11));

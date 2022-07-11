@@ -19,7 +19,6 @@ void Particle::Update(const float deltaT)
 {
 	if (isPlaying)
 	{
-		cout << m_ParticleTotalTime << endl;
 		m_ParticleTotalTime += deltaT;
 	}
 }
