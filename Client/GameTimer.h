@@ -20,20 +20,17 @@ public:
 	void Reset(); // Call before message loop.
 	void Start(); // Call when unpaused.
 	void Stop();  // Call when paused.
-	void Tick(const float lockFPS);  // Call every frame.
-
+	void Tick(const float fLockFPS);  // Call every frame.
 
 private:
-	double							m_fTimeScale;
-	float							m_fTimeElapsed;
+	double mSecondsPerCount;
+	double mDeltaTime;
 
-	__int64							m_nBasePerformanceCounter;
-	__int64							m_nPausedPerformanceCounter;
-	__int64							m_nStopPerformanceCounter;
-	__int64							m_nCurrentPerformanceCounter;
-	__int64							m_nLastPerformanceCounter;
-
-	__int64							m_nPerformanceFrequencyPerSec;
+	__int64 mBaseTime;
+	__int64 mPausedTime;
+	__int64 mStopTime;
+	__int64 mPrevTime;
+	__int64 mCurrTime;
 
 	float							m_fFrameTime[MAX_SAMPLE_COUNT];
 	ULONG							m_nSampleCount;
@@ -42,7 +39,7 @@ private:
 	unsigned long					m_nFramesPerSecond;
 	float							m_fFPSTimeElapsed;
 
-	bool							m_bStopped;
+	bool mStopped;
 };
 
 #endif // GAMETIMER_H

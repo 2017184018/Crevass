@@ -111,7 +111,6 @@ void Core::CalculateFrameStats()
 	// Code computes the average frames per second, and also the 
 	// average time it takes to render one frame.  These stats 
 	// are appended to the window caption bar.
-
 	static int frameCnt = 0;
 	static float timeElapsed = 0.0f;
 
@@ -174,13 +173,13 @@ void GameCore::InitializeCore(IGameApp& game)
 
 bool GameCore::UpdateCore(IGameApp& game)
 {
-	g_GameTimer->Tick(60);
+	g_GameTimer->Tick(60.f);
 
 	if (!mAppPaused)
 	{
 		CalculateFrameStats();
 
-		static const float deltaT = g_GameTimer->DeltaTime();
+		const float deltaT = g_GameTimer->DeltaTime();
 		game.Update(deltaT);
 
 		PreparePresent();
