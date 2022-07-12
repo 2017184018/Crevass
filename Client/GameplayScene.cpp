@@ -42,11 +42,11 @@ void GameplayScene::Initialize()
 			AppContext->CreateUI2D("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
 		}
 	}
-	AppContext->CreateUI2D("ui_p", "ui_p", 20, -380.f, 180.f, 30.f, 20.f);
-	AppContext->CreateUI2D("ui_h", "ui_h", 21, -380.f, 150.f, 30.f, 20.f);
-	AppContext->CreateUI2D("ui_s", "ui_s", 22, -380.f, 120.f, 30.f, 20.f);
-	AppContext->CreateUI2D("ui_b", "ui_b", 23, -380.f, 90.f, 30.f, 20.f);
-	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
+	AppContext->CreateUI2D("ui_Penguin", "ui_Penguin", 20, -380.f, 180.f, UI_SIZEX, UI_SIZEY);
+	AppContext->CreateUI2D("ui_Husky", "ui_Husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
+	AppContext->CreateUI2D("ui_Seal", "ui_Seal", 22, -380.f, 120.f, UI_SIZEX, UI_SIZEY);
+	AppContext->CreateUI2D("ui_PolarBear", "ui_PolarBear", 23, -380.f, 90.f, UI_SIZEX, UI_SIZEY);
+	AppContext->CreateUI2D("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
 	for (int i = 0; i < 25; i++) {
 		AppContext->CreateParticle("testParticle", "testParticle" + std::to_string(i), "Particle_Ice");
@@ -76,6 +76,7 @@ void GameplayScene::Initialize()
 		DestructionCnt[i] = 0;
 		//IsDown[i] = true;
 	}
+
 }
 
 void GameplayScene::OnResize()
@@ -98,7 +99,7 @@ bool GameplayScene::Enter()
 	{
 		int ty = g_pFramework->m_pNetwork->GetCharacterType(i);
 		if (ty == CHARACTER_PENGUIN) {
-			m_Users[i] = AppContext->FindObject<Character>("Penguin_LOD0skin", "Penguin_LOD0skin0");
+			m_Users[i] = AppContext->FindObject<Character>("Penguin", "Penguin0");
 		}
 		else if (ty == CHARACTER_ARCTICFOX) {
 			m_Users[i] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
@@ -142,6 +143,17 @@ bool GameplayScene::Enter()
 		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
 		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
+	}
+
+	//여기서 초기화
+ 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->SetPosition(-380.f, 180.f- i*30.f,1.f);
+		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->m_positionRatio = { (-380.f - (UI_SIZEX / 20.f)) / 800.f, (180.f - i * 30.f - (UI_SIZEY / 20.f)) / 600.f };
+
+		//GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
+		//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
+		//이부분 
 	}
 
 	//눈 파티클 시작
@@ -357,18 +369,25 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
+		//누군가 떨어졌을때
 		if (g_pFramework->m_pNetwork->GetCharacterReset(i) == true)
 		{
-			//m_Users[m_PlayerID]->is_fall = false;
-			//cout << "reset" << endl;
+			Player_Lifecnt[i] = g_pFramework->m_pNetwork->GetPlayerLifeCnt(i);
+		
+			for (int j = 4; j > Player_Lifecnt[i]-1; j--) {
+				cout << "i = " << i << "j ==" << j << endl;
+				AppContext->HiddenUI("player_" + std::to_string(i) + "hp" + std::to_string(j), "player_" + std::to_string(i) + "hp" + std::to_string(j));
+			}
+
 			g_pFramework->m_pNetwork->SetCharacterReset(i);
 			g_pFramework->m_pNetwork->SetCharacterFall(i);
+			//내가 떨어졌을때 
 			if (i == m_PlayerID)
 			{
-				Lifecnt = g_pFramework->m_pNetwork->GetPlayerLifeCnt(i);
+				
 				m_Users[i]->m_PlayerController->SetIsFall();
 				GraphicsContext::GetApp()->OnBlurEffect(false);
-
+			
 				IsFall[m_PlayerID] = false;
 					if (Lifecnt == 0) {
 						//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
@@ -619,7 +638,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
 			if (i != m_PlayerID) {
 				if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
-					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["Penguin_LOD0skinOutline"]->GetinstanceKeymap();
+					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PenguinOutline"]->GetinstanceKeymap();
 					auto tmp = myoutline.begin();
 					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
 					tmpuser._11 = 1.1;
@@ -681,7 +700,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 		if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_PENGUIN) {
-			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["Penguin_LOD0skinOutline"]->GetinstanceKeymap();
+			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PenguinOutline"]->GetinstanceKeymap();
 			auto tmp = myoutline.begin();
 			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
 			tmpuser._11 = 1.1;
@@ -815,32 +834,39 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["huskyOutline"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["Penguin_LOD0skinOutline"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["PenguinOutline"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ArcticFoxOutline"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["PolarBearOutline"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["SealOutline"], AppContext->m_RItemsVec);
 
-	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Penguin, MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get());
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Penguin, MeshReference::GetApp()->m_SkinnedModelInsts["Penguin"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Husky, MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Fox, MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
 
 
-	/*UI*/
-	for (int j = 0; j < 5; j++) {
+	/*UI*/	for (int j = 0; j < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++j)
+	{
 		for (int i = 0; i < 5; i++) {
 			GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
 			GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
 		}
 	}
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_"+ m_Users[i]->GetType()], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
+		//이부분 
+	}
+	/*GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
@@ -849,7 +875,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);*/
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateUIPassCB(0.75f);
@@ -959,7 +985,7 @@ void GameplayScene::Render()
 	}
 
 	if (!ty[0])
-		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skin"], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin"], AppContext->m_RItemsVec);
 	if (!g_pFramework->m_pNetwork->GetFoxSkill()) {
 		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["ArcticFox"]->GetinstanceKeymap();
 		AppContext->m_RItemsVec[info.begin()->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ArcticFox"]->MatCBIndex;
@@ -981,7 +1007,7 @@ void GameplayScene::Render()
 
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OutlinePSO.Get());
 	if (!ty[0])
-		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin_LOD0skinOutline"], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PenguinOutline"], AppContext->m_RItemsVec);
 	if (!ty[1] && !(g_pFramework->m_pNetwork->GetFoxSkill() && g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) != CHARACTER_ARCTICFOX))
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFoxOutline"], AppContext->m_RItemsVec);
 	if (!ty[2])
@@ -1007,17 +1033,25 @@ void GameplayScene::Render()
 
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
-	for (int j = 0; j < 5; j++) {
+	for (int j = 0; j < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++j)
+	{
 		for (int i = 0; i < 5; i++) {
 			GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["player_" + std::to_string(j) + "hp" + std::to_string(i)], AppContext->m_RItemsVec);
 
 		}
 	}
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
+
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{ 
+		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
+	}
+
+	/*GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);*/
+
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 
 

@@ -89,7 +89,7 @@ public:
 	void HiddenCharacter(std::string userName);
 
 	void DisplayUI(std::string mapName);
-	void HiddenUI(std::string uiName);
+	void HiddenUI(std::string uiName, std::string instname);
 
 	void SetUI2DPosition(std::string ui2dName, float posX, float posY);
 

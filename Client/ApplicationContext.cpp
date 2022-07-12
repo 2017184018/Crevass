@@ -312,8 +312,8 @@ void ApplicationContext::CreateBackground()
 			bonidx = BoneIndex::Husky;
 		}
 		else if (i / 10 == 1) {
-			meshName = "Penguin_LOD0skin";
-			instID = "Penguin_LOD0skin" + std::to_string(i + 100);
+			meshName = "Penguin";
+			instID = "Penguin" + std::to_string(i + 100);
 			matidx = 2;
 			bonidx = BoneIndex::Penguin;
 		}
@@ -1001,17 +1001,17 @@ void ApplicationContext::CreateOutline() {
 		husky->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get();
 		husky->m_World = MathHelper::Identity4x4();
 
-		Character* penguin = CreateObject<Character>("Penguin_LOD0skinOutline", "Penguin_LOD0skinOutline0");
-		penguin->Geo = MeshReference::GetApp()->m_GeometryMesh["Penguin_LOD0skin"].get();
-		penguin->IndexCount = penguin->Geo->DrawArgs["Penguin_LOD0skin"].IndexCount;
-		penguin->StartIndexLocation = penguin->Geo->DrawArgs["Penguin_LOD0skin"].StartIndexLocation;
-		penguin->BaseVertexLocation = penguin->Geo->DrawArgs["Penguin_LOD0skin"].BaseVertexLocation;
+		Character* penguin = CreateObject<Character>("PenguinOutline", "PenguinOutline0");
+		penguin->Geo = MeshReference::GetApp()->m_GeometryMesh["Penguin"].get();
+		penguin->IndexCount = penguin->Geo->DrawArgs["Penguin"].IndexCount;
+		penguin->StartIndexLocation = penguin->Geo->DrawArgs["Penguin"].StartIndexLocation;
+		penguin->BaseVertexLocation = penguin->Geo->DrawArgs["Penguin"].BaseVertexLocation;
 		penguin->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		penguin->m_Bounds = penguin->Geo->DrawArgs["Penguin_LOD0skin"].Bounds;
+		penguin->m_Bounds = penguin->Geo->DrawArgs["Penguin"].Bounds;
 		penguin->m_IsVisible = true;
 		penguin->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redline"]->MatCBIndex;
 		penguin->m_SkinnedCBIndex = BoneIndex::Penguin;
-		penguin->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Penguin_LOD0skin"].get();
+		penguin->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Penguin"].get();
 		penguin->m_World = MathHelper::Identity4x4();
 
 		Character* arcticfox = CreateObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
@@ -1193,13 +1193,19 @@ void ApplicationContext::DisplayUI(std::string mapName)
 {
 }
 
-void ApplicationContext::HiddenUI(std::string uiName)
+void ApplicationContext::HiddenUI(std::string uiName, std::string instname )
 {
-	GameObject* obj = FindObject<GameObject>(uiName, uiName);
+	GameObject* obj = FindObject<GameObject>(uiName, instname);
+	if (!obj) { 
+		cout << "return" << endl;
+		return; }
+	cout << "come" << endl;
 	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
-	obj->m_IsVisible = false;
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[uiName], AppContext->m_RItemsVec);
+	obj->m_IsVisible = false;
+
+
 }
 
 void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float posY)

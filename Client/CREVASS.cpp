@@ -58,13 +58,13 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Fall");
 	m_MeshRef->BuildSkinnedModelAnimation("husky", "Skill");
 
-	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin_LOD0skin");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Run");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Idle");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Jump");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Attack");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Fall");
-	m_MeshRef->BuildSkinnedModelAnimation("Penguin_LOD0skin", "Skill");
+	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "Penguin");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin", "Run");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin", "Idle");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin", "Jump");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin", "Attack");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin", "Fall");
+	m_MeshRef->BuildSkinnedModelAnimation("Penguin", "Skill");
 
 	m_MeshRef->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), "ArcticFox");
 	m_MeshRef->BuildSkinnedModelAnimation("ArcticFox", "Run");
@@ -174,7 +174,7 @@ void CREVASS::RenderUI(void)
 void CREVASS::BuildCharacters()
 {
 	AppContext->CreateCharacter("husky", "husky0", "husky", BoneIndex::Husky);
-	AppContext->CreateCharacter("Penguin_LOD0skin", "Penguin_LOD0skin0", "Penguin", BoneIndex::Penguin);
+	AppContext->CreateCharacter("Penguin", "Penguin0", "Penguin", BoneIndex::Penguin);
 	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
 	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
 	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);

@@ -119,9 +119,9 @@ void GameplayController::HandleInput(const float deltaT)
 	// 파티클 루프 테스트
 	if (InputHandler::IsKeyUp('P')) {
 		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
-		AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
-		
-		
+		//AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
+		AppContext->HiddenUI("ui_p", "ui_p");
+		cout << "find == " << AppContext->FindObject<GameObject>("player_" + std::to_string(1) + "hp" + std::to_string(1), "player_" + std::to_string(1) + "hp" + std::to_string(1))->m_IsVisible << endl;
 	}
 	if (InputHandler::IsKeyUp('O')) {
 		AppContext->HiddenParticle("testParticle", "testParticle" + std::to_string(11));
