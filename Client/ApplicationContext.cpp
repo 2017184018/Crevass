@@ -77,7 +77,7 @@ void ApplicationContext::CreateLobby() {
 
 void ApplicationContext::CreateSkycube(std::string skycubeName, std::string instID, std::string matName)
 {
-	
+
 	GameObject* skyRitem = CreateObject<GameObject>(skycubeName, instID);		//0
 	skyRitem->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
 	skyRitem->IndexCount = skyRitem->Geo->DrawArgs["sphere"].IndexCount;
@@ -89,7 +89,7 @@ void ApplicationContext::CreateSkycube(std::string skycubeName, std::string inst
 	//skyRitem->m_MaterialIndex = MeshReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	skyRitem->m_World = MathHelper::Identity4x4();
 	skyRitem->m_TexTransform = MathHelper::Identity4x4();
-	skyRitem->Scale(5000, 5000,5000);
+	skyRitem->Scale(5000, 5000, 5000);
 }
 
 void ApplicationContext::CreateDebugBoundingBox(std::string boundsName, std::string boundsInstName)
@@ -411,7 +411,7 @@ void ApplicationContext::CreateBackground()
 		top->m_World._11 = size;
 		top->m_World._22 = size;
 		top->m_World._33 = size;
-	//	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
+		//	XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * -0.5));
 		top->m_World._41 = (size * 1.1) * i;
 		top->m_World._42 = 300;
 		top->m_World._43 = 400;
@@ -754,9 +754,10 @@ void ApplicationContext::CreateWaterDrop()
 		top->m_IsVisible = true;
 		top->m_MaterialIndex = 18;
 		top->m_World = MathHelper::Identity4x4();
-		top->m_World._11 = 100 * 1.43;
-		top->m_World._22 = 100;
-		top->m_World._33 = 75 * 1.43;
+		top->m_World._11 = 150;
+		top->m_World._22 = 150;
+		top->m_World._33 = 1;
+		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(3.141592 * 30 / 180));
 		XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * i / 2.0));
 
 		top->m_TexTransform = MathHelper::Identity4x4();
@@ -779,7 +780,7 @@ void ApplicationContext::CreateMinimap()
 		Sea->m_World._11 = 3;
 		Sea->m_World._33 = 3;
 
-		XMStoreFloat4x4(&Sea->m_World, XMLoadFloat4x4(&Sea->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+		XMStoreFloat4x4(&Sea->m_World, XMLoadFloat4x4(&Sea->m_World) * XMMatrixRotationX(-3.141592 * (90 - acos(0.4 * sqrt(5))) / 180.0f));
 
 		Sea->m_TexTransform = MathHelper::Identity4x4();
 		Core::wave[1] = Sea;
@@ -809,7 +810,7 @@ void ApplicationContext::CreateMinimap()
 				instancingObj->m_World._42 = -30;
 				instancingObj->m_World._43 = distance * j;
 
-				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - acos(0.4 * sqrt(5))) / 180.0f));
 
 				instancingObj->m_TexTransform = MathHelper::Identity4x4();
 
@@ -834,7 +835,7 @@ void ApplicationContext::CreateMinimap()
 				instancingObj->m_World._42 = -30;
 				instancingObj->m_World._43 = distance * j;
 
-				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - acos(0.4 * sqrt(5))) / 180.0f));
 
 				instancingObj->m_TexTransform = MathHelper::Identity4x4();
 
@@ -868,7 +869,7 @@ void ApplicationContext::CreateMinimap()
 			top->m_World._42 = -30;
 			top->m_World._43 = distance * j;
 
-			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationX(-3.141592 * (90 - acos(0.4 * sqrt(5))) / 180.0f));
 
 			top->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -892,7 +893,7 @@ void ApplicationContext::CreateMinimap()
 			instancingObj->m_World._42 = -30;
 			instancingObj->m_World._43 = distance * j;
 
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - acos(0.4 * sqrt(5))) / 180.0f));
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		}
 	}
@@ -909,10 +910,9 @@ void ApplicationContext::CreateMinimap()
 		icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueicon"]->MatCBIndex;
 		icon->m_World = MathHelper::Identity4x4();
 		icon->m_World._11 = 15;
-		icon->m_World._22 = 1;
-		icon->m_World._33 = 15;
-		icon->Scale(10, 10, 10);
-		XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (45 - 0.4 * sqrt(5)) / 180.0f));
+		icon->m_World._22 = 15;
+		icon->m_World._33 = 1;
+		XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(3.141592 * acos(0.4 * sqrt(5)) / 180.0f));
 
 		icon->m_TexTransform = MathHelper::Identity4x4();
 	}
@@ -930,10 +930,10 @@ void ApplicationContext::CreateMinimap()
 			icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["snowmanicon"]->MatCBIndex;
 			icon->m_World = MathHelper::Identity4x4();
 			icon->m_World._11 = 50;
-			icon->m_World._22 = 1;
-			icon->m_World._33 = 50;
+			icon->m_World._22 = 50;
+			icon->m_World._33 = 1;
 
-			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(3.141592 * acos(0.4 * sqrt(5)) / 180.0f));
 
 			icon->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -951,10 +951,10 @@ void ApplicationContext::CreateMinimap()
 			icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["iglooicon"]->MatCBIndex;
 			icon->m_World = MathHelper::Identity4x4();
 			icon->m_World._11 = 20;
-			icon->m_World._22 = 1;
-			icon->m_World._33 = 20;
+			icon->m_World._22 = 20;
+			icon->m_World._33 = 1;
 
-			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(3.141592 * acos(0.4 * sqrt(5)) / 180.0f));
 
 			icon->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -972,13 +972,13 @@ void ApplicationContext::CreateMinimap()
 			icon->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redicon"]->MatCBIndex;
 			icon->m_World = MathHelper::Identity4x4();
 			icon->m_World._11 = 15;
-			icon->m_World._22 = 1;
-			icon->m_World._33 = 15;
+			icon->m_World._22 = 15;
+			icon->m_World._33 = 1;
 
 			icon->m_World._41 = -1000;
 			icon->m_World._42 = -1000;
 			icon->m_World._43 = -1000;
-			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(-3.141592 * (90 - 0.4 * sqrt(5)) / 180.0f));
+			XMStoreFloat4x4(&icon->m_World, XMLoadFloat4x4(&icon->m_World) * XMMatrixRotationX(3.141592 * acos(0.4 * sqrt(5)) / 180.0f));
 
 			icon->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -998,7 +998,7 @@ void ApplicationContext::CreateOutline() {
 		husky->m_IsVisible = true;
 		husky->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["redline"]->MatCBIndex;
 		husky->m_SkinnedCBIndex = BoneIndex::Husky;
-		husky->m_SkinnedModelInst =  MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get();
+		husky->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get();
 		husky->m_World = MathHelper::Identity4x4();
 
 		Character* penguin = CreateObject<Character>("Penguin_LOD0skinOutline", "Penguin_LOD0skinOutline0");
@@ -1084,7 +1084,7 @@ void ApplicationContext::CreateParticle(std::string particleName, std::string in
 	particle->BaseVertexLocation = particle->Geo->DrawArgs[particleName].BaseVertexLocation;
 	particle->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	particle->m_Bounds = particle->Geo->DrawArgs[particleName].Bounds;
-	particle->SetParticleNameCount(particleName); 
+	particle->SetParticleNameCount(particleName);
 	particle->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	//particle->m_MaterialIndex = 28;
 	particle->m_IsVisible = true;
@@ -1213,7 +1213,7 @@ void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float
 void ApplicationContext::DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos)
 {
 	Particle* ptc = FindObject<Particle>(particleName, instID);
-	if (!ptc) {  return; }
+	if (!ptc) { return; }
 	ptc->m_IsVisible = true;
 	ptc->m_World = MathHelper::Identity4x4();
 	ptc->m_TexTransform = MathHelper::Identity4x4();

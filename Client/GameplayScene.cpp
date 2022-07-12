@@ -26,7 +26,7 @@ void GameplayScene::Initialize()
 {
 	m_SceneController = new GameplayController(this);
 
-	AppContext->CreateSkycube("sky", "sky0", "snowcube1024"); 
+	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
 	AppContext->CreateBlocks();
 	AppContext->Createigloos();
 	AppContext->CreateWave();
@@ -39,7 +39,7 @@ void GameplayScene::Initialize()
 
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
-			AppContext->CreateUI2D("player_"+ std::to_string(j)+"hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i*23.f, 180.f -j*30.f, 20.f, 10.5f);
+			AppContext->CreateUI2D("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
 		}
 	}
 	AppContext->CreateUI2D("ui_p", "ui_p", 20, -380.f, 180.f, 30.f, 20.f);
@@ -49,7 +49,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_f", "ui_f", 24, -380.f, 60.f, 30.f, 20.f);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
 	for (int i = 0; i < 25; i++) {
-			AppContext->CreateParticle("testParticle", "testParticle" + std::to_string(i), "Particle_Ice");
+		AppContext->CreateParticle("testParticle", "testParticle" + std::to_string(i), "Particle_Ice");
 	}
 
 	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow");
@@ -65,7 +65,7 @@ void GameplayScene::Initialize()
 			}
 		}
 	}
-	
+
 #ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 #endif
@@ -161,8 +161,7 @@ void GameplayScene::Exit()
 void GameplayScene::Update(const float& fDeltaTime)
 {
 
-	m_Timer = 300 - g_pFramework->m_pNetwork->Gettime();
-
+	m_Timer = 300 - (g_pFramework->m_pNetwork->Gettime()) / 60.0f;
 	m_SceneController->Update(fDeltaTime);
 	static float time = 0.0f;
 	static XMFLOAT3 huskyimagepos[4];
@@ -261,7 +260,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
 			//cout << "how meny -" << AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->m_Particles.size() << endl;
-		
+
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._33 = 1;
@@ -364,14 +363,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 			//cout << "reset" << endl;
 			g_pFramework->m_pNetwork->SetCharacterReset(i);
 			g_pFramework->m_pNetwork->SetCharacterFall(i);
-			Lifecnt=g_pFramework->m_pNetwork->GetPlayerLifeCnt(i);
 			if (i == m_PlayerID)
 			{
+				Lifecnt = g_pFramework->m_pNetwork->GetPlayerLifeCnt(i);
 				m_Users[i]->m_PlayerController->SetIsFall();
 				GraphicsContext::GetApp()->OnBlurEffect(false);
 
 				IsFall[m_PlayerID] = false;
-			
 					if (Lifecnt == 0) {
 						//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
 							//서버에 패배 전송
@@ -466,12 +464,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	{	//waterdrop
 		for (int i = 0; i < 4; ++i) {
-			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._41 = m_Users[m_PlayerID]->GetPosition().x + (100 * (i / 2) - 50);
-			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 330;
-			if (i == 0 || i == 3)
+			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._41 = m_Users[m_PlayerID]->GetPosition().x;
+			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._42 = m_Users[m_PlayerID]->GetPosition().y + 380;
+			AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 30;
+			/*if (i == 0 || i == 3)
 				AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z - 85;
 			else
-				AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;
+				AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_World._43 = m_Users[m_PlayerID]->GetPosition().z + 25;*/
 		}
 	}
 
@@ -832,8 +831,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Fox, MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
-	
-	
+
+
 	/*UI*/
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
@@ -860,6 +859,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec,true);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec, true);
+
 	///*Shadow*/
 	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
 	GraphicsContext::GetApp()->UpdateShadowPassCB();
@@ -918,7 +918,7 @@ void GameplayScene::Render()
 	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BB.Get());
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["huskyBB"], AppContext->m_RItemsVec);
 
-	
+
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	bool ty[5]{ false,false,false,false,false };
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
@@ -1019,8 +1019,8 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
-	
-	
+
+
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
@@ -1052,7 +1052,7 @@ void GameplayScene::Render()
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
-		
+
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap[p.second->GetType()], AppContext->m_RItemsVec);
 	}
 

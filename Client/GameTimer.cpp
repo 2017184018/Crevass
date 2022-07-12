@@ -130,9 +130,9 @@ void GameTimer::Tick(const float fLockFPS)
 		while (fDeltaTime < (1.0f / fLockFPS))
 		{
 			QueryPerformanceCounter((LARGE_INTEGER*)&mCurrTime);
-		//	mCurrTime = currTime;
+			//	mCurrTime = currTime;
 
-			// Time difference between this frame and the previous.
+				// Time difference between this frame and the previous.
 			fDeltaTime = (mCurrTime - mPrevTime) * mSecondsPerCount;
 		}
 	}
