@@ -301,7 +301,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		memcpy(&packet, ptr, sizeof(packet));
 		std::cout << "time= " << (packet.time) / 3600 << "min " << ((packet.time) % 3600) / 60 << "sec" << endl;
 		
-		m_timer = packet.time % 3600 / 60;
+		m_timer = packet.time;// % 3600 / 60;
 		
 		break;
 	}

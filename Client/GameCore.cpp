@@ -174,7 +174,7 @@ void GameCore::InitializeCore(IGameApp& game)
 
 bool GameCore::UpdateCore(IGameApp& game)
 {
-	g_GameTimer->Tick(60);
+	g_GameTimer->Tick();
 
 	if (!mAppPaused)
 	{

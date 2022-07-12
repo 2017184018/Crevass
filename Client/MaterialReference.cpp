@@ -305,6 +305,7 @@ void MaterialReference::BuildMaterials()
 	redline->DiffuseSrvHeapIndex = 12;
 	redline->DiffuseAlbedo = XMFLOAT4(30.0f, 0.0f, 0.0f, 1.0f);
 	redline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	redline->Emissive = XMFLOAT3(30.0f, 0.1f, 0.1f);
 	redline->Roughness = 1.0f;
 
 	auto blueline = std::make_unique<Material>();
@@ -312,6 +313,7 @@ void MaterialReference::BuildMaterials()
 	blueline->DiffuseSrvHeapIndex = 12;
 	blueline->DiffuseAlbedo = XMFLOAT4(0.0f, 0.0f, 30.0f, 1.0f);
 	blueline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	blueline->Emissive= XMFLOAT3(0.1f, 0.1f, 30.0f);
 	blueline->Roughness = 1.0f;
 
 	auto bricks0 = std::make_unique<Material>();

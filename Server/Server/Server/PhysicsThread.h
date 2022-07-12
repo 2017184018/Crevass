@@ -873,7 +873,7 @@ void ProcessClients()
 						if (phyPlayers[j].CurrentIcecube == -1 &&
 							phyPlayers[j].m_pos.x - 10 <= blocks[i].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[i].pos.x - 54 &&
 							phyPlayers[j].m_pos.z - 10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[i].pos.z - 54 &&
-							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60)
+							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60 && blocks[i].destuctioncnt!=3)
 						{
 							//	if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
 							phyPlayers[j].CurrentIcecube = i;
