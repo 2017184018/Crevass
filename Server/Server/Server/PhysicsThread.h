@@ -536,6 +536,12 @@ void ProcessClients()
 						break;
 					case KEY_ATTACK:
 						phyPlayers[phyMsg.id].is_attack = true;
+						if (phyPlayers[phyMsg.id].is_jump == false) {
+							phyPlayers[phyMsg.id].SetKeyA(false);
+							phyPlayers[phyMsg.id].SetKeyW(false);
+							phyPlayers[phyMsg.id].SetKeyS(false);
+							phyPlayers[phyMsg.id].SetKeyD(false);
+						}
 						//hit box  위치 갱신 
 						phyPlayers[phyMsg.id].Hit_BB.Center = phyPlayers[phyMsg.id].GetPos();
 						if (phyPlayers[phyMsg.id].dir == 0) {
@@ -583,7 +589,7 @@ void ProcessClients()
 									cout << "hit!" << endl;
 									phyPlayers[i].is_hitted = true;
 									phyPlayers[i].is_jump = true;
-									//처맞은 방향
+									//맞은 방향
 									phyPlayers[i].hitted_dir = phyPlayers[phyMsg.id].dir;
 									phyPlayers[phyMsg.id].Hit_BB.Center = DirectX::XMFLOAT3(0, 0, 0);
 								}

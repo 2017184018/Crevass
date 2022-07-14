@@ -375,7 +375,7 @@ void PlayerController::OnKeyReleased()
 			tmp = -1;
 		}
 		if (InputHandler::IsKeyUp('A')) {
-			//	CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Attack));
+				CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Attack));
 		}
 		if (InputHandler::IsKeyUp('S')) {
 		}
