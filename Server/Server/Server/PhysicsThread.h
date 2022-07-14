@@ -32,66 +32,68 @@ DirectX::XMFLOAT3 OriginBlockExtents;
 
 int CalcTime = 0;
 
-void Update(vector<Player>& player)
+void Update(vector<Player>& player, float elapsedTime)
 {
+	float elaps_time = elapsedTime / 16;
+
 	for (int i = 0; i < numOfCls; ++i)
 	{
 		float saveX = 0;
 		float saveZ = 0;
 		if (player[i].is_hitted == false) {
 			if (player[i].GetKeyW() && player[i].GetKeyA()) {
-				player[i].m_pos.z += player[i].GetCrossSpeed();
-				player[i].m_pos.x -= player[i].GetCrossSpeed();
+				player[i].m_pos.z += player[i].GetCrossSpeed()* elaps_time;
+				player[i].m_pos.x -= player[i].GetCrossSpeed() * elaps_time;
 				player[i].dir = DIR_UP_LEFT;
-				saveX = -player[i].GetCrossSpeed();
-				saveZ = player[i].GetCrossSpeed();
+				saveX = -player[i].GetCrossSpeed() * elaps_time;
+				saveZ = player[i].GetCrossSpeed() * elaps_time;
 			}
 			else if (player[i].GetKeyW() && player[i].GetKeyD()) {
-				player[i].m_pos.z += player[i].GetCrossSpeed();
-				player[i].m_pos.x += player[i].GetCrossSpeed();
+				player[i].m_pos.z += player[i].GetCrossSpeed() * elaps_time;
+				player[i].m_pos.x += player[i].GetCrossSpeed() * elaps_time;
 				player[i].dir = DIR_UP_RIGHT;
-				saveX = player[i].GetCrossSpeed();
-				saveZ = player[i].GetCrossSpeed();
+				saveX = player[i].GetCrossSpeed() * elaps_time;
+				saveZ = player[i].GetCrossSpeed() * elaps_time;
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyD()) {
-				player[i].m_pos.z -= player[i].GetCrossSpeed();
-				player[i].m_pos.x += player[i].GetCrossSpeed();
+				player[i].m_pos.z -= player[i].GetCrossSpeed() * elaps_time;
+				player[i].m_pos.x += player[i].GetCrossSpeed() * elaps_time;
 				player[i].dir = DIR_DOWN_RIGHT;
-				saveX = player[i].GetCrossSpeed();
-				saveZ = -player[i].GetCrossSpeed();
+				saveX = player[i].GetCrossSpeed() * elaps_time;
+				saveZ = -player[i].GetCrossSpeed() * elaps_time;
 
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyA()) {
-				player[i].m_pos.z -= player[i].GetCrossSpeed();
-				player[i].m_pos.x -= player[i].GetCrossSpeed();
+				player[i].m_pos.z -= player[i].GetCrossSpeed() * elaps_time;
+				player[i].m_pos.x -= player[i].GetCrossSpeed() * elaps_time;
 				player[i].dir = DIR_DOWN_LEFT;
-				saveX = -player[i].GetCrossSpeed();
-				saveZ = -player[i].GetCrossSpeed();
+				saveX = -player[i].GetCrossSpeed() * elaps_time;
+				saveZ = -player[i].GetCrossSpeed() * elaps_time;
 			}
 			else {
 				if (player[i].GetKeyW())
 				{
-					player[i].m_pos.z += player[i].GetSpeed();
+					player[i].m_pos.z += player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_UP;
-					saveZ = player[i].GetSpeed();
+					saveZ = player[i].GetSpeed() * elaps_time;
 				}
 				if (player[i].GetKeyS())
 				{
-					player[i].m_pos.z -= player[i].GetSpeed();
+					player[i].m_pos.z -= player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_DOWN;
-					saveZ = -player[i].GetSpeed();
+					saveZ = -player[i].GetSpeed() * elaps_time;
 				}
 				if (player[i].GetKeyA())
 				{
-					player[i].m_pos.x -= player[i].GetSpeed();
+					player[i].m_pos.x -= player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_LEFT;
-					saveX = -player[i].GetSpeed();
+					saveX = -player[i].GetSpeed() * elaps_time;
 				}
 				if (player[i].GetKeyD())
 				{
-					player[i].m_pos.x += player[i].GetSpeed();
+					player[i].m_pos.x += player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_RIGHT;
-					saveX = player[i].GetSpeed();
+					saveX = player[i].GetSpeed() * elaps_time;
 				}
 			}
 		}
@@ -100,27 +102,27 @@ void Update(vector<Player>& player)
 			//위
 
 			if (static_cast<int>(player[i].hitted_dir) == 0) {
-				player[i].m_pos.z += player[i].GetSpeed();
+				player[i].m_pos.z += player[i].GetSpeed() * elaps_time;
 				player[i].dir = DIR_DOWN;
-				saveZ = player[i].GetSpeed();
+				saveZ = player[i].GetSpeed() * elaps_time;
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 2)
 			{
-				player[i].m_pos.x += player[i].GetSpeed();
+				player[i].m_pos.x += player[i].GetSpeed() * elaps_time;
 				player[i].dir = DIR_LEFT;
-				saveZ = player[i].GetSpeed();
+				saveZ = player[i].GetSpeed() * elaps_time;
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 4)
 			{
-				player[i].m_pos.z -= player[i].GetSpeed();
+				player[i].m_pos.z -= player[i].GetSpeed() * elaps_time;
 				player[i].dir = DIR_UP;
-				saveZ = player[i].GetSpeed();
+				saveZ = player[i].GetSpeed() * elaps_time;
 			}
 			else if (static_cast<int>(player[i].hitted_dir) == 6)
 			{
-				player[i].m_pos.x -= player[i].GetSpeed();
+				player[i].m_pos.x -= player[i].GetSpeed() * elaps_time;
 				player[i].dir = DIR_RIGHT;
-				saveZ = player[i].GetSpeed();
+				saveZ = player[i].GetSpeed() * elaps_time;
 			}
 		}
 		for (int j = 0; j < numOfCls; ++j) {
@@ -456,11 +458,6 @@ void ProcessClients()
 	float elapsedTime{};
 	float deltaT;
 
-	//using frame = duration<int32_t, ratio<1, FPS>>;
-	//using ms = duration<float, milli>;
-	//time_point<steady_clock> fpsTimer(steady_clock::now());
-	//frame FramePerSec{};
-
 	while (true)
 	{
 		auto cur_Time = chrono::high_resolution_clock::now();
@@ -470,7 +467,7 @@ void ProcessClients()
 
 		//FramePerSec = duration_cast<frame>(steady_clock::now() - fpsTimer);
 
-		if (/*FramePerSec.count() >= 1*/elapsedTime > 1000.0f / 60.0f)
+		if (elapsedTime > 1000.0f / 60.0f)
 		{
 			g_MsgQueueLock.lock();
 			phyMsgQueue = g_MsgQueue;
@@ -646,8 +643,8 @@ void ProcessClients()
 			{
 				if (phyPlayers[i].is_attack == true)
 				{
-					phyPlayers[i].AttackTimeCount += 1.0f;
-					if (phyPlayers[i].AttackTimeCount > 60.0f)
+					phyPlayers[i].AttackTimeCount += elapsedTime;
+					if (phyPlayers[i].AttackTimeCount > 700.0f)
 					{
 						phyPlayers[i].AttackTimeCount = 0.0f;
 						phyPlayers[i].is_attack = false;
@@ -658,8 +655,8 @@ void ProcessClients()
 
 				if (phyPlayers[i].is_jumpanim == true)
 				{
-					phyPlayers[i].JumpTimeCount += 1.0f;
-					if (phyPlayers[i].JumpTimeCount > 60.0f)
+					phyPlayers[i].JumpTimeCount += elapsedTime;
+					if (phyPlayers[i].JumpTimeCount > 700.0f)
 					{
 						phyPlayers[i].JumpTimeCount = 0.0f;
 						phyPlayers[i].is_jumpanim = false;
@@ -670,8 +667,8 @@ void ProcessClients()
 
 				if (phyPlayers[i].is_Skillanim == true)
 				{
-					phyPlayers[i].SkillTimeCount += 1.0f;
-					if (phyPlayers[i].SkillTimeCount > 60.0f)
+					phyPlayers[i].SkillTimeCount += elapsedTime;
+					if (phyPlayers[i].SkillTimeCount > 700.0f)
 					{
 						phyPlayers[i].SkillTimeCount = 0.0f;
 						if (phyPlayers[i].TypeName != "Penguin")
@@ -682,8 +679,8 @@ void ProcessClients()
 
 				if (phyPlayers[i].is_hitted == true)
 				{
-					phyPlayers[i].hittedTimeCount += 1.0f;
-					if (phyPlayers[i].hittedTimeCount > 60.0f)
+					phyPlayers[i].hittedTimeCount += elapsedTime;
+					if (phyPlayers[i].hittedTimeCount > 700.0f)
 					{
 						phyPlayers[i].hittedTimeCount = 0.0f;
 						phyPlayers[i].is_hitted = false;
@@ -719,7 +716,7 @@ void ProcessClients()
 				//아이스 , 스노우 아무것도 출동하지 않을때 
 				if (phyPlayers[i].CurrentIcecube == -1 && phyPlayers[i].CurrentSnowcube == -1)
 				{
-					phyPlayers[i].gravity -= 0.04f;
+					phyPlayers[i].gravity -= 9.8f / pow(elapsedTime,2);
 				}
 			}
 
@@ -811,7 +808,7 @@ void ProcessClients()
 					}
 				}
 			}
-			Update(phyPlayers);
+			Update(phyPlayers, elapsedTime);
 
 			for (int i = 0; i < 2; ++i) {
 				g_boundaries["igloo" + std::to_string(i)]->Extents.x = OriginIglooExtens.x * 2.0 / 10.0;
