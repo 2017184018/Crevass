@@ -198,4 +198,20 @@ void CREVASS::BuildStream() {
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_sled_m.mesh", "sled");
 	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fishrack01_m.mesh", "fishrack");
 
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/ice_cube_2.mesh", "lobby_icecube");    //fbx
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_top.mesh", "lobby_snow_top");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowman.mesh", "lobby_snowman");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snowbox_dest.mesh", "lobby_icicle");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/snow_cube.mesh", "lobby_snowcube");
+
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fish_m.mesh", "lobby_fish");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_kayak_m.mesh", "lobby_kayak");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_kayakPaddle_m.mesh", "lobby_kayakpaddle");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_rock00.mesh", "lobby_rock_0");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_rock01.mesh", "lobby_rock_1");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_tent01_m.mesh", "lobby_tent");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/mountains01_m.mesh", "lobby_mountain");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/igloo01_m.mesh", "lobby_igloo");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_sled_m.mesh", "lobby_sled");
+	m_MeshRef->BuildStreamMeshes(g_Device.Get(), g_CommandList.Get(), "./Models/arctic_fishrack01_m.mesh", "lobby_fishrack");
 	}

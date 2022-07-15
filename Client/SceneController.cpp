@@ -25,6 +25,22 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+	if (GetAsyncKeyState(VK_UP) & 0x8000) {
+		CREVASS::GetApp()->m_Camera->Walk(50);
+		
+	}
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+		CREVASS::GetApp()->m_Camera->Walk(-50);
+		
+	}
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
+		CREVASS::GetApp()->m_Camera->Strafe(-50);
+		
+	}
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
+		CREVASS::GetApp()->m_Camera->Strafe(50);
+		
+	}
 	//const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["lobby"]->GetinstanceKeymap();
 	//UINT SNum = info.begin()->second;
 	//if (InputHandler::IsKeyUp(VK_F1))
