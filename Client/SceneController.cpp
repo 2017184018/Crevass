@@ -25,73 +25,73 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
-	const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["lobby"]->GetinstanceKeymap();
-	UINT SNum = info.begin()->second;
-	if (InputHandler::IsKeyUp(VK_F1))
-	{
-		SceneManager::GetApp()->ChangeScene();
-	}
-	if (InputHandler::IsKeyUp('B'))
-	{
+	//const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["lobby"]->GetinstanceKeymap();
+	//UINT SNum = info.begin()->second;
+	//if (InputHandler::IsKeyUp(VK_F1))
+	//{
+	//	SceneManager::GetApp()->ChangeScene();
+	//}
+	//if (InputHandler::IsKeyUp('B'))
+	//{
 
-		switch (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex) {
-		case 8:
-		case 13:
-			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
-			break;
-		case 14:
-			g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
-			break;
-		case 15:
-			g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
-			break;
-		case 16:
-			g_pFramework->m_pNetwork->Send(CS_READY_FOX);
-			break;
-		case 17:
-			g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
-			break;
-		}
-	}
+	//	switch (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex) {
+	//	case 8:
+	//	case 13:
+	//		g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
+	//		break;
+	//	case 14:
+	//		g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
+	//		break;
+	//	case 15:
+	//		g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
+	//		break;
+	//	case 16:
+	//		g_pFramework->m_pNetwork->Send(CS_READY_FOX);
+	//		break;
+	//	case 17:
+	//		g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
+	//		break;
+	//	}
+	//}
 
-	if (!Inactive) {
-		//8 ·Îºñ  13 Æë±Ï  14 Çã½ºÅ°  15 °õ  16¿©¿ì  17¹°°³
-		static bool one = true;
-		if (GetAsyncKeyState(VK_UP) & 0x8000) {
-			cout << AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex << endl;
-			if (one) {
+	//if (!Inactive) {
+	//	//8 ·Îºñ  13 Æë±Ï  14 Çã½ºÅ°  15 °õ  16¿©¿ì  17¹°°³
+	//	static bool one = true;
+	//	if (GetAsyncKeyState(VK_UP) & 0x8000) {
+	//		cout << AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex << endl;
+	//		if (one) {
 
-				if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 17) {
-					AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 13;
-					
-				}
-				else {
-					++AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
-				}
-				one = false;
-			}
-		}
-		else {
-			one = true;
-		}
+	//			if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 17) {
+	//				AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 13;
+	//				
+	//			}
+	//			else {
+	//				++AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
+	//			}
+	//			one = false;
+	//		}
+	//	}
+	//	else {
+	//		one = true;
+	//	}
 
-		static bool one2 = true;
-		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
-			if (one2) {
+	//	static bool one2 = true;
+	//	if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+	//		if (one2) {
 
-				if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 13) {
-					AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 17;
-				}
-				else {
-					--AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
-				}
-				one2 = false;
-			}
-		}
-		else {
-			one2 = true;
-		}
-	}
+	//			if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 13) {
+	//				AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 17;
+	//			}
+	//			else {
+	//				--AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
+	//			}
+	//			one2 = false;
+	//		}
+	//	}
+	//	else {
+	//		one2 = true;
+	//	}
+	//}
 }
 
 void LobbyController::MouseCallback()

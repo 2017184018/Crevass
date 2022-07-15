@@ -1025,7 +1025,6 @@ void GameplayScene::Render()
 	//sky
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
-
 	/*Particle*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec);

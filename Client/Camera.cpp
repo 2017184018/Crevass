@@ -37,6 +37,7 @@ CameraType Camera::GetCameraType()
 
 void Camera::Initialize()
 {
+
 	m_Owner = nullptr;
 
 	mPosition = { 0.0f, 0.0f, 0.0f };
@@ -137,6 +138,60 @@ Camera::~Camera()
 void Camera::OnResize()
 {
 	SetLens(0.25f * MathHelper::Pi, 1.0f, 1.0f, 2000.0f);
+}
+
+void Camera::CameraInitialize(SceneType sceneType)
+{
+	switch (sceneType)
+	{
+
+	case SceneType::Lobby:
+		// Set FovY
+		SetLens(0.25f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+
+		mPosition = { 400.f, 100.f, -750.f };
+		mRight = { 1.0f, 0.0f, 0.0f };
+		mUp = { 0.0f, 1.0f, 0.0f };
+		mLook = { 0.0f, 0.0f, 1.0f };
+
+		/*mRight = { 0.9507743,  -0.0093735, 0.3097426 };
+		mUp = { -0.0093735, 0.9982151, 0.0589806 };
+		mLook = { -0.3097426, -0.0589806, 0.9489893 };*/
+
+		mTarget = { 0.f,0.f,0.f };
+		mOffset = { 0.f,0.f,0.f };
+		mRotation = { 0.f,0.f,0.f,0.f };
+		mTimeLag = 0.f;
+
+		m_CameraType = CameraType::Free;
+
+		mViewDirty = true;
+
+		break;
+
+	case SceneType::GamePlay:
+		// Set FovY
+		SetLens(0.35f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+
+		if (!m_Owner)	return;
+
+		mUp = m_Owner->GetUp();
+		mRight = m_Owner->GetRight();
+		mLook = m_Owner->GetLook();
+		mRight = MathHelper::Normalize(mRight);
+		mLook = MathHelper::Normalize(mLook);
+
+		m_CameraType = CameraType::Third;
+
+		break;
+
+	case SceneType::GameResult:
+
+		break;
+
+	default:
+		break;
+	}
 }
 
 XMVECTOR Camera::GetPosition()const

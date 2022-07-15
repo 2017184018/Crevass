@@ -1,5 +1,33 @@
 #pragma once
 #include "Scene.h"
+#include "Waves.h"
+#include "GameObject.h"
+namespace Graphics
+{
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OutlinePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> 	g_DebugPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BB;
+
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> HorBlur;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> VerBlur;
+
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ShadowOpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedShadowOpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ParticlePSO;
+
+
+}
+
+namespace Core
+{
+	extern std::unique_ptr<Waves> mWaves;
+	extern GameObject* wave[2];
+
+}
 
 class LobbyScene : public Scene
 {
