@@ -26,7 +26,7 @@ void LobbyController::Update(const float deltaT)
 void LobbyController::HandleInput(const float deltaT)
 {
 	static bool up = true;
-	if (GetAsyncKeyState(VK_UP) & 0x8000) {
+	if (GetAsyncKeyState(VK_UP) & 0x8000 && !is_ready) {
 		if (up) {
 			if (CREVASS::GetApp()->currchar == 4) {
 				CREVASS::GetApp()->currchar = 0;
@@ -42,13 +42,15 @@ void LobbyController::HandleInput(const float deltaT)
 		up = true;
 	}
 	static bool down = true;
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000 && !is_ready) {
 		if (down) {
 			if (CREVASS::GetApp()->currchar == 0) {
 				CREVASS::GetApp()->currchar = 4;
+				cout << CREVASS::GetApp()->currchar << endl;
 			}
 			else {
 				--CREVASS::GetApp()->currchar;
+				cout << CREVASS::GetApp()->currchar << endl;
 			}
 			down = false;
 		}
@@ -63,33 +65,34 @@ void LobbyController::HandleInput(const float deltaT)
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
 		CREVASS::GetApp()->m_Camera->Strafe(50);
 	}
+
+	if (InputHandler::IsKeyUp('B'))
+	{
+		is_ready = true;
+		switch (CREVASS::GetApp()->currchar) {
+		case 0:
+			g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
+			break;
+		case 1:
+			g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
+			break;
+		case 2:
+			g_pFramework->m_pNetwork->Send(CS_READY_FOX);
+			break;
+		case 3:
+			g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
+			break;
+		case 4:
+			g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
+			break;
+		}
+	}
+
 	//const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["lobby"]->GetinstanceKeymap();
 	//UINT SNum = info.begin()->second;
 	//if (InputHandler::IsKeyUp(VK_F1))
 	//{
 	//	SceneManager::GetApp()->ChangeScene();
-	//}
-	//if (InputHandler::IsKeyUp('B'))
-	//{
-
-	//	switch (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex) {
-	//	case 8:
-	//	case 13:
-	//		g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
-	//		break;
-	//	case 14:
-	//		g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
-	//		break;
-	//	case 15:
-	//		g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
-	//		break;
-	//	case 16:
-	//		g_pFramework->m_pNetwork->Send(CS_READY_FOX);
-	//		break;
-	//	case 17:
-	//		g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
-	//		break;
-	//	}
 	//}
 
 	//if (!Inactive) {

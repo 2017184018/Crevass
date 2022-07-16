@@ -20,6 +20,8 @@ private:
 
 private:
 	LobbyScene* m_MyScene;
+public:
+	BOOL is_ready = false;
 };
 
 
