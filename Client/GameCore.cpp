@@ -59,6 +59,8 @@ namespace Core
 	D3D12_RECT mMinimapScissorRect;
 	XMFLOAT3 MinimapCubePos[25];
 	XMFLOAT3 MinimapBlockScale;
+
+	int m_PlayerID;
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)

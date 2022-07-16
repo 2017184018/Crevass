@@ -346,10 +346,7 @@ void ApplicationContext::CreateBackground()
 		chr->m_MaterialIndex = matidx;
 		chr->m_SkinnedCBIndex = bonidx;
 		chr->m_SkinnedModelInst = NULL; MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
-		if (i < 3)
-			chr->m_IsVisible = true;
-		else
-			chr->m_IsVisible = false;
+		chr->m_IsVisible = true;
 		// 임시 스폰위치 지정
 		//chr->m_SpawnLoaction = skinnedCBIndex;
 		int XPos, ZPos;
@@ -365,12 +362,17 @@ void ApplicationContext::CreateBackground()
 		} while (XPos < -600 || (XPos < -300 && ZPos>1100) || (XPos > -300 && XPos < 15) || (XPos > 15 && XPos < 150)
 			|| (XPos > 150 && XPos < 350 && ZPos>1600) || (XPos > 350 && XPos < 660 && ZPos>1150) || (XPos > 660 && XPos < 1100 && ZPos>1350)
 			|| (XPos > 1100 && XPos < 1570 && ZPos>800) || XPos>1600 || ZPos < 0);
-		if (XPos <= 200) {	//항상 중심 바라보게
-			chr->Rotate(0, 180 - ((200 - XPos) * 45 / 600 + (1100 - ZPos) * 45 / 1100), 0);
-		}
-		else {
-			chr->Rotate(0, 180 + ((XPos - 200) * 45 / 600 + (1100 - ZPos) * 45 / 1100), 0);
-		}
+		//if (instID != "husky100" && instID != "Penguin110" && instID != "ArcticFox120" && instID != "PolarBear130" && instID != "Seal140") {
+		//	if (XPos <= 200) {	//항상 중심 바라보게
+		//		chr->Rotate(0, 180 - ((200 - XPos) * 45 / 600 + (1100 - ZPos) * 45 / 1100), 0);
+		//	}
+		//	else {
+		//		chr->Rotate(0, 180 + ((XPos - 200) * 45 / 600 + (1100 - ZPos) * 45 / 1100), 0);
+		//	}
+		//}
+	//	else {
+			chr->Rotate(0, 180, 0);
+//		}
 		chr->SetPosition(XPos, -size + 95 - 45 * tmp2 / (620.0 * sqrt(2)) + 10, ZPos);
 	}
 
@@ -1488,14 +1490,15 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
-	chr->m_IsVisible = false;
+	chr->m_IsVisible = true;
 	// 임시 스폰위치 지정
 	//chr->m_SpawnLoaction = skinnedCBIndex;
 	if (meshName == "Seal")
 		chr->Scale(15, 15, 15);
 	else
-		chr->Scale(200, 200, 200);
-	chr->SetPosition(500, 500, 0);
+		chr->Scale(20, 20, 20);
+	XMStoreFloat4x4(&chr->m_World, XMLoadFloat4x4(&chr->m_World) * XMMatrixRotationY(3.141592));
+	chr->SetPosition(-1000, 30, -1000);
 
 }
 

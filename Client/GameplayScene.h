@@ -49,6 +49,8 @@ namespace Core
 	extern D3D12_RECT mScissorRect;
 	extern XMFLOAT3 MinimapCubePos[25];
 	extern XMFLOAT3 MinimapBlockScale;
+
+	extern int m_PlayerID;
 }
 
 class Character;
@@ -68,7 +70,6 @@ public:
 	virtual void RenderUI() override;
 	/* ID: battleID */
 	std::map<int, Character*> m_Users;
-	int m_PlayerID;
 
 //	bool IsShake[25];
 	//bool IsRight[25];		//오른쪽으로 흔들리는지

@@ -25,21 +25,43 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+	static bool up = true;
 	if (GetAsyncKeyState(VK_UP) & 0x8000) {
-		CREVASS::GetApp()->m_Camera->Walk(50);
-		
+		if (up) {
+			if (CREVASS::GetApp()->currchar == 4) {
+				CREVASS::GetApp()->currchar = 0;
+			}
+			else {
+				++CREVASS::GetApp()->currchar;
+			}
+			up = false;
+		}
+		//	CREVASS::GetApp()->m_Camera->Walk(50);
 	}
+	else {
+		up = true;
+	}
+	static bool down = true;
 	if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
-		CREVASS::GetApp()->m_Camera->Walk(-50);
-		
+		if (down) {
+			if (CREVASS::GetApp()->currchar == 0) {
+				CREVASS::GetApp()->currchar = 4;
+			}
+			else {
+				--CREVASS::GetApp()->currchar;
+			}
+			down = false;
+		}
+		//	CREVASS::GetApp()->m_Camera->Walk(-50);
+	}
+	else {
+		down = true;
 	}
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
 		CREVASS::GetApp()->m_Camera->Strafe(-50);
-		
 	}
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
 		CREVASS::GetApp()->m_Camera->Strafe(50);
-		
 	}
 	//const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["lobby"]->GetinstanceKeymap();
 	//UINT SNum = info.begin()->second;

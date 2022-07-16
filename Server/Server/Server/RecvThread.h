@@ -50,6 +50,7 @@ void Receiver(char id)
 			cout << "ID " << (int)id << " is out. And this Id slot is empty" << endl;
 			cout << "======================================================" << endl;
 
+
 			if (retval == SOCKET_ERROR)
 				ErrDisplay("RecvThread occured Error!");
 			return;

@@ -55,5 +55,7 @@ public:
 	MaterialReference* m_MaterialRef;
 	SceneManager* m_SceneManager;
 	CommandCenter* m_CommandCenter;
+
+	int currchar = 0;
 };
 
