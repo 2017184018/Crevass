@@ -307,24 +307,8 @@ void MaterialReference::BuildMaterials()
 	huskyimage3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage3->Roughness = 1.0f;
 
-	auto redline = std::make_unique<Material>();
-	redline->MatCBIndex = 37;
-	redline->DiffuseSrvHeapIndex = 12;
-	redline->DiffuseAlbedo = XMFLOAT4(30.0f, 0.0f, 0.0f, 1.0f);
-	redline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	redline->Emissive = XMFLOAT3(30.0f, 0.1f, 0.1f);
-	redline->Roughness = 1.0f;
-
-	auto blueline = std::make_unique<Material>();
-	blueline->MatCBIndex = 38;
-	blueline->DiffuseSrvHeapIndex = 12;
-	blueline->DiffuseAlbedo = XMFLOAT4(0.0f, 0.0f, 30.0f, 1.0f);
-	blueline->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	blueline->Emissive= XMFLOAT3(0.1f, 0.1f, 30.0f);
-	blueline->Roughness = 1.0f;
-
 	auto bricks0 = std::make_unique<Material>();
-	bricks0->MatCBIndex = 39;
+	bricks0->MatCBIndex = 37;
 	bricks0->DiffuseSrvHeapIndex = 34;
 	bricks0->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	bricks0->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
@@ -369,8 +353,6 @@ void MaterialReference::BuildMaterials()
 	m_Materials["huskyimage3"] = std::move(huskyimage3);
 	m_Materials["snowmanicon"] = std::move(snowmanicon);
 	m_Materials["redicon"] = std::move(redicon);
-	m_Materials["redline"] = std::move(redline);
-	m_Materials["blueline"] = std::move(blueline);
 	m_Materials["bricks0"] = std::move(bricks0);
 	
 }

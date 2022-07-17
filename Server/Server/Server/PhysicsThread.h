@@ -15,20 +15,13 @@ bool IsRight[25];
 UINT ShakeCnt[25];
 bool IsDown[25];
 bool IsShake[25];
-//int tmp1[3] = { -1,-1,-1 };		//현재 밟고 있는 icecube
 bool BlockIn = false;
-float Gravity = 0.1;
-//int tmp2[3] = { -1,-1,-1 };		//밟고 있는 snowcube
-//string TypeName[3];
 bool IsFall[3] = { false,false,false };
 Block blocks[25];
 bool dir_switch[3];
-//bool IsInteract[3] = { false,false,false };		//상호작용 키 눌렀는지
-//bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 Hail hails[5];
 DirectX::XMFLOAT3 OriginBlockExtents;
-//bool IsSkillPushed[3] = { false,false,false };		//스킬 키 눌렀는지
 
 int CalcTime = 0;
 
@@ -100,7 +93,6 @@ void Update(vector<Player>& player, float elapsedTime)
 
 		else {
 			//위
-
 			if (static_cast<int>(player[i].hitted_dir) == 0) {
 				player[i].m_pos.z += player[i].GetSpeed() * elaps_time;
 				player[i].dir = DIR_DOWN;
@@ -128,16 +120,16 @@ void Update(vector<Player>& player, float elapsedTime)
 		for (int j = 0; j < numOfCls; ++j) {
 			if (i != j && !(player[i].TypeName == "husky" && player[i].is_Skill)) {
 				g_boundaries[player[i].TypeName]->Center.x += saveX;
-				//	g_boundaries[player[i].TypeName]->Center.y -= 10;
+				g_boundaries[player[i].TypeName]->Center.y += player[i].gravity;
 				g_boundaries[player[i].TypeName]->Center.z += saveZ;
 				if (g_boundaries[player[i].TypeName]->Intersects(*g_boundaries[player[j].TypeName])) {
 					player[i].m_pos.x -= saveX;
-					//	player[i].m_pos.y += 10;
+					player[i].m_pos.y -= player[i].gravity;
 					player[i].m_pos.z -= saveZ;
 					g_boundaries[player[i].TypeName]->Center.x -= saveX;
-					//	g_boundaries[player[i].TypeName]->Center.y += 10;
+					g_boundaries[player[i].TypeName]->Center.y -= player[i].gravity;
 					g_boundaries[player[i].TypeName]->Center.z -= saveZ;
-
+					player[i].gravity = 0;
 				}
 			}
 		}
@@ -481,13 +473,6 @@ void ProcessClients()
 				g_MsgQueue.pop();
 			g_MsgQueueLock.unlock();
 
-
-
-			//float  speed = 1.0f; 
-			//speed += Gravity;         //점프 하면 중력 0.1로 최고점에서 닿은 순간부터 중력에 0.05씩 더하기
-
-
-
 			while (!phyMsgQueue.empty())
 			{
 				phyMsg = phyMsgQueue.front();
@@ -638,9 +623,6 @@ void ProcessClients()
 				//   SendAnim(*players);
 				//}
 			}
-
-
-
 
 			for (int i = 0; i < numOfCls; ++i)
 			{
@@ -1199,6 +1181,9 @@ void ProcessClients()
 						}
 						else if (phyPlayers[i].TypeName == "husky") {
 							static float HittedIdx = -1;
+							if (phyPlayers[i].m_pos.y < 80) {
+								phyPlayers[i].m_pos.y += 10.0f;
+							}
 							if (phyPlayers[i].SkillTime >= 10 && phyPlayers[i].SkillTime <= 80) {
 								switch (static_cast<int>(phyPlayers[i].dir)) {
 								case 0:
@@ -1355,20 +1340,6 @@ void ProcessClients()
 			SendPos(*players);
 			SendAnim(*players);
 
-
-			if ((numOfCls-1) == lose_count)
-			{
-				for (int i = 0; i < numOfCls; ++i)
-				{
-					for (int j = 0; j < lose_count; ++j)
-					{
-						if (i != who_lose[j])
-						{
-							SendGameOverPacket(i);
-						}
-					}
-				}
-			}
 
 			//fpsTimer = steady_clock::now();
 			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
