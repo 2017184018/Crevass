@@ -219,7 +219,6 @@ void GameplayController::HandleInput(const float deltaT)
 {
 	if (InputHandler::IsKeyUp('Q')) {
 		SceneManager::GetApp()->EnterScene(SceneType::Lobby);
-		cout << "sdsdssd" << endl;
 	//	SceneManager::GetApp()->ChangeScene();
 	}
 

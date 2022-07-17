@@ -42,7 +42,7 @@ void Update(vector<Player>& player, float elapsedTime)
 		float saveZ = 0;
 		if (player[i].is_hitted == false) {
 			if (player[i].GetKeyW() && player[i].GetKeyA()) {
-				player[i].m_pos.z += player[i].GetCrossSpeed()* elaps_time;
+				player[i].m_pos.z += player[i].GetCrossSpeed() * elaps_time;
 				player[i].m_pos.x -= player[i].GetCrossSpeed() * elaps_time;
 				player[i].dir = DIR_UP_LEFT;
 				saveX = -player[i].GetCrossSpeed() * elaps_time;
@@ -128,14 +128,14 @@ void Update(vector<Player>& player, float elapsedTime)
 		for (int j = 0; j < numOfCls; ++j) {
 			if (i != j && !(player[i].TypeName == "husky" && player[i].is_Skill)) {
 				g_boundaries[player[i].TypeName]->Center.x += saveX;
-				g_boundaries[player[i].TypeName]->Center.y -= 10;
+				//	g_boundaries[player[i].TypeName]->Center.y -= 10;
 				g_boundaries[player[i].TypeName]->Center.z += saveZ;
 				if (g_boundaries[player[i].TypeName]->Intersects(*g_boundaries[player[j].TypeName])) {
 					player[i].m_pos.x -= saveX;
-					player[i].m_pos.y += 10;
+					//	player[i].m_pos.y += 10;
 					player[i].m_pos.z -= saveZ;
 					g_boundaries[player[i].TypeName]->Center.x -= saveX;
-					g_boundaries[player[i].TypeName]->Center.y += 10;
+					//	g_boundaries[player[i].TypeName]->Center.y += 10;
 					g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 
 				}
@@ -298,7 +298,7 @@ void shake(Block* object, int index) {
 		if (IsDown[index]) {
 			bool check = false;
 			for (int i = 0; i < numOfCls; ++i) {
-				if (phyPlayers[i].CurrentSnowcube != -1) {
+				if (phyPlayers[i].CurrentSnowcube == index) {
 					check = true;
 					break;
 				}
@@ -315,12 +315,12 @@ void shake(Block* object, int index) {
 			if (object->pos.y <= -30) {
 				bool check = false;
 				for (int i = 0; i < numOfCls; ++i) {
-					if (phyPlayers[i].CurrentSnowcube == -1) {
+					if (phyPlayers[i].CurrentSnowcube == index) {
 						check = true;
 						break;
 					}
 				}
-				if (check) {
+				if (!check) {
 					object->pos.y += 0.2f;
 				}
 			}
@@ -719,7 +719,7 @@ void ProcessClients()
 				//아이스 , 스노우 아무것도 출동하지 않을때 
 				if (phyPlayers[i].CurrentIcecube == -1 && phyPlayers[i].CurrentSnowcube == -1)
 				{
-					phyPlayers[i].gravity -= 9.8f / pow(elapsedTime,2);
+					phyPlayers[i].gravity -= 9.8f / pow(elapsedTime, 2);
 				}
 			}
 
@@ -812,7 +812,7 @@ void ProcessClients()
 							else {
 								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
 							}*/
-						SendReset(i,phyPlayers[i].lifecnt);
+						SendReset(i, phyPlayers[i].lifecnt);
 
 					}
 				}
@@ -885,7 +885,7 @@ void ProcessClients()
 						if (phyPlayers[j].CurrentIcecube == -1 &&
 							phyPlayers[j].m_pos.x - 10 <= blocks[i].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[i].pos.x - 54 &&
 							phyPlayers[j].m_pos.z - 10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[i].pos.z - 54 &&
-							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60 && blocks[i].destuctioncnt!=3)
+							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60 && blocks[i].destuctioncnt != 3)
 						{
 							//	if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
 							phyPlayers[j].CurrentIcecube = i;
@@ -939,8 +939,10 @@ void ProcessClients()
 								phyPlayers[j].m_pos.z - 10 <= blocks[phyPlayers[j].CurrentSnowcube].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[phyPlayers[j].CurrentSnowcube].pos.z - 54 &&
 								phyPlayers[j].m_pos.y <= blocks[phyPlayers[j].CurrentSnowcube].pos.y + 70))
 						{
-							IsDown[phyPlayers[j].CurrentSnowcube] = false;
-
+							for (int k = 0; k < numOfCls; ++k) {
+								if (j != k && phyPlayers[j].CurrentSnowcube != phyPlayers[k].CurrentSnowcube)
+									IsDown[phyPlayers[j].CurrentSnowcube] = false;
+							}
 							phyPlayers[j].CurrentSnowcube = -1;
 						}
 					}
@@ -1320,7 +1322,7 @@ void ProcessClients()
 					}
 					else {
 						phyPlayers[i].is_Skill = false;
-					//	phyPlayers[i].is_Skillanim = false;
+						//	phyPlayers[i].is_Skillanim = false;
 					}
 					if (phyPlayers[i].IsSkillCool) {
 						phyPlayers[i].SkillCoolTime += 1;
