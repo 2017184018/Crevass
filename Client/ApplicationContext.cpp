@@ -347,22 +347,25 @@ void ApplicationContext::CreateBackground()
 		chr->m_MaterialIndex = matidx;
 		chr->m_SkinnedCBIndex = bonidx;
 		chr->m_SkinnedModelInst = NULL; MeshReference::GetApp()->m_SkinnedModelInsts[meshName].get();
-		chr->m_IsVisible = true;
+		if (i % 5 < 5)
+			chr->m_IsVisible = true;
+		else
+			chr->m_IsVisible = false;
 		// 임시 스폰위치 지정
 		//chr->m_SpawnLoaction = skinnedCBIndex;
 		int XPos, ZPos;
 		int size = uid6(dre2);
-		chr->Scale(size, size, size);
+		chr->Scale(20, 20, 20);
 		int tmp = 0;
 		float tmp2 = 0;
-		do {
+	/*	do {
 			tmp = uid8(dre2);
 			XPos = X[tmp] + uid9(dre2);
 			ZPos = Z[tmp] + uid9(dre2);
 			tmp2 = sqrt(pow(XPos - X[tmp], 2) + pow(ZPos - Z[tmp], 2));
 		} while (XPos < -600 || (XPos < -300 && ZPos>1100) || (XPos > -300 && XPos < 15) || (XPos > 15 && XPos < 150)
 			|| (XPos > 150 && XPos < 350 && ZPos>1600) || (XPos > 350 && XPos < 660 && ZPos>1150) || (XPos > 660 && XPos < 1100 && ZPos>1350)
-			|| (XPos > 1100 && XPos < 1570 && ZPos>800) || XPos>1600 || ZPos < 0);
+			|| (XPos > 1100 && XPos < 1570 && ZPos>800) || XPos>1600 || ZPos < 0);*/
 		//if (instID != "husky100" && instID != "Penguin110" && instID != "ArcticFox120" && instID != "PolarBear130" && instID != "Seal140") {
 		//	if (XPos <= 200) {	//항상 중심 바라보게
 		//		chr->Rotate(0, 180 - ((200 - XPos) * 45 / 600 + (1100 - ZPos) * 45 / 1100), 0);
@@ -372,9 +375,10 @@ void ApplicationContext::CreateBackground()
 		//	}
 		//}
 	//	else {
-			chr->Rotate(0, 180, 0);
-//		}
-		chr->SetPosition(XPos, -size + 95 - 45 * tmp2 / (620.0 * sqrt(2)) + 10, ZPos);
+		chr->Rotate(0, 180, 0);
+		//		}
+	//	chr->SetPosition(XPos, -size + 95 - 45 * tmp2 / (620.0 * sqrt(2)) + 10, ZPos);
+		chr->SetPosition(-1000,-1000,-1000);
 	}
 
 	//134~138	라이프
@@ -1498,7 +1502,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 		chr->Scale(15, 15, 15);
 	else
 		chr->Scale(20, 20, 20);
-	XMStoreFloat4x4(&chr->m_World, XMLoadFloat4x4(&chr->m_World) * XMMatrixRotationY(3.141592));
+//	XMStoreFloat4x4(&chr->m_World, XMLoadFloat4x4(&chr->m_World) * XMMatrixRotationY(3.141592));
 	chr->SetPosition(-1000, 30, -1000);
 
 }
@@ -1582,12 +1586,13 @@ void ApplicationContext::DisplayUI(std::string mapName)
 {
 }
 
-void ApplicationContext::HiddenUI(std::string uiName, std::string instname )
+void ApplicationContext::HiddenUI(std::string uiName, std::string instname)
 {
 	GameObject* obj = FindObject<GameObject>(uiName, instname);
-	if (!obj) { 
+	if (!obj) {
 		cout << "return" << endl;
-		return; }
+		return;
+	}
 	cout << "come" << endl;
 	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
