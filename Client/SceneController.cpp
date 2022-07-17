@@ -217,8 +217,10 @@ void GameplayController::Update(const float deltaT)
 
 void GameplayController::HandleInput(const float deltaT)
 {
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
-		SceneManager::GetApp()->ChangeScene();
+	if (InputHandler::IsKeyUp('Q')) {
+		SceneManager::GetApp()->EnterScene(SceneType::Lobby);
+		cout << "sdsdssd" << endl;
+	//	SceneManager::GetApp()->ChangeScene();
 	}
 
 	// 파티클 루프 테스트
