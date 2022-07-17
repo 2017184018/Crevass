@@ -651,67 +651,69 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 	{	//outline
+		float outlinesize = 1.1;
+		float syncoutline = (outlinesize - 1) * 20;
 		for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
 			if (i != m_PlayerID) {
 				if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PenguinOutline"]->GetinstanceKeymap();
 					auto tmp = myoutline.begin();
 					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-					tmpuser._11 = 1.1;
-					tmpuser._22 = 1.1;
-					tmpuser._33 = 1.1;
+					tmpuser._11 = outlinesize;
+					tmpuser._22 = outlinesize;
+					tmpuser._33 = outlinesize;
 
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
 					auto tmp = myoutline.begin();
 					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-					tmpuser._11 = 1.1;
-					tmpuser._22 = 1.1;
-					tmpuser._33 = 1.1;
+					tmpuser._11 = outlinesize;
+					tmpuser._22 = outlinesize;
+					tmpuser._33 = outlinesize;
 
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["huskyOutline"]->GetinstanceKeymap();
 					auto tmp = myoutline.begin();
 					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-					tmpuser._11 = 1.1;
-					tmpuser._22 = 1.1;
-					tmpuser._33 = 1.1;
+					tmpuser._11 = outlinesize;
+					tmpuser._22 = outlinesize;
+					tmpuser._33 = outlinesize;
 
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["SealOutline"]->GetinstanceKeymap();
 					auto tmp = myoutline.begin();
 					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-					tmpuser._11 = 1.1;
-					tmpuser._22 = 1.1;
-					tmpuser._33 = 1.1;
+					tmpuser._11 = outlinesize;
+					tmpuser._22 = outlinesize;
+					tmpuser._33 = outlinesize;
 
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline/20*15;
 				}
 				else {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
 					auto tmp = myoutline.begin();
 					XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-					tmpuser._11 = 1.1;
-					tmpuser._22 = 1.1;
-					tmpuser._33 = 1.1;
+					tmpuser._11 = outlinesize;
+					tmpuser._22 = outlinesize;
+					tmpuser._33 = outlinesize;
 
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 				}
 			}
 		}
@@ -719,65 +721,65 @@ void GameplayScene::Update(const float& fDeltaTime)
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PenguinOutline"]->GetinstanceKeymap();
 			auto tmp = myoutline.begin();
 			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-			tmpuser._11 = 1.1;
-			tmpuser._22 = 1.1;
-			tmpuser._33 = 1.1;
+			tmpuser._11 = outlinesize;
+			tmpuser._22 = outlinesize;
+			tmpuser._33 = outlinesize;
 
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
 			auto tmp = myoutline.begin();
 			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-			tmpuser._11 = 1.1;
-			tmpuser._22 = 1.1;
-			tmpuser._33 = 1.1;
+			tmpuser._11 = outlinesize;
+			tmpuser._22 = outlinesize;
+			tmpuser._33 = outlinesize;
 
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_HUSKY) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["huskyOutline"]->GetinstanceKeymap();
 			auto tmp = myoutline.begin();
 			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-			tmpuser._11 = 1.1;
-			tmpuser._22 = 1.1;
-			tmpuser._33 = 1.1;
+			tmpuser._11 = outlinesize;
+			tmpuser._22 = outlinesize;
+			tmpuser._33 = outlinesize;
 
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_SEAL) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["SealOutline"]->GetinstanceKeymap();
 			auto tmp = myoutline.begin();
 			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-			tmpuser._11 = 1.1;
-			tmpuser._22 = 1.1;
-			tmpuser._33 = 1.1;
+			tmpuser._11 = outlinesize;
+			tmpuser._22 = outlinesize;
+			tmpuser._33 = outlinesize;
 
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline / 20 * 15;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
 		}
 		else {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
 			auto tmp = myoutline.begin();
 			XMFLOAT4X4 tmpuser = MathHelper::Identity4x4();
-			tmpuser._11 = 1.1;
-			tmpuser._22 = 1.1;
-			tmpuser._33 = 1.1;
+			tmpuser._11 = outlinesize;
+			tmpuser._22 = outlinesize;
+			tmpuser._33 = outlinesize;
 
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= 1.5;
+			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
 		}
 	}
