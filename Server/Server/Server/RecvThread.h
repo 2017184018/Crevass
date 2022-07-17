@@ -416,7 +416,9 @@ void Receiver(char id)
 
 		case CS_PLAYER_LOSE:
 		{
-			SendGameOverPacket(id);
+			who_lose[lose_count] = id;
+			lose_count += 1;
+			//SendGameOverPacket(id);
 			break;
 		}
 		default:

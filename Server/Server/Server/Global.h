@@ -45,6 +45,9 @@ std::queue <Message> g_MsgQueue;
 
 std::map <char, SOCKET> g_clients;
 
+int lose_count = 0;
+int who_lose[5];
+
 
 atomic_int numOfCls;				// ������ Ŭ���̾�Ʈ ��
 
