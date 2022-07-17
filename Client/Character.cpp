@@ -716,6 +716,13 @@ void Character::SetDir(float angle)
 	m_CurrentAngle = angle;
 }
 
+bool Character::ReleaseTransform()
+{
+
+
+	return true;
+}
+
 void Character::SetPosition(float posX, float posY, float posZ)
 {
 	GameObject::SetPosition(posX, posY, posZ);

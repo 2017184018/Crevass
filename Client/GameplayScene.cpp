@@ -7,6 +7,7 @@
 #include "ApplicationContext.h"
 #include "InputHandler.h"
 #include "SceneManager.h"
+#include "CommandCenter.h"
 
 #include "GameObject.h"
 #include "Particle.h"
@@ -169,10 +170,19 @@ bool GameplayScene::Enter()
 
 void GameplayScene::Exit()
 {
+	//CommandCenter Reset
+	CommandCenter::GetApp()->Release();
+
 	/*AppContext->HiddenProps(m_MapName);
 	AppContext->HiddenCharacter(CHARACTER_DRUID);*/
 	AppContext->HiddenBlocks();
-	//AppContext->HiddenCharacter("Husky");
+	AppContext->HiddenCharacter("Penguin");
+	AppContext->HiddenCharacter("Husky");
+	AppContext->HiddenCharacter("ArcticFox");
+	AppContext->HiddenCharacter("PolarBear");
+	AppContext->HiddenCharacter("Seal");
+
+
 	cout << "===========================================" << endl << endl;
 }
 
