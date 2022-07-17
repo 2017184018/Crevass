@@ -11,6 +11,7 @@
 #include "CREVASS.h"
 #include "Network.h"
 
+using namespace Core;
 void LobbyScene::Initialize()
 {
 	m_SceneController = new LobbyController(this);
@@ -41,6 +42,16 @@ bool LobbyScene::Enter()
 	CREVASS::GetApp()->m_Camera->CameraInitialize(SceneType::Lobby);
 	Core::g_pFramework->m_pNetwork->Recv();
 	Core::m_PlayerID = Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
+	
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->m_IsVisible = true;
+		AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->m_IsVisible = true;
+		AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->m_IsVisible = true;
+		AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->m_IsVisible = true;
+		AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->m_IsVisible = true;
+	}
+
 	return false;
 }
 
@@ -63,7 +74,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 	Core::mWaves->Disturb(i, j, r);
 
 	Core::mWaves->Update(fDeltaTime);
-
+	cout <<"currchar =" << CREVASS::GetApp()->currchar << endl;
 	for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
 		switch (CREVASS::GetApp()->currchar) {
 		case 0:
