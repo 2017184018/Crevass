@@ -785,12 +785,18 @@ void ProcessClients()
 						phyPlayers[i].is_attack = false;
 						phyPlayers[i].is_Skill = false;
 						phyPlayers[i].is_Skillanim = false;
+						phyPlayers[i].m_keyW = false;
+						phyPlayers[i].m_keyA = false;
+						phyPlayers[i].m_keyS = false;
+						phyPlayers[i].m_keyD = false;
+
 						int BlockTmpX;
 						int BlockTmpZ;
 						do {
 							BlockTmpX = uid(dre);
 							BlockTmpZ = uid(dre);
 						} while (blocks[BlockTmpX * 10 + BlockTmpZ * 2].pos.y < -50);
+
 						phyPlayers[i].m_pos.x = BlockTmpX * 400;
 						phyPlayers[i].m_pos.y = 100.0f;
 						phyPlayers[i].m_pos.z = BlockTmpZ * 400;
