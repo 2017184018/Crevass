@@ -15,20 +15,13 @@ bool IsRight[25];
 UINT ShakeCnt[25];
 bool IsDown[25];
 bool IsShake[25];
-//int tmp1[3] = { -1,-1,-1 };		//현재 밟고 있는 icecube
 bool BlockIn = false;
-float Gravity = 0.1;
-//int tmp2[3] = { -1,-1,-1 };		//밟고 있는 snowcube
-//string TypeName[3];
 bool IsFall[3] = { false,false,false };
 Block blocks[25];
 bool dir_switch[3];
-//bool IsInteract[3] = { false,false,false };		//상호작용 키 눌렀는지
-//bool IsInteracting[3] = { false,false,false };	//상호작용 중인지
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 Hail hails[5];
 DirectX::XMFLOAT3 OriginBlockExtents;
-//bool IsSkillPushed[3] = { false,false,false };		//스킬 키 눌렀는지
 
 int CalcTime = 0;
 
@@ -100,7 +93,6 @@ void Update(vector<Player>& player, float elapsedTime)
 
 		else {
 			//위
-
 			if (static_cast<int>(player[i].hitted_dir) == 0) {
 				player[i].m_pos.z += player[i].GetSpeed() * elaps_time;
 				player[i].dir = DIR_DOWN;
@@ -481,13 +473,6 @@ void ProcessClients()
 				g_MsgQueue.pop();
 			g_MsgQueueLock.unlock();
 
-
-
-			//float  speed = 1.0f; 
-			//speed += Gravity;         //점프 하면 중력 0.1로 최고점에서 닿은 순간부터 중력에 0.05씩 더하기
-
-
-
 			while (!phyMsgQueue.empty())
 			{
 				phyMsg = phyMsgQueue.front();
@@ -638,9 +623,6 @@ void ProcessClients()
 				//   SendAnim(*players);
 				//}
 			}
-
-
-
 
 			for (int i = 0; i < numOfCls; ++i)
 			{

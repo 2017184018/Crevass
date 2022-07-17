@@ -201,7 +201,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
 
 		if (g_pFramework->m_pNetwork->GetHuskySkill()) {
-			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.05f) {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.04f) {
 				for (int j = 3; j >= 0; --j) {
 					if (j != 0) {
 						huskyimagepos[j] = huskyimagepos[j - 1];
@@ -510,17 +510,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	{
-		//huskyafterimage
-		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
-		auto i = info.begin();
-
 		for (int j = 0; j < 3; ++j) {
-			++i;
-			AppContext->m_RItemsVec[(i)->second]->m_World = huskyimagerota[j + 1];
-			AppContext->m_RItemsVec[(i)->second]->m_World._41 = huskyimagepos[j + 1].x;
-			AppContext->m_RItemsVec[(i)->second]->m_World._42 = huskyimagepos[j + 1].y;
-			AppContext->m_RItemsVec[(i)->second]->m_World._43 = huskyimagepos[j + 1].z;
-			AppContext->m_RItemsVec[(i)->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105+j))->m_World= huskyimagerota[j + 1];
+		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
+		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex= MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;
 		}
 	}
 	{		//minimap
@@ -651,7 +645,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 	{	//outline
-		float outlinesize = 1.1;
+		float outlinesize = 1.05;
 		float syncoutline = (outlinesize - 1) * 20;
 		for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
 			if (i != m_PlayerID) {
@@ -666,6 +660,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
@@ -678,6 +673,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["huskyOutline"]->GetinstanceKeymap();
@@ -690,6 +686,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["SealOutline"]->GetinstanceKeymap();
@@ -702,6 +699,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline/20*15;
+					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 				else {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
@@ -714,6 +712,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 			}
 		}
@@ -728,7 +727,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
-			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
@@ -741,7 +741,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
-			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_HUSKY) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["huskyOutline"]->GetinstanceKeymap();
@@ -754,7 +755,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
-			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_SEAL) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["SealOutline"]->GetinstanceKeymap();
@@ -767,7 +769,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline / 20 * 15;
-			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
@@ -780,7 +783,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
-			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["blueline"]->MatCBIndex;
+			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 	}
 	MaterialReference::GetApp()->Update(fDeltaTime);

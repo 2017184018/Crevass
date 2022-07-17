@@ -159,6 +159,13 @@ float4 PS(VertexOut pin) : SV_Target
 	return litColor;
 }
 
+float4 outlinePS(VertexOut pin) : SV_Target
+{
+	float4 litColor = float4(pin.MatIndex * 30, 0, (1 - pin.MatIndex) * 30, 1);
+
+	return litColor;
+}
+
 float4 PenguinPS(VertexOut pin) : SV_Target
 {
 	// Fetch the material data.

@@ -308,6 +308,7 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skinnedVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", skinnedDefines, "VS", "vs_5_1");
 	m_Shaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
+	m_Shaders["outlinePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "outlinePS", "ps_5_1");
 
 	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
@@ -513,7 +514,13 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedOpaquePsoDesc, IID_PPV_ARGS(&g_SkinnedPSO)));
 
+	//outlinePSO
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC OulinePSO = skinnedOpaquePsoDesc;
+	OulinePSO.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["outlinePS"]->GetBufferPointer()),
+		m_Shaders["outlinePS"]->GetBufferSize()
+	};
 	OulinePSO.RasterizerState.FrontCounterClockwise = TRUE;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&OulinePSO, IID_PPV_ARGS(&g_OutlinePSO)));
 
