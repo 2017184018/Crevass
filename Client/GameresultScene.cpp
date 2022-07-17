@@ -19,6 +19,7 @@ bool GameresultScene::Enter()
 
 void GameresultScene::Exit()
 {
+	cout << "exitGameresultScene===========================================" << endl << endl;
 }
 
 void GameresultScene::Update(const float& fDeltaTime)
