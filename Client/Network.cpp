@@ -154,6 +154,46 @@ void Network::ProcessPacket(char* packet_buffer)
 
 		break;
 	}
+
+	case SC_CHOOSE_HUSKY:
+	{
+		sc_packet_choose packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << (int)packet.type << endl;
+		break;
+	}
+	case SC_CHOOSE_PENGUIN:
+	{
+		sc_packet_choose packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << (int)packet.type << endl;
+		break;
+	}
+
+	case SC_CHOOSE_FOX:
+	{
+		sc_packet_choose packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << (int)packet.type << endl;
+		break;
+	}
+
+	case SC_CHOOSE_POLARBEAR:
+	{
+		sc_packet_choose packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << (int)packet.type << endl;
+		break;
+	}	
+	case SC_CHOOSE_SEAL:
+	{
+		sc_packet_choose packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << (int)packet.type << endl;
+		break;
+	}
+
+
 	case SC_GAMESTART:
 	{
 

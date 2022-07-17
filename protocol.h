@@ -18,6 +18,13 @@
 #define SC_FOX_SKILL				15
 #define SC_HUSKY_SKILL				16
 #define SC_PENGUIN_SKILL				17
+
+#define SC_CHOOSE_PENGUIN			18
+#define SC_CHOOSE_HUSKY				19
+#define SC_CHOOSE_FOX				20
+#define SC_CHOOSE_POLARBEAR			21
+#define SC_CHOOSE_SEAL				22
+
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -46,6 +53,12 @@
 #define CS_READY_FOX				19
 #define CS_READY_POLARBEAR				20
 #define CS_READY_SEAL				21
+
+#define CS_CHOOSE_PENGUIN			22
+#define CS_CHOOSE_HUSKY				23
+#define CS_CHOOSE_FOX				24
+#define CS_CHOOSE_POLARBEAR			25
+#define CS_CHOOSE_SEAL				26
 
 
 
@@ -103,6 +116,12 @@ struct sc_packet_ready {
 	char id;
 	char ready;
 	char Character_type;
+};
+
+struct sc_packet_choose {
+	short size;
+	char type;
+	char id;
 };
 
 struct sc_packet_game_start {

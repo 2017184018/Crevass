@@ -69,6 +69,32 @@ void LobbyController::HandleInput(const float deltaT)
 				}
 			}
 			up = false;
+			
+			switch (CREVASS::GetApp()->currchar)
+			{
+			case CHARACTER_HUSKY:
+				g_pFramework->m_pNetwork->Send(CS_CHOOSE_HUSKY);
+				break;
+
+			case CHARACTER_PENGUIN:
+				g_pFramework->m_pNetwork->Send(CS_CHOOSE_PENGUIN);
+				break;
+
+			case CHARACTER_ARCTICFOX:
+				g_pFramework->m_pNetwork->Send(CS_CHOOSE_FOX);
+				break;
+
+			case CHARACTER_POLARBEAR:
+				g_pFramework->m_pNetwork->Send(CS_CHOOSE_POLARBEAR);
+				break;
+
+			case CHARACTER_SEAL:
+				g_pFramework->m_pNetwork->Send(CS_CHOOSE_SEAL);
+				break;
+
+
+			}
+
 		}
 		else {
 			up = true;
@@ -117,6 +143,30 @@ void LobbyController::HandleInput(const float deltaT)
 					}
 				}
 				down = false;
+
+				switch (CREVASS::GetApp()->currchar)
+				{
+				case CHARACTER_HUSKY:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_HUSKY);
+					break;
+
+				case CHARACTER_PENGUIN:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_PENGUIN);
+					break;
+
+				case CHARACTER_ARCTICFOX:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_FOX);
+					break;
+
+				case CHARACTER_POLARBEAR:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_POLARBEAR);
+					break;
+
+				case CHARACTER_SEAL:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_SEAL);
+					break;
+
+				}
 			}
 			//	CREVASS::GetApp()->m_Camera->Walk(-50);
 		}

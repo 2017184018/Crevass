@@ -414,6 +414,41 @@ void Receiver(char id)
 			break;
 		}
 
+		case CS_CHOOSE_HUSKY:
+		{
+			for (auto& cl : g_clients)
+				SendChooseHusky(cl.first, id);
+			break;
+		}
+		case CS_CHOOSE_PENGUIN:
+		{
+			for (auto& cl : g_clients)
+				SendChoosePenguin(cl.first, id);
+			break;
+		}
+
+		case CS_CHOOSE_FOX:
+		{
+			for (auto& cl : g_clients)
+				SendChooseFox(cl.first, id);
+			break;
+		}
+
+		case CS_CHOOSE_POLARBEAR:
+		{
+			for (auto& cl : g_clients)
+				SendChooseBear(cl.first, id);
+			break;
+		}
+
+		case CS_CHOOSE_SEAL:
+		{
+			for (auto& cl : g_clients)
+				SendChooseSeal(cl.first, id);
+			break;
+		}
+
+
 		case CS_PLAYER_LOSE:
 		{
 			who_lose[lose_count] = id;

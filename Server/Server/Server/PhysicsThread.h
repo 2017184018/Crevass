@@ -1350,7 +1350,23 @@ void ProcessClients()
 			{
 				SendTime(CalcTime);
 			}
+
+			if ((numOfCls - 1) == lose_count)
+			{
+				for (int i = 0; i < numOfCls; ++i)
+				{
+					for (int j = 0; j < lose_count; ++j)
+					{
+						if (i != who_lose[j])
+						{
+							SendGameOverPacket(i);
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 	phyPlayers.clear();
+	return;
 }

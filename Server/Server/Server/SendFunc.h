@@ -71,6 +71,7 @@ void SendReadyHusky(char id, char other, char ready) {
 	packet.ready = g_playerReadyInfo[other].ready;
 	packet.Character_type = CHARACTER_HUSKY;
 	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+
 }
 
 void SendReadyBear(char id, char other, char ready) {
@@ -105,6 +106,68 @@ void SendReadySeal(char id, char other, char ready) {
 	packet.Character_type = CHARACTER_SEAL;
 	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 }
+
+void SendChooseHusky(char id, char other)
+{
+	sc_packet_choose packet;
+	packet.id = id;
+	packet.size = sizeof(packet);
+	packet.type = SC_CHOOSE_HUSKY;
+
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	cout << (int)packet.type << endl;
+}
+
+void SendChoosePenguin(char id, char other)
+{
+	sc_packet_choose packet;
+	packet.id = id;
+	packet.size = sizeof(packet);
+	packet.type = SC_CHOOSE_PENGUIN;
+
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	cout << (int)packet.type << endl;
+
+}
+
+void SendChooseFox(char id, char other)
+{
+	sc_packet_choose packet;
+	packet.id = id;
+	packet.size = sizeof(packet);
+	packet.type = SC_CHOOSE_FOX;
+
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	cout << (int)packet.type << endl;
+
+}
+
+void SendChooseBear(char id, char other)
+{
+	sc_packet_choose packet;
+	packet.id = id;
+	packet.size = sizeof(packet);
+	packet.type = SC_CHOOSE_POLARBEAR;
+
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	cout << (int)packet.type << endl;
+
+}
+
+void SendChooseSeal(char id, char other)
+{
+	sc_packet_choose packet;
+	packet.id = id;
+	packet.size = sizeof(packet);
+	packet.type = SC_CHOOSE_SEAL;
+
+	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	cout << (int)packet.type << endl;
+
+}
+
+
+
 
 void SendGameStartPacket()
 {
