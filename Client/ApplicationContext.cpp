@@ -1569,17 +1569,21 @@ void ApplicationContext::HiddenBlocks()
 void ApplicationContext::HiddenCharacter(std::string userName)
 {
 	Character* user = FindObject<Character>(userName, userName + std::to_string(0));
-	if (!user) return;
+	if (!user) { cout << "return" << endl; return; }
 
 	user->m_MyCamera = nullptr;
-	user->m_IsVisible = false;
+
 	user->m_SkinnedModelInst->ChangeSkinnedAnimation("Idle");
+	user->m_PlayerController.release();
 
 	ZeroMemory(&user->m_World, sizeof(user->m_World));
 	ZeroMemory(&user->m_TexTransform, sizeof(user->m_TexTransform));
 
+	//user->ReleaseTransform();
+
 	// Update InstanceData
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[userName], AppContext->m_RItemsVec);
+		user->m_IsVisible = false;
 }
 
 void ApplicationContext::DisplayUI(std::string mapName)

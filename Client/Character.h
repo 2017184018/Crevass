@@ -87,6 +87,7 @@ public:
 	void SetParts(CharacterParts* parts);
 	void SetDir(float angle);
 
+	bool ReleaseTransform();
 
 	virtual void SetPosition(float posX, float posY, float posZ);
 	virtual void SetPosition(DirectX::XMFLOAT3 xmPos);
