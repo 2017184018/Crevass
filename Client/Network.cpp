@@ -340,10 +340,8 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_gameover packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = false;
-		if (static_cast<int>(packet.id) == 0)
-			m_pGameInfo->m_WinnerID = 1;
-		else
-			m_pGameInfo->m_WinnerID = 0;
+		
+		m_pGameInfo->m_WinnerID = packet.id;
 		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
 		if (m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
 			MessageBox(nullptr, L"You Win", L"Game Over!", MB_OK);
