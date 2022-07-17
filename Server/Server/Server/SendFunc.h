@@ -107,61 +107,66 @@ void SendReadySeal(char id, char other, char ready) {
 	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 }
 
-void SendChooseHusky(char id, char other)
+void SendChooseHusky(char id)
 {
 	sc_packet_choose packet;
 	packet.id = id;
 	packet.size = sizeof(packet);
 	packet.type = SC_CHOOSE_HUSKY;
 
-	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	SendPacket(&packet);
+	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 	cout << (int)packet.type << endl;
 }
 
-void SendChoosePenguin(char id, char other)
+void SendChoosePenguin(char id)
 {
 	sc_packet_choose packet;
 	packet.id = id;
 	packet.size = sizeof(packet);
 	packet.type = SC_CHOOSE_PENGUIN;
 
-	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	SendPacket(&packet);
+	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 	cout << (int)packet.type << endl;
 
 }
 
-void SendChooseFox(char id, char other)
+void SendChooseFox(char id)
 {
 	sc_packet_choose packet;
 	packet.id = id;
 	packet.size = sizeof(packet);
 	packet.type = SC_CHOOSE_FOX;
 
-	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	SendPacket(&packet);
+	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 	cout << (int)packet.type << endl;
 
 }
 
-void SendChooseBear(char id, char other)
+void SendChooseBear(char id)
 {
 	sc_packet_choose packet;
 	packet.id = id;
 	packet.size = sizeof(packet);
 	packet.type = SC_CHOOSE_POLARBEAR;
 
-	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	SendPacket(&packet);
+	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 	cout << (int)packet.type << endl;
 
 }
 
-void SendChooseSeal(char id, char other)
+void SendChooseSeal(char id)
 {
 	sc_packet_choose packet;
 	packet.id = id;
 	packet.size = sizeof(packet);
 	packet.type = SC_CHOOSE_SEAL;
 
-	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
+	SendPacket(&packet);
+	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 	cout << (int)packet.type << endl;
 
 }

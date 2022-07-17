@@ -59,6 +59,7 @@ public:
 	bool GetPenguinSkill()const;
 	bool GetPlayerSkillCool(int num)const;
 	int GetPlayerLifeCnt(int num)const;
+	int GetChooseCharacter(int num)const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[5];
 	int PlayerAnim[5];
@@ -84,6 +85,8 @@ private:
 	bool FoxSkill = false;
 	bool HuskySkill = false;
 	bool PenguinSkill = false;
+
+	int choosename[5]{};
 public:
 	GameInfo* m_pGameInfo;
 };

@@ -416,35 +416,30 @@ void Receiver(char id)
 
 		case CS_CHOOSE_HUSKY:
 		{
-			for (auto& cl : g_clients)
-				SendChooseHusky(cl.first, id);
+			SendChooseHusky(id);
 			break;
 		}
 		case CS_CHOOSE_PENGUIN:
 		{
-			for (auto& cl : g_clients)
-				SendChoosePenguin(cl.first, id);
+			SendChoosePenguin(id);
 			break;
 		}
 
 		case CS_CHOOSE_FOX:
 		{
-			for (auto& cl : g_clients)
-				SendChooseFox(cl.first, id);
+			SendChooseFox(id);
 			break;
 		}
 
 		case CS_CHOOSE_POLARBEAR:
 		{
-			for (auto& cl : g_clients)
-				SendChooseBear(cl.first, id);
+			SendChooseBear(id);
 			break;
 		}
 
 		case CS_CHOOSE_SEAL:
 		{
-			for (auto& cl : g_clients)
-				SendChooseSeal(cl.first, id);
+			SendChooseSeal(id);
 			break;
 		}
 
