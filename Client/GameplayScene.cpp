@@ -114,6 +114,12 @@ bool GameplayScene::Enter()
 			m_Users[i] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
 		}
 		m_Users[i]->m_IsVisible = true;
+
+		AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->m_IsVisible = false;
+		AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->m_IsVisible = false;
+		AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->m_IsVisible = false;
+		AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->m_IsVisible = false;
+		AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->m_IsVisible = false;
 	}
 
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
@@ -146,9 +152,9 @@ bool GameplayScene::Enter()
 	}
 
 	//여기서 초기화
- 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
-		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->SetPosition(-380.f, 180.f- i*30.f,1.f);
+		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->SetPosition(-380.f, 180.f - i * 30.f, 1.f);
 		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->m_positionRatio = { (-380.f - (UI_SIZEX / 20.f)) / 800.f, (180.f - i * 30.f - (UI_SIZEY / 20.f)) / 600.f };
 
 		//GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
@@ -373,8 +379,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 		if (g_pFramework->m_pNetwork->GetCharacterReset(i) == true)
 		{
 			Player_Lifecnt[i] = g_pFramework->m_pNetwork->GetPlayerLifeCnt(i);
-		
-			for (int j = 4; j > Player_Lifecnt[i]-1; j--) {
+
+			for (int j = 4; j > Player_Lifecnt[i] - 1; j--) {
 				cout << "i = " << i << "j ==" << j << endl;
 				AppContext->HiddenUI("player_" + std::to_string(i) + "hp" + std::to_string(j), "player_" + std::to_string(i) + "hp" + std::to_string(j));
 			}
@@ -384,17 +390,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 			//내가 떨어졌을때 
 			if (i == m_PlayerID)
 			{
-				
+
 				m_Users[i]->m_PlayerController->SetIsFall();
 				GraphicsContext::GetApp()->OnBlurEffect(false);
-			
+
 				IsFall[m_PlayerID] = false;
-					if (Lifecnt == 0) {
-						//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-							//서버에 패배 전송
-						g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
-					}
-				
+				if (Lifecnt == 0) {
+					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
+						//서버에 패배 전송
+					g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
+				}
+
 			}
 		}
 	}
@@ -862,8 +868,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_"+ m_Users[i]->GetType()], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
 		//이부분 
 	}
 	/*GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
@@ -883,7 +889,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec,true);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["testParticle"], AppContext->m_RItemsVec, true);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec, true);
 
 	///*Shadow*/
@@ -1041,7 +1047,7 @@ void GameplayScene::Render()
 	}
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
-	{ 
+	{
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
 	}
 
