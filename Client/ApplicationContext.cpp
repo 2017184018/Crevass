@@ -242,6 +242,7 @@ void ApplicationContext::Createigloos()
 		instancingObj->m_World._22 = SCALE * 1 / 10.0;
 		instancingObj->m_World._33 = SCALE * 1 / 10.0;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
+
 	}
 }
 

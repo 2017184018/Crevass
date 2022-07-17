@@ -43,7 +43,7 @@ void GameplayScene::Initialize()
 		}
 	}
 	AppContext->CreateUI2D("ui_Penguin", "ui_Penguin", 20, -380.f, 180.f, UI_SIZEX, UI_SIZEY);
-	AppContext->CreateUI2D("ui_Husky", "ui_Husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
+	AppContext->CreateUI2D("ui_husky", "ui_husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
 	AppContext->CreateUI2D("ui_Seal", "ui_Seal", 22, -380.f, 120.f, UI_SIZEX, UI_SIZEY);
 	AppContext->CreateUI2D("ui_PolarBear", "ui_PolarBear", 23, -380.f, 90.f, UI_SIZEX, UI_SIZEY);
 	AppContext->CreateUI2D("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
