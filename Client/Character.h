@@ -118,6 +118,10 @@ public:
 
 	void SetSnowmanNum(int num);
 	int GetSnowmanNum()const;
+
+	void SetSkillCool(bool cool);
+	bool GetSkillCool();
+
 public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;
@@ -142,4 +146,5 @@ private:
 	bool IsHide;
 	int SnowmanNum;
 	bool IsSkill = false;
+	bool IsSkillCool = false;
 };

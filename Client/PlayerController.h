@@ -14,8 +14,8 @@ public:
 	void Fall();
 	void SetIsFall();
 	void SetLoop(bool loop);
-	void SetSkillCool(bool cool);
-	bool GetSkillCool();
+	//void SetSkillCool(bool cool);
+	//bool GetSkillCool();
 private:
 	virtual void HandleInput(const float deltaT) override;
 	virtual void MouseCallback() override;
@@ -26,5 +26,5 @@ private:
 private:
 	Character* m_Owner;
 	int tmp = -1;		//화면 내려갈 때 키 눌림 해제
-	bool IsSkillCool = false;
+	//bool IsSkillCool = false;
 };

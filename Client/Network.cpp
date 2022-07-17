@@ -266,7 +266,7 @@ void Network::ProcessPacket(char* packet_buffer)
 			BlockPos[i] = packet.blocks[i].pos;
 			BlockDestructionCnt[i] = packet.blocks[i].destuctioncnt;
 		}
-		SceneManager::GetApp()->EnterScene(SceneType::GamePlay);
+		SceneManager::GetApp()->ChangeScene(SceneType::GamePlay);
 		break;
 	}
 	case SC_POS:

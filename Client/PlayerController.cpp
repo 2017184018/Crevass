@@ -257,7 +257,7 @@ void PlayerController::OnKeyPressed()
 
 		if (InputHandler::IsKeyDown('D')) {
 			//	MessageBox(nullptr,L"hi", L"HR Failed", MB_OK);
-			if (!IsSkillCool) {
+			if (!m_Owner->IsSkillCool) {
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Skill), m_Owner);
 				g_pFramework->m_pNetwork->Send(CS_PLAYER_SKILL);
 				CommandCenter::GetApp()->m_StartSkillAnim = true;
@@ -402,12 +402,12 @@ void PlayerController::SetLoop(bool loop)
 	CommandCenter::GetApp()->IsLoop = loop;
 }
 
-void PlayerController::SetSkillCool(bool cool)
-{
-	IsSkillCool = cool;
-}
-
-bool PlayerController::GetSkillCool()
-{
-	return IsSkillCool;
-}
+//void PlayerController::SetSkillCool(bool cool)
+//{
+//	IsSkillCool = cool;
+//}
+//
+//bool PlayerController::GetSkillCool()
+//{
+//	return IsSkillCool;
+//}

@@ -22,13 +22,11 @@ SceneManager::~SceneManager()
 		s->Exit();
 		SAFE_DELETE_PTR(s);
 	}
-	m_CurScene = -1;
+	///m_CurScene = -1;
 }
 
 void SceneManager::InitializeScenes()
 {
-
-	
 	CreateScene<GameplayScene>(SceneType::GamePlay);
 	CreateScene<LobbyScene>(SceneType::Lobby);
 	CreateScene<GameresultScene>(SceneType::GameResult);
@@ -38,7 +36,8 @@ void SceneManager::ChangeScene(SceneType sceneType)
 {
 	if (m_CurScene == -1)
 		cout << "NullScene" << endl;
-
+	cout << "curscene == "<< endl;
+	cout << "curscene == " << m_CurScene << endl;
 	m_Scenes[m_CurScene]->Exit();
 
 	m_CurScene = static_cast<int>(sceneType);

@@ -173,17 +173,15 @@ void GameplayScene::Exit()
 	//CommandCenter Reset
 	CommandCenter::GetApp()->Release();
 
-	/*AppContext->HiddenProps(m_MapName);
-	AppContext->HiddenCharacter(CHARACTER_DRUID);*/
 	AppContext->HiddenBlocks();
 	AppContext->HiddenCharacter("Penguin");
-	AppContext->HiddenCharacter("Husky");
-	AppContext->HiddenCharacter("ArcticFox");
-	AppContext->HiddenCharacter("PolarBear");
-	AppContext->HiddenCharacter("Seal");
+	//AppContext->HiddenCharacter("Husky");
+	//AppContext->HiddenCharacter("ArcticFox");
+	//AppContext->HiddenCharacter("PolarBear");
+	//AppContext->HiddenCharacter("Seal");
 
 
-	cout << "===========================================" << endl << endl;
+	cout << "exit===========================================" << endl << endl;
 }
 
 void GameplayScene::Update(const float& fDeltaTime)
@@ -263,11 +261,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	m_Users[m_PlayerID]->m_PlayerController->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
-	if (m_Users[m_PlayerID]->m_PlayerController->GetSkillCool()) {
+	m_Users[m_PlayerID]->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
+	if (m_Users[m_PlayerID]->GetSkillCool()) {
 		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 26;
 	}
-	else if (!m_Users[m_PlayerID]->m_PlayerController->GetSkillCool()) {
+	else if (!m_Users[m_PlayerID]->GetSkillCool()) {
 		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 25;
 	}
 
@@ -405,7 +403,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				GraphicsContext::GetApp()->OnBlurEffect(false);
 
 				IsFall[m_PlayerID] = false;
-				if (Lifecnt == 0) {
+				if (Player_Lifecnt[i] == 0) {
 					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
 						//서버에 패배 전송
 					g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);

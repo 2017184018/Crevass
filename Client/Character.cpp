@@ -880,3 +880,14 @@ void Character::SetSnowmanNum(int num)
 int Character::GetSnowmanNum()const {
 	return SnowmanNum;
 }
+
+void Character::SetSkillCool(bool cool)
+{
+	IsSkillCool = cool;
+}
+
+bool Character::GetSkillCool()
+{
+	return IsSkillCool;
+}
+
