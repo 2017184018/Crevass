@@ -128,11 +128,14 @@ void Update(vector<Player>& player, float elapsedTime)
 		for (int j = 0; j < numOfCls; ++j) {
 			if (i != j && !(player[i].TypeName == "husky" && player[i].is_Skill)) {
 				g_boundaries[player[i].TypeName]->Center.x += saveX;
+				g_boundaries[player[i].TypeName]->Center.y -= 10;
 				g_boundaries[player[i].TypeName]->Center.z += saveZ;
 				if (g_boundaries[player[i].TypeName]->Intersects(*g_boundaries[player[j].TypeName])) {
 					player[i].m_pos.x -= saveX;
+					player[i].m_pos.y += 10;
 					player[i].m_pos.z -= saveZ;
 					g_boundaries[player[i].TypeName]->Center.x -= saveX;
+					g_boundaries[player[i].TypeName]->Center.y += 10;
 					g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 
 				}
