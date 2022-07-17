@@ -128,16 +128,16 @@ void Update(vector<Player>& player, float elapsedTime)
 		for (int j = 0; j < numOfCls; ++j) {
 			if (i != j && !(player[i].TypeName == "husky" && player[i].is_Skill)) {
 				g_boundaries[player[i].TypeName]->Center.x += saveX;
-				//	g_boundaries[player[i].TypeName]->Center.y -= 10;
+				g_boundaries[player[i].TypeName]->Center.y += player[i].gravity;
 				g_boundaries[player[i].TypeName]->Center.z += saveZ;
 				if (g_boundaries[player[i].TypeName]->Intersects(*g_boundaries[player[j].TypeName])) {
 					player[i].m_pos.x -= saveX;
-					//	player[i].m_pos.y += 10;
+					player[i].m_pos.y -= player[i].gravity;
 					player[i].m_pos.z -= saveZ;
 					g_boundaries[player[i].TypeName]->Center.x -= saveX;
-					//	g_boundaries[player[i].TypeName]->Center.y += 10;
+					g_boundaries[player[i].TypeName]->Center.y -= player[i].gravity;
 					g_boundaries[player[i].TypeName]->Center.z -= saveZ;
-
+					player[i].gravity = 0;
 				}
 			}
 		}
@@ -1199,6 +1199,9 @@ void ProcessClients()
 						}
 						else if (phyPlayers[i].TypeName == "husky") {
 							static float HittedIdx = -1;
+							if (phyPlayers[i].m_pos.y < 80) {
+								phyPlayers[i].m_pos.y += 10.0f;
+							}
 							if (phyPlayers[i].SkillTime >= 10 && phyPlayers[i].SkillTime <= 80) {
 								switch (static_cast<int>(phyPlayers[i].dir)) {
 								case 0:
@@ -1355,20 +1358,6 @@ void ProcessClients()
 			SendPos(*players);
 			SendAnim(*players);
 
-
-			if ((numOfCls-1) == lose_count)
-			{
-				for (int i = 0; i < numOfCls; ++i)
-				{
-					for (int j = 0; j < lose_count; ++j)
-					{
-						if (i != who_lose[j])
-						{
-							SendGameOverPacket(i);
-						}
-					}
-				}
-			}
 
 			//fpsTimer = steady_clock::now();
 			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
