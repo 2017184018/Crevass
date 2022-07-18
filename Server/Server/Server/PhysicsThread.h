@@ -1181,7 +1181,7 @@ void ProcessClients()
 						}
 						else if (phyPlayers[i].TypeName == "husky") {
 							static float HittedIdx = -1;
-							if (phyPlayers[i].m_pos.y < 80) {
+							if (phyPlayers[i].m_pos.y < 70) {
 								phyPlayers[i].m_pos.y += 10.0f;
 							}
 							if (phyPlayers[i].SkillTime >= 10 && phyPlayers[i].SkillTime <= 80) {
