@@ -25,6 +25,8 @@
 #define SC_CHOOSE_POLARBEAR			21
 #define SC_CHOOSE_SEAL				22
 
+#define SC_CRASH					23
+
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
 
@@ -185,6 +187,13 @@ struct sc_packet_block
 	short size;
 	char type;
 	Block blocks[25];
+};
+
+struct sc_packet_crash
+{
+	short size;
+	char type;
+	int blocknum;
 };
 struct sc_packet_time
 {

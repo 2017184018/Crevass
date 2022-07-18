@@ -308,6 +308,13 @@ void Network::ProcessPacket(char* packet_buffer)
 		}
 		break;
 	}
+	case SC_CRASH:
+	{
+		sc_packet_crash packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << "crash cube num = " << packet.blocknum << endl;
+		break;
+	}
 
 	case SC_ANIM:
 	{
