@@ -74,7 +74,6 @@ void LobbyScene::Update(const float& fDeltaTime)
 	Core::mWaves->Disturb(i, j, r);
 
 	Core::mWaves->Update(fDeltaTime);
-	cout <<"currchar =" << CREVASS::GetApp()->currchar << endl;
 	for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
 			//cout << i << ": " << Core::g_pFramework->m_pNetwork->GetChooseCharacter(i) << endl;
 		switch (Core::g_pFramework->m_pNetwork->GetChooseCharacter(i)) {

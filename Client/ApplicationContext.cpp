@@ -1571,9 +1571,8 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 	Character* user = FindObject<Character>(userName, userName + std::to_string(0));
 	if (!user) { cout << userName << "return" << endl; return; }
 
-	//user->m_MyCamera = nullptr;
-
-	user->m_SkinnedModelInst->ChangeSkinnedAnimation("Idle");
+	user->m_MyCamera = nullptr;
+	user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
 	user->m_PlayerController.release();
 
 	ZeroMemory(&user->m_World, sizeof(user->m_World));
@@ -1597,7 +1596,6 @@ void ApplicationContext::HiddenUI(std::string uiName, std::string instname)
 		cout << "return" << endl;
 		return;
 	}
-	cout << "come" << endl;
 	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[uiName], AppContext->m_RItemsVec);
