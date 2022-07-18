@@ -398,6 +398,8 @@ void Network::ProcessPacket(char* packet_buffer)
 		else if (m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
 			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
 
+		SceneManager::GetApp()->ChangeScene(SceneType::Lobby);
+
 		break;
 	}
 	default:

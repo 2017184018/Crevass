@@ -1360,7 +1360,9 @@ void ProcessClients()
 						if (i != who_lose[j])
 						{
 							SendGameOverPacket(i);
-							break;
+							phyPlayers.clear();
+							return;
+							//break;
 						}
 					}
 				}
