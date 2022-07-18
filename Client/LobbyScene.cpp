@@ -76,7 +76,8 @@ void LobbyScene::Update(const float& fDeltaTime)
 	Core::mWaves->Update(fDeltaTime);
 	cout <<"currchar =" << CREVASS::GetApp()->currchar << endl;
 	for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
-		switch (CREVASS::GetApp()->currchar) {
+			//cout << i << ": " << Core::g_pFramework->m_pNetwork->GetChooseCharacter(i) << endl;
+		switch (Core::g_pFramework->m_pNetwork->GetChooseCharacter(i)) {
 		case 0:
 			AppContext->FindObject<Character>("husky", "husky"+std::to_string(100+i))->SetPosition(200*i, 30, 0);
 			AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->SetPosition(-1000, 30, -1000);

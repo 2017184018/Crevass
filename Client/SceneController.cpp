@@ -68,34 +68,34 @@ void LobbyController::HandleInput(const float deltaT)
 						}
 					}
 				}
+
+				up = false;
+
+				switch (CREVASS::GetApp()->currchar)
+				{
+				case 0:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_HUSKY);
+					break;
+
+				case 1:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_PENGUIN);
+					break;
+
+				case 2:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_FOX);
+					break;
+
+				case 3:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_POLARBEAR);
+					break;
+
+				case 4:
+					g_pFramework->m_pNetwork->Send(CS_CHOOSE_SEAL);
+					break;
+
+
+				}
 			}
-			up = false;
-			
-			switch (CREVASS::GetApp()->currchar)
-			{
-			case CHARACTER_HUSKY:
-				g_pFramework->m_pNetwork->Send(CS_CHOOSE_HUSKY);
-				break;
-
-			case CHARACTER_PENGUIN:
-				g_pFramework->m_pNetwork->Send(CS_CHOOSE_PENGUIN);
-				break;
-
-			case CHARACTER_ARCTICFOX:
-				g_pFramework->m_pNetwork->Send(CS_CHOOSE_FOX);
-				break;
-
-			case CHARACTER_POLARBEAR:
-				g_pFramework->m_pNetwork->Send(CS_CHOOSE_POLARBEAR);
-				break;
-
-			case CHARACTER_SEAL:
-				g_pFramework->m_pNetwork->Send(CS_CHOOSE_SEAL);
-				break;
-
-
-			}
-
 		}
 		else {
 			up = true;
@@ -147,23 +147,23 @@ void LobbyController::HandleInput(const float deltaT)
 
 				switch (CREVASS::GetApp()->currchar)
 				{
-				case CHARACTER_HUSKY:
+				case 0:
 					g_pFramework->m_pNetwork->Send(CS_CHOOSE_HUSKY);
 					break;
 
-				case CHARACTER_PENGUIN:
+				case 1:
 					g_pFramework->m_pNetwork->Send(CS_CHOOSE_PENGUIN);
 					break;
 
-				case CHARACTER_ARCTICFOX:
+				case 2:
 					g_pFramework->m_pNetwork->Send(CS_CHOOSE_FOX);
 					break;
 
-				case CHARACTER_POLARBEAR:
+				case 3:
 					g_pFramework->m_pNetwork->Send(CS_CHOOSE_POLARBEAR);
 					break;
 
-				case CHARACTER_SEAL:
+				case 4:
 					g_pFramework->m_pNetwork->Send(CS_CHOOSE_SEAL);
 					break;
 

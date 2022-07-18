@@ -159,6 +159,8 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
+		choosename[(int)packet.id] = 0;
+		cout << (int)packet.id << endl;
 		cout << (int)packet.type << endl;
 		break;
 	}
@@ -166,6 +168,8 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
+		choosename[(int)packet.id] = 1;
+		cout << (int)packet.id << endl;
 		cout << (int)packet.type << endl;
 		break;
 	}
@@ -174,6 +178,8 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
+		choosename[(int)packet.id] = 2;
+		cout << (int)packet.id << endl;
 		cout << (int)packet.type << endl;
 		break;
 	}
@@ -182,6 +188,8 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
+		choosename[(int)packet.id] = 3;
+		cout << (int)packet.id << endl;
 		cout << (int)packet.type << endl;
 		break;
 	}	
@@ -189,6 +197,8 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
+		choosename[(int)packet.id] = 4;
+		cout << (int)packet.id << endl;
 		cout << (int)packet.type << endl;
 		break;
 	}
@@ -531,4 +541,12 @@ bool Network::GetPlayerSkillCool(int num)const
 int Network::GetPlayerLifeCnt(int num)const
 {
 	return PlayerLifeCnt[num];
+}
+
+int Network::GetChooseCharacter(int num)const
+{
+	//for (int i = 0; i < 5; ++i) {
+	//	cout << "c" <<i<<": " << choosename[i] << endl;
+	//}
+	return choosename[num];
 }
