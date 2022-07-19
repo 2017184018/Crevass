@@ -3,7 +3,7 @@
 #include "InputHandler.h"
 #include "SceneManager.h"
 #include "ApplicationContext.h"
-
+#include "Character.h"
 #include "CREVASS.h"
 
 #include "MainFramework.h"
@@ -237,9 +237,9 @@ void GameplayController::HandleInput(const float deltaT)
 	if (InputHandler::IsKeyUp('P')) {
 		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
 		//AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
-		AppContext->HiddenUI("ui_p", "ui_p");
-		cout << "find == " << AppContext->FindObject<GameObject>("player_" + std::to_string(1) + "hp" + std::to_string(1), "player_" + std::to_string(1) + "hp" + std::to_string(1))->m_IsVisible << endl;
-	}
+		cout <<"ps======" << AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center.x << "==="<< AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center.y << endl;
+		AppContext->DisplayParticle("starParticle", "Penguin_star_particle", AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center);
+			}
 	if (InputHandler::IsKeyUp('O')) {
 		AppContext->HiddenParticle("crushparticle", "crushparticle" + std::to_string(11));
 	}

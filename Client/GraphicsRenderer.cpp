@@ -131,6 +131,7 @@ void GraphicsRenderer::LoadTextures()
 		"UI_SkillOff",
 		"Particle_Ice",
 		"Particle_snow",
+		"Particle_star",
 		"snowmanicon",
 		"iglooicon",
 		"blueicon",
@@ -168,6 +169,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/ingame/SkillOff_ui.dds",
 		L"./Textures/ingame/ice_particle.dds",
 		L"./Textures/ingame/snow_particle.dds",
+		L"./Textures/ingame/star_particle.dds",
 	    L"./Textures/snowmanicon.dds",
 		L"./Textures/iglooicon.dds",
 		L"./Textures/blueicon.dds",
@@ -236,6 +238,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	m_Textures["UI_SkillOff"]->Resource,
 	m_Textures["Particle_Ice"]->Resource,
 	m_Textures["Particle_snow"]->Resource,
+	m_Textures["Particle_star"]->Resource,
 	m_Textures["snowmanicon"]->Resource,
 	m_Textures["iglooicon"]->Resource,
 	m_Textures["blueicon"]->Resource,
@@ -381,7 +384,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,32, 2, 0);		//�ؽ��� ��
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,33, 2, 0);		//�ؽ��� ��
 
 	CD3DX12_DESCRIPTOR_RANGE texTable2;
 	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);

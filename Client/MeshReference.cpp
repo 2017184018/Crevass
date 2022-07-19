@@ -262,8 +262,8 @@ void MeshReference::BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList*
 	m_GeometryMesh["wave"] = std::move(geo);
 }
 
-void MeshReference::BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particleSize,float pos,
-	float VelX, float VelY, float VelZ,
+void MeshReference::BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particleSize,float pos, float posY,
+	float VelX, float VelY1, float VelY2, float VelZ,
 	DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime)
 {
 	// 입력받아야 할 자료들
@@ -275,9 +275,9 @@ void MeshReference::BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandLi
 	for (int i = 0; i < particleCount; ++i)
 	{
 
-		particleVertices[i].pos = XMFLOAT3(MathHelper::RandF(-pos, pos), 0.f, MathHelper::RandF(-pos, pos));
+		particleVertices[i].pos = XMFLOAT3(MathHelper::RandF(-pos, pos), MathHelper::RandF(-posY, posY), MathHelper::RandF(-pos, pos));
 ;		particleVertices[i].size = particleSize;
-		particleVertices[i].velocity = XMFLOAT3(MathHelper::RandF(-VelX, VelX), MathHelper::RandF(VelY, VelY), MathHelper::RandF(-VelZ, VelZ));
+		particleVertices[i].velocity = XMFLOAT3(MathHelper::RandF(-VelX, VelX), MathHelper::RandF(VelY1, VelY2), MathHelper::RandF(-VelZ, VelZ));
 
 		particleVertices[i].Starttime = MathHelper::RandF(particleStartTime.x, particleStartTime.y);
 		particleVertices[i].Lifetime = MathHelper::RandF(particleLifeTime.x, particleLifeTime.y);

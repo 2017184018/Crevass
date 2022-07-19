@@ -10,7 +10,7 @@
 #include "MaterialReference.h"
 
 #include "CommandCenter.h"
-//#include "Character.h"
+#include "Character.h"
 //#include "CharacterParts.h"
 
 #include "Network.h"
@@ -91,9 +91,9 @@ void CREVASS::Startup(void)
 	m_MeshRef->BuildSkinnedModelAnimation("Seal", "Skill");
 
 	// Particles
-	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "crushparticle", 1000, DirectX::XMFLOAT2(5, 5),30.f,70.f,100.f,70.f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1, 5));
-	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "snowParticle", 5000, DirectX::XMFLOAT2(20, 30),1000.f , 50.f,-250.f, 50.f, DirectX::XMFLOAT2(1, 10), DirectX::XMFLOAT2(9, 11));
-
+	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "crushparticle", 1000, DirectX::XMFLOAT2(5, 5),30.f,0.f,70.f,100.f,100.f,70.f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1, 5));
+	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "snowParticle", 5000, DirectX::XMFLOAT2(20, 30),1000.f, 0.f, 50.f,-250.f,-250.f, 50.f, DirectX::XMFLOAT2(1, 10), DirectX::XMFLOAT2(9, 11));
+	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "starParticle", 1000, DirectX::XMFLOAT2(5, 5), 10.f, 10.f, 100.f, -100.f, 100.f, 100.f, DirectX::XMFLOAT2(1, 10), DirectX::XMFLOAT2(1, 5));
 
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 
@@ -102,9 +102,9 @@ void CREVASS::Startup(void)
 	MaterialReference::GetApp()->BuildMaterials();
 
 	// Build RenderItem
-
+	
 	SceneManager::GetApp()->InitializeScenes();
-	// 위 아래 바꾸면 이상함 
+	//위아래 바꾸려면 gamescene  findobject로 바꿔야됨
 	BuildCharacters();
 	SceneManager::GetApp()->EnterScene(SceneType::Lobby);
 
@@ -178,6 +178,18 @@ void CREVASS::BuildCharacters()
 	AppContext->CreateCharacter("ArcticFox", "ArcticFox0", "ArcticFox", BoneIndex::Fox);
 	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
 	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
+
+	AppContext->CreateParticle("starParticle", "Penguin_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "husky_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "PolarBear_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "ArcticFox_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "Seal_star_particle", "Particle_star");
+
+	AppContext->FindObject<Character>("Penguin", "Penguin0")->SetParticle("starParticle", "Penguin_star_particle");
+	AppContext->FindObject<Character>("husky", "husky0")->SetParticle("starParticle", "husky_star_particle");
+	AppContext->FindObject<Character>("PolarBear", "PolarBear0")->SetParticle("starParticle", "PolarBear_star_particle");
+	AppContext->FindObject<Character>("ArcticFox", "ArcticFox0")->SetParticle("starParticle", "ArcticFox_star_particle");
+	AppContext->FindObject<Character>("Seal", "Seal0")->SetParticle("starParticle", "Seal_star_particle");
 }
 
 void CREVASS::BuildStream() {

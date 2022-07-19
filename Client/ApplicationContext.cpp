@@ -2400,7 +2400,7 @@ void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float
 void ApplicationContext::DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos)
 {
 	Particle* ptc = FindObject<Particle>(particleName, instID);
-	if (!ptc) { return; }
+	if (!ptc) { cout << "return1111111" << endl;  return; }
 	ptc->m_IsVisible = true;
 	ptc->m_World = MathHelper::Identity4x4();
 	ptc->m_TexTransform = MathHelper::Identity4x4();

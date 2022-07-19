@@ -21,8 +21,8 @@ public:
 	void BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName);
 	void BuildSkinnedModelAnimation(std::string meshName, const std::string clipName);
 	void BuildWaves(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, Waves* wave);
-	void BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particleSize, float pos,
-		float VelX, float VelY, float VelZ,
+	void BuildParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particleSize, float pos, float posY,
+		float VelX, float VelY1, float VelY2, float VelZ,
 		DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime);
 
 private:

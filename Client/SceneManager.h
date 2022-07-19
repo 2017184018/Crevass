@@ -10,9 +10,9 @@ private:
 	{
 		Scene* scene = new NewScene;
 
-		m_Scenes[static_cast<int>(sceneType)] = scene;
+		
 		scene->Initialize();
-
+		m_Scenes[static_cast<int>(sceneType)] = scene;
 	}
 
 public:

@@ -26,7 +26,6 @@ using namespace Core;
 void GameplayScene::Initialize()
 {
 	m_SceneController = new GameplayController(this);
-
 	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
 	AppContext->CreateBlocks();
 	AppContext->Createigloos();
@@ -52,6 +51,11 @@ void GameplayScene::Initialize()
 	for (int i = 0; i < 25; i++) {
 		AppContext->CreateParticle("crushparticle", "crushparticle" + std::to_string(i), "Particle_Ice");
 	}
+	/*AppContext->CreateParticle("starParticle", "Penguin_star_particle" , "Particle_star");
+	AppContext->CreateParticle("starParticle", "husky_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "PolarBear_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "ArcticFox_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "Seal_star_particle", "Particle_star");*/
 
 	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow");
 
@@ -66,7 +70,12 @@ void GameplayScene::Initialize()
 			}
 		}
 	}
-
+	/*AppContext->FindObject<Character>("Penguin", "Penguin0" )->SetParticle("starParticle", "Penguin_star_particle" );
+	AppContext->FindObject<Character>("husky", "husky0")->SetParticle("starParticle", "husky_star_particle");
+	AppContext->FindObject<Character>("PolarBear", "PolarBear0")->SetParticle("starParticle", "PolarBear_star_particle");
+	AppContext->FindObject<Character>("ArcticFox", "ArcticFox0")->SetParticle("starParticle", "ArcticFox_star_particle");
+	AppContext->FindObject<Character>("Seal", "Seal0")->SetParticle("starParticle", "Seal_star_particle");*/
+	
 #ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 #endif
@@ -160,7 +169,7 @@ bool GameplayScene::Enter()
 
 	//눈 파티클 시작
 	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
-
+	
 	return false;
 }
 
@@ -186,6 +195,12 @@ void GameplayScene::Exit()
 	AppContext->HiddenCharacter("Seal","Seal0");
 
 	AppContext->HiddenParticle("crushparticle","crushparticle");
+	AppContext->HiddenParticle("starParticle", "Penguin_star_particle");
+	AppContext->HiddenParticle("starParticle", "husky_star_particle");
+	AppContext->HiddenParticle("starParticle", "PolarBear_star_particle");
+	AppContext->HiddenParticle("starParticle", "ArcticFox_star_particle");
+	AppContext->HiddenParticle("starParticle", "Seal_star_particle");
+
 
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
@@ -295,11 +310,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 	else if (!m_Users[m_PlayerID]->GetSkillCool()) {
 		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 25;
 	}
-	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->BlockParticle();
-	//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
-	AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->UpdateParticleTime(fDeltaTime);
-	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
 
+	AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->UpdateParticleTime(fDeltaTime);
+	
+	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
+	AppContext->FindObject<Particle>("starParticle", "Penguin_star_particle")->Update(fDeltaTime);
 
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
@@ -398,6 +413,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		{
 			if (i == m_PlayerID)
 			{
+				
 				m_Users[i]->m_PlayerController->Fall();
 				Fall(i);
 			}
@@ -887,16 +903,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
 		//이부분 
 	}
-	/*GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);*/
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateUIPassCB(0.75f);
@@ -906,6 +912,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["crushparticle"], AppContext->m_RItemsVec, true);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec, true);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["starParticle"], AppContext->m_RItemsVec, true);
 
 	///*Shadow*/
 	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
@@ -1049,6 +1056,8 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["crushparticle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["starParticle"], AppContext->m_RItemsVec);
+	
 
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
