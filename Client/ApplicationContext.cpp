@@ -389,7 +389,7 @@ void ApplicationContext::CreateBackground()
 		top->IndexCount = top->Geo->DrawArgs["grid"].IndexCount;
 		top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
 		top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
-		top->m_IsVisible = true;
+		top->m_IsVisible = false;
 		top->m_MaterialIndex = 5;
 		top->m_World = MathHelper::Identity4x4();
 		float size = 7;
@@ -412,7 +412,7 @@ void ApplicationContext::CreateBackground()
 		top->StartIndexLocation = top->Geo->DrawArgs["grid"].StartIndexLocation;
 		top->BaseVertexLocation = top->Geo->DrawArgs["grid"].BaseVertexLocation;
 		top->m_MaterialIndex = 7;
-		top->m_IsVisible = true;
+		top->m_IsVisible = false;
 		top->m_World = MathHelper::Identity4x4();
 		float size = 15;
 		top->m_World._11 = size;
