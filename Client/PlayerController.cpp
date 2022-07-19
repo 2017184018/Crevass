@@ -177,6 +177,12 @@ void PlayerController::HandleInput(const float deltaT)
 		}
 		break;
 	}
+	case CameraType::None:
+	{
+		
+		break;
+	}
+
 	default:
 		break;
 	}

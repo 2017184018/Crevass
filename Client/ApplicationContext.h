@@ -91,6 +91,10 @@ public:
 	void Hiddenigloos();
 	void HiddenBlocks();
 	void HiddenBackground();
+
+	void HiddenlobbyBackground();
+	void HiddenlobbyBlocks();
+
 	void DisplayCharacter(Character* user, XMFLOAT3 pos, bool isVisible);
 	void DisplayCharacter(std::string mapName, std::string userName, int spawnLocation, bool isVisible = true);
 	void HiddenCharacter(Character* user);

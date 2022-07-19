@@ -59,6 +59,9 @@ bool LobbyScene::Enter()
 
 void LobbyScene::Exit()
 {
+	AppContext->HiddenlobbyBackground();
+	AppContext->HiddenlobbyBlocks();
+
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
@@ -87,7 +90,6 @@ void LobbyScene::Update(const float& fDeltaTime)
 
 	Core::mWaves->Update(fDeltaTime);
 	for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
-		cout << i << "============" << Core::g_pFramework->m_pNetwork->GetChooseCharacter(i) << endl;
 		switch (Core::g_pFramework->m_pNetwork->GetChooseCharacter(i)) {
 	
 

@@ -25,6 +25,8 @@ void Camera::SetCamera(CameraType cameraType, Character* owner)
 		break;
 	case CameraType::Free:
 		break;
+	case CameraType::None:
+		break;
 	}
 
 	mViewDirty = true;
@@ -119,6 +121,8 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 	}
 	case CameraType::Free:
 		break;
+	case CameraType::None:
+		break;
 	}
 
 	mViewDirty = true;
@@ -163,7 +167,7 @@ void Camera::CameraInitialize(SceneType sceneType)
 		mRotation = { 0.f,0.f,0.f,0.f };
 		mTimeLag = 0.f;
 
-		m_CameraType = CameraType::Free;
+		m_CameraType = CameraType::None;
 
 		mViewDirty = true;
 
@@ -361,6 +365,21 @@ void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
 		mLook = XMFLOAT3(LookAtMat._13, LookAtMat._23, LookAtMat._33);
 		break;
 	}
+	case CameraType::None:
+	{
+		XMVECTOR Up = { 0.f,1.f,0.f };
+
+		Up = XMVector3Transform(Up, XMMatrixRotationQuaternion(XMLoadFloat4(&mRotation)));
+
+		XMFLOAT4X4 LookAtMat;
+		XMStoreFloat4x4(&LookAtMat, XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), Up));
+
+		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
+		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
+		mLook = XMFLOAT3(LookAtMat._13, LookAtMat._23, LookAtMat._33);
+		break;
+	}
+
 	}
 
 	mViewDirty = true;

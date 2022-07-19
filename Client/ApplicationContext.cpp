@@ -2071,6 +2071,271 @@ void ApplicationContext::HiddenBackground()
 
 }
 
+void ApplicationContext::HiddenlobbyBackground()
+{
+	//79~83	바닥
+	for (int i = 0; i < 5; ++i) {
+		GameObject* obj = FindObject<GameObject>("lobby_snowcube", "lobby_snowcube" + std::to_string(25 + i));
+		if (!obj)
+			return;
+		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+	}
+
+
+	//144~147	산
+	for (int i = 0; i < 4; ++i) {
+		GameObject* instancingObj = FindObject<GameObject>("lobby_mountain", "lobby_mountain" + std::to_string(i));
+		if (!instancingObj)
+			return;
+		ZeroMemory(&instancingObj->m_World, sizeof(instancingObj->m_World));
+		ZeroMemory(&instancingObj->m_TexTransform, sizeof(instancingObj->m_TexTransform));
+	}
+
+	//148	텐트
+	{
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_tent", "lobby_tent" + std::to_string(0));
+		if (!instancingObj)
+			return;
+		ZeroMemory(&instancingObj->m_World, sizeof(instancingObj->m_World));
+		ZeroMemory(&instancingObj->m_TexTransform, sizeof(instancingObj->m_TexTransform));
+	}
+
+	//149 카약
+	{
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_kayak", "lobby_kayak" + std::to_string(0));
+		if (!instancingObj)
+			return;
+		ZeroMemory(&instancingObj->m_World, sizeof(instancingObj->m_World));
+		ZeroMemory(&instancingObj->m_TexTransform, sizeof(instancingObj->m_TexTransform));
+	}
+
+	//150~151	패들
+	for (int i = 0; i < 2; ++i) {
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_kayakpaddle", "lobby_kayakpaddle" + std::to_string(i));
+		if (!instancingObj)
+			return;
+		ZeroMemory(&instancingObj->m_World, sizeof(instancingObj->m_World));
+		ZeroMemory(&instancingObj->m_TexTransform, sizeof(instancingObj->m_TexTransform));
+	}
+
+	//152~191	돌
+	for (int i = 0; i < 25; ++i) {
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_rock_0", "lobby_rock_0" + std::to_string(i));
+		if (!instancingObj)
+			return;
+		ZeroMemory(&instancingObj->m_World, sizeof(instancingObj->m_World));
+		ZeroMemory(&instancingObj->m_TexTransform, sizeof(instancingObj->m_TexTransform));
+	}
+	for (int i = 0; i < 15; ++i) {
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_rock_1", "lobby_rock_1" + std::to_string(i));
+		if (!instancingObj2)
+			return;
+		ZeroMemory(&instancingObj2->m_World, sizeof(instancingObj2->m_World));
+		ZeroMemory(&instancingObj2->m_TexTransform, sizeof(instancingObj2->m_TexTransform));
+	}
+
+	//192	이글루
+	{
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_igloo", "lobby_igloo" + std::to_string(2));
+		if (!instancingObj2)
+			return;
+		ZeroMemory(&instancingObj2->m_World, sizeof(instancingObj2->m_World));
+		ZeroMemory(&instancingObj2->m_TexTransform, sizeof(instancingObj2->m_TexTransform));
+	}
+
+	//193~196	텐트 생선
+	for (int i = 0; i < 4; ++i) {
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_fish", "lobby_fish" + std::to_string(i));
+		if (!instancingObj2)
+			return;
+		ZeroMemory(&instancingObj2->m_World, sizeof(instancingObj2->m_World));
+		ZeroMemory(&instancingObj2->m_TexTransform, sizeof(instancingObj2->m_TexTransform));
+	}
+
+	//197 썰매
+	{
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_sled", "lobby_sled" + std::to_string(0));
+		if (!instancingObj2)
+			return;
+		ZeroMemory(&instancingObj2->m_World, sizeof(instancingObj2->m_World));
+		ZeroMemory(&instancingObj2->m_TexTransform, sizeof(instancingObj2->m_TexTransform));
+	}
+
+	//198~208 물고기 걸이, 물고기
+	{
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_fishrack", "lobby_fishrack" + std::to_string(0));
+		if (!instancingObj2)
+			return;
+		ZeroMemory(&instancingObj2->m_World, sizeof(instancingObj2->m_World));
+		ZeroMemory(&instancingObj2->m_TexTransform, sizeof(instancingObj2->m_TexTransform));
+
+		for (int i = 0; i < 10; ++i) {
+			GameObject* instancingObj;
+			instancingObj = FindObject<GameObject>("lobby_fish", "lobby_fish" + std::to_string(4 + i));
+			if (!instancingObj)
+				return;
+			ZeroMemory(&instancingObj->m_World, sizeof(instancingObj->m_World));
+			ZeroMemory(&instancingObj->m_TexTransform, sizeof(instancingObj->m_TexTransform));
+		}
+	}
+
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_snowcube"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_mountain"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_tent"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_kayak"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_kayakpaddle"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_rock_0"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_rock_1"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_igloo"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_sled"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_fishrack"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_fish"], m_RItemsVec);
+
+
+
+	//79~83	바닥
+	for (int i = 0; i < 5; ++i) {
+		GameObject* obj = FindObject<GameObject>("lobby_snowcube", "lobby_snowcube" + std::to_string(25 + i));
+		obj->m_IsVisible = false;
+	}
+
+
+
+	//144~147	산
+	for (int i = 0; i < 4; ++i) {
+		GameObject* instancingObj = FindObject<GameObject>("lobby_mountain", "lobby_mountain" + std::to_string(i));
+		instancingObj->m_IsVisible = false;
+	}
+
+	//148	텐트
+	{
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_tent", "lobby_tent" + std::to_string(0));
+		instancingObj->m_IsVisible = false;
+	}
+
+	//149 카약
+	{
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_kayak", "lobby_kayak" + std::to_string(0));
+		instancingObj->m_IsVisible = false;
+	}
+
+	//150~151	패들
+	for (int i = 0; i < 2; ++i) {
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_kayakpaddle", "lobby_kayakpaddle" + std::to_string(i));
+		instancingObj->m_IsVisible = false;
+	}
+
+	//152~191	돌
+	for (int i = 0; i < 25; ++i) {
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_rock_0", "lobby_rock_0" + std::to_string(i));
+		instancingObj->m_IsVisible = false;
+	}
+	for (int i = 0; i < 15; ++i) {
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_rock_1", "lobby_rock_1" + std::to_string(i));
+		instancingObj2->m_IsVisible = false;
+	}
+
+	//192	이글루
+	{
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_igloo", "lobby_igloo" + std::to_string(2));
+		instancingObj2->m_IsVisible = false;
+	}
+
+	//193~196	텐트 생선
+	for (int i = 0; i < 4; ++i) {
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_fish", "lobby_fish" + std::to_string(i));
+		instancingObj2->m_IsVisible = false;
+	}
+
+	//197 썰매
+	{
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_sled", "lobby_sled" + std::to_string(0));
+		instancingObj2->m_IsVisible = false;
+	}
+
+	//198~208 물고기 걸이, 물고기
+	{
+		GameObject* instancingObj2;
+		instancingObj2 = FindObject<GameObject>("lobby_fishrack", "lobby_fishrack" + std::to_string(0));
+		if (!instancingObj2)
+			return;
+		instancingObj2->m_IsVisible = false;
+
+		for (int i = 0; i < 10; ++i) {
+			GameObject* instancingObj;
+			instancingObj = FindObject<GameObject>("lobby_fish", "lobby_fish" + std::to_string(4 + i));
+			instancingObj->m_IsVisible = false;
+		}
+	}
+}
+
+void ApplicationContext::HiddenlobbyBlocks()
+{
+	for (int i = 0; i < 5; ++i) {//1~50
+		for (int j = 0; j < 5; ++j) {
+
+			if (BlockCheck(5 * i + j)) {
+				GameObject* obj = FindObject<GameObject>("lobby_icecube", "lobby_icecube" + std::to_string(5 * i + j));
+				if (!obj)
+					return;
+				ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+				ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+			}
+			else {
+				GameObject* obj = FindObject<GameObject>("lobby_snowcube", "lobby_snowcube" + std::to_string(5 * i + j));
+				if (!obj)
+					return;
+				ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+				ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+			}
+			GameObject* obj = FindObject<GameObject>("lobby_snow_top", "lobby_snow_top" + std::to_string(5 * i + j));
+			if (!obj)
+				return;
+			ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+			ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+
+		}
+	}
+
+	// Update InstanceData
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_icecube"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_snowcube"], m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["lobby_snow_top"], m_RItemsVec);
+
+	for (int i = 0; i < 5; ++i) {
+		for (int j = 0; j < 5; ++j) {
+			if (BlockCheck(5 * i + j)) {
+				GameObject* obj = FindObject<GameObject>("lobby_icecube", "lobby_icecube" + std::to_string(5 * i + j));
+				obj->m_IsVisible = false;
+			}
+			else {
+				GameObject* obj = FindObject<GameObject>("lobby_snowcube", "lobby_snowcube" + std::to_string(5 * i + j));
+				obj->m_IsVisible = false;
+			}
+			GameObject* obj = FindObject<GameObject>("lobby_snow_top", "lobby_snow_top" + std::to_string(5 * i + j));
+			obj->m_IsVisible = false;
+		}
+	}
+}
+
 void ApplicationContext::DisplayCharacter( Character* user, XMFLOAT3 pos,bool isVisible)
 {
 	

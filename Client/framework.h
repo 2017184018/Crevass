@@ -80,7 +80,7 @@ using namespace DirectX::PackedVector;
 enum BoneIndex { Husky = 0, Penguin, Seal, Fox, PolarBear, Count};
 
 enum class SceneType { /*Title*/ Lobby, GamePlay, GameResult, Count};
-enum class CameraType { First, Third, Free };
+enum class CameraType { First, Third, Free, None };
 
 // Light Name
 #define LIGHT_NAME_DIRECTIONAL "Directional" 
