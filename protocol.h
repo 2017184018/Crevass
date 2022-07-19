@@ -19,6 +19,8 @@
 #define SC_HUSKY_SKILL				16
 #define SC_PENGUIN_SKILL				17
 
+#define SC_SEAL_SKILL				24
+
 #define SC_CHOOSE_PENGUIN			18
 #define SC_CHOOSE_HUSKY				19
 #define SC_CHOOSE_FOX				20
@@ -224,6 +226,12 @@ struct sc_packet_penguinskill
 	short size;
 	char type;
 	bool penguinskill;
+};
+struct sc_packet_sealskill
+{
+	short size;
+	char type;
+	bool sealskill;
 };
 
 /* Client to Server */

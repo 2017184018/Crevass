@@ -391,6 +391,13 @@ void Network::ProcessPacket(char* packet_buffer)
 		PenguinSkill = packet.penguinskill;
 		break;
 	}
+	case SC_SEAL_SKILL:
+	{
+		sc_packet_sealskill packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		SealSkill = packet.sealskill;
+		break;
+	}
 	case SC_GAMEOVER:
 	{
 		std::cout << "game over" << std::endl;
@@ -538,6 +545,11 @@ bool Network::GetHuskySkill() const
 bool Network::GetPenguinSkill() const
 {
 	return PenguinSkill;
+}
+
+bool Network::GetSealSkill() const
+{
+	return SealSkill;
 }
 
 bool Network::GetPlayerSkillCool(int num)const

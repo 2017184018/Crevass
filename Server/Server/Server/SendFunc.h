@@ -381,3 +381,13 @@ void SendPenguinSkill(bool PenguinSkill) {
 
 	SendPacket(&packet);
 }
+
+void SendSealSkill(bool SealSkill) {
+	sc_packet_sealskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_SEAL_SKILL;
+	packet.sealskill = SealSkill;
+
+	SendPacket(&packet);
+}
+

@@ -698,6 +698,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline/20*15;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
+					if (g_pFramework->m_pNetwork->GetSealSkill()) {
+						AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 2;
+					}
+					else {
+						AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 1;
+					}
 				}
 				else {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
@@ -767,7 +773,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline / 20 * 15;
-			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			if (g_pFramework->m_pNetwork->GetSealSkill()) {
+				AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 2;
+			}
+			else {
+				AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			}
 			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else {

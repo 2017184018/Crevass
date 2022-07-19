@@ -1262,6 +1262,7 @@ void ProcessClients()
 						}
 						else if (phyPlayers[i].TypeName == "Seal") {
 							phyPlayers[i].is_hitted = false;
+							SendSealSkill(true);
 						}
 						else if (phyPlayers[i].TypeName == "PolarBear") {
 							if (phyPlayers[i].CurrentIcecube != -1 || phyPlayers[i].CurrentSnowcube != -1) {
@@ -1304,6 +1305,7 @@ void ProcessClients()
 							phyPlayers[i].IsSkillCool = true;
 							SendFoxSkill(false);
 							SendPenguinSkill(false);
+							SendSealSkill(false);
 						}
 					}
 					else {
