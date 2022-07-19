@@ -48,6 +48,8 @@ public:
 
 	void SetParticle(std::string particleName, std::string instID);
 	void BlockParticle();
+
+	virtual void InitializeTransform();
 	virtual void Update(const float deltaT);
 	void UpdateParticleTime(const float deltaT);
 

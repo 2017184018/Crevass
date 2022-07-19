@@ -82,12 +82,19 @@ public:
 	void CreatelobbyBackground();
 
 	void DisplayProps(std::string mapName);
-	void HiddenBlocks();
 
-	void DisplayCharacter(std::string mapName, Character* user, int spawnLocation, bool isVisible = true);
+	void HiddenOutline();
+	void HiddenMinimap();
+	void HiddenSnowmans();
+	void HiddenWaterDrop();
+	void HiddenHail();
+	void Hiddenigloos();
+	void HiddenBlocks();
+	void HiddenBackground();
+	void DisplayCharacter(Character* user, XMFLOAT3 pos, bool isVisible);
 	void DisplayCharacter(std::string mapName, std::string userName, int spawnLocation, bool isVisible = true);
 	void HiddenCharacter(Character* user);
-	void HiddenCharacter(std::string userName);
+	void HiddenCharacter(std::string userName, std::string insname);
 
 	void DisplayUI(std::string mapName);
 	void HiddenUI(std::string uiName, std::string instname);

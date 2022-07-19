@@ -43,20 +43,32 @@ bool LobbyScene::Enter()
 	Core::g_pFramework->m_pNetwork->Recv();
 	Core::m_PlayerID = Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 	
-	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
-	{
-		AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->m_IsVisible = true;
-		AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->m_IsVisible = true;
-		AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->m_IsVisible = true;
-		AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->m_IsVisible = true;
-		AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->m_IsVisible = true;
-	}
+	//for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	//{
+	//	AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->m_IsVisible = true;
+	//	AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->m_IsVisible = true;
+	//	AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->m_IsVisible = true;
+	//	AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->m_IsVisible = true;
+	//	AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->m_IsVisible = true;
+
+	//	
+	//}
 
 	return false;
 }
 
 void LobbyScene::Exit()
 {
+	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	{
+		AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
+		AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
+		AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
+		AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
+		AppContext->HiddenCharacter("Seal", "Seal" + std::to_string(140 + i));
+
+	}
+
 	cout << "LobbyScene===========================================" << endl << endl;
 }
 
@@ -75,42 +87,74 @@ void LobbyScene::Update(const float& fDeltaTime)
 
 	Core::mWaves->Update(fDeltaTime);
 	for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
-			//cout << i << ": " << Core::g_pFramework->m_pNetwork->GetChooseCharacter(i) << endl;
+		cout << i << "============" << Core::g_pFramework->m_pNetwork->GetChooseCharacter(i) << endl;
 		switch (Core::g_pFramework->m_pNetwork->GetChooseCharacter(i)) {
+	
+
 		case 0:
-			AppContext->FindObject<Character>("husky", "husky"+std::to_string(100+i))->SetPosition(200*i, 30, 0);
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i)), XMFLOAT3(200.f * i, 30.f, 0.f),true);
+			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
+			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
+			AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
+			AppContext->HiddenCharacter("Seal", "Seal" + std::to_string(140 + i));
+
+		/*	AppContext->FindObject<Character>("husky", "husky"+std::to_string(100+i))->SetPosition(200*i, 30, 0);
 			AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->SetPosition(-1000, 30, -1000);
-			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);
+			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);*/
 			break;
 		case 1:
-			AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->SetPosition(200 * i, 30, 0);
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
+			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
+			AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
+			AppContext->HiddenCharacter("Seal", "Seal" + std::to_string(140 + i));
+
+		/*	AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->SetPosition(200 * i, 30, 0);
 			AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->SetPosition(-1000, 30, -1000);
-			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);
+			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);*/
 			break;
 		case 2:
-			AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->SetPosition(200 * i, 30, 0);
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
+			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
+			AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
+			AppContext->HiddenCharacter("Seal", "Seal" + std::to_string(140 + i));
+
+			/*AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->SetPosition(200 * i, 30, 0);
 			AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->SetPosition(-1000, 30, -1000);
-			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);
+			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);*/
 			break;
 		case 3:
-			AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->SetPosition(200 * i, 30, 0);
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
+			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
+			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
+			AppContext->HiddenCharacter("Seal", "Seal" + std::to_string(140 + i));
+
+			/*AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->SetPosition(200 * i, 30, 0);
 			AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->SetPosition(-1000, 30, -1000);
-			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);
+			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(-1000, 30, -1000);*/
 			break;
 		case 4:
-			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(200 * i, 30, 0);
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
+			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
+			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
+			AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
+
+		/*	AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->SetPosition(200 * i, 30, 0);
 			AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->SetPosition(-1000, 30, -1000);
 			AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->SetPosition(-1000, 30, -1000);
-			AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->SetPosition(-1000, 30, -1000);
+			AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->SetPosition(-1000, 30, -1000);*/
 			break;
 		}
 	}
@@ -142,6 +186,8 @@ void LobbyScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Fox, MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
+
+
 
 	AppContext->FindObject<Character>("Penguin", "Penguin0")->Update(fDeltaTime);
 	AppContext->FindObject<Character>("husky", "husky0")->Update(fDeltaTime);

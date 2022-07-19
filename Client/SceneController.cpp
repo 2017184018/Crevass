@@ -209,51 +209,6 @@ void LobbyController::HandleInput(const float deltaT)
 		}
 	}
 }
-//const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["lobby"]->GetinstanceKeymap();
-//UINT SNum = info.begin()->second;
-//if (InputHandler::IsKeyUp(VK_F1))
-//{
-//	SceneManager::GetApp()->ChangeScene();
-//}
-
-//if (!Inactive) {
-//	//8 로비  13 펭귄  14 허스키  15 곰  16여우  17물개
-//	static bool one = true;
-//	if (GetAsyncKeyState(VK_UP) & 0x8000) {
-//		cout << AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex << endl;
-//		if (one) {
-
-//			if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 17) {
-//				AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 13;
-//				
-//			}
-//			else {
-//				++AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
-//			}
-//			one = false;
-//		}
-//	}
-//	else {
-//		one = true;
-//	}
-
-//	static bool one2 = true;
-//	if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
-//		if (one2) {
-
-//			if (AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 8 || AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex == 13) {
-//				AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex = 17;
-//			}
-//			else {
-//				--AppContext->FindObject<GameObject>("lobby", "lobby0")->m_MaterialIndex;
-//			}
-//			one2 = false;
-//		}
-//	}
-//	else {
-//		one2 = true;
-//	}
-//}
 
 void LobbyController::MouseCallback()
 {
@@ -281,12 +236,12 @@ void GameplayController::HandleInput(const float deltaT)
 	// 파티클 루프 테스트
 	if (InputHandler::IsKeyUp('P')) {
 		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
-		//AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
+		//AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
 		AppContext->HiddenUI("ui_p", "ui_p");
 		cout << "find == " << AppContext->FindObject<GameObject>("player_" + std::to_string(1) + "hp" + std::to_string(1), "player_" + std::to_string(1) + "hp" + std::to_string(1))->m_IsVisible << endl;
 	}
 	if (InputHandler::IsKeyUp('O')) {
-		AppContext->HiddenParticle("testParticle", "testParticle" + std::to_string(11));
+		AppContext->HiddenParticle("crushparticle", "crushparticle" + std::to_string(11));
 	}
 
 	//if (InputHandler::IsOverlap(VK_UP))

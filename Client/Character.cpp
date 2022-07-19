@@ -632,26 +632,29 @@ Character::~Character()
 {
 }
 
+void Character::InitializeTransform()
+{
+	GameObject::InitializeTransform();
+
+	m_Position = { 0,0,0 };
+	m_Right = { 1,0,0 };
+	m_Up = { 0,1,0 };
+	m_Look = { 0,0,1 };
+}
+
 void Character::Update(const float deltaT)
 {
-
 	SetState(deltaT);
 	if (m_PlayerController)
 		m_PlayerController->Update(deltaT);
-
 	m_Bounds.Center = GetPosition();
-
 	for (auto& p : m_MapAnimData)
 	{
 		p.second->m_Time += deltaT;
 	}
 	UpdateBoneTransforms();
-
 	if (m_MyCamera != NULL) {
-
-
 		CameraType cType = m_MyCamera->GetCameraType();
-
 		if (cType == CameraType::Third)
 		{
 			XMFLOAT3 target = GetPosition();
@@ -660,7 +663,6 @@ void Character::Update(const float deltaT)
 			m_MyCamera->SetTarget(target);
 		}
 	}
-
 }
 
 void Character::SetCamera(Camera* myCamera, CameraType cameraType)
@@ -718,7 +720,18 @@ void Character::SetDir(float angle)
 
 bool Character::ReleaseTransform()
 {
+	if (m_MyCamera)
+	{
+		if (m_MyCamera->GetCameraType() == CameraType::Third)
+		{
+			XMFLOAT3 extent = m_Bounds.Extents;
+			if (m_Bounds.Extents.x > 100.f)
+				m_MyCamera->SetOffset(XMFLOAT3(0.0f, 150.f, -300.f));
+			else
+				m_MyCamera->SetOffset(XMFLOAT3(0.0f, 150.f, -300.f));
 
+		}
+	}
 
 	return true;
 }
@@ -857,6 +870,11 @@ void Character::Scale(float x, float y, float z)
 }
 
 
+
+void Character::SetAnimationPlayerState(PlayerState playerState)
+{
+	m_PlayerState = playerState;
+}
 
 void Character::SetAnimationKeyState(PlayerState keyState)
 {

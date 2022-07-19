@@ -340,8 +340,8 @@ void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
 	case CameraType::Third:
 	{
 		XMFLOAT4X4 LookAtMat;
+		//¿©±â¼­ ÅÍÁü 
 		XMStoreFloat4x4(&LookAtMat, XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), XMLoadFloat3(&m_Owner->GetUp())));
-
 		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
 		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
 		mLook = XMFLOAT3(LookAtMat._13, LookAtMat._23, LookAtMat._33);

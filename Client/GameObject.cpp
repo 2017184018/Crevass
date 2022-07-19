@@ -55,7 +55,13 @@ void GameObject::SetParticle(std::string particleName, std::string instID)
 void GameObject::BlockParticle()
 {
 	XMFLOAT3 offSet = { 0,50,0 };
-	AppContext->DisplayParticle("testParticle", "testParticle" + std::to_string(11), MathHelper::Add(GetPosition(), offSet));
+	AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(11), MathHelper::Add(GetPosition(), offSet));
+}
+
+void GameObject::InitializeTransform()
+{
+	m_World = MathHelper::Identity4x4();
+	m_TexTransform = MathHelper::Identity4x4();
 }
 
 void GameObject::Update(const float deltaT)

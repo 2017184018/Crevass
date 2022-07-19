@@ -79,6 +79,8 @@ public:
 	explicit Character(std::string type, std::string id);
 	virtual ~Character();
 
+	virtual void InitializeTransform() override;
+
 	void Update(const float deltaT);
 
 	void SetCamera(Camera* myCamera, CameraType cameraType);
@@ -107,10 +109,9 @@ public:
 	virtual void Rotate(const DirectX::XMFLOAT4& quaternion);
 	virtual void Rotate(float pitch, float yaw, float roll);
 
-
-
 	virtual void Scale(float x, float y, float z) override;
 	void pushed_back(float up, float back, float speed, float hit_angle);
+	void SetAnimationPlayerState(PlayerState playerState);
 	void SetAnimationKeyState(PlayerState keyState);
 
 	void SetHide(bool hide);
