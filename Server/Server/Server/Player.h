@@ -72,6 +72,7 @@ public:
 	UINT SkillTime = 0.f;
 	UINT SkillCoolTime = 0.f;
 	bool IsSkillCool = false;
+	bool IsSkillEnd = false;
 	int CurrentIcecube = -1;
 	int CurrentSnowcube = -1;
 	string TypeName;

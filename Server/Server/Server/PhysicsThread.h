@@ -1171,8 +1171,9 @@ void ProcessClients()
 			//   Update(phyPlayers)
 			{	//skill
 				for (int i = 0; i < numOfCls; ++i) {
-					if (phyPlayers[i].is_Skill && phyPlayers[i].SnowmanNum == -1 && !phyPlayers[i].IsSkillCool) {
+					if (phyPlayers[i].is_Skill && phyPlayers[i].SnowmanNum == -1 && !phyPlayers[i].IsSkillEnd) {
 						if (phyPlayers[i].TypeName == "Penguin") {
+							phyPlayers[i].IsSkillCool = true;
 							if (phyPlayers[i].m_pos.y <= 200) {
 								phyPlayers[i].gravity = 0.0f;
 								phyPlayers[i].m_pos.y += 2.0f;
@@ -1181,6 +1182,7 @@ void ProcessClients()
 							SendPenguinSkill(true);
 						}
 						else if (phyPlayers[i].TypeName == "husky") {
+							phyPlayers[i].IsSkillCool = true;
 							static float HittedIdx = -1;
 							if (phyPlayers[i].m_pos.y < 70) {
 								phyPlayers[i].m_pos.y += 10.0f;
@@ -1243,7 +1245,7 @@ void ProcessClients()
 								phyPlayers[i].SetKeyD(false);
 								phyPlayers[i].SetSpeed(1.0f * 1.5f);
 								phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
-								phyPlayers[i].IsSkillCool = true;
+								phyPlayers[i].IsSkillEnd = true;
 								if (HittedIdx != -1)
 									phyPlayers[HittedIdx].SetHittedSpeed(1.0f * 1.5f);
 								HittedIdx = -1;
@@ -1258,13 +1260,16 @@ void ProcessClients()
 							}
 						}
 						else if (phyPlayers[i].TypeName == "ArcticFox") {
+							phyPlayers[i].IsSkillCool = true;
 							SendFoxSkill(true);
 						}
 						else if (phyPlayers[i].TypeName == "Seal") {
+							phyPlayers[i].IsSkillCool = true;
 							phyPlayers[i].is_hitted = false;
 							SendSealSkill(true);
 						}
 						else if (phyPlayers[i].TypeName == "PolarBear") {
+							phyPlayers[i].IsSkillCool = true;
 							if (phyPlayers[i].CurrentIcecube != -1 || phyPlayers[i].CurrentSnowcube != -1) {
 								int TempBlockIdx = max(phyPlayers[i].CurrentIcecube, phyPlayers[i].CurrentSnowcube);
 								PolarbearSkill(TempBlockIdx);
@@ -1295,7 +1300,7 @@ void ProcessClients()
 							}
 							phyPlayers[i].is_Skill = false;
 							phyPlayers[i].SkillTime = 0;
-							phyPlayers[i].IsSkillCool = true;
+							phyPlayers[i].IsSkillEnd = true;
 						}
 						phyPlayers[i].SkillTime += 1;
 						if (phyPlayers[i].SkillTime >= 300) {
@@ -1306,6 +1311,7 @@ void ProcessClients()
 							SendFoxSkill(false);
 							SendPenguinSkill(false);
 							SendSealSkill(false);
+							phyPlayers[i].IsSkillEnd = true;
 						}
 					}
 					else {
@@ -1317,6 +1323,7 @@ void ProcessClients()
 						if (phyPlayers[i].SkillCoolTime >= 600) {
 							phyPlayers[i].IsSkillCool = false;
 							phyPlayers[i].SkillCoolTime = 0;
+							phyPlayers[i].IsSkillEnd = false;
 						}
 					}
 				}

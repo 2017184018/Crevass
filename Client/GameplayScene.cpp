@@ -403,7 +403,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				GraphicsContext::GetApp()->OnBlurEffect(false);
 
 				IsFall[m_PlayerID] = false;
-				if (Player_Lifecnt[i] == 4) {
+				if (Player_Lifecnt[i] == 0) {
 					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
 						//서버에 패배 전송
 					g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
