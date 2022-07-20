@@ -37,7 +37,8 @@ bool LobbyScene::Enter()
 
 	/* Light Setting */
 	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.57735f, -0.57735f, 0.57735f };
-
+	AppContext->DisplaylobbyBackground();
+	AppContext->DisplaylobbyBlocks();
 	// 카메라 뷰행렬 초기화
 	CREVASS::GetApp()->m_Camera->CameraInitialize(SceneType::Lobby);
 	Core::g_pFramework->m_pNetwork->Recv();
@@ -199,6 +200,11 @@ void LobbyScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
+
+	/*Shadow*/
+	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
+	GraphicsContext::GetApp()->UpdateShadowPassCB();
+
 	//meterial
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
 }
@@ -223,16 +229,43 @@ void LobbyScene::Render()
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 
-	//sky
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
-
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+
+	//sky
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
+
+	/*Shadow*/
+	GraphicsContext::GetApp()->SetResourceShadowPassCB();
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_icecube"], AppContext->m_RItemsVec);	
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_snow_top"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_snowcube"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_mountain"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_tent"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_kayak"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_kayakpaddle"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_rock_0"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_rock_1"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_fish"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_sled"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby_fishrack"], AppContext->m_RItemsVec);
+
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedShadowOpaquePSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ArcticFox"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["PolarBear"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
+
+	
+
+
 
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby"], AppContext->m_RItemsVec);
 }

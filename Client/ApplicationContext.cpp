@@ -1152,9 +1152,7 @@ void ApplicationContext::CreatelobbyBlocks()
 
 void ApplicationContext::CreatelobbyBackground()
 {
-	float X[5] = { -950,400,1750,-950,1750 };		//배경 블록 위치
-	float Z[5] = { 1800,1800,1800,400,400 };
-
+	
 	//79~83	바닥
 	for (int i = 0; i < 5; ++i) {
 		GameObject* instancingObj;
@@ -1165,19 +1163,10 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_snowcube"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_snowcube"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_snowcube"].Bounds;
-		instancingObj->m_IsVisible = true;
+		instancingObj->m_IsVisible = false;
 		instancingObj->m_MaterialIndex = 1;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		float size = 13;
-		instancingObj->m_World._11 = size;
-		instancingObj->m_World._22 = size;
-		instancingObj->m_World._33 = size;
-
-		instancingObj->m_World._41 = X[i];
-		instancingObj->m_World._42 = -640;
-		instancingObj->m_World._43 = Z[i];
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
-
 		instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["lobby_snowcube"].Bounds.Center, instancingObj->GetPosition());
 	}
 
@@ -1193,23 +1182,10 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_mountain"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_mountain"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_mountain"].Bounds;
-		instancingObj->m_IsVisible = true;
+		instancingObj->m_IsVisible = false;
 		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		float size = 0.8;
-		instancingObj->m_World._11 = size;
-		instancingObj->m_World._22 = size;
-		instancingObj->m_World._33 = size;
 
-		instancingObj->m_World._42 = 50;
-		if (i < 2) {
-			instancingObj->m_World._41 = X[0] + 600 * (i);
-			instancingObj->m_World._43 = Z[0] - 400 + 400 * i;
-		}
-		else {
-			instancingObj->m_World._41 = X[0] + 600 * (i + 1);
-			instancingObj->m_World._43 = Z[0] - 0 - 400 * (i - 2);
-		}
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1223,17 +1199,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_tent"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_tent"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_tent"].Bounds;
-		instancingObj->m_IsVisible = true;
+		instancingObj->m_IsVisible = false;
 		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		float size = 0.7;
-		instancingObj->m_World._11 = size;
-		instancingObj->m_World._22 = size;
-		instancingObj->m_World._33 = size;
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * 8 / 10));
-		instancingObj->m_World._41 = X[1] - 450;
-		instancingObj->m_World._42 = 50;
-		instancingObj->m_World._43 = Z[1] - 400;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1247,16 +1215,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_kayak"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_kayak"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_kayak"].Bounds;
-		instancingObj->m_IsVisible = true;
+		instancingObj->m_IsVisible = false;
 		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		float size = 0.7;
-		instancingObj->m_World._11 = size;
-		instancingObj->m_World._22 = size;
-		instancingObj->m_World._33 = size;
-		instancingObj->m_World._41 = X[1] - 350;
-		instancingObj->m_World._42 = 50;
-		instancingObj->m_World._43 = Z[1] - 700;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1270,16 +1231,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_kayakpaddle"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_kayakpaddle"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_kayakpaddle"].Bounds;
-		instancingObj->m_IsVisible = true;
+		instancingObj->m_IsVisible = false;
 		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		float size = 0.7;
-		instancingObj->m_World._11 = size;
-		instancingObj->m_World._22 = size;
-		instancingObj->m_World._33 = size;
-		instancingObj->m_World._41 = X[1] - 330 + 20 * (i + 1);
-		instancingObj->m_World._42 = 50;
-		instancingObj->m_World._43 = Z[1] - 680;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1293,20 +1247,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_rock_0"].StartIndexLocation;
 		instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_rock_0"].BaseVertexLocation;
 		instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_rock_0"].Bounds;
-		instancingObj->m_IsVisible = true;
+		instancingObj->m_IsVisible = false;
 		instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj->m_World = MathHelper::Identity4x4();
-		float size = 2;
-		instancingObj->m_World._11 = size;
-		instancingObj->m_World._22 = size;
-		instancingObj->m_World._33 = size;
-		XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * uid7(dre2) / 100.0));
-		instancingObj->m_World._41 = 400 + cos(i) * 1350;
-		instancingObj->m_World._42 = 80;
-		if (sin(i) < 0)
-			instancingObj->m_World._43 = 400 - sin(i) * 1350;
-		else
-			instancingObj->m_World._43 = 400 + sin(i) * 1350;
 		instancingObj->m_TexTransform = MathHelper::Identity4x4();
 	}
 	for (int i = 0; i < 15; ++i) {
@@ -1318,24 +1261,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj2->StartIndexLocation = instancingObj2->Geo->DrawArgs["lobby_rock_1"].StartIndexLocation;
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["lobby_rock_1"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["lobby_rock_1"].Bounds;
-		instancingObj2->m_IsVisible = true;
+		instancingObj2->m_IsVisible = false;
 		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
-		float size = 1.0;
-		instancingObj2->m_World._11 = size;
-		instancingObj2->m_World._22 = size;
-		instancingObj2->m_World._33 = size;
-		XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 0.5));
-		if (i == 11) {
-			instancingObj2->m_World._41 = X[1] + 100;
-			instancingObj2->m_World._42 = 150;
-			instancingObj2->m_World._43 = Z[1] - 500;
-		}
-		else {
-			instancingObj2->m_World._41 = X[1] + 100 + cos(i * 3.141592 / 15 * 2) * 100;
-			instancingObj2->m_World._42 = 65;
-			instancingObj2->m_World._43 = Z[1] - 500 + sin(i * 3.141592 / 15 * 2) * 100;
-		}
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1349,17 +1277,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj2->StartIndexLocation = instancingObj2->Geo->DrawArgs["lobby_igloo"].StartIndexLocation;
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["lobby_igloo"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["lobby_igloo"].Bounds;
-		instancingObj2->m_IsVisible = true;
+		instancingObj2->m_IsVisible = false;
 		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
-		float size = 0.6;
-		instancingObj2->m_World._11 = size;
-		instancingObj2->m_World._22 = size;
-		instancingObj2->m_World._33 = size;
-		XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592));
-		instancingObj2->m_World._41 = X[1] + 100;
-		instancingObj2->m_World._42 = 50;
-		instancingObj2->m_World._43 = Z[1] - 500;
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1373,19 +1293,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj2->StartIndexLocation = instancingObj2->Geo->DrawArgs["lobby_fish"].StartIndexLocation;
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["lobby_fish"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["lobby_fish"].Bounds;
-		instancingObj2->m_IsVisible = true;
+		instancingObj2->m_IsVisible = false;
 		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
-		float size = 0.7;
-		instancingObj2->m_World._11 = size;
-		instancingObj2->m_World._22 = size;
-		instancingObj2->m_World._33 = size;
-		XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 11 / 10));
-		XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationX(3.141592 * 2 / 10));
-		XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationZ(3.141592 * -1 / 10));
-		instancingObj2->m_World._41 = X[1] - 465 - i * 13;
-		instancingObj2->m_World._42 = 130;
-		instancingObj2->m_World._43 = Z[1] - 495 + i * 13;
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1399,17 +1309,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj2->StartIndexLocation = instancingObj2->Geo->DrawArgs["lobby_sled"].StartIndexLocation;
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["lobby_sled"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["lobby_sled"].Bounds;
-		instancingObj2->m_IsVisible = true;
+		instancingObj2->m_IsVisible = false;
 		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
-		float size = 1;
-		instancingObj2->m_World._11 = size;
-		instancingObj2->m_World._22 = size;
-		instancingObj2->m_World._33 = size;
-		XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 7 / 10));
-		instancingObj2->m_World._41 = X[1] - 500;
-		instancingObj2->m_World._42 = 30;
-		instancingObj2->m_World._43 = Z[0] - 650;
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 	}
 
@@ -1423,17 +1325,9 @@ void ApplicationContext::CreatelobbyBackground()
 		instancingObj2->StartIndexLocation = instancingObj2->Geo->DrawArgs["lobby_fishrack"].StartIndexLocation;
 		instancingObj2->BaseVertexLocation = instancingObj2->Geo->DrawArgs["lobby_fishrack"].BaseVertexLocation;
 		instancingObj2->m_Bounds = instancingObj2->Geo->DrawArgs["lobby_fishrack"].Bounds;
-		instancingObj2->m_IsVisible = true;
+		instancingObj2->m_IsVisible = false;
 		instancingObj2->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 		instancingObj2->m_World = MathHelper::Identity4x4();
-		float size = 1;
-		instancingObj2->m_World._11 = size;
-		instancingObj2->m_World._22 = size;
-		instancingObj2->m_World._33 = size;
-		XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 7 / 10));
-		instancingObj2->m_World._41 = X[0] + 520;
-		instancingObj2->m_World._42 = 30;
-		instancingObj2->m_World._43 = 1170;
 		instancingObj2->m_TexTransform = MathHelper::Identity4x4();
 
 		for (int i = 0; i < 10; ++i) {
@@ -1445,18 +1339,9 @@ void ApplicationContext::CreatelobbyBackground()
 			instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_fish"].StartIndexLocation;
 			instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_fish"].BaseVertexLocation;
 			instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_fish"].Bounds;
-			instancingObj->m_IsVisible = true;
+			instancingObj->m_IsVisible = false;
 			instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["arctic"]->DiffuseSrvHeapIndex;
 			instancingObj->m_World = MathHelper::Identity4x4();
-			float size = 0.7;
-			instancingObj->m_World._11 = size;
-			instancingObj->m_World._22 = size;
-			instancingObj->m_World._33 = size;
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * 11 / 10));
-			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * 1.5 / 10));
-			instancingObj->m_World._41 = X[0] + 470 + 11 * i;
-			instancingObj->m_World._42 = 180;
-			instancingObj->m_World._43 = 1110 + 15 * i;
 			instancingObj->m_TexTransform = MathHelper::Identity4x4();
 		}
 	}
@@ -2069,6 +1954,265 @@ void ApplicationContext::HiddenBackground()
 		}
 	}
 
+}
+
+void ApplicationContext::DisplaylobbyBackground()
+{
+	float X[5] = { -950,400,1750,-950,1750 };		//배경 블록 위치
+	float Z[5] = { 1800,1800,1800,400,400 };
+
+	//79~83	바닥
+	for (int i = 0; i < 5; ++i) {
+		GameObject* instancingObj;
+		instancingObj = FindObject<GameObject>("lobby_snowcube", "lobby_snowcube" + std::to_string(25 + i));
+		instancingObj->InitializeTransform();
+		instancingObj->m_IsVisible = true;
+		float size = 13;
+		instancingObj->m_World._11 = size;
+		instancingObj->m_World._22 = size;
+		instancingObj->m_World._33 = size;
+		instancingObj->m_World._41 = X[i];
+		instancingObj->m_World._42 = -640;
+		instancingObj->m_World._43 = Z[i];
+
+
+
+		//144~147	산
+		for (int i = 0; i < 4; ++i) {
+			GameObject* instancingObj;
+			instancingObj = FindObject<GameObject>("lobby_mountain", "lobby_mountain" + std::to_string(i));
+			instancingObj->InitializeTransform();
+			instancingObj->m_IsVisible = true;
+			float size = 0.8;
+			instancingObj->m_World._11 = size;
+			instancingObj->m_World._22 = size;
+			instancingObj->m_World._33 = size;
+			instancingObj->m_World._42 = 50;
+			if (i < 2) {
+				instancingObj->m_World._41 = X[0] + 600 * (i);
+				instancingObj->m_World._43 = Z[0] - 400 + 400 * i;
+			}
+			else {
+				instancingObj->m_World._41 = X[0] + 600 * (i + 1);
+				instancingObj->m_World._43 = Z[0] - 0 - 400 * (i - 2);
+			}
+		}
+
+		//148	텐트
+		{
+			GameObject* instancingObj;
+			instancingObj = FindObject<GameObject>("lobby_tent", "lobby_tent" + std::to_string(0));
+			instancingObj->InitializeTransform();
+			instancingObj->m_IsVisible = true;
+			float size = 0.7;
+			instancingObj->m_World._11 = size;
+			instancingObj->m_World._22 = size;
+			instancingObj->m_World._33 = size;
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * 8 / 10));
+			instancingObj->m_World._41 = X[1] - 450;
+			instancingObj->m_World._42 = 50;
+			instancingObj->m_World._43 = Z[1] - 400;
+		}
+
+		//149 카약
+		{
+			GameObject* instancingObj;
+			instancingObj = FindObject<GameObject>("lobby_kayak", "lobby_kayak" + std::to_string(0));
+			instancingObj->InitializeTransform();
+			instancingObj->m_IsVisible = true;
+			float size = 0.7;
+			instancingObj->m_World._11 = size;
+			instancingObj->m_World._22 = size;
+			instancingObj->m_World._33 = size;
+			instancingObj->m_World._41 = X[1] - 350;
+			instancingObj->m_World._42 = 50;
+			instancingObj->m_World._43 = Z[1] - 700;
+		}
+
+		//150~151	패들
+		for (int i = 0; i < 2; ++i) {
+			GameObject* instancingObj;
+			instancingObj = FindObject<GameObject>("lobby_kayakpaddle", "lobby_kayakpaddle" + std::to_string(i));
+			instancingObj->InitializeTransform();
+			instancingObj->m_IsVisible = true;
+			float size = 0.7;
+			instancingObj->m_World._11 = size;
+			instancingObj->m_World._22 = size;
+			instancingObj->m_World._33 = size;
+			instancingObj->m_World._41 = X[1] - 330 + 20 * (i + 1);
+			instancingObj->m_World._42 = 50;
+			instancingObj->m_World._43 = Z[1] - 680;
+		}
+
+		//152~191	돌
+		for (int i = 0; i < 25; ++i) {
+			GameObject* instancingObj;
+			instancingObj = FindObject<GameObject>("lobby_rock_0", "lobby_rock_0" + std::to_string(i));
+			instancingObj->InitializeTransform();
+			instancingObj->m_IsVisible = true;
+			float size = 2;
+			instancingObj->m_World._11 = size;
+			instancingObj->m_World._22 = size;
+			instancingObj->m_World._33 = size;
+			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * uid7(dre2) / 100.0));
+			instancingObj->m_World._41 = 400 + cos(i) * 1350;
+			instancingObj->m_World._42 = 80;
+			if (sin(i) < 0)
+				instancingObj->m_World._43 = 400 - sin(i) * 1350;
+			else
+				instancingObj->m_World._43 = 400 + sin(i) * 1350;
+		}
+		for (int i = 0; i < 15; ++i) {
+			GameObject* instancingObj2;
+			instancingObj2 = FindObject<GameObject>("lobby_rock_1", "lobby_rock_1" + std::to_string(i));
+			instancingObj2->InitializeTransform();
+			instancingObj2->m_IsVisible = true;
+			float size = 1.0;
+			instancingObj2->m_World._11 = size;
+			instancingObj2->m_World._22 = size;
+			instancingObj2->m_World._33 = size;
+			XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 0.5));
+			if (i == 11) {
+				instancingObj2->m_World._41 = X[1] + 100;
+				instancingObj2->m_World._42 = 150;
+				instancingObj2->m_World._43 = Z[1] - 500;
+			}
+			else {
+				instancingObj2->m_World._41 = X[1] + 100 + cos(i * 3.141592 / 15 * 2) * 100;
+				instancingObj2->m_World._42 = 65;
+				instancingObj2->m_World._43 = Z[1] - 500 + sin(i * 3.141592 / 15 * 2) * 100;
+			}
+		}
+
+		//192	이글루
+		{
+			GameObject* instancingObj2;
+			instancingObj2 = FindObject<GameObject>("lobby_igloo", "lobby_igloo" + std::to_string(2));
+			instancingObj2->InitializeTransform();
+			instancingObj2->m_IsVisible = true;
+			float size = 0.6;
+			instancingObj2->m_World._11 = size;
+			instancingObj2->m_World._22 = size;
+			instancingObj2->m_World._33 = size;
+			XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592));
+			instancingObj2->m_World._41 = X[1] + 100;
+			instancingObj2->m_World._42 = 50;
+			instancingObj2->m_World._43 = Z[1] - 500;
+		}
+
+		//193~196	텐트 생선
+		for (int i = 0; i < 4; ++i) {
+			GameObject* instancingObj2;
+			instancingObj2 = FindObject<GameObject>("lobby_fish", "lobby_fish" + std::to_string(i));
+			instancingObj2->InitializeTransform();
+			instancingObj2->m_IsVisible = true;
+			instancingObj2->m_World = MathHelper::Identity4x4();
+			float size = 0.7;
+			instancingObj2->m_World._11 = size;
+			instancingObj2->m_World._22 = size;
+			instancingObj2->m_World._33 = size;
+			XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 11 / 10));
+			XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationX(3.141592 * 2 / 10));
+			XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationZ(3.141592 * -1 / 10));
+			instancingObj2->m_World._41 = X[1] - 465 - i * 13;
+			instancingObj2->m_World._42 = 130;
+			instancingObj2->m_World._43 = Z[1] - 495 + i * 13;
+		}
+
+		//197 썰매
+		{
+			GameObject* instancingObj2;
+			instancingObj2 = FindObject<GameObject>("lobby_sled", "lobby_sled" + std::to_string(0));
+			instancingObj2->InitializeTransform();
+			instancingObj2->m_IsVisible = true;
+			float size = 1;
+			instancingObj2->m_World._11 = size;
+			instancingObj2->m_World._22 = size;
+			instancingObj2->m_World._33 = size;
+			XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 7 / 10));
+			instancingObj2->m_World._41 = X[1] - 500;
+			instancingObj2->m_World._42 = 30;
+			instancingObj2->m_World._43 = Z[0] - 650;
+		}
+
+		//198~208 물고기 걸이, 물고기
+		{
+			GameObject* instancingObj2;
+			instancingObj2 = FindObject<GameObject>("lobby_fishrack", "lobby_fishrack" + std::to_string(0));
+			instancingObj2->InitializeTransform();
+			instancingObj2->m_IsVisible = true;
+			float size = 1;
+			instancingObj2->m_World._11 = size;
+			instancingObj2->m_World._22 = size;
+			instancingObj2->m_World._33 = size;
+			XMStoreFloat4x4(&instancingObj2->m_World, XMLoadFloat4x4(&instancingObj2->m_World) * XMMatrixRotationY(3.141592 * 7 / 10));
+			instancingObj2->m_World._41 = X[0] + 520;
+			instancingObj2->m_World._42 = 30;
+			instancingObj2->m_World._43 = 1170;
+
+			for (int i = 0; i < 10; ++i) {
+				GameObject* instancingObj;
+				instancingObj = FindObject<GameObject>("lobby_fish", "lobby_fish" + std::to_string(4 + i));
+				instancingObj->InitializeTransform();
+				instancingObj->m_IsVisible = true;
+				float size = 0.7;
+				instancingObj->m_World._11 = size;
+				instancingObj->m_World._22 = size;
+				instancingObj->m_World._33 = size;
+				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationY(3.141592 * 11 / 10));
+				XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(3.141592 * 1.5 / 10));
+				instancingObj->m_World._41 = X[0] + 470 + 11 * i;
+				instancingObj->m_World._42 = 180;
+				instancingObj->m_World._43 = 1110 + 15 * i;
+			}
+		}
+	}
+}
+
+void ApplicationContext::DisplaylobbyBlocks()
+{
+	int distance = SCALE * 200;
+
+	for (int i = 0; i < 5; ++i) {//1~50
+		for (int j = 0; j < 5; ++j) {
+			GameObject* instancingObj;
+			if (BlockCheck(5 * i + j)) {
+				instancingObj = FindObject<GameObject>("lobby_icecube", "lobby_icecube" + std::to_string(5 * i + j));
+				instancingObj->InitializeTransform();
+				instancingObj->m_IsVisible = true;
+				instancingObj->m_World._11 = SCALE;
+				instancingObj->m_World._22 = SCALE;
+				instancingObj->m_World._33 = SCALE;
+				instancingObj->m_World._41 = distance * i;
+				instancingObj->m_World._42 = -30;
+				instancingObj->m_World._43 = distance * j;
+
+			}
+			else {
+				instancingObj = FindObject<GameObject>("lobby_snowcube", "lobby_snowcube" + std::to_string(5 * i + j));
+				instancingObj->InitializeTransform();
+				instancingObj->m_IsVisible = true;
+				instancingObj->m_World._11 = SCALE;
+				instancingObj->m_World._22 = SCALE;
+				instancingObj->m_World._33 = SCALE;
+
+				instancingObj->m_World._41 = distance * i;
+				instancingObj->m_World._42 = -30;
+				instancingObj->m_World._43 = distance * j;
+			}
+
+			GameObject* top = FindObject<GameObject>("lobby_snow_top", "lobby_snow_top" + std::to_string(5 * i + j));
+			top->InitializeTransform();
+			top->m_IsVisible = true;
+			top->m_World._11 = SCALE;
+			top->m_World._22 = SCALE;
+			top->m_World._33 = SCALE;
+			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
+			top->m_World._41 = distance * i;
+			top->m_World._42 = -30;
+			top->m_World._43 = distance * j;
+		}
+	}
 }
 
 void ApplicationContext::HiddenlobbyBackground()

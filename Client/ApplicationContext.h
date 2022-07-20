@@ -81,8 +81,6 @@ public:
 	void CreatelobbyBlocks();
 	void CreatelobbyBackground();
 
-	void DisplayProps(std::string mapName);
-
 	void HiddenOutline();
 	void HiddenMinimap();
 	void HiddenSnowmans();
@@ -92,6 +90,8 @@ public:
 	void HiddenBlocks();
 	void HiddenBackground();
 
+	void DisplaylobbyBackground();
+	void DisplaylobbyBlocks();
 	void HiddenlobbyBackground();
 	void HiddenlobbyBlocks();
 
