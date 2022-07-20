@@ -308,6 +308,13 @@ void Network::ProcessPacket(char* packet_buffer)
 		}
 		break;
 	}
+	case SC_CRASH:
+	{
+		sc_packet_crash packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << "crash cube num = " << packet.blocknum << endl;
+		break;
+	}
 
 	case SC_ANIM:
 	{
@@ -382,6 +389,13 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_penguinskill packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		PenguinSkill = packet.penguinskill;
+		break;
+	}
+	case SC_SEAL_SKILL:
+	{
+		sc_packet_sealskill packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		SealSkill = packet.sealskill;
 		break;
 	}
 	case SC_GAMEOVER:
@@ -531,6 +545,11 @@ bool Network::GetHuskySkill() const
 bool Network::GetPenguinSkill() const
 {
 	return PenguinSkill;
+}
+
+bool Network::GetSealSkill() const
+{
+	return SealSkill;
 }
 
 bool Network::GetPlayerSkillCool(int num)const

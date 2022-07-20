@@ -5,6 +5,7 @@
 #include "MaterialReference.h"
 #include "MeshReference.h"
 
+#include "Particle.h"
 #include "Character.h"
 #include "CharacterParts.h"
 
@@ -21,6 +22,7 @@ void LobbyScene::Initialize()
 	AppContext->CreateWave();
 	AppContext->CreatelobbyBackground();
 
+	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow");
 }
 
 
@@ -54,6 +56,8 @@ bool LobbyScene::Enter()
 
 	//	
 	//}
+	//눈 파티클 시작
+	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
 
 	return false;
 }
@@ -72,6 +76,7 @@ void LobbyScene::Exit()
 		AppContext->HiddenCharacter("Seal", "Seal" + std::to_string(140 + i));
 
 	}
+	AppContext->HiddenParticle("snowParticle", "snowParticle");
 
 	cout << "LobbyScene===========================================" << endl << endl;
 }
@@ -162,6 +167,9 @@ void LobbyScene::Update(const float& fDeltaTime)
 		}
 	}
 
+	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
+
+
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lobby_icecube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lobby_snowcube"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["lobby_snow_top"], AppContext->m_RItemsVec);
@@ -201,6 +209,8 @@ void LobbyScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec, true);
+
 	/*Shadow*/
 	GraphicsContext::GetApp()->UpdateShadowTransform(CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
 	GraphicsContext::GetApp()->UpdateShadowPassCB();
@@ -239,6 +249,10 @@ void LobbyScene::Render()
 	//sky
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["sky"], AppContext->m_RItemsVec);
+
+	/*Particle*/
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec);
 
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();

@@ -81,6 +81,15 @@ public:
 	void CreatelobbyBlocks();
 	void CreatelobbyBackground();
 
+
+	void DisplayOutline();
+	void DisplayMinimap();
+	void DisplaySnowmans();
+	void DisplayWaterDrop();
+	void DisplayHail();
+	void Displayigloos();
+	void DisplayBlocks();
+	void DisplayBackground();
 	void HiddenOutline();
 	void HiddenMinimap();
 	void HiddenSnowmans();
@@ -90,6 +99,7 @@ public:
 	void HiddenBlocks();
 	void HiddenBackground();
 
+	 
 	void DisplaylobbyBackground();
 	void DisplaylobbyBlocks();
 	void HiddenlobbyBackground();
@@ -100,7 +110,7 @@ public:
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName, std::string insname);
 
-	void DisplayUI(std::string mapName);
+	void DisplayUI(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY);
 	void HiddenUI(std::string uiName, std::string instname);
 
 	void SetUI2DPosition(std::string ui2dName, float posX, float posY);

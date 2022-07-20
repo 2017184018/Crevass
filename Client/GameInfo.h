@@ -15,7 +15,7 @@ public:
 public:
 	int	m_ClientsNum = 0;
 	int m_ClientID = -1;
-	int m_WinnerID = 0;
+	int m_WinnerID = -1;
 
 	// 게임 상태 변수
 	bool	m_IsConnect = false;

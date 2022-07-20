@@ -29,7 +29,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
 	AppContext->CreateBlocks();
 	AppContext->Createigloos();
-	AppContext->CreateWave();
+	//AppContext->CreateWave();
 	AppContext->CreateBackground();
 	AppContext->CreateSnowmans();
 	AppContext->CreateHail();
@@ -57,7 +57,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateParticle("starParticle", "ArcticFox_star_particle", "Particle_star");
 	AppContext->CreateParticle("starParticle", "Seal_star_particle", "Particle_star");*/
 
-	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow");
+	//AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow");
 
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -103,6 +103,27 @@ bool GameplayScene::Enter()
 	/* Light Setting */
 	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.47735f, -0.81735f, 1.07735 };
 
+	 AppContext->DisplayOutline();
+	 AppContext->DisplayMinimap();
+	 AppContext->DisplaySnowmans();
+	 AppContext->DisplayWaterDrop();
+	 AppContext->DisplayHail();
+	 AppContext->Displayigloos();
+	 AppContext->DisplayBlocks();
+	 AppContext->DisplayBackground();
+
+	 for (int j = 0; j < 5; j++) {
+		 for (int i = 0; i < 5; i++) {
+			 AppContext->DisplayUI("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
+		 }
+	 }
+	 AppContext->DisplayUI("ui_Penguin", "ui_Penguin", 20, -380.f, 180.f, UI_SIZEX, UI_SIZEY);
+	 AppContext->DisplayUI("ui_husky", "ui_husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
+	 AppContext->DisplayUI("ui_Seal", "ui_Seal", 22, -380.f, 120.f, UI_SIZEX, UI_SIZEY);
+	 AppContext->DisplayUI("ui_PolarBear", "ui_PolarBear", 23, -380.f, 90.f, UI_SIZEX, UI_SIZEY);
+	 AppContext->DisplayUI("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
+	 AppContext->DisplayUI("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
+
 	//m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 	//나 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
@@ -135,6 +156,7 @@ bool GameplayScene::Enter()
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
 	}
+	//이글루
 	for (int i = 0; i < 2; ++i) {
 		float scale = 2.0f / 10.0f;
 		iglooIndex[i] = iglooLocaArray[g_pFramework->m_pNetwork->GetiglooLocation(i)];
@@ -145,16 +167,18 @@ bool GameplayScene::Enter()
 			XMStoreFloat4x4(&AppContext->m_RItemsVec[76 + i]->m_World, XMMatrixScaling(scale, scale + 0.05, scale) * XMMatrixRotationY(3.14 * 7 / 6));
 		}
 	}
+	//눈사람
 	for (int i = 0; i < 4; ++i) {
 		float scale = 3.0f / 5.0f;
 		SnowmanIndex[i] = g_pFramework->m_pNetwork->GetSnowmanLocation(i);
 	}
-	for (int i = 0; i < 25; ++i) {
-		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
-		AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
-		AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
-		DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
-	}
+
+	//for (int i = 0; i < 25; ++i) {
+	//	AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+	//	AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+	//	AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
+	//	DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
+	//}
 
 	//여기서 초기화
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
@@ -292,9 +316,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[i]->is_StartFallAnim = false;
 				break;
 			}
-
 		}
-		if (g_pFramework->m_pNetwork->GetPlayerAnim(i) == ANIM_FALL) {
+		if (g_pFramework->m_pNetwork->GetCharacterFall(i)) {
 			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
 			m_Users[i]->is_StartFallAnim = true;
 		}
@@ -441,11 +464,23 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 				IsFall[m_PlayerID] = false;
 				if (Player_Lifecnt[i] == 4) {
-					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-						//서버에 패배 전송
 					g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
+					/*static float TmpTime = 0.0f;
+					if (TmpTime > 0.5f) {
+						m_Users[i]->m_MyCamera->SetCameraType(CameraType::Free);
+						XMFLOAT3 pos;
+						pos.x = 400;
+						pos.y = 350;
+						pos.z = -100;
+						m_Users[i]->m_MyCamera->SetPosition(pos);
+						for (int j = 0; j < 4; ++j) {
+							AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_IsVisible = false;
+						}
+					}
+					else {
+						TmpTime += 0.1f;
+					}*/
 				}
-
 			}
 		}
 	}
@@ -503,15 +538,15 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	for (int i = 0; i < 5; ++i) {	//life
-		auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
+	//for (int i = 0; i < 5; ++i) {	//life
+	//	auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
 
-		AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
-		AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
-		AppContext->m_RItemsVec[139 + i]->m_World._42 += 9.f;
-		AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
-		AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
-	}
+	//	AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
+	//	AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
+	//	AppContext->m_RItemsVec[139 + i]->m_World._42 += 9.f;
+	//	AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
+	//	AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
+	//}
 
 	{	//waterdrop
 		for (int i = 0; i < 4; ++i) {
@@ -527,10 +562,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	{
 		for (int j = 0; j < 3; ++j) {
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105+j))->m_World= huskyimagerota[j + 1];
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex= MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_World = huskyimagerota[j + 1];
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;
 		}
 	}
 	{		//minimap
@@ -714,8 +749,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline/20*15;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline / 20 * 15;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
+					if (g_pFramework->m_pNetwork->GetSealSkill()) {
+						AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 2;
+					}
+					else {
+						AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 1;
+					}
 				}
 				else {
 					const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["PolarBearOutline"]->GetinstanceKeymap();
@@ -785,7 +826,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 			XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[m_PlayerID]->m_World));
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline / 20 * 15;
-			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			if (g_pFramework->m_pNetwork->GetSealSkill()) {
+				AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 2;
+			}
+			else {
+				AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
+			}
 			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else {
@@ -801,6 +847,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
 			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
+		}
+	}
+
+	{	//승리자 포커싱
+		if (g_pFramework->m_pNetwork->m_pGameInfo->m_WinnerID != -1) {
+			auto tmppso = m_Users[g_pFramework->m_pNetwork->m_pGameInfo->m_WinnerID]->GetPosition();
+			m_Users[m_PlayerID]->m_MyCamera->SetPosition(tmppso.x, tmppso.y + 150, tmppso.z - 300);
 		}
 	}
 	MaterialReference::GetApp()->Update(fDeltaTime);

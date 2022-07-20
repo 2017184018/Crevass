@@ -325,6 +325,16 @@ void SendBlockPacket(Block& blocks) {
 	SendPacket(&packet);
 }
 
+void SendCrashPacket(int num)
+{
+	sc_packet_crash packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_CRASH;
+	packet.blocknum = num;
+
+	SendPacket(&packet);
+}
+
 void SendTime(int time)
 {
 	sc_packet_time packet;
@@ -371,3 +381,13 @@ void SendPenguinSkill(bool PenguinSkill) {
 
 	SendPacket(&packet);
 }
+
+void SendSealSkill(bool SealSkill) {
+	sc_packet_sealskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_SEAL_SKILL;
+	packet.sealskill = SealSkill;
+
+	SendPacket(&packet);
+}
+

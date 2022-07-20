@@ -161,7 +161,7 @@ float4 PS(VertexOut pin) : SV_Target
 
 float4 outlinePS(VertexOut pin) : SV_Target
 {
-	float4 litColor = float4(pin.MatIndex * 30, 0, (1 - pin.MatIndex) * 30, 1);
+	float4 litColor = float4(pin.MatIndex, (pin.MatIndex - 1) * pin.MatIndex * 0.5f, ((2 - pin.MatIndex) - 1) * (2 - pin.MatIndex) * 0.5f, 1);
 
 	return litColor;
 }

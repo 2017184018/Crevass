@@ -58,6 +58,7 @@ public:
 	bool GetFoxSkill()const;
 	bool GetHuskySkill()const;
 	bool GetPenguinSkill()const;
+	bool GetSealSkill()const;
 	bool GetPlayerSkillCool(int num)const;
 	int GetPlayerLifeCnt(int num)const;
 	int GetChooseCharacter(int num)const;
@@ -86,6 +87,7 @@ private:
 	bool FoxSkill = false;
 	bool HuskySkill = false;
 	bool PenguinSkill = false;
+	bool SealSkill = false;
 
 	int choosename[5]{};
 public:
