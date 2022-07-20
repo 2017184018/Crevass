@@ -29,7 +29,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateSkycube("sky", "sky0", "snowcube1024");
 	AppContext->CreateBlocks();
 	AppContext->Createigloos();
-	//AppContext->CreateWave();
+	AppContext->CreateWave();
 	AppContext->CreateBackground();
 	AppContext->CreateSnowmans();
 	AppContext->CreateHail();
