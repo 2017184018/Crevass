@@ -785,7 +785,8 @@ void ProcessClients()
 						phyPlayers[i].m_pos.x = BlockTmpX * 400;
 						phyPlayers[i].m_pos.y = 100.0f;
 						phyPlayers[i].m_pos.z = BlockTmpZ * 400;
-						phyPlayers[i].lifecnt -= 1;
+						if(phyPlayers[i].lifecnt>0)
+							phyPlayers[i].lifecnt -= 1;
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;
 						/*	if (TypeName[i] == "Penguin") {
@@ -794,7 +795,8 @@ void ProcessClients()
 							else {
 								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
 							}*/
-						SendReset(i, phyPlayers[i].lifecnt);
+						if(phyPlayers[i].lifecnt>=0)
+							SendReset(i, phyPlayers[i].lifecnt);
 
 					}
 				}
@@ -1359,7 +1361,7 @@ void ProcessClients()
 				SendTime(CalcTime);
 			}
 			for (int i = 0; i < 5; ++i) {
-				cout <<i<<": " << who_lose[i] << endl;
+				//cout <<i<<": " << who_lose[i] << endl;
 			}
 			if ((numOfCls - 1) == lose_count)
 			{

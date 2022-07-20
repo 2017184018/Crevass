@@ -293,6 +293,7 @@ void SendFall(int client)
 	packet.type = SC_FALL;
 	packet.id = client;
 
+
 	SendPacket(&packet);
 }
 
@@ -303,6 +304,8 @@ void SendReset(int client,int life)
 	packet.type = SC_RESET;
 	packet.id = client;
 	packet.life = life;
+
+	cout << (int)packet.id << " life=" <<(int) packet.life << endl;
 
 	SendPacket(&packet);
 }
