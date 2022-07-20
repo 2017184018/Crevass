@@ -124,6 +124,11 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 	mViewDirty = true;
 }
 
+void Camera::SetCameraType(CameraType cameratype)
+{
+	m_CameraType = cameratype;
+}
+
 Camera::Camera(CameraType cameraType) :
 	m_CameraType(cameraType)
 {

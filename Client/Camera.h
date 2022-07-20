@@ -19,7 +19,7 @@ public:
 
 	virtual void Initialize();
 	void Update(const DirectX::XMFLOAT3& lookAt, float deltaT);
-
+	void SetCameraType(CameraType cameratype);
 public:
 	explicit Camera(CameraType cameraType = CameraType::Free);
 	virtual ~Camera();

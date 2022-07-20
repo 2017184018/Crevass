@@ -744,7 +744,6 @@ void ProcessClients()
 					phyPlayers[i].gravity = 0.0f;
 					SendFall(i);
 					phyPlayers[i].is_reset = true;
-
 				}
 				g_boundaries[phyPlayers[i].TypeName]->Center = players[i].pos;
 				/*			if (TypeName[i] == "Penguin") {
@@ -1158,7 +1157,6 @@ void ProcessClients()
 							if (hails[i].GetPos().y <= -90) {
 								hails[i].SetPos(-1000, -1000, -1000);
 							}
-
 						}
 						else if (phyPlayers[i].TimeWhileBlock == 0) {
 							hails[i].SetPos(-1000, -1000, -1000);
@@ -1360,7 +1358,9 @@ void ProcessClients()
 			{
 				SendTime(CalcTime);
 			}
-
+			for (int i = 0; i < 5; ++i) {
+				cout <<i<<": " << who_lose[i] << endl;
+			}
 			if ((numOfCls - 1) == lose_count)
 			{
 				for (int i = 0; i < numOfCls; ++i)

@@ -250,9 +250,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[i]->is_StartFallAnim = false;
 				break;
 			}
-
 		}
-		if (g_pFramework->m_pNetwork->GetPlayerAnim(i) == ANIM_FALL) {
+		if (g_pFramework->m_pNetwork->GetCharacterFall(i)) {
 			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
 			m_Users[i]->is_StartFallAnim = true;
 		}
@@ -404,11 +403,23 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 				IsFall[m_PlayerID] = false;
 				if (Player_Lifecnt[i] == 0) {
-					//	SceneManager::GetApp()->EnterScene(SceneType::GameResult);
-						//서버에 패배 전송
 					g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
+					/*static float TmpTime = 0.0f;
+					if (TmpTime > 0.5f) {
+						m_Users[i]->m_MyCamera->SetCameraType(CameraType::Free);
+						XMFLOAT3 pos;
+						pos.x = 400;
+						pos.y = 350;
+						pos.z = -100;
+						m_Users[i]->m_MyCamera->SetPosition(pos);
+						for (int j = 0; j < 4; ++j) {
+							AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_IsVisible = false;
+						}
+					}
+					else {
+						TmpTime += 0.1f;
+					}*/
 				}
-
 			}
 		}
 	}
@@ -509,10 +520,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	{
 		for (int j = 0; j < 3; ++j) {
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105+j))->m_World= huskyimagerota[j + 1];
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex= MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
-		AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_World = huskyimagerota[j + 1];
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;
 		}
 	}
 	{		//minimap
@@ -696,7 +707,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
-					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline/20*15;
+					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline / 20 * 15;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 					if (g_pFramework->m_pNetwork->GetSealSkill()) {
 						AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 2;
@@ -794,6 +805,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
 			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
+		}
+	}
+
+	{	//승리자 포커싱
+		if (g_pFramework->m_pNetwork->m_pGameInfo->m_WinnerID != -1) {
+			auto tmppso = m_Users[g_pFramework->m_pNetwork->m_pGameInfo->m_WinnerID]->GetPosition();
+			m_Users[m_PlayerID]->m_MyCamera->SetPosition(tmppso.x, tmppso.y + 150, tmppso.z - 300);
 		}
 	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
