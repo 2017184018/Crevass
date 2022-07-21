@@ -30,6 +30,11 @@ bool Particle::SetParticleNameCount(std::string meshName)
 	return false;
 }
 
+void Particle::SetIsLoop(bool isLoop)
+{
+	m_IsLoop = isLoop;
+}
+
 
 void Particle::PlayParticle()
 {
@@ -48,3 +53,7 @@ float Particle::GetParticleTotalTime() const
 	return m_ParticleTotalTime;
 }
 
+bool Particle::GetIsLoop() const
+{
+	return m_IsLoop;
+}

@@ -1,6 +1,8 @@
 #pragma once
 #include "headers.h"
 #include "GameInfo.h"
+
+
 #define SERVERIP "127.0.0.1"
 //#define SERVERIP "192.168.35.197"
 //#define SERVERIP "192.168.35.252"
@@ -42,7 +44,7 @@ public:
 	int GetSnowmanLocation(int num)const;
 	int GetPlayerDir(int num)const;
 	int GetBlockDestructionCnt(int num) const;
-
+	int GetCrashBlockIndex() const;
 	int GetPlayerAnim(int num)const;
 	char GetCharacterType(int num)const;
 
@@ -77,7 +79,7 @@ private:
 
 	DirectX::XMFLOAT3 BlockPos[25];
 	int BlockDestructionCnt[25];
-
+	int crash_block_index = 0;
 	char CharacterType[5];
 
 	bool IsFall[5]{ false,false,false,false,false };

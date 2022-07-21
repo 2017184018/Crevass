@@ -236,9 +236,8 @@ void GameplayController::HandleInput(const float deltaT)
 	// 파티클 루프 테스트
 	if (InputHandler::IsKeyUp('P')) {
 		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
-		//AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(11), XMFLOAT3(0, 0, 0));
-		cout <<"ps======" << AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center.x << "==="<< AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center.y << endl;
-		AppContext->DisplayParticle("starParticle", "Penguin_star_particle", AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center);
+		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(5), XMFLOAT3(0, 0, 0));
+		//AppContext->DisplayParticle("starParticle", "Penguin_star_particle", AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center);
 			}
 	if (InputHandler::IsKeyUp('O')) {
 		AppContext->HiddenParticle("crushparticle", "crushparticle" + std::to_string(11));

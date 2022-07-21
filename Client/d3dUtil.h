@@ -102,9 +102,8 @@ namespace ShaderResource
 		DirectX::XMFLOAT4X4 TexTransform = MathHelper::Identity4x4();
 		UINT MaterialIndex;
 		float particleTime;
+		int particleIsLoop;
 		UINT InstancePad0;
-		UINT InstancePad1;
-		//UINT InstancePad2;
 	};
 
 	struct PassConstants

@@ -77,7 +77,7 @@ public:
 	void CreateMinimap();
 	void CreateOutline();
 	void CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY);
-	void CreateParticle(std::string particleName, std::string instID, std::string matName);
+	void CreateParticle(std::string particleName, std::string instID, std::string matName, bool isLoop);
 	void CreatelobbyBlocks();
 	void CreatelobbyBackground();
 

@@ -334,11 +334,12 @@ void UpdateBlock(Block* object) {
 			ShakeCnt[i] = 0;
 			IsShake[i] = false;
 			++object[i].destuctioncnt;
+			SendCrashPacket(i);
 			if (object[i].destuctioncnt == 3) {
 				g_boundaries["icecube" + std::to_string(i)]->Center = DirectX::XMFLOAT3(-0, -1000, 0);
 				g_boundaries["icecube" + std::to_string(i)]->Extents = DirectX::XMFLOAT3(0, 0, 0);
 				object[i].pos.y = -150;
-				SendCrashPacket(i);
+			
 			}
 		}
 		if (object[i].destuctioncnt == 0) {

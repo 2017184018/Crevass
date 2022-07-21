@@ -818,7 +818,7 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 	//item->SetPosition(posX, posY, 1.f);
 }
 
-void ApplicationContext::CreateParticle(std::string particleName, std::string instID, std::string matName)
+void ApplicationContext::CreateParticle(std::string particleName, std::string instID, std::string matName,bool isLoop)
 {
 	Particle* particle = CreateObject<Particle>(particleName, instID);
 	particle->Geo = MeshReference::GetApp()->m_GeometryMesh[particleName].get();
@@ -829,8 +829,8 @@ void ApplicationContext::CreateParticle(std::string particleName, std::string in
 	particle->m_Bounds = particle->Geo->DrawArgs[particleName].Bounds;
 	particle->SetParticleNameCount(particleName);
 	particle->m_MaterialIndex = MaterialReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
-	//particle->m_MaterialIndex = 28;
-	particle->m_IsVisible = true;
+	particle->m_IsVisible = false;
+	particle->SetIsLoop(isLoop);
 }
 
 void ApplicationContext::CreatelobbyBlocks()
@@ -848,7 +848,7 @@ void ApplicationContext::CreatelobbyBlocks()
 				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_icecube"].StartIndexLocation;
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_icecube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_icecube"].Bounds;
-				instancingObj->m_IsVisible = true;
+				instancingObj->m_IsVisible = false;
 				instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
@@ -870,7 +870,7 @@ void ApplicationContext::CreatelobbyBlocks()
 				instancingObj->StartIndexLocation = instancingObj->Geo->DrawArgs["lobby_snowcube"].StartIndexLocation;
 				instancingObj->BaseVertexLocation = instancingObj->Geo->DrawArgs["lobby_snowcube"].BaseVertexLocation;
 				instancingObj->m_Bounds = instancingObj->Geo->DrawArgs["lobby_snowcube"].Bounds;
-				instancingObj->m_IsVisible = true;
+				instancingObj->m_IsVisible = false;
 				instancingObj->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 				instancingObj->m_World = MathHelper::Identity4x4();
 				instancingObj->m_World._11 = SCALE;
@@ -891,7 +891,7 @@ void ApplicationContext::CreatelobbyBlocks()
 			top->IndexCount = top->Geo->DrawArgs["lobby_snow_top"].IndexCount;
 			top->StartIndexLocation = top->Geo->DrawArgs["lobby_snow_top"].StartIndexLocation;
 			top->BaseVertexLocation = top->Geo->DrawArgs["lobby_snow_top"].BaseVertexLocation;
-			top->m_IsVisible = true;
+			top->m_IsVisible = false;
 			top->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 			top->m_World = MathHelper::Identity4x4();
 			top->m_World._11 = SCALE;

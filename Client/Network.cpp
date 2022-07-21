@@ -6,6 +6,7 @@
 
 #include "MainFramework.h"
 
+#include "ApplicationContext.h"
 namespace Core
 {
 	extern std::map<int, Character*> m_Users;
@@ -313,6 +314,9 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_crash packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		cout << "crash cube num = " << packet.blocknum << endl;
+		crash_block_index = packet.blocknum;
+		XMFLOAT3 f3 = AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(packet.blocknum))->GetPosition();
+		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(packet.blocknum), XMFLOAT3(f3.x, f3.y +60.f, f3.z));
 		break;
 	}
 
@@ -484,6 +488,12 @@ DirectX::XMFLOAT3 Network::GetHailPos(int num) const
 
 int Network::GetBlockDestructionCnt(int num)const {
 	return BlockDestructionCnt[num];
+}
+
+int Network::GetCrashBlockIndex() const
+{
+
+	return crash_block_index;
 }
 
 int Network::GetPlayerAnim(int num)const

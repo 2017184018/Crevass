@@ -179,11 +179,11 @@ void CREVASS::BuildCharacters()
 	AppContext->CreateCharacter("PolarBear", "PolarBear0", "PolarBear", BoneIndex::PolarBear);
 	AppContext->CreateCharacter("Seal", "Seal0", "Seal", BoneIndex::Seal);
 
-	AppContext->CreateParticle("starParticle", "Penguin_star_particle", "Particle_star");
-	AppContext->CreateParticle("starParticle", "husky_star_particle", "Particle_star");
-	AppContext->CreateParticle("starParticle", "PolarBear_star_particle", "Particle_star");
-	AppContext->CreateParticle("starParticle", "ArcticFox_star_particle", "Particle_star");
-	AppContext->CreateParticle("starParticle", "Seal_star_particle", "Particle_star");
+	AppContext->CreateParticle("starParticle", "Penguin_star_particle", "Particle_star", false);
+	AppContext->CreateParticle("starParticle", "husky_star_particle", "Particle_star", false);
+	AppContext->CreateParticle("starParticle", "PolarBear_star_particle", "Particle_star", false);
+	AppContext->CreateParticle("starParticle", "ArcticFox_star_particle", "Particle_star", false);
+	AppContext->CreateParticle("starParticle", "Seal_star_particle", "Particle_star", false);
 
 	AppContext->FindObject<Character>("Penguin", "Penguin0")->SetParticle("starParticle", "Penguin_star_particle");
 	AppContext->FindObject<Character>("husky", "husky0")->SetParticle("starParticle", "husky_star_particle");

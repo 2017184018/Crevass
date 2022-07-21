@@ -18,6 +18,8 @@ struct VertexOut
     float LifeTime : LIFETIME;
 
     float ParticleTime : PARTICLETIME;
+  int   ParticleIsLoop : PARTICLEISLOOP;
+
     nointerpolation uint MatIndex  : MATINDEX;
 };
 
@@ -42,6 +44,7 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
     
     // out particleTime
     vout.ParticleTime = instData.particleTime;
+    vout.ParticleIsLoop = instData.particleIsLoop;
 
     // Fetch the material data.
     MaterialData matData = gMaterialData[matIndex];
@@ -71,6 +74,7 @@ void GS(point VertexOut gin[1],
         inout TriangleStream<GeoOut> triStream)
 {
     float newTime = gin[0].ParticleTime - gin[0].StartTime;
+
     float3 pos = gin[0].CenterW;
     float alpha = 0.f;
     float3 c_Gravity = float3(0, -170, 0);
@@ -83,7 +87,11 @@ void GS(point VertexOut gin[1],
         //0~ LifeTime
         tempTime = alpha * gin[0].LifeTime;
 
-
+        // loop x
+        if (gin[0].ParticleTime > gin[0].LifeTime && gin[0].ParticleIsLoop == 0)
+        {
+            alpha = 1.0;
+        }
 
         pos.xyz = gin[0].CenterW.xyz + vel.xyz * tempTime + 0.5 * c_Gravity.xyz * tempTime * tempTime;
 
@@ -93,6 +101,7 @@ void GS(point VertexOut gin[1],
         //투명하게
         alpha = 1.f;
     }
+    // 
     //
 	// Compute the local coordinate system of the sprite relative to the world
 	// space such that the billboard is aligned with the y-axis and faces the eye.

@@ -22,7 +22,7 @@ void LobbyScene::Initialize()
 	AppContext->CreateWave();
 	AppContext->CreatelobbyBackground();
 
-	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow");
+	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow", true);
 }
 
 

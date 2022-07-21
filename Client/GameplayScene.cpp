@@ -49,7 +49,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
 	for (int i = 0; i < 25; i++) {
-		AppContext->CreateParticle("crushparticle", "crushparticle" + std::to_string(i), "Particle_Ice");
+		AppContext->CreateParticle("crushparticle", "crushparticle" + std::to_string(i), "Particle_Ice",false);
 	}
 	/*AppContext->CreateParticle("starParticle", "Penguin_star_particle" , "Particle_star");
 	AppContext->CreateParticle("starParticle", "husky_star_particle", "Particle_star");
@@ -218,7 +218,6 @@ void GameplayScene::Exit()
 	AppContext->HiddenCharacter("PolarBear","PolarBear0");
 	AppContext->HiddenCharacter("Seal","Seal0");
 
-	AppContext->HiddenParticle("crushparticle","crushparticle");
 	AppContext->HiddenParticle("starParticle", "Penguin_star_particle");
 	AppContext->HiddenParticle("starParticle", "husky_star_particle");
 	AppContext->HiddenParticle("starParticle", "PolarBear_star_particle");
@@ -337,7 +336,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->UpdateParticleTime(fDeltaTime);
-	
+
+	for(int i=0;i<25;i++)
+	AppContext->FindObject<Particle>("crushparticle", "crushparticle" + std::to_string(i))->Update(fDeltaTime);
+
 	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
 	AppContext->FindObject<Particle>("starParticle", "Penguin_star_particle")->Update(fDeltaTime);
 

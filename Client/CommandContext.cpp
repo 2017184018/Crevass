@@ -84,12 +84,14 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 				XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(TexTransform));
 				data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
 				if (isParticle) {
-					data.particleTime = dynamic_cast<Particle*>(rItems[i.second])->GetParticleTotalTime();
-					
+					Particle* parti = static_cast<Particle*>(rItems[i.second]);
+					data.particleTime = parti->GetParticleTotalTime();
+					data.particleIsLoop = parti->GetIsLoop();
 				}
 				else
 				{
 					data.particleTime = 0.f;
+					data.particleIsLoop = false;
 				}
 
 				// Write the instance data to structured buffer for the visible objects.
@@ -98,30 +100,6 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 		
 	}
 
-}
-
-void GraphicsContext::UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems)
-{
-	for (auto& objinfo : objInfos) {
-		const std::map<std::string, UINT>& info = objinfo->GetinstanceKeymap();
-
-		int visibleInstanceCount = 0;
-
-		for (auto& i : info)
-		{
-			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
-			XMMATRIX TexTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
-			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
-
-			ShaderResource::InstanceData data;
-			XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
-			XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(TexTransform));
-			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
-
-			// Write the instance data to structured buffer for the visible objects.
-			m_InstanceBuffers[objinfo->m_Type]->CopyData(visibleInstanceCount++, data);
-		}
-	}
 }
 
 void GraphicsContext::UpdateWave(Waves* wave, GameObject* waveobject) {

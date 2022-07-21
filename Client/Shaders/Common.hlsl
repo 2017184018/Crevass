@@ -25,8 +25,8 @@ struct InstanceData
 	float4x4 TexTransform;
 	uint     MaterialIndex;
 	float	 particleTime;
+	int		 particleIsLoop;
 	uint     InstPad0;
-	uint     InstPad1;
 };
 
 
