@@ -418,33 +418,33 @@ void ProcessClients()
 		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
 		if (players[i].Character_type == CHARACTER_HUSKY) {
-			phyPlayers[i].SetSpeed(1.5f + 0.2f * 4.0f);
-			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 4.0f));
-			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 4.0f);
+			phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 4.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (BASE_SPEED + 0.2f * 4.0f));
+			phyPlayers[i].SetHittedSpeed(BASE_HITTEDSPEED + 0.2f * 4.0f);
 			phyPlayers[i].TypeName = "husky";
 		}
 		else if (players[i].Character_type == CHARACTER_PENGUIN) {
-			phyPlayers[i].SetSpeed(1.5f + 0.2f * 2.0f);
-			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 2.0f));
-			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 2.0f);
+			phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 2.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (BASE_SPEED + 0.2f * 2.0f));
+			phyPlayers[i].SetHittedSpeed(BASE_HITTEDSPEED + 0.2f * 2.0f);
 			phyPlayers[i].TypeName = "Penguin";
 		}
 		else if (players[i].Character_type == CHARACTER_ARCTICFOX) {
-			phyPlayers[i].SetSpeed(1.5f + 0.2f * 5.0f);
-			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 5.0f));
-			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 5.0f);
+			phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 5.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (BASE_SPEED + 0.2f * 5.0f));
+			phyPlayers[i].SetHittedSpeed(BASE_HITTEDSPEED + 0.2f * 5.0f);
 			phyPlayers[i].TypeName = "ArcticFox";
 		}
 		else if (players[i].Character_type == CHARACTER_SEAL) {
-			phyPlayers[i].SetSpeed(1.5f + 0.2f * 3.0f);
-			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 3.0f));
-			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 3.0f);
+			phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 3.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (BASE_SPEED + 0.2f * 3.0f));
+			phyPlayers[i].SetHittedSpeed(BASE_HITTEDSPEED + 0.2f * 3.0f);
 			phyPlayers[i].TypeName = "Seal";
 		}
 		else if (players[i].Character_type == CHARACTER_POLARBEAR) {
-			phyPlayers[i].SetSpeed(1.5f + 0.2f * 1.0f);
-			phyPlayers[i].SetCrossSpeed(cos(45) * (1.5f + 0.2f * 1.0f));
-			phyPlayers[i].SetHittedSpeed(0.5f + 0.2f * 1.0f);
+			phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 1.0f);
+			phyPlayers[i].SetCrossSpeed(cos(45) * (BASE_SPEED + 0.2f * 1.0f));
+			phyPlayers[i].SetHittedSpeed(BASE_HITTEDSPEED + 0.2f * 1.0f);
 			phyPlayers[i].TypeName = "PolarBear";
 		}
 		phyPlayers[i].Hit_BB.Radius = g_boundaries[phyPlayers[i].TypeName]->Extents.z / 2;
@@ -1130,8 +1130,8 @@ void ProcessClients()
 									if (phyPlayers[i].TypeName == "husky") {
 										phyPlayers[j].is_Skill = false;
 										phyPlayers[j].is_Skillanim = false;
-										phyPlayers[i].SetSpeed(1.0f * 1.5f);
-										phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+										phyPlayers[i].SetSpeed(1.0f * BASE_SPEED);
+										phyPlayers[i].SetCrossSpeed(cos(45) * BASE_HITTEDSPEED);
 									}
 									float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
 									float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
@@ -1196,7 +1196,7 @@ void ProcessClients()
 								switch (static_cast<int>(phyPlayers[i].dir)) {
 								case 0:
 									phyPlayers[i].SetKeyW(true);
-									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									phyPlayers[i].SetSpeed(5.0f * BASE_SPEED);
 									break;
 								case 1:
 									phyPlayers[i].SetKeyW(true);
@@ -1205,7 +1205,7 @@ void ProcessClients()
 									break;
 								case 2:
 									phyPlayers[i].SetKeyD(true);
-									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									phyPlayers[i].SetSpeed(5.0f * BASE_SPEED);
 									break;
 								case 3:
 									phyPlayers[i].SetKeyD(true);
@@ -1214,7 +1214,7 @@ void ProcessClients()
 									break;
 								case 4:
 									phyPlayers[i].SetKeyS(true);
-									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									phyPlayers[i].SetSpeed(5.0f * BASE_SPEED);
 									break;
 								case 5:
 									phyPlayers[i].SetKeyS(true);
@@ -1223,7 +1223,7 @@ void ProcessClients()
 									break;
 								case 6:
 									phyPlayers[i].SetKeyA(true);
-									phyPlayers[i].SetSpeed(5.0f * 1.5f);
+									phyPlayers[i].SetSpeed(5.0f * BASE_SPEED);
 									break;
 								case 7:
 									phyPlayers[i].SetKeyW(true);
@@ -1249,7 +1249,7 @@ void ProcessClients()
 								phyPlayers[i].SetKeyA(false);
 								phyPlayers[i].SetKeyS(false);
 								phyPlayers[i].SetKeyD(false);
-								phyPlayers[i].SetSpeed(1.0f * 1.5f);
+								phyPlayers[i].SetSpeed(1.0f * BASE_SPEED);
 								phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
 								phyPlayers[i].IsSkillEnd = true;
 								if (HittedIdx != -1)

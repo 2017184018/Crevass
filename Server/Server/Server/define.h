@@ -27,6 +27,9 @@
 #define HITTED_POWER    3
 
 #define HITTED_JUMP_POWER		1
-#define JUMP_POWER		3
+#define JUMP_POWER		2
 #define SPEED_POWER 1
 #define FPS				30
+
+#define BASE_SPEED 1.8
+#define BASE_HITTEDSPEED 0.7
