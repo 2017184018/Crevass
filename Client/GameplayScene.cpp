@@ -251,7 +251,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				break;
 			}
 		}
-		if (g_pFramework->m_pNetwork->GetCharacterFall(i)) {
+		if (g_pFramework->m_pNetwork->GetCharacterFall(i) || g_pFramework->m_pNetwork->GetPlayerAnim(i) == ANIM_FALL) {
 			m_Users[i]->SetAnimationKeyState(Character::PlayerState::STATE_FALL);
 			m_Users[i]->is_StartFallAnim = true;
 		}
