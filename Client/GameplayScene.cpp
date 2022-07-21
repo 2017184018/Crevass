@@ -290,8 +290,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
 			m_Users[i]->m_PlayerController->SetLoop(g_pFramework->m_pNetwork->GetPenguinSkill());
 		}
+		
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
+
 		if (i != m_PlayerID) {//애니메이션은 나는 제외 
 			switch (g_pFramework->m_pNetwork->GetPlayerAnim(i))
 			{
@@ -427,9 +429,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		p.second->Update(fDeltaTime);
 	}
 
-	// SceneBounds Update
-	//m_SceneBounds.Center = { m_Users[m_PlayerID]->GetPosition().x, 0 , m_Users[m_PlayerID]->GetPosition().z };
-
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		if (g_pFramework->m_pNetwork->GetCharacterFall(i) == true)
@@ -463,23 +462,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 				GraphicsContext::GetApp()->OnBlurEffect(false);
 
 				IsFall[m_PlayerID] = false;
-				if (Player_Lifecnt[i] == 4) {
+				if (Player_Lifecnt[i] == 0) {
 					g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
-					/*static float TmpTime = 0.0f;
-					if (TmpTime > 0.5f) {
-						m_Users[i]->m_MyCamera->SetCameraType(CameraType::Free);
-						XMFLOAT3 pos;
-						pos.x = 400;
-						pos.y = 350;
-						pos.z = -100;
-						m_Users[i]->m_MyCamera->SetPosition(pos);
-						for (int j = 0; j < 4; ++j) {
-							AppContext->FindObject<GameObject>("waterdrop", "waterdrop" + std::to_string(i))->m_IsVisible = false;
-						}
-					}
-					else {
-						TmpTime += 0.1f;
-					}*/
+				
 				}
 			}
 		}
