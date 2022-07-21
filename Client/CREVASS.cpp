@@ -93,7 +93,7 @@ void CREVASS::Startup(void)
 	// Particles
 	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "crushparticle", 1000, DirectX::XMFLOAT2(5, 5),30.f,0.f,70.f,100.f,100.f,70.f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1, 5));
 	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "snowParticle", 5000, DirectX::XMFLOAT2(20, 30),1000.f, 0.f, 50.f,-250.f,-250.f, 50.f, DirectX::XMFLOAT2(1, 10), DirectX::XMFLOAT2(9, 11));
-	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "starParticle", 1000, DirectX::XMFLOAT2(5, 5), 10.f, 10.f, 100.f, -100.f, 100.f, 100.f, DirectX::XMFLOAT2(1, 10), DirectX::XMFLOAT2(1, 5));
+	m_MeshRef->BuildParticle(g_Device.Get(), g_CommandList.Get(), "starParticle", 1000, DirectX::XMFLOAT2(5, 5), 10.f, 10.f, 100.f, -100.f, 100.f, 100.f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1, 5));
 
 	mWaves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
 

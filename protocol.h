@@ -18,8 +18,8 @@
 #define SC_FOX_SKILL				15
 #define SC_HUSKY_SKILL				16
 #define SC_PENGUIN_SKILL				17
-
 #define SC_SEAL_SKILL				24
+
 
 #define SC_CHOOSE_PENGUIN			18
 #define SC_CHOOSE_HUSKY				19
@@ -28,6 +28,8 @@
 #define SC_CHOOSE_SEAL				22
 
 #define SC_CRASH					23
+
+#define SC_HITPLAYER			    25
 
 ///////////////////////////////
 #define CS_PLAYER_UP_UP				1
@@ -197,6 +199,15 @@ struct sc_packet_crash
 	char type;
 	int blocknum;
 };
+
+struct sc_packet_hitplayer
+{
+	short size;
+	char type;
+	char typenum;
+	DirectX::XMFLOAT3 hit_pos;
+};
+
 struct sc_packet_time
 {
 	short size;

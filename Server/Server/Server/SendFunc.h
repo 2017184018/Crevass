@@ -335,6 +335,17 @@ void SendCrashPacket(int num)
 	SendPacket(&packet);
 }
 
+void SendHitPalyer(char num, DirectX::XMFLOAT3 pos)
+{
+	sc_packet_hitplayer packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_HITPLAYER;
+	packet.typenum = num;
+	packet.hit_pos = pos;
+
+	SendPacket(&packet);
+}
+
 void SendTime(int time)
 {
 	sc_packet_time packet;

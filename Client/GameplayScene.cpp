@@ -70,11 +70,6 @@ void GameplayScene::Initialize()
 			}
 		}
 	}
-	/*AppContext->FindObject<Character>("Penguin", "Penguin0" )->SetParticle("starParticle", "Penguin_star_particle" );
-	AppContext->FindObject<Character>("husky", "husky0")->SetParticle("starParticle", "husky_star_particle");
-	AppContext->FindObject<Character>("PolarBear", "PolarBear0")->SetParticle("starParticle", "PolarBear_star_particle");
-	AppContext->FindObject<Character>("ArcticFox", "ArcticFox0")->SetParticle("starParticle", "ArcticFox_star_particle");
-	AppContext->FindObject<Character>("Seal", "Seal0")->SetParticle("starParticle", "Seal_star_particle");*/
 	
 #ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
@@ -341,7 +336,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 	AppContext->FindObject<Particle>("crushparticle", "crushparticle" + std::to_string(i))->Update(fDeltaTime);
 
 	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
+	AppContext->FindObject<Particle>("starParticle", "husky_star_particle")->Update(fDeltaTime);
 	AppContext->FindObject<Particle>("starParticle", "Penguin_star_particle")->Update(fDeltaTime);
+	AppContext->FindObject<Particle>("starParticle", "PolarBear_star_particle")->Update(fDeltaTime);
+	AppContext->FindObject<Particle>("starParticle", "ArcticFox_star_particle")->Update(fDeltaTime);
+	AppContext->FindObject<Particle>("starParticle", "Seal_star_particle")->Update(fDeltaTime);
+
 
 	for (int i = 0; i < 25; ++i) {
 		AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));

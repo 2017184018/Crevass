@@ -3,6 +3,7 @@
 #include "PlayerInfo.h"
 #include "CREVASS.h"
 #include "SceneManager.h"
+#include "Character.h"
 
 #include "MainFramework.h"
 
@@ -317,6 +318,38 @@ void Network::ProcessPacket(char* packet_buffer)
 		crash_block_index = packet.blocknum;
 		XMFLOAT3 f3 = AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(packet.blocknum))->GetPosition();
 		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(packet.blocknum), XMFLOAT3(f3.x, f3.y +60.f, f3.z));
+		break;
+	}
+
+	case SC_HITPLAYER:
+	{
+	
+		sc_packet_hitplayer packet;
+		memcpy(&packet, ptr, sizeof(packet));
+		cout << "type num = " << packet.typenum << endl;
+		switch (packet.typenum)
+		{
+		case CHARACTER_HUSKY:
+
+			AppContext->DisplayParticle("starParticle", "husky_star_particle", packet.hit_pos);
+			break;
+		case CHARACTER_PENGUIN:
+			AppContext->DisplayParticle("starParticle", "Penguin_star_particle", packet.hit_pos);
+			break;
+		case CHARACTER_POLARBEAR:
+			AppContext->DisplayParticle("starParticle", "PolarBear_star_particle", packet.hit_pos);
+			break;
+		case CHARACTER_ARCTICFOX:
+			AppContext->DisplayParticle("starParticle", "ArcticFox_star_particle", packet.hit_pos);
+			break;
+		case CHARACTER_SEAL:
+			AppContext->DisplayParticle("starParticle", "Seal_star_particle", packet.hit_pos);
+
+			break;
+		default:
+			break;
+		}
+
 		break;
 	}
 

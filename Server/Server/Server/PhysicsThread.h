@@ -569,16 +569,20 @@ void ProcessClients()
 							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
 
 						}
-
+						
 						for (int i = 0; i < numOfCls; i++) {
 							if (phyMsg.id != i) {
+								//맞았다면
 								if (phyPlayers[phyMsg.id].Hit_BB.Intersects(*g_boundaries[phyPlayers[i].TypeName])) {
 									cout << "hit!" << endl;
 									phyPlayers[i].is_hitted = true;
 									phyPlayers[i].is_jump = true;
 									//맞은 방향
 									phyPlayers[i].hitted_dir = phyPlayers[phyMsg.id].dir;
+									SendHitPalyer(players[phyMsg.id].Character_type, phyPlayers[phyMsg.id].Hit_BB.Center);
+
 									phyPlayers[phyMsg.id].Hit_BB.Center = DirectX::XMFLOAT3(0, 0, 0);
+									
 								}
 							}
 						}
@@ -1225,6 +1229,7 @@ void ProcessClients()
 									phyPlayers[i].SetCrossSpeed(cos(45) * 7.5f);
 									break;
 								}
+
 								for (int j = 0; j < numOfCls; ++j) {
 									if (i != j && g_boundaries["husky"]->Intersects(*g_boundaries[phyPlayers[j].TypeName])) {
 										phyPlayers[j].hitted_dir = phyPlayers[i].dir;
