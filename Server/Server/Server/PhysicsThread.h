@@ -707,7 +707,7 @@ void ProcessClients()
 				//아이스 , 스노우 아무것도 출동하지 않을때 
 				if (phyPlayers[i].CurrentIcecube == -1 && phyPlayers[i].CurrentSnowcube == -1)
 				{
-					phyPlayers[i].gravity -= 9.8f / pow(elapsedTime, 2);
+					phyPlayers[i].gravity -= 0.98f / pow(elapsedTime, 2)*elapsedTime;
 				}
 			}
 
@@ -1123,7 +1123,7 @@ void ProcessClients()
 			{
 				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
 				if (phyPlayers[i].is_jump == true && phyPlayers[i].is_hitted == true) {
-					phyPlayers[i].m_pos.y += (HITTED_JUMP_POWER + phyPlayers[i].gravity);
+					phyPlayers[i].m_pos.y += (HITTED_JUMP_POWER + phyPlayers[i].gravity* elapsedTime);
 				}
 				else if (phyPlayers[i].is_jump == true)
 				{

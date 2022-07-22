@@ -312,7 +312,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[i]->is_StartFallAnim = false;
 		}
 	}
-	//here
 	m_Users[m_PlayerID]->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
 
 	if (m_Users[m_PlayerID]->GetSkillCool()) {
@@ -410,13 +409,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
 	}
-
-	//{		//우박 hail
-	//	for (int i = 0; i < 5; ++i) {
-	//		AppContext->m_RItemsVec[213 + i]->SetPosition(g_pFramework->m_pNetwork->GetHailPos(i));
-
-	//	}
-	//}
 
 	for (auto& p : m_Users)
 	{

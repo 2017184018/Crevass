@@ -31,5 +31,5 @@
 #define SPEED_POWER 1
 #define FPS				30
 
-#define BASE_SPEED 1.8
+#define BASE_SPEED 2.5
 #define BASE_HITTEDSPEED 0.7
