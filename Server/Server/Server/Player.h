@@ -77,6 +77,7 @@ public:
 	int CurrentSnowcube = -1;
 	string TypeName;
 	bool IsInteract = false;
+	bool IsDead = false;
 private:
 	float Speed = 1.5f;
 	float Crossspeed = cos(45) * 1.5f;

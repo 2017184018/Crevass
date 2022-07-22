@@ -188,15 +188,15 @@ void PlayerController::HandleInput(const float deltaT)
 	}
 
 
-	if (GetAsyncKeyState(VK_F1) & 0x8000) {
-		m_Owner->SetCamera(CameraType::First);
-	}
-	if (GetAsyncKeyState(VK_F2) & 0x8000) {
-		m_Owner->SetCamera(CameraType::Third);
-	}
-	if (GetAsyncKeyState(VK_F3) & 0x8000) {
-		m_Owner->SetCamera(CameraType::Free);
-	}
+	//if (GetAsyncKeyState(VK_F1) & 0x8000) {
+	//	m_Owner->SetCamera(CameraType::First);
+	//}
+	//if (GetAsyncKeyState(VK_F2) & 0x8000) {
+	//	m_Owner->SetCamera(CameraType::Third);
+	//}
+	//if (GetAsyncKeyState(VK_F3) & 0x8000) {
+	//	m_Owner->SetCamera(CameraType::Free);
+	//}
 
 }
 

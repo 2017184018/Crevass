@@ -657,7 +657,12 @@ void Character::Update(const float deltaT)
 		CameraType cType = m_MyCamera->GetCameraType();
 		if (cType == CameraType::Third)
 		{
-			XMFLOAT3 target = GetPosition();
+			XMFLOAT3 target;
+			if (IsDead) {
+				target = WatchPlayerPosition;
+			}
+			else
+				target = GetPosition();
 			target.y += 100;
 			m_MyCamera->Update(target, deltaT);
 			m_MyCamera->SetTarget(target);
@@ -665,14 +670,14 @@ void Character::Update(const float deltaT)
 	}
 }
 
-void Character::SetCamera(Camera* myCamera, CameraType cameraType)
+void Character::SetCamera(Camera* myCamera, CameraType cameraType, bool IsFirst)
 {
 	m_MyCamera = myCamera;
 
-	SetCamera(cameraType);
+	SetCamera(cameraType, IsFirst);
 }
 
-void Character::SetCamera(CameraType cameraType)
+void Character::SetCamera(CameraType cameraType, bool IsFirst)
 {
 	if (m_MyCamera == nullptr) return;
 	m_MyCamera->SetCamera(cameraType, this);
@@ -687,7 +692,10 @@ void Character::SetCamera(CameraType cameraType)
 		break;
 	case CameraType::Third:
 		m_MyCamera->SetTimeLag(0.1f);
-		m_MyCamera->SetOffset(XMFLOAT3(0.0f, 150.f, -300.f));
+		if (IsFirst)
+			m_MyCamera->SetOffset(XMFLOAT3(0.0f, 150.f, -300.f));
+		else
+			m_MyCamera->SetOffset(XMFLOAT3(0.0f, 110.f, -300.f));
 		m_MyCamera->SetPosition(MathHelper::Add(GetPosition(), m_MyCamera->GetOffset()));
 		break;
 	case CameraType::Free:
@@ -907,5 +915,15 @@ void Character::SetSkillCool(bool cool)
 bool Character::GetSkillCool()
 {
 	return IsSkillCool;
+}
+
+void Character::SetWatchPlayerPosition(float x, float y, float z)
+{
+	WatchPlayerPosition = XMFLOAT3(x, y, z);
+}
+
+void Character::SetWatchPlayerPosition(XMFLOAT3 v)
+{
+	WatchPlayerPosition = v;
 }
 

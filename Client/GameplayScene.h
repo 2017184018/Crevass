@@ -88,8 +88,9 @@ public:
 	int tmp2 = -1;
 
 	void Fall(int num);
-	UINT Player_Lifecnt[5] = {0,1,2,3,4};
+	UINT Player_Lifecnt[5] = {5,5,5,5,5};
 
+	int WatchPlayerIdx = -1;
 	int FallX, FallZ;
 	float Gravity = 0.1;
 
