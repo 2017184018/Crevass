@@ -312,7 +312,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			m_Users[i]->is_StartFallAnim = false;
 		}
 	}
-
+	//here
 	m_Users[m_PlayerID]->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
 
 	if (m_Users[m_PlayerID]->GetSkillCool()) {

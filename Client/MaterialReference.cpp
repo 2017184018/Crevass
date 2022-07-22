@@ -64,7 +64,7 @@ void MaterialReference::BuildMaterials()
 	auto Penguin = std::make_unique<Material>();
 	Penguin->MatCBIndex = 2;
 	Penguin->DiffuseSrvHeapIndex = 2;
-	Penguin->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	Penguin->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	Penguin->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Penguin->Roughness = 1.0f;
 
@@ -72,13 +72,13 @@ void MaterialReference::BuildMaterials()
 	water->MatCBIndex = 3;
 	water->DiffuseSrvHeapIndex = 3;
 	water->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	water->FresnelR0 = XMFLOAT3(0.2f, 0.2f, 0.2f);
+	water->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	water->Roughness = 0.0f;
 
 	auto husky = std::make_unique<Material>();
 	husky->MatCBIndex = 4;
 	husky->DiffuseSrvHeapIndex = 4;
-	husky->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	husky->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	husky->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	husky->Roughness = 1.0f;
 
@@ -113,7 +113,7 @@ void MaterialReference::BuildMaterials()
 	auto arctic = std::make_unique<Material>();
 	arctic->MatCBIndex = 9;
 	arctic->DiffuseSrvHeapIndex = 9;
-	arctic->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	arctic->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	arctic->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	arctic->Roughness = 1.0f;
 
@@ -177,63 +177,63 @@ void MaterialReference::BuildMaterials()
 	waterdrop->MatCBIndex = 18;
 	waterdrop->DiffuseSrvHeapIndex = 18;
 	waterdrop->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	waterdrop->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	waterdrop->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	waterdrop->Roughness = 1.0f;
 
 	auto UI_hp = std::make_unique<Material>();
 	UI_hp->MatCBIndex = 19;
 	UI_hp->DiffuseSrvHeapIndex = 19;
 	UI_hp->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_hp->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_hp->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_hp->Roughness = 1.0f;
 
 	auto UI_Penguin = std::make_unique<Material>();
 	UI_Penguin->MatCBIndex = 20;
 	UI_Penguin->DiffuseSrvHeapIndex = 20;
 	UI_Penguin->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_Penguin->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Penguin->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_Penguin->Roughness = 1.0f;
 
 	auto UI_Husky = std::make_unique<Material>();
 	UI_Husky->MatCBIndex = 21;
 	UI_Husky->DiffuseSrvHeapIndex = 21;
 	UI_Husky->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_Husky->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Husky->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_Husky->Roughness = 1.0f;
 
 	auto UI_Seal= std::make_unique<Material>();
 	UI_Seal->MatCBIndex = 22;
 	UI_Seal->DiffuseSrvHeapIndex = 22;
 	UI_Seal->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_Seal->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Seal->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_Seal->Roughness = 1.0f;
 
 	auto UI_bear = std::make_unique<Material>();
 	UI_bear->MatCBIndex = 23;
 	UI_bear->DiffuseSrvHeapIndex = 23;
 	UI_bear->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_bear->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_bear->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_bear->Roughness = 1.0f;
 
 	auto UI_Fox = std::make_unique<Material>();
 	UI_Fox->MatCBIndex = 24;
 	UI_Fox->DiffuseSrvHeapIndex = 24;
 	UI_Fox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_Fox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_Fox->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_Fox->Roughness = 1.0f;
 
 	auto UI_SkillOn = std::make_unique<Material>();
 	UI_SkillOn->MatCBIndex = 25;
 	UI_SkillOn->DiffuseSrvHeapIndex = 25;
 	UI_SkillOn->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_SkillOn->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_SkillOn->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_SkillOn->Roughness = 1.0f;
 
 	auto UI_SkillOff = std::make_unique<Material>();
 	UI_SkillOff->MatCBIndex = 26;
 	UI_SkillOff->DiffuseSrvHeapIndex = 26;
 	UI_SkillOff->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	UI_SkillOff->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	UI_SkillOff->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_SkillOff->Roughness = 1.0f;
 
 	
@@ -241,49 +241,49 @@ void MaterialReference::BuildMaterials()
 	Particle_Ice->MatCBIndex = 27;
 	Particle_Ice->DiffuseSrvHeapIndex = 27;
 	Particle_Ice->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
-	Particle_Ice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	Particle_Ice->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	Particle_Ice->Roughness = 1.0f;
 
 	auto snow_particle = std::make_unique<Material>();
 	snow_particle->MatCBIndex = 28;
 	snow_particle->DiffuseSrvHeapIndex = 28;
 	snow_particle->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
-	snow_particle->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	snow_particle->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	snow_particle->Roughness = 1.0f;
 
 	auto star_particle = std::make_unique<Material>();
 	star_particle->MatCBIndex = 29;
 	star_particle->DiffuseSrvHeapIndex = 29;
 	star_particle->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
-	star_particle->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	star_particle->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	star_particle->Roughness = 1.0f;
 
 	auto snowmanicon = std::make_unique<Material>();
 	snowmanicon->MatCBIndex = 30;
 	snowmanicon->DiffuseSrvHeapIndex = 30;
 	snowmanicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	snowmanicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	snowmanicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	snowmanicon->Roughness = 1.0f;
 
 	auto iglooicon = std::make_unique<Material>();
 	iglooicon->MatCBIndex = 31;
 	iglooicon->DiffuseSrvHeapIndex = 31;
 	iglooicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	iglooicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	iglooicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	iglooicon->Roughness = 1.0f;
 
 	auto blueicon = std::make_unique<Material>();
 	blueicon->MatCBIndex = 32;
 	blueicon->DiffuseSrvHeapIndex = 32;
 	blueicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	blueicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	blueicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	blueicon->Roughness = 1.0f;
 
 	auto redicon = std::make_unique<Material>();
 	redicon->MatCBIndex = 33;
 	redicon->DiffuseSrvHeapIndex = 33;
 	redicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	redicon->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	redicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	redicon->Roughness = 1.0f;
 
 	auto TranslucentArcticFox = std::make_unique<Material>();

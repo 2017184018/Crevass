@@ -163,6 +163,7 @@ void ApplicationContext::CreateBlocks()
 			top->IndexCount = top->Geo->DrawArgs["snow_top"].IndexCount;
 			top->StartIndexLocation = top->Geo->DrawArgs["snow_top"].StartIndexLocation;
 			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
+			top->m_Bounds = instancingObj->Geo->DrawArgs["snow_top"].Bounds;
 			top->m_IsVisible = false;
 			top->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
 			top->m_World = MathHelper::Identity4x4();
