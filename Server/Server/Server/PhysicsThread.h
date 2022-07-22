@@ -792,6 +792,9 @@ void ProcessClients()
 						phyPlayers[i].m_pos.z = BlockTmpZ * 400;
 						if(phyPlayers[i].lifecnt>0)
 							phyPlayers[i].lifecnt -= 1;
+						if (phyPlayers[i].lifecnt == 0) {
+							phyPlayers[i].IsDead = true;
+						}
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;
 						/*	if (TypeName[i] == "Penguin") {
@@ -804,6 +807,14 @@ void ProcessClients()
 							SendReset(i, phyPlayers[i].lifecnt);
 
 					}
+				}
+
+				if (phyPlayers[i].IsDead) {
+					phyPlayers[i].m_pos.x = -1000;
+					phyPlayers[i].m_pos.y = 30;
+					phyPlayers[i].m_pos.z = -1000;
+					players[i].pos.y = phyPlayers[i].m_pos.y;
+					phyPlayers[i].gravity = 0.0f;
 				}
 			}
 			Update(phyPlayers, elapsedTime);

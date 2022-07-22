@@ -49,7 +49,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
 	for (int i = 0; i < 25; i++) {
-		AppContext->CreateParticle("crushparticle", "crushparticle" + std::to_string(i), "Particle_Ice",false);
+		AppContext->CreateParticle("crushparticle", "crushparticle" + std::to_string(i), "Particle_Ice", false);
 	}
 	/*AppContext->CreateParticle("starParticle", "Penguin_star_particle" , "Particle_star");
 	AppContext->CreateParticle("starParticle", "husky_star_particle", "Particle_star");
@@ -70,7 +70,7 @@ void GameplayScene::Initialize()
 			}
 		}
 	}
-	
+
 #ifdef DEBUG_SHADOW
 	AppContext->CreateDebugBoundingBox("huskyBB", "huskyBB0");
 #endif
@@ -98,26 +98,26 @@ bool GameplayScene::Enter()
 	/* Light Setting */
 	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.47735f, -0.81735f, 1.07735 };
 
-	 AppContext->DisplayOutline();
-	 AppContext->DisplayMinimap();
-	 AppContext->DisplaySnowmans();
-	 AppContext->DisplayWaterDrop();
-	 AppContext->DisplayHail();
-	 AppContext->Displayigloos();
-	 AppContext->DisplayBlocks();
-	 AppContext->DisplayBackground();
+	AppContext->DisplayOutline();
+	AppContext->DisplayMinimap();
+	AppContext->DisplaySnowmans();
+	AppContext->DisplayWaterDrop();
+	AppContext->DisplayHail();
+	AppContext->Displayigloos();
+	AppContext->DisplayBlocks();
+	AppContext->DisplayBackground();
 
-	 for (int j = 0; j < 5; j++) {
-		 for (int i = 0; i < 5; i++) {
-			 AppContext->DisplayUI("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
-		 }
-	 }
-	 AppContext->DisplayUI("ui_Penguin", "ui_Penguin", 20, -380.f, 180.f, UI_SIZEX, UI_SIZEY);
-	 AppContext->DisplayUI("ui_husky", "ui_husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
-	 AppContext->DisplayUI("ui_Seal", "ui_Seal", 22, -380.f, 120.f, UI_SIZEX, UI_SIZEY);
-	 AppContext->DisplayUI("ui_PolarBear", "ui_PolarBear", 23, -380.f, 90.f, UI_SIZEX, UI_SIZEY);
-	 AppContext->DisplayUI("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
-	 AppContext->DisplayUI("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
+			AppContext->DisplayUI("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
+		}
+	}
+	AppContext->DisplayUI("ui_Penguin", "ui_Penguin", 20, -380.f, 180.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_husky", "ui_husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_Seal", "ui_Seal", 22, -380.f, 120.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_PolarBear", "ui_PolarBear", 23, -380.f, 90.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
 
 	//m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 	//나 
@@ -142,8 +142,8 @@ bool GameplayScene::Enter()
 		m_Users[i]->m_IsVisible = true;
 
 	}
-
-	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third);
+	WatchPlayerIdx = m_PlayerID;
+	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third,true);
 	m_Users[m_PlayerID]->SetController();
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
@@ -179,7 +179,7 @@ bool GameplayScene::Enter()
 
 	//눈 파티클 시작
 	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
-	
+
 	return false;
 }
 
@@ -199,10 +199,10 @@ void GameplayScene::Exit()
 	AppContext->Hiddenigloos();
 
 	AppContext->HiddenCharacter("Penguin", "Penguin0");
-	AppContext->HiddenCharacter("Husky","Husky0");
-	AppContext->HiddenCharacter("ArcticFox","ArcticFox0");
-	AppContext->HiddenCharacter("PolarBear","PolarBear0");
-	AppContext->HiddenCharacter("Seal","Seal0");
+	AppContext->HiddenCharacter("Husky", "Husky0");
+	AppContext->HiddenCharacter("ArcticFox", "ArcticFox0");
+	AppContext->HiddenCharacter("PolarBear", "PolarBear0");
+	AppContext->HiddenCharacter("Seal", "Seal0");
 
 	AppContext->HiddenParticle("starParticle", "Penguin_star_particle");
 	AppContext->HiddenParticle("starParticle", "husky_star_particle");
@@ -275,7 +275,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
 			m_Users[i]->m_PlayerController->SetLoop(g_pFramework->m_pNetwork->GetPenguinSkill());
 		}
-		
+
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 
@@ -324,8 +324,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->UpdateParticleTime(fDeltaTime);
 
-	for(int i=0;i<25;i++)
-	AppContext->FindObject<Particle>("crushparticle", "crushparticle" + std::to_string(i))->Update(fDeltaTime);
+	for (int i = 0; i < 25; i++)
+		AppContext->FindObject<Particle>("crushparticle", "crushparticle" + std::to_string(i))->Update(fDeltaTime);
 
 	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
 	AppContext->FindObject<Particle>("starParticle", "husky_star_particle")->Update(fDeltaTime);
@@ -431,7 +431,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		{
 			if (i == m_PlayerID)
 			{
-				
+
 				m_Users[i]->m_PlayerController->Fall();
 				Fall(i);
 			}
@@ -450,19 +450,29 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 			g_pFramework->m_pNetwork->SetCharacterReset(i);
 			g_pFramework->m_pNetwork->SetCharacterFall(i);
+
 			//내가 떨어졌을때 
-			if (i == m_PlayerID)
-			{
+			m_Users[m_PlayerID]->m_PlayerController->SetIsFall();
+			GraphicsContext::GetApp()->OnBlurEffect(false);
 
-				m_Users[i]->m_PlayerController->SetIsFall();
-				GraphicsContext::GetApp()->OnBlurEffect(false);
+			IsFall[m_PlayerID] = false;
+			if (Player_Lifecnt[m_PlayerID] == 0) {
+				g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
+			}
+		}
+		if (Player_Lifecnt[m_PlayerID] == 0) {
+			m_Users[m_PlayerID]->m_IsVisible = false;
 
-				IsFall[m_PlayerID] = false;
-				if (Player_Lifecnt[i] == 0) {
-					g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
-				
+			while (Player_Lifecnt[WatchPlayerIdx] == 0) {
+				++WatchPlayerIdx;
+				if (WatchPlayerIdx == g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum) {
+					WatchPlayerIdx = 0;
 				}
 			}
+			auto tmp = m_Users[WatchPlayerIdx]->GetPosition();
+			m_Users[m_PlayerID]->IsDead = true;
+			m_Users[m_PlayerID]->SetWatchPlayerPosition(tmp);
+			m_Users[WatchPlayerIdx]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third,false);
 		}
 	}
 	{
@@ -506,7 +516,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			else {
 				XMStoreFloat4x4(&AppContext->m_RItemsVec[209 + i]->m_World, XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(3.14 * 7 / 6));
 			}
-		
+
 			if (SnowmanIndex[i] % 5) {
 				AppContext->m_RItemsVec[209 + i]->m_World._41 = AppContext->m_RItemsVec[2 * SnowmanIndex[i] + 1]->m_World._41 - 20;
 			}
@@ -756,7 +766,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
-			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
+		AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
@@ -1082,7 +1092,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["crushparticle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["starParticle"], AppContext->m_RItemsVec);
-	
+
 
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());

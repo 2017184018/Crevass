@@ -83,8 +83,8 @@ public:
 
 	void Update(const float deltaT);
 
-	void SetCamera(Camera* myCamera, CameraType cameraType);
-	void SetCamera(CameraType cameraType);
+	void SetCamera(Camera* myCamera, CameraType cameraType, bool IsFirst);
+	void SetCamera(CameraType cameraType,bool IsFirst);
 	void SetController();
 	void SetParts(CharacterParts* parts);
 	void SetDir(float angle);
@@ -123,6 +123,8 @@ public:
 	void SetSkillCool(bool cool);
 	bool GetSkillCool();
 
+	void SetWatchPlayerPosition(float x, float y, float z);
+	void SetWatchPlayerPosition(DirectX::XMFLOAT3 v);
 public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;
@@ -134,12 +136,14 @@ public:
 	float m_CurrentAngle = 0.0f;
 
 	BoundingBox m_HitBox;
+	bool IsDead = false;
 private:
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Right;
 	DirectX::XMFLOAT3 m_Up;
 	DirectX::XMFLOAT3 m_Look;
-
+	DirectX::XMFLOAT3 WatchPlayerPosition;
+	;
 	float m_Pitch;
 	float m_Yaw;
 	float m_Roll;

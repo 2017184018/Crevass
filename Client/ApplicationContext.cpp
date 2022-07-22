@@ -314,7 +314,7 @@ void ApplicationContext::CreateBackground()
 		int tmp = 0;
 		float tmp2 = 0;
 
-		chr->Rotate(0, 90, 0);
+		//chr->Rotate(0, 180, 0);
 		chr->SetPosition(-1000, -1000, -1000);
 	}
 
@@ -744,6 +744,7 @@ void ApplicationContext::CreateOutline() {
 		husky->m_SkinnedCBIndex = BoneIndex::Husky;
 		husky->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get();
 		husky->m_World = MathHelper::Identity4x4();
+		husky->SetPosition(-1000, -1000, -1000);
 
 		Character* penguin = CreateObject<Character>("PenguinOutline", "PenguinOutline0");
 		penguin->Geo = MeshReference::GetApp()->m_GeometryMesh["Penguin"].get();
@@ -757,6 +758,7 @@ void ApplicationContext::CreateOutline() {
 		penguin->m_SkinnedCBIndex = BoneIndex::Penguin;
 		penguin->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Penguin"].get();
 		penguin->m_World = MathHelper::Identity4x4();
+		penguin->SetPosition(-1000, -1000, -1000);
 
 		Character* arcticfox = CreateObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
 		arcticfox->Geo = MeshReference::GetApp()->m_GeometryMesh["ArcticFox"].get();
@@ -770,6 +772,7 @@ void ApplicationContext::CreateOutline() {
 		arcticfox->m_SkinnedCBIndex = BoneIndex::Fox;
 		arcticfox->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get();
 		arcticfox->m_World = MathHelper::Identity4x4();
+		arcticfox->SetPosition(-1000, -1000, -1000);
 
 		Character* polarbear = CreateObject<Character>("PolarBearOutline", "PolarBearOutline0");
 		polarbear->Geo = MeshReference::GetApp()->m_GeometryMesh["PolarBear"].get();
@@ -783,6 +786,7 @@ void ApplicationContext::CreateOutline() {
 		polarbear->m_SkinnedCBIndex = BoneIndex::PolarBear;
 		polarbear->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get();
 		polarbear->m_World = MathHelper::Identity4x4();
+		polarbear->SetPosition(-1000, -1000, -1000);
 
 		Character* seal = CreateObject<Character>("SealOutline", "SealOutline0");
 		seal->Geo = MeshReference::GetApp()->m_GeometryMesh["Seal"].get();
@@ -796,6 +800,7 @@ void ApplicationContext::CreateOutline() {
 		seal->m_SkinnedCBIndex = BoneIndex::Seal;
 		seal->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get();
 		seal->m_World = MathHelper::Identity4x4();
+		seal->SetPosition(-1000, -1000, -1000);
 
 	}
 }
@@ -2757,6 +2762,7 @@ void ApplicationContext::DisplayCharacter( Character* user, XMFLOAT3 pos,bool is
 			user->SetAnimationPlayerState(Character::PlayerState::STATE_IDLE);
 			user->m_IsVisible = isVisible;
 			user->Scale(20.f, 20.f, 20.f);
+			user->Rotate(0, 180, 0);
 			user->SetPosition(pos);
 		
 			
