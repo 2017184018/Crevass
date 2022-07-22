@@ -403,7 +403,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_hail packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		for (int i = 0; i < 5; ++i) {
-			HailPos[i] = packet.pos[i];
+			AppContext->FindObject<GameObject>("rock_1", "rock_1" + std::to_string(i + 15))->SetPosition(packet.pos[i]);
 		}
 		break;
 	}

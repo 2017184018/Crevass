@@ -411,12 +411,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
 	}
 
-	{		//우박 hail
-		for (int i = 0; i < 5; ++i) {
-			AppContext->m_RItemsVec[213 + i]->SetPosition(g_pFramework->m_pNetwork->GetHailPos(i));
+	//{		//우박 hail
+	//	for (int i = 0; i < 5; ++i) {
+	//		AppContext->m_RItemsVec[213 + i]->SetPosition(g_pFramework->m_pNetwork->GetHailPos(i));
 
-		}
-	}
+	//	}
+	//}
 
 	for (auto& p : m_Users)
 	{
