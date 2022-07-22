@@ -184,7 +184,29 @@ bool GameCore::UpdateCore(IGameApp& game)
 		const float deltaT = g_GameTimer->DeltaTime();
 		game.Update(deltaT);
 
-		PreparePresent();
+		//PreparePresent();
+		/////////////////////////////////////////////////////////////////////////////////////////
+		ThrowIfFailed(g_DirectCmdListAlloc->Reset());
+		ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), Graphics::g_OpaquePSO.Get()));
+
+		m_GraphicsRenderer->SetGraphicsDescriptorHeap();
+
+		m_GraphicsRenderer->RenderGraphicsShadow();
+		game.WriteShadow();
+
+		g_CommandList->RSSetViewports(1, &mScreenViewport);
+		g_CommandList->RSSetScissorRects(1, &mScissorRect);
+
+
+		g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
+			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		// Clear the back buffer and depth buffer.
+		g_CommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
+		g_CommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		g_CommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
 		m_GraphicsRenderer->RenderGraphics();
 		game.RenderScene();
 		m_GraphicsRenderer->ExecuteBlurEffects();

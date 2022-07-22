@@ -89,6 +89,11 @@ void SceneManager::RenderUI()
 	m_Scenes[m_CurScene]->RenderUI();
 }
 
+void SceneManager::WriteShadow()
+{
+	m_Scenes[m_CurScene]->WriteShadow();
+}
+
 Scene* SceneManager::GetCurScene() const
 {
 	return m_Scenes[m_CurScene];

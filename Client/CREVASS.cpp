@@ -171,6 +171,12 @@ void CREVASS::RenderUI(void)
 		SceneManager::GetApp()->RenderUI();
 }
 
+void CREVASS::WriteShadow(void)
+{
+	if (m_SceneManager)
+		m_SceneManager->WriteShadow();
+}
+
 void CREVASS::BuildCharacters()
 {
 	AppContext->CreateCharacter("husky", "husky0", "husky", BoneIndex::Husky);

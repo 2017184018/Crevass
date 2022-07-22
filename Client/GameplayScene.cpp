@@ -168,12 +168,6 @@ bool GameplayScene::Enter()
 		SnowmanIndex[i] = g_pFramework->m_pNetwork->GetSnowmanLocation(i);
 	}
 
-	//for (int i = 0; i < 25; ++i) {
-	//	AppContext->m_RItemsVec[2 * i + 1]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
-	//	AppContext->m_RItemsVec[2 * (i + 1)]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
-	//	AppContext->m_RItemsVec[51 + i]->SetPosition(g_pFramework->m_pNetwork->GetBlockPos(i));
-	//	DestructionCnt[i] = g_pFramework->m_pNetwork->GetBlockDestructionCnt(i);
-	//}
 
 	//여기서 초기화
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
@@ -181,9 +175,6 @@ bool GameplayScene::Enter()
 		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->SetPosition(-380.f, 180.f - i * 30.f, 1.f);
 		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->m_positionRatio = { (-380.f - (UI_SIZEX / 20.f)) / 800.f, (180.f - i * 30.f - (UI_SIZEY / 20.f)) / 600.f };
 
-		//GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
-		//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
-		//이부분 
 	}
 
 	//눈 파티클 시작
@@ -323,6 +314,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	m_Users[m_PlayerID]->SetSkillCool(g_pFramework->m_pNetwork->GetPlayerSkillCool(m_PlayerID));
+
 	if (m_Users[m_PlayerID]->GetSkillCool()) {
 		AppContext->FindObject<GameObject>("ui_SkillOn", "ui_SkillOn")->m_MaterialIndex = 26;
 	}
@@ -418,12 +410,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._42 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._42 = AppContext->m_RItemsVec[51 + i]->m_World._42;
 		AppContext->m_RItemsVec[2 * i + 1]->m_World._43 = AppContext->m_RItemsVec[2 * (i + 1)]->m_World._43 = AppContext->m_RItemsVec[51 + i]->m_World._43;
 	}
+
 	{		//우박 hail
 		for (int i = 0; i < 5; ++i) {
 			AppContext->m_RItemsVec[213 + i]->SetPosition(g_pFramework->m_pNetwork->GetHailPos(i));
 
 		}
 	}
+
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
@@ -524,16 +518,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		}
 	}
-
-	//for (int i = 0; i < 5; ++i) {	//life
-	//	auto CameraPOS = m_Users[m_PlayerID]->m_MyCamera->GetPosition();
-
-	//	AppContext->m_RItemsVec[139 + i]->m_World._41 = AppContext->m_RItemsVec[134 + i]->m_World._41 = XMVectorGetX(CameraPOS) - 45 + 7.7 * i;
-	//	AppContext->m_RItemsVec[139 + i]->m_World._42 = AppContext->m_RItemsVec[134 + i]->m_World._42 = XMVectorGetY(CameraPOS) + 14;
-	//	AppContext->m_RItemsVec[139 + i]->m_World._42 += 9.f;
-	//	AppContext->m_RItemsVec[139 + i]->m_World._43 = AppContext->m_RItemsVec[134 + i]->m_World._43 = XMVectorGetZ(CameraPOS) + 100;
-	//	AppContext->m_RItemsVec[139 + i]->m_World._43 += 0.02;
-	//}
 
 	{	//waterdrop
 		for (int i = 0; i < 4; ++i) {
@@ -966,6 +950,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 void GameplayScene::Render()
 {
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 
@@ -1123,6 +1108,28 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 
 
+}
+
+void GameplayScene::RenderUI()
+{
+	// Timer
+	GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
+	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer / 60) + L" : " + std::to_wstring(m_Timer % 60), 0, -Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
+
+	// skill cool time
+	//GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
+	//GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer % 60), -Core::g_DisplayWidth/2.9, Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
+
+}
+
+void GameplayScene::WriteShadow()
+{
+	TEST();
+}
+
+void GameplayScene::TEST()
+{
+
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
@@ -1159,18 +1166,6 @@ void GameplayScene::Render()
 	}
 
 	GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
-}
-
-void GameplayScene::RenderUI()
-{
-	// Timer
-	GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
-	GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer / 60) + L" : " + std::to_wstring(m_Timer % 60), 0, -Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
-
-	// skill cool time
-	//GraphicsContext::GetApp()->SetTextSize(Core::g_DisplayWidth / 20);
-	//GraphicsContext::GetApp()->DrawD2DText(std::to_wstring(m_Timer % 60), -Core::g_DisplayWidth/2.9, Core::g_DisplayHeight / 2.3, Core::g_DisplayWidth);
-
 }
 
 float GameplayScene::distance(XMFLOAT3 a, XMFLOAT3 b)

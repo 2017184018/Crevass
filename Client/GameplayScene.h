@@ -68,8 +68,12 @@ public:
 	virtual void Render() override;
 	float distance(XMFLOAT3 a, XMFLOAT3 b);
 	virtual void RenderUI() override;
+	virtual void WriteShadow() override;
 	/* ID: battleID */
 	std::map<int, Character*> m_Users;
+
+public:
+	void TEST();
 
 //	bool IsShake[25];
 	//bool IsRight[25];		//오른쪽으로 흔들리는지

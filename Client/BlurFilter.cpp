@@ -124,6 +124,8 @@ void BlurFilter::Execute(ID3D12GraphicsCommandList* cmdList,
 	}
 }
 
+
+
 std::vector<float> BlurFilter::CalcGaussWeights(float sigma)
 {
 	float twoSigma2 = 2.0f * sigma * sigma;

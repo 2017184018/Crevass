@@ -38,7 +38,9 @@ public:
 	void Shutdown();
 
 public:
+	void SetGraphicsDescriptorHeap();
 	void RenderGraphics();
+	void RenderGraphicsShadow();
 
 	void ExecuteBlurEffects();
 	void ExecuteResizeBlur();

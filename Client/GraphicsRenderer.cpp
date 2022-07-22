@@ -55,11 +55,17 @@ void GraphicsRenderer::Shutdown()
 {
 }
 
+void GraphicsRenderer::SetGraphicsDescriptorHeap()
+{
+	ID3D12DescriptorHeap* descriptorHeaps[] = { m_SrvDescriptorHeap.Get() };
+	g_CommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+}
+
 void GraphicsRenderer::RenderGraphics()
 {
 	/****************************** Render **********************************/
-	ID3D12DescriptorHeap* descriptorHeaps[] = { m_SrvDescriptorHeap.Get() };
-	g_CommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	//ID3D12DescriptorHeap* descriptorHeaps[] = { m_SrvDescriptorHeap.Get() };
+	//g_CommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 	g_CommandList->SetGraphicsRootSignature(m_RenderRS.Get());
 
@@ -73,6 +79,18 @@ void GraphicsRenderer::RenderGraphics()
 	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	skyTexDescriptor.Offset(mSkyTexHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 	g_CommandList->SetGraphicsRootDescriptorTable(3, skyTexDescriptor);
+
+	//CD3DX12_GPU_DESCRIPTOR_HANDLE shadowTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	//shadowTexDescriptor.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+	//g_CommandList->SetGraphicsRootDescriptorTable(6, shadowTexDescriptor);
+}
+
+void GraphicsRenderer::RenderGraphicsShadow()
+{
+	g_CommandList->SetGraphicsRootSignature(m_RenderRS.Get());
+
+	auto matBuffer = GraphicsContext::GetApp()->MaterialBuffer->Resource();
+	g_CommandList->SetGraphicsRootShaderResourceView(1, matBuffer->GetGPUVirtualAddress());
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE shadowTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	shadowTexDescriptor.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
