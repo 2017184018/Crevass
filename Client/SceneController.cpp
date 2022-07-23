@@ -29,7 +29,6 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool up = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000 && !is_ready) {
 			if (up) {
-				cout << "pushed" << endl;
 				if (CREVASS::GetApp()->currchar == 4) {
 					CREVASS::GetApp()->currchar = 0;
 				}
@@ -40,30 +39,35 @@ void LobbyController::HandleInput(const float deltaT)
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
 						if (CREVASS::GetApp()->currchar == 0) {
 							++CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
 						if (CREVASS::GetApp()->currchar == 1) {
 							++CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
 						if (CREVASS::GetApp()->currchar == 2) {
 							++CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_POLARBEAR) {
 						if (CREVASS::GetApp()->currchar == 3) {
 							++CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
 						if (CREVASS::GetApp()->currchar == 4) {
 							CREVASS::GetApp()->currchar = 0;
+							i = -1;
 							continue;
 						}
 					}
@@ -115,30 +119,35 @@ void LobbyController::HandleInput(const float deltaT)
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
 						if (CREVASS::GetApp()->currchar == 0) {
 							CREVASS::GetApp()->currchar=4;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
 						if (CREVASS::GetApp()->currchar == 1) {
 							--CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
 						if (CREVASS::GetApp()->currchar == 2) {
 							--CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_POLARBEAR) {
 						if (CREVASS::GetApp()->currchar == 3) {
 							--CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
 						if (CREVASS::GetApp()->currchar == 4) {
 							--CREVASS::GetApp()->currchar;
+							i = -1;
 							continue;
 						}
 					}

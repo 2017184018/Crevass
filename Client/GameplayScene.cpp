@@ -143,7 +143,7 @@ bool GameplayScene::Enter()
 
 	}
 	WatchPlayerIdx = m_PlayerID;
-	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third,true);
+	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third, true);
 	m_Users[m_PlayerID]->SetController();
 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
@@ -461,10 +461,43 @@ void GameplayScene::Update(const float& fDeltaTime)
 					WatchPlayerIdx = 0;
 				}
 			}
-			auto tmp = m_Users[WatchPlayerIdx]->GetPosition();
+
+			if (!Inactive) {
+				static bool up = false;
+				static bool down = false;
+				if (GetAsyncKeyState(VK_UP) & 0x8000) {
+					if (up) {
+						do {
+							++WatchPlayerIdx;
+							if (WatchPlayerIdx == g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum) {
+								WatchPlayerIdx = 0;
+							}
+						} while (Player_Lifecnt[WatchPlayerIdx] == 0);
+						up = false;
+					}
+				}
+				else {
+					up = true;
+				}
+				if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+					if (down) {
+						do {
+							--WatchPlayerIdx;
+							if (WatchPlayerIdx == -1) {
+								WatchPlayerIdx = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum - 1;
+							}
+						} while (Player_Lifecnt[WatchPlayerIdx] == 0);
+						down = false;
+					}
+				}
+				else {
+					down = true;
+				}
+			}
+			m_Users[WatchPlayerIdx]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third, false);
+			m_Users[WatchPlayerIdx]->m_MyCamera->SetLook(0,0,1);
 			m_Users[m_PlayerID]->IsDead = true;
-			m_Users[m_PlayerID]->SetWatchPlayerPosition(tmp);
-			m_Users[WatchPlayerIdx]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third,false);
+			m_Users[m_PlayerID]->SetWatchPlayerPosition(m_Users[WatchPlayerIdx]->GetPosition());
 		}
 	}
 	{
@@ -758,7 +791,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 			AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
 			AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 0;
-		AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
+			AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 		}
 		else if (g_pFramework->m_pNetwork->GetCharacterType(m_PlayerID) == CHARACTER_ARCTICFOX) {
 			const std::map<std::string, UINT>& myoutline = AppContext->m_RItemsMap["ArcticFoxOutline"]->GetinstanceKeymap();
