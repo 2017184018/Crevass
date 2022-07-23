@@ -390,6 +390,16 @@ void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
 	mViewDirty = true;
 }
 
+void Camera::SetLook(XMFLOAT3 look)
+{
+	mLook = look;
+}
+
+void Camera::SetLook(float x, float y, float z)
+{
+	mLook = XMFLOAT3(x, y, z);
+}
+
 void Camera::LookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp)
 {
 	XMVECTOR L = XMVector3Normalize(XMVectorSubtract(target, pos));
