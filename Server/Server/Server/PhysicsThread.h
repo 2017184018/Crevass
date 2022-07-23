@@ -948,7 +948,7 @@ void ProcessClients()
 					}
 				}
 			}
-
+			
 			for (int i = 0; i < numOfCls; ++i) {	//눈사람에 숨어을때 위치 동기화
 				if (phyPlayers[i].SnowmanNum >= 0) {
 					phyPlayers[i].m_pos.x = TempSnowmanLocation[phyPlayers[i].SnowmanNum] / 5 * 200;
@@ -1118,12 +1118,13 @@ void ProcessClients()
 					}
 				}
 			}
+			//1
 
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
 				if (phyPlayers[i].is_jump == true && phyPlayers[i].is_hitted == true) {
-					phyPlayers[i].m_pos.y += (HITTED_JUMP_POWER + phyPlayers[i].gravity* elapsedTime);
+					phyPlayers[i].m_pos.y += (HITTED_JUMP_POWER + phyPlayers[i].gravity);
 				}
 				else if (phyPlayers[i].is_jump == true)
 				{
@@ -1131,7 +1132,7 @@ void ProcessClients()
 				}
 				{		//우박 hail
 					if (phyPlayers[i].CurrentBlockNum != -1) {
-						if (phyPlayers[i].TimeWhileBlock >= 180) {		//한 블록에 3초 이상
+						if (phyPlayers[i].TimeWhileBlock >= 10080) {		//한 블록에 3초 이상
 							float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
 							hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
 							g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
@@ -1183,6 +1184,7 @@ void ProcessClients()
 					}
 				}
 			}
+
 			SendHail(*hails);
 			//   Update(phyPlayers)
 			{	//skill

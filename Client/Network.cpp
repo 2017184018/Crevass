@@ -26,7 +26,7 @@ void Network::InitSocket()
 	BOOL optval = TRUE;
 	setsockopt(m_ClientSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
 	ioctlsocket(m_ClientSocket, FIONBIO, &on);	//nonblock
-	std::cout << "Ŭ���̾�Ʈ ���� ����" << std::endl;
+	
 
 	ZeroMemory(&serveraddr, sizeof(SOCKADDR_IN));
 	serveraddr.sin_family = AF_INET;
@@ -213,27 +213,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_game_start packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = true;
-		//for (int i = 0; i < TOTAL_PLAYER_NUM; ++i)
-		//{
-		//	if (packet.players[i].id != -1)
-		//	{
-		//		if (m_pGameInfo->m_PlayersInfo[i] != nullptr)
-		//		{
-		//			if (packet.players[i].posX != NULL && packet.players[i].posY != NULL)
-		//			{
-		//				Info::GetInstance()->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players[i].posX, packet.players[i].posY);
-		//			}
-		//		}
-		//	}
-		//}
-		/*=====================================================*/
-		//PlayerPos = packet.players[m_pGameInfo->m_ClientID].pos;
-		//if (m_pGameInfo->m_ClientID == 0)
-		//	OtherPlayerPos = packet.players[1].pos;
-		//else
-		//	OtherPlayerPos = packet.players[0].pos;
-		//break;
-		/*=====================================================*/
+	
 		for (int i = 0; i < TOTAL_PLAYER_NUM; ++i)
 		{
 			if (packet.players[i].id != -1)
@@ -293,11 +273,7 @@ void Network::ProcessPacket(char* packet_buffer)
 			PlayerSnowmanHide[i] = packet.players[i].SnowmanNum;
 			PlayerSkillCool[i] = packet.players[i].IsSkillCool;
 		}
-		//	cout << packet.players[0].pos.x << endl;
-			//if (m_pGameInfo->m_ClientID == 0)
-			//	OtherPlayerPos = packet.players[1].pos;
-			//else
-			//	OtherPlayerPos = packet.players[0].pos;
+
 		break;
 	}
 	case SC_BLOCK:
@@ -393,7 +369,6 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 		sc_packet_time packet;
 		memcpy(&packet, ptr, sizeof(packet));
-		
 		m_timer = packet.time;// % 3600 / 60;
 		
 		break;
