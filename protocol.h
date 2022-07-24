@@ -133,7 +133,7 @@ struct sc_packet_choose {
 struct sc_packet_game_start {
 	short size;
 	char type;
-	Pro_Player players[3];
+	Pro_Player players[5];
 	int iglooLocation[2];
 	int SnowmanLocation[4];
 	Block blocks[25];
@@ -149,14 +149,14 @@ struct sc_packet_pos
 {
 	short size;
 	char type;
-	Pro_Player players[3];
+	Pro_Player players[5];
 };
 
 struct sc_packet_anim
 {
 	short size;
 	char type;
-	Pro_Player players[3];
+	Pro_Player players[5];
 };
 struct sc_packet_fall
 {

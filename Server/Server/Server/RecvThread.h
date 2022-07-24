@@ -221,6 +221,16 @@ void Receiver(char id)
 				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 				for (auto& cl : g_clients)
 					SendReadyPenguin(cl.first, id, ready);
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
 
 			}
 			break;
@@ -256,6 +266,17 @@ void Receiver(char id)
 				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 				for (auto& cl : g_clients)
 					SendReadyHusky(cl.first, id, ready);
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
+
 				//g_initialPos[id].Character_type = CHARACTER_HUSKY;
 			}
 			break;
@@ -291,6 +312,17 @@ void Receiver(char id)
 				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 				for (auto& cl : g_clients)
 					SendReadyBear(cl.first, id, ready);
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
+
 				//g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
 			}
 			break;
@@ -326,6 +358,17 @@ void Receiver(char id)
 				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 				for (auto& cl : g_clients)
 					SendReadyFox(cl.first, id, ready);
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
+
 				//g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
 			}
 			break;
@@ -361,6 +404,17 @@ void Receiver(char id)
 				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 				for (auto& cl : g_clients)
 					SendReadySeal(cl.first, id, ready);
+				if (CheckGameStart())
+				{
+
+					SendGameStartPacket();
+					g_isPlaying = true;
+					// Physics Thread ����
+					std::cout << "physics thread ����!" << std::endl;
+					thread PhysicsThread(ProcessClients);
+					PhysicsThread.detach();
+				}
+
 				//g_initialPos[id].Character_type = CHARACTER_SEAL;
 			}
 			break;
@@ -415,16 +469,16 @@ void Receiver(char id)
 			g_MsgQueueLock.unlock();
 		}
 
-		if (CheckGameStart())
-		{
+		//if (CheckGameStart())
+		//{
 
-			SendGameStartPacket();
-			g_isPlaying = true;
-			// Physics Thread ����
-			std::cout << "physics thread ����!" << std::endl;
-			thread PhysicsThread(ProcessClients);
-			PhysicsThread.detach();
-		}
+		//	SendGameStartPacket();
+		//	g_isPlaying = true;
+		//	// Physics Thread ����
+		//	std::cout << "physics thread ����!" << std::endl;
+		//	thread PhysicsThread(ProcessClients);
+		//	PhysicsThread.detach();
+		//}
 
 	}
 }
