@@ -693,9 +693,9 @@ void Character::SetCamera(CameraType cameraType, bool IsFirst)
 	case CameraType::Third:
 		m_MyCamera->SetTimeLag(0.1f);
 		if (IsFirst)
-			m_MyCamera->SetOffset(XMFLOAT3(0.0f, 150.f, -300.f));
+			m_MyCamera->SetOffset(XMFLOAT3(0.0f, 150.f, -350.f));
 		else
-			m_MyCamera->SetOffset(XMFLOAT3(0.0f, 110.f, -300.f));
+			m_MyCamera->SetOffset(XMFLOAT3(0.0f, 110.f, -350.f));
 		m_MyCamera->SetPosition(MathHelper::Add(GetPosition(), m_MyCamera->GetOffset()));
 		break;
 	case CameraType::Free:
