@@ -85,7 +85,7 @@ public:
 
 	UINT iglooLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
-	bool IsFall[3] = { 0, };		// 블러링, 높은 물결
+	bool IsFall[5] = { 0, };		// 블러링, 높은 물결
 
 	bool BlockIn = false;		//블록 한번만 밟게
 	int tmp1 = -1;

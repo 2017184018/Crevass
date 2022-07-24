@@ -180,12 +180,12 @@ void SendGameStartPacket()
 	// player에 초기화 좌표를 다 넣어줘야한다
 	// 현재 들어온 클라이언트 정보만 넣어서 보내주기.
 	g_InitialPosLock.lock();
-	Pro_Player tempPlayer[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} }; // 일단 복사.
+	Pro_Player tempPlayer[5] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]},{g_initialPos[3]},{g_initialPos[4]} }; // 일단 복사.
 //	cout << static_cast<int>(tempPlayer[1].Character_type) << endl;
 	g_InitialPosLock.unlock();
 
 	g_PlayerReadyInfoLock.lock();
-	PlayerReadyInfo tempInfo[3] = { {g_playerReadyInfo[0]},{g_playerReadyInfo[1]},{g_playerReadyInfo[2]} };
+	PlayerReadyInfo tempInfo[5] = { {g_playerReadyInfo[0]},{g_playerReadyInfo[1]},{g_playerReadyInfo[2]},{g_playerReadyInfo[3]},{g_playerReadyInfo[4]} };
 	g_PlayerReadyInfoLock.unlock();
 
 	g_iglooPosLock.lock();

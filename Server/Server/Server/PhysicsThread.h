@@ -16,9 +16,9 @@ UINT ShakeCnt[25];
 bool IsDown[25];
 bool IsShake[25];
 bool BlockIn = false;
-bool IsFall[3] = { false,false,false };
+bool IsFall[5] = { false,false,false,false,false };
 Block blocks[25];
-bool dir_switch[3];
+bool dir_switch[5];
 bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 Hail hails[5];
 DirectX::XMFLOAT3 OriginBlockExtents;
@@ -362,9 +362,9 @@ void PolarbearSkill(int tmp) {
 void ProcessClients()
 {
 	g_player_lock.lock();
-	Pro_Player players[3] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]} };
+	Pro_Player players[5] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]},{g_initialPos[3]},{g_initialPos[4]} };
 
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 5; ++i) {
 		if (players[i].Character_type == CHARACTER_HUSKY) {
 			g_boundaries["husky"]->Center = players[i].pos;
 		}

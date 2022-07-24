@@ -22,7 +22,7 @@ struct ConnectClient
 {
 	bool is_connected;
 };
-ConnectClient g_connectedCls[3]{ false };
+ConnectClient g_connectedCls[5]{ false };
 
 // =======================================
 
@@ -32,12 +32,15 @@ std::vector <Player> phyPlayers;
 
 // �÷��̾���� �ʱ� ��ġ
 
-Pro_Player g_initialPos[3] = { 
+Pro_Player g_initialPos[5] = { 
 	{0,DirectX::XMFLOAT3(0.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
 	{1,DirectX::XMFLOAT3(400.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
-	{2,DirectX::XMFLOAT3(800.0f,100.0f,0.0f),0,0,CHARACTER_NONE} };
+	{2,DirectX::XMFLOAT3(800.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
+	{3,DirectX::XMFLOAT3(1200.0f,100.0f,0.0f),0,0,CHARACTER_NONE} ,
+	{4,DirectX::XMFLOAT3(1600.0f,100.0f,0.0f),0,0,CHARACTER_NONE} 
+};
 
-PlayerReadyInfo g_playerReadyInfo[3]{ {-1, 0}, {-1, 0}, {-1, 0} };
+PlayerReadyInfo g_playerReadyInfo[5]{ {-1, 0}, {-1, 0}, {-1, 0},{-1, 0},{-1, 0} };
 
 // =======================================
 

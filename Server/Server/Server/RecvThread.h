@@ -222,16 +222,6 @@ void Receiver(char id)
 				for (auto& cl : g_clients)
 					SendReadyPenguin(cl.first, id, ready);
 
-				if (CheckGameStart())
-				{
-					
-					SendGameStartPacket();
-					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread!" << std::endl;
-					thread PhysicsThread(ProcessClients);
-					PhysicsThread.detach();
-				}
 			}
 			break;
 		}
@@ -267,16 +257,6 @@ void Receiver(char id)
 				for (auto& cl : g_clients)
 					SendReadyHusky(cl.first, id, ready);
 				//g_initialPos[id].Character_type = CHARACTER_HUSKY;
-				if (CheckGameStart())
-				{
-
-					SendGameStartPacket();
-					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread!" << std::endl;
-					thread PhysicsThread(ProcessClients);
-					PhysicsThread.detach();
-				}
 			}
 			break;
 		}
@@ -312,16 +292,6 @@ void Receiver(char id)
 				for (auto& cl : g_clients)
 					SendReadyBear(cl.first, id, ready);
 				//g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
-				if (CheckGameStart())
-				{
-
-					SendGameStartPacket();
-					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread !" << std::endl;
-					thread PhysicsThread(ProcessClients);
-					PhysicsThread.detach();
-				}
 			}
 			break;
 		}
@@ -357,16 +327,6 @@ void Receiver(char id)
 				for (auto& cl : g_clients)
 					SendReadyFox(cl.first, id, ready);
 				//g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
-				if (CheckGameStart())
-				{
-
-					SendGameStartPacket();
-					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
-					thread PhysicsThread(ProcessClients);
-					PhysicsThread.detach();
-				}
 			}
 			break;
 		}
@@ -402,16 +362,6 @@ void Receiver(char id)
 				for (auto& cl : g_clients)
 					SendReadySeal(cl.first, id, ready);
 				//g_initialPos[id].Character_type = CHARACTER_SEAL;
-				if (CheckGameStart())
-				{
-
-					SendGameStartPacket();
-					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
-					thread PhysicsThread(ProcessClients);
-					PhysicsThread.detach();
-				}
 			}
 			break;
 		}
@@ -464,5 +414,17 @@ void Receiver(char id)
 			g_MsgQueue.emplace(msg);
 			g_MsgQueueLock.unlock();
 		}
+
+		if (CheckGameStart())
+		{
+
+			SendGameStartPacket();
+			g_isPlaying = true;
+			// Physics Thread ����
+			std::cout << "physics thread ����!" << std::endl;
+			thread PhysicsThread(ProcessClients);
+			PhysicsThread.detach();
+		}
+
 	}
 }

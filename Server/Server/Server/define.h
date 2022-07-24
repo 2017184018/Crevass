@@ -22,7 +22,7 @@
 #define ANIM_JUMP		3
 #define ANIM_SKILL			5
 
-#define MAXPLAYER		3
+#define MAXPLAYER		5
 
 #define HITTED_POWER    3
 
