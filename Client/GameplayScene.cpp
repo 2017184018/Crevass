@@ -98,7 +98,7 @@ bool GameplayScene::Enter()
 	/* Light Setting */
 	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.47735f, -0.81735f, 1.07735 };
 
-	AppContext->DisplayOutline();
+	//AppContext->DisplayOutline();
 	AppContext->DisplayMinimap();
 	AppContext->DisplaySnowmans();
 	AppContext->DisplayWaterDrop();
