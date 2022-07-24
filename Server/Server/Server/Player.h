@@ -60,7 +60,8 @@ public:
 	int TimeWhileBlock = 0;
 
 	int lifecnt = 5;
-
+	int ResetLocation = -1;
+	float ResetLocationSaveCount = 0.0f;
 public:
 	char dir = 0;
 	char anim = 0;

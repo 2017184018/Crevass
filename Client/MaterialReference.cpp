@@ -321,6 +321,13 @@ void MaterialReference::BuildMaterials()
 	bricks0->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	bricks0->Roughness = 1.0f;
 
+	auto darkice = std::make_unique<Material>();
+	darkice->MatCBIndex = 39;
+	darkice->DiffuseSrvHeapIndex = 1;
+	darkice->DiffuseAlbedo = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	darkice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	darkice->Roughness = 1.0f;
+
 	
 	
 	m_Materials["snowcube1024"] = std::move(sky);
@@ -362,5 +369,6 @@ void MaterialReference::BuildMaterials()
 	m_Materials["snowmanicon"] = std::move(snowmanicon);
 	m_Materials["redicon"] = std::move(redicon);
 	m_Materials["bricks0"] = std::move(bricks0);
+	m_Materials["darkice"] = std::move(darkice);
 	
 }

@@ -165,9 +165,8 @@ void ApplicationContext::CreateBlocks()
 			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
 			top->m_Bounds = instancingObj->Geo->DrawArgs["snow_top"].Bounds;
 			top->m_IsVisible = false;
-			top->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["ice"]->DiffuseSrvHeapIndex;
+			top->m_MaterialIndex = 39; MaterialReference::GetApp()->m_Materials["darkice"]->DiffuseSrvHeapIndex;
 			top->m_World = MathHelper::Identity4x4();
-	
 			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			top->m_TexTransform = MathHelper::Identity4x4();
 		}
@@ -638,7 +637,7 @@ void ApplicationContext::CreateMinimap()
 				instancingObj->m_Bounds.Center = MathHelper::Add(instancingObj->Geo->DrawArgs["snowcube"].Bounds.Center, instancingObj->GetPosition());
 			}
 
-		
+
 
 			GameObject* top = CreateObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(5 * i + j));
 			top->Geo = MeshReference::GetApp()->m_GeometryMesh["snow_top"].get();
@@ -740,7 +739,7 @@ void ApplicationContext::CreateOutline() {
 		husky->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		husky->m_Bounds = husky->Geo->DrawArgs["husky"].Bounds;
 		husky->m_IsVisible = false;
-		husky->m_MaterialIndex = 1; 
+		husky->m_MaterialIndex = 1;
 		husky->m_SkinnedCBIndex = BoneIndex::Husky;
 		husky->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["husky"].get();
 		husky->m_World = MathHelper::Identity4x4();
@@ -754,7 +753,7 @@ void ApplicationContext::CreateOutline() {
 		penguin->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		penguin->m_Bounds = penguin->Geo->DrawArgs["Penguin"].Bounds;
 		penguin->m_IsVisible = false;
-		penguin->m_MaterialIndex = 1; 
+		penguin->m_MaterialIndex = 1;
 		penguin->m_SkinnedCBIndex = BoneIndex::Penguin;
 		penguin->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Penguin"].get();
 		penguin->m_World = MathHelper::Identity4x4();
@@ -768,7 +767,7 @@ void ApplicationContext::CreateOutline() {
 		arcticfox->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		arcticfox->m_Bounds = arcticfox->Geo->DrawArgs["ArcticFox"].Bounds;
 		arcticfox->m_IsVisible = false;
-		arcticfox->m_MaterialIndex = 1; 
+		arcticfox->m_MaterialIndex = 1;
 		arcticfox->m_SkinnedCBIndex = BoneIndex::Fox;
 		arcticfox->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["ArcticFox"].get();
 		arcticfox->m_World = MathHelper::Identity4x4();
@@ -782,7 +781,7 @@ void ApplicationContext::CreateOutline() {
 		polarbear->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		polarbear->m_Bounds = polarbear->Geo->DrawArgs["PolarBear"].Bounds;
 		polarbear->m_IsVisible = false;
-		polarbear->m_MaterialIndex = 1; 
+		polarbear->m_MaterialIndex = 1;
 		polarbear->m_SkinnedCBIndex = BoneIndex::PolarBear;
 		polarbear->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get();
 		polarbear->m_World = MathHelper::Identity4x4();
@@ -796,7 +795,7 @@ void ApplicationContext::CreateOutline() {
 		seal->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		seal->m_Bounds = seal->Geo->DrawArgs["Seal"].Bounds;
 		seal->m_IsVisible = false;
-		seal->m_MaterialIndex = 1; 
+		seal->m_MaterialIndex = 1;
 		seal->m_SkinnedCBIndex = BoneIndex::Seal;
 		seal->m_SkinnedModelInst = MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get();
 		seal->m_World = MathHelper::Identity4x4();
@@ -824,7 +823,7 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 	//item->SetPosition(posX, posY, 1.f);
 }
 
-void ApplicationContext::CreateParticle(std::string particleName, std::string instID, std::string matName,bool isLoop)
+void ApplicationContext::CreateParticle(std::string particleName, std::string instID, std::string matName, bool isLoop)
 {
 	Particle* particle = CreateObject<Particle>(particleName, instID);
 	particle->Geo = MeshReference::GetApp()->m_GeometryMesh[particleName].get();
@@ -914,7 +913,7 @@ void ApplicationContext::CreatelobbyBlocks()
 
 void ApplicationContext::CreatelobbyBackground()
 {
-	
+
 	//79~83	¹Ù´Ú
 	for (int i = 0; i < 5; ++i) {
 		GameObject* instancingObj;
@@ -1219,7 +1218,7 @@ void ApplicationContext::DisplayMinimap()
 			instancingObj->m_World._43 = distance * j;
 
 			XMStoreFloat4x4(&instancingObj->m_World, XMLoadFloat4x4(&instancingObj->m_World) * XMMatrixRotationX(-3.141592 * (90 - acos(0.4 * sqrt(5))) / 180.0f));
-		
+
 		}
 	}
 
@@ -1376,7 +1375,7 @@ void ApplicationContext::DisplayBlocks()
 			GameObject* top = FindObject<GameObject>("snow_top", "snow_top" + std::to_string(5 * i + j));
 			top->InitializeTransform();
 			top->m_IsVisible = true;
-			
+
 			top->m_World._11 = SCALE;
 			top->m_World._22 = SCALE;
 			top->m_World._33 = SCALE;
@@ -1483,7 +1482,7 @@ void ApplicationContext::DisplayBackground()
 		GameObject* instancingObj;
 		instancingObj = FindObject<GameObject>("kayakpaddle", "kayakpaddle" + std::to_string(i));
 		instancingObj->InitializeTransform();
-		
+
 		instancingObj->m_IsVisible = true;
 		float size = 0.7;
 		instancingObj->m_World._11 = size;
@@ -1499,7 +1498,7 @@ void ApplicationContext::DisplayBackground()
 		GameObject* instancingObj;
 		instancingObj = FindObject<GameObject>("rock_0", "rock_0" + std::to_string(i));
 		instancingObj->InitializeTransform();
-		
+
 		instancingObj->m_IsVisible = true;
 		float size = 2;
 		instancingObj->m_World._11 = size;
@@ -1517,7 +1516,7 @@ void ApplicationContext::DisplayBackground()
 		GameObject* instancingObj2;
 		instancingObj2 = FindObject<GameObject>("rock_1", "rock_1" + std::to_string(i));
 		instancingObj2->InitializeTransform();
-		
+
 		instancingObj2->m_IsVisible = true;
 		float size = 1.0;
 		instancingObj2->m_World._11 = size;
@@ -1695,7 +1694,7 @@ void ApplicationContext::HiddenMinimap()
 				ZeroMemory(&instancingObj->m_World, sizeof(instancingObj->m_World));
 				ZeroMemory(&instancingObj->m_TexTransform, sizeof(instancingObj->m_TexTransform));
 			}
-			
+
 			GameObject* top = FindObject<GameObject>("Minimapsnow_top", "Minimapsnow_top" + std::to_string(5 * i + j));
 			if (!top)
 				return;
@@ -1919,8 +1918,8 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 		chr->Scale(15, 15, 15);
 	else
 		chr->Scale(20, 20, 20);
-//	XMStoreFloat4x4(&chr->m_World, XMLoadFloat4x4(&chr->m_World) * XMMatrixRotationY(3.141592));
-	
+	//	XMStoreFloat4x4(&chr->m_World, XMLoadFloat4x4(&chr->m_World) * XMMatrixRotationY(3.141592));
+
 }
 
 void ApplicationContext::HiddenBlocks()
@@ -2131,7 +2130,7 @@ void ApplicationContext::HiddenBackground()
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["fishrack"], m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap["fish"], m_RItemsVec);
 
-	
+
 
 	//79~83	¹Ù´Ú
 	for (int i = 0; i < 5; ++i) {
@@ -2752,20 +2751,20 @@ void ApplicationContext::HiddenlobbyBlocks()
 	}
 }
 
-void ApplicationContext::DisplayCharacter( Character* user, XMFLOAT3 pos,bool isVisible)
+void ApplicationContext::DisplayCharacter(Character* user, XMFLOAT3 pos, bool isVisible)
 {
-	
+
 	if (!user) { cout << "return0000000000000000000000000" << endl;  return; };
 
-			user->InitializeTransform();
-			user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
-			user->SetAnimationPlayerState(Character::PlayerState::STATE_IDLE);
-			user->m_IsVisible = isVisible;
-			user->Scale(20.f, 20.f, 20.f);
-			user->Rotate(0, 180, 0);
-			user->SetPosition(pos);
-		
-			
+	user->InitializeTransform();
+	user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
+	user->SetAnimationPlayerState(Character::PlayerState::STATE_IDLE);
+	user->m_IsVisible = isVisible;
+	user->Scale(20.f, 20.f, 20.f);
+	user->Rotate(0, 180, 0);
+	user->SetPosition(pos);
+
+
 }
 
 void ApplicationContext::HiddenCharacter(std::string userName, std::string insname)
@@ -2780,7 +2779,7 @@ void ApplicationContext::HiddenCharacter(std::string userName, std::string insna
 
 	ZeroMemory(&user->m_World, sizeof(user->m_World));
 	ZeroMemory(&user->m_TexTransform, sizeof(user->m_TexTransform));
-    user->ReleaseTransform();
+	user->ReleaseTransform();
 
 	// Update InstanceData
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[userName], AppContext->m_RItemsVec);
@@ -2830,6 +2829,7 @@ void ApplicationContext::DisplayParticle(std::string particleName, std::string i
 	ptc->m_IsVisible = true;
 	ptc->m_World = MathHelper::Identity4x4();
 	ptc->m_TexTransform = MathHelper::Identity4x4();
+	ptc->Scale(2, 2, 2);
 	ptc->SetPosition(pos);
 	ptc->PlayParticle();
 	// rotate
@@ -2842,7 +2842,7 @@ void ApplicationContext::HiddenParticle(std::string particleName, std::string in
 
 	ZeroMemory(&ptc->m_World, sizeof(ptc->m_World));
 	ZeroMemory(&ptc->m_TexTransform, sizeof(ptc->m_TexTransform));
-	
+
 	ptc->StopParticle();
 
 	// Update InstanceData
