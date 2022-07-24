@@ -94,7 +94,7 @@ bool GameplayScene::Enter()
 	cout << "GamePlay Scene" << endl;
 	/* Create SceneBounds for Shadow */
 	m_SceneBounds.Center = XMFLOAT3(500.f, 0.0f, 500.f);
-	m_SceneBounds.Radius = sqrtf(2000.f * 2000.f + 2000.f * 2000.f);
+	m_SceneBounds.Radius = sqrtf(1000.f * 1000.f + 1000.f * 1000.f);
 	/* Light Setting */
 	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.47735f, -0.81735f, 1.07735 };
 
@@ -451,7 +451,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			GraphicsContext::GetApp()->OnBlurEffect(false);
 
 			IsFall[m_PlayerID] = false;
-			if (Player_Lifecnt[m_PlayerID] == 4) {
+			if (Player_Lifecnt[m_PlayerID] == 0) {
 				g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
 			}
 		}
@@ -983,12 +983,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	//meterial
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
-	for (int j = 0; j < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++j)
-	{
-		if (Player_Lifecnt[m_PlayerID] == 4) {
-			g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
-		}
-	}
 
 }
 

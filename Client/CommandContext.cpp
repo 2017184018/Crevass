@@ -208,8 +208,6 @@ void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance
 void GraphicsContext::UpdateShadowPassCB()
 {
 
-	
-
 	XMMATRIX view = XMLoadFloat4x4(&mLightView);
 	XMMATRIX proj = XMLoadFloat4x4(&mLightProj);
 
@@ -239,15 +237,6 @@ void GraphicsContext::UpdateShadowPassCB()
 
 void GraphicsContext::UpdateShadowTransform(Light* light, DirectX::BoundingSphere sceneBounds)
 {
-	
-	//mLightRotationAngle = 0.2f * Core::g_GameTimer->DeltaTime();
-
-	//XMMATRIX R = DirectX::XMMatrixRotationY(mLightRotationAngle);
-	//for (int i = 0; i < 1; i++) {
-	//	XMVECTOR lightDir = XMLoadFloat3(&light->Direction);
-	//	lightDir = XMVector3TransformNormal(lightDir, R);
-	//	XMStoreFloat3(&light->Direction, lightDir);
-	//}
 
 	// Only the first "main" light casts a shadow.
 	XMVECTOR lightDir = DirectX::XMLoadFloat3(&light->Direction);

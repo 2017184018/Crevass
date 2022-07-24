@@ -98,4 +98,4 @@ enum class CameraType { First, Third, Free, None };
 
 #define UI_SIZEX 30.f
 #define UI_SIZEY 20.f
-//#define DEBUG_SHADOW 0x00FF0
+#define DEBUG_SHADOW 0x00FF0

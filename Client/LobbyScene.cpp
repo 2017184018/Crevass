@@ -78,7 +78,9 @@ void LobbyScene::Exit()
 	}
 	AppContext->HiddenParticle("snowParticle", "snowParticle");
 
+	dynamic_cast<LobbyController*>(m_SceneController)->is_ready = false;
 	cout << "LobbyScene===========================================" << endl << endl;
+	
 }
 
 void LobbyScene::Update(const float& fDeltaTime)

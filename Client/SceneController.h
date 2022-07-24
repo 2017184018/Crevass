@@ -13,11 +13,13 @@ public:
 
 public:
 	virtual void Update(const float deltaT) override;
+	void Initready();
 
 private:
 	virtual void HandleInput(const float deltaT) override;
 	virtual void MouseCallback() override;
 
+	
 private:
 	LobbyScene* m_MyScene;
 public:

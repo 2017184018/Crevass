@@ -1114,23 +1114,23 @@ void ApplicationContext::DisplayOutline()
 	//309~313
 	Character* husky = FindObject<Character>("huskyOutline", "huskyOutline0");
 	husky->InitializeTransform();
-	husky->m_IsVisible = true;
+//	husky->m_IsVisible = true;
 
 	Character* penguin = FindObject<Character>("PenguinOutline", "PenguinOutline0");
 	penguin->InitializeTransform();
-	penguin->m_IsVisible = true;
+	//penguin->m_IsVisible = true;
 
 	Character* arcticfox = FindObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
 	arcticfox->InitializeTransform();
-	arcticfox->m_IsVisible = true;
+	//arcticfox->m_IsVisible = true;
 
 	Character* polarbear = FindObject<Character>("PolarBearOutline", "PolarBearOutline0");
 	polarbear->InitializeTransform();
-	polarbear->m_IsVisible = true;
+	//polarbear->m_IsVisible = true;
 
 	Character* seal = FindObject<Character>("SealOutline", "SealOutline0");
 	seal->InitializeTransform();
-	seal->m_IsVisible = true;
+	//seal->m_IsVisible = true;
 
 }
 

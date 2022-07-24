@@ -13,4 +13,5 @@ protected:
 	virtual void OnKeyPressed() {};
 	virtual void OnKeyReleased() {};
 
+public:
 };

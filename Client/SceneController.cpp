@@ -23,6 +23,11 @@ void LobbyController::Update(const float deltaT)
 	HandleInput(deltaT);
 }
 
+void LobbyController::Initready()
+{
+	is_ready = false;
+}
+
 void LobbyController::HandleInput(const float deltaT)
 {
 	if (!Inactive) {
@@ -196,23 +201,23 @@ void LobbyController::HandleInput(const float deltaT)
 			switch (CREVASS::GetApp()->currchar) {
 			case 0:
 				g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
-				is_ready = false;
+				
 				break;
 			case 1:
 				g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
-				is_ready = false;
+				
 				break;
 			case 2:
 				g_pFramework->m_pNetwork->Send(CS_READY_FOX);
-				is_ready = false;
+				
 				break;
 			case 3:
 				g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
-				is_ready = false;
+				
 				break;
 			case 4:
 				g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
-				is_ready = false;
+				
 				break;
 			}
 		}
