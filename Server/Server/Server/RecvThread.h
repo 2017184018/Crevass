@@ -444,13 +444,13 @@ void Receiver(char id)
 		}
 
 
-		case CS_PLAYER_LOSE:
-		{
-			who_lose[lose_count] = id;
-			lose_count += 1;
-			//SendGameOverPacket(id);
-			break;
-		}
+		//case CS_PLAYER_LOSE:
+		//{
+		//	who_lose[lose_count] = id;
+		//	lose_count += 1;
+		//	//SendGameOverPacket(id);
+		//	break;
+		//}
 		default:
 			cout << "Packet Type Error! - " << buf[0] << endl;
 			while (true);

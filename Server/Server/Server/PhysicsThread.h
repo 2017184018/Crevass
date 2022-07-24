@@ -405,7 +405,7 @@ void ProcessClients()
 	auto OriginSnowmanExtens = g_boundaries["snowman0"]->Extents;
 	auto OriginIglooExtens = g_boundaries["igloo0"]->Extents;
 
-	//g_player_lock.unlock();
+	g_player_lock.unlock();
 
 	std::queue <Message> phyMsgQueue;
 	Message phyMsg;
@@ -794,6 +794,8 @@ void ProcessClients()
 							phyPlayers[i].lifecnt -= 1;
 						if (phyPlayers[i].lifecnt == 0) {
 							phyPlayers[i].IsDead = true;
+							who_lose[lose_count] = i;
+							lose_count += 1;
 						}
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;
