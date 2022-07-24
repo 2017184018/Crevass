@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\N-Main\Documents\Crevass\Client\x64\Release\Crevass.exe</FullPath>
+=======
+      <FullPath>C:\Users\USER\Documents\Crevass\Client\x64\Release\Crevass.exe</FullPath>
+>>>>>>> origin/jh16
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

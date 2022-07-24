@@ -802,6 +802,8 @@ void ProcessClients()
 							phyPlayers[i].lifecnt -= 1;
 						if (phyPlayers[i].lifecnt == 0) {
 							phyPlayers[i].IsDead = true;
+							who_lose[lose_count] = i;
+							lose_count += 1;
 						}
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;

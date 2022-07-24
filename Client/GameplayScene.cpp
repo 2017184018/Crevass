@@ -451,9 +451,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			GraphicsContext::GetApp()->OnBlurEffect(false);
 
 			IsFall[m_PlayerID] = false;
-			if (Player_Lifecnt[m_PlayerID] == 0) {
-				g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
-			}
 		}
 		if (Player_Lifecnt[m_PlayerID] == 0) {
 			m_Users[m_PlayerID]->m_IsVisible = false;
