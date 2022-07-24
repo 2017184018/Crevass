@@ -209,6 +209,7 @@ void Receiver(char id)
 
 			if (OverlapCheck == false)
 			{
+
 				if ((int)g_playerReadyInfo[id].ready == 0)
 				{
 					g_initialPos[id].Character_type = CHARACTER_PENGUIN;
@@ -220,13 +221,14 @@ void Receiver(char id)
 				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 				for (auto& cl : g_clients)
 					SendReadyPenguin(cl.first, id, ready);
+
 				if (CheckGameStart())
 				{
-
+					
 					SendGameStartPacket();
 					g_isPlaying = true;
 					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread!" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
@@ -271,7 +273,7 @@ void Receiver(char id)
 					SendGameStartPacket();
 					g_isPlaying = true;
 					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread!" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
@@ -316,7 +318,7 @@ void Receiver(char id)
 					SendGameStartPacket();
 					g_isPlaying = true;
 					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread !" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}

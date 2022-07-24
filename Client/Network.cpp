@@ -580,6 +580,12 @@ int Network::GetPlayerLifeCnt(int num)const
 	return PlayerLifeCnt[num];
 }
 
+void Network::SetPlayerLifeCnt()
+{
+	for (int i = 0; i < 5; i++)
+		PlayerLifeCnt[i] = 5;
+}
+
 int Network::GetChooseCharacter(int num)const
 {
 	//for (int i = 0; i < 5; ++i) {

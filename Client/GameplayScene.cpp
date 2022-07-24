@@ -233,6 +233,9 @@ void GameplayScene::Exit()
 	}
 
 	AppContext->HiddenParticle("snowParticle", "snowParticle");
+	g_pFramework->m_pNetwork->SetPlayerLifeCnt();
+	for (int i = 0; i < 5; i++) 
+	Player_Lifecnt[i] = 5;
 
 	cout << "exit===========================================" << endl << endl;
 }
@@ -980,6 +983,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	//meterial
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(MaterialReference::GetApp()->m_Materials);
+	for (int j = 0; j < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++j)
+	{
+		if (Player_Lifecnt[m_PlayerID] == 4) {
+			g_pFramework->m_pNetwork->Send(CS_PLAYER_LOSE);
+		}
+	}
 
 }
 

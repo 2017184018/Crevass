@@ -405,7 +405,7 @@ void ProcessClients()
 	auto OriginSnowmanExtens = g_boundaries["snowman0"]->Extents;
 	auto OriginIglooExtens = g_boundaries["igloo0"]->Extents;
 
-	//g_player_lock.unlock();
+	g_player_lock.unlock();
 
 	std::queue <Message> phyMsgQueue;
 	Message phyMsg;

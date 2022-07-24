@@ -63,6 +63,7 @@ public:
 	bool GetSealSkill()const;
 	bool GetPlayerSkillCool(int num)const;
 	int GetPlayerLifeCnt(int num)const;
+	void SetPlayerLifeCnt();
 	int GetChooseCharacter(int num)const;
 private:
 	DirectX::XMFLOAT3 PlayerPos[5];
