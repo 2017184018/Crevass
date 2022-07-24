@@ -339,7 +339,7 @@ void UpdateBlock(Block* object) {
 				g_boundaries["icecube" + std::to_string(i)]->Center = DirectX::XMFLOAT3(-0, -1000, 0);
 				g_boundaries["icecube" + std::to_string(i)]->Extents = DirectX::XMFLOAT3(0, 0, 0);
 				object[i].pos.y = -150;
-			
+
 			}
 		}
 		if (object[i].destuctioncnt == 0) {
@@ -569,7 +569,7 @@ void ProcessClients()
 							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
 
 						}
-						
+
 						for (int i = 0; i < numOfCls; i++) {
 							if (phyMsg.id != i) {
 								//맞았다면
@@ -582,7 +582,7 @@ void ProcessClients()
 									SendHitPalyer(players[phyMsg.id].Character_type, phyPlayers[phyMsg.id].Hit_BB.Center);
 
 									phyPlayers[phyMsg.id].Hit_BB.Center = DirectX::XMFLOAT3(0, 0, 0);
-									
+
 								}
 							}
 						}
@@ -707,7 +707,7 @@ void ProcessClients()
 				//아이스 , 스노우 아무것도 출동하지 않을때 
 				if (phyPlayers[i].CurrentIcecube == -1 && phyPlayers[i].CurrentSnowcube == -1)
 				{
-					phyPlayers[i].gravity -= 0.98f / pow(elapsedTime, 2)*elapsedTime;
+					phyPlayers[i].gravity -= 0.98f / pow(elapsedTime, 2) * elapsedTime;
 				}
 			}
 
@@ -782,15 +782,23 @@ void ProcessClients()
 
 						int BlockTmpX;
 						int BlockTmpZ;
+						bool resetoverlap = false;
 						do {
+							resetoverlap = false;
 							BlockTmpX = uid(dre);
 							BlockTmpZ = uid(dre);
-						} while (blocks[BlockTmpX * 10 + BlockTmpZ * 2].pos.y < -50);
+							for (int j = 0; j < numOfCls; ++j) {
+								if (i != j && BlockTmpX * 10 + BlockTmpZ * 2 == phyPlayers[j].ResetLocation) {
+									resetoverlap = true;
+								}
+							}
+						} while (blocks[BlockTmpX * 10 + BlockTmpZ * 2].pos.y < -50 || resetoverlap);
 
+						phyPlayers[i].ResetLocation = BlockTmpX * 10 + BlockTmpZ * 2;
 						phyPlayers[i].m_pos.x = BlockTmpX * 400;
 						phyPlayers[i].m_pos.y = 100.0f;
 						phyPlayers[i].m_pos.z = BlockTmpZ * 400;
-						if(phyPlayers[i].lifecnt>0)
+						if (phyPlayers[i].lifecnt > 0)
 							phyPlayers[i].lifecnt -= 1;
 						if (phyPlayers[i].lifecnt == 0) {
 							phyPlayers[i].IsDead = true;
@@ -803,9 +811,18 @@ void ProcessClients()
 							else {
 								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
 							}*/
-						if(phyPlayers[i].lifecnt>=0)
+						if (phyPlayers[i].lifecnt >= 0)
 							SendReset(i, phyPlayers[i].lifecnt);
 
+					}
+				}
+
+				if (phyPlayers[i].ResetLocation != -1)
+				{
+					phyPlayers[i].ResetLocationSaveCount += 1;
+					if (phyPlayers[i].ResetLocationSaveCount > 60.0f) {
+						phyPlayers[i].ResetLocation = -1;
+						phyPlayers[i].ResetLocationSaveCount = 0.0f;
 					}
 				}
 
@@ -948,7 +965,7 @@ void ProcessClients()
 					}
 				}
 			}
-			
+
 			for (int i = 0; i < numOfCls; ++i) {	//눈사람에 숨어을때 위치 동기화
 				if (phyPlayers[i].SnowmanNum >= 0) {
 					phyPlayers[i].m_pos.x = TempSnowmanLocation[phyPlayers[i].SnowmanNum] / 5 * 200;
@@ -1380,9 +1397,9 @@ void ProcessClients()
 				SendTime(CalcTime);
 			}
 
-		/*	for (int i = 0; i < 5; ++i) {
-				cout <<i<<": " << who_lose[i] << endl;
-			}*/
+			/*	for (int i = 0; i < 5; ++i) {
+					cout <<i<<": " << who_lose[i] << endl;
+				}*/
 
 			if ((numOfCls - 1) == lose_count)
 			{
