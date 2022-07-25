@@ -22,6 +22,8 @@ void LobbyScene::Initialize()
 	AppContext->CreateWave();
 	AppContext->CreatelobbyBackground();
 
+	AppContext->CreateUI2D("UI_SelectCharater", "UI_SelectCharater", 27, -280.f, -260.f, 1000.f, 1000.f);
+
 	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow", true);
 }
 
@@ -41,6 +43,8 @@ bool LobbyScene::Enter()
 	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.57735f, -0.57735f, 0.57735f };
 	AppContext->DisplaylobbyBackground();
 	AppContext->DisplaylobbyBlocks();
+
+	AppContext->DisplayUI("UI_SelectCharater", "UI_SelectCharater", 25, 0.f, 230.f, 500, 100);
 	// 카메라 뷰행렬 초기화
 	CREVASS::GetApp()->m_Camera->CameraInitialize(SceneType::Lobby);
 	Core::g_pFramework->m_pNetwork->Recv();
@@ -77,6 +81,8 @@ void LobbyScene::Exit()
 
 	}
 	AppContext->HiddenParticle("snowParticle", "snowParticle");
+
+	AppContext->HiddenUI("UI_SelectCharater", "UI_SelectCharater");
 
 	dynamic_cast<LobbyController*>(m_SceneController)->is_ready = false;
 	cout << "LobbyScene===========================================" << endl << endl;
@@ -200,7 +206,8 @@ void LobbyScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::PolarBear, MeshReference::GetApp()->m_SkinnedModelInsts["PolarBear"].get());
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Seal, MeshReference::GetApp()->m_SkinnedModelInsts["Seal"].get());
 
-
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_SelectCharater"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_SelectCharater"], AppContext->m_RItemsVec);
 
 	AppContext->FindObject<Character>("Penguin", "Penguin0")->Update(fDeltaTime);
 	AppContext->FindObject<Character>("husky", "husky0")->Update(fDeltaTime);
@@ -256,6 +263,11 @@ void LobbyScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["snowParticle"], AppContext->m_RItemsVec);
 
+	/* UI */
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_SelectCharater"], AppContext->m_RItemsVec);
+
+
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
@@ -280,8 +292,7 @@ void LobbyScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 
 
-
-
+\
 
 	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby"], AppContext->m_RItemsVec);
 }

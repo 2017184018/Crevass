@@ -1146,12 +1146,6 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_" + m_Users[i]->GetType()], AppContext->m_RItemsVec);
 	}
 
-	/*GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_p"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_h"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_s"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_b"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_f"], AppContext->m_RItemsVec);*/
-
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 
 
@@ -1171,10 +1165,10 @@ void GameplayScene::RenderUI()
 
 void GameplayScene::WriteShadow()
 {
-	TEST();
+	RenderShadow();
 }
 
-void GameplayScene::TEST()
+void GameplayScene::RenderShadow()
 {
 
 	/*Shadow*/

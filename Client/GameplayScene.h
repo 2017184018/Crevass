@@ -73,7 +73,7 @@ public:
 	std::map<int, Character*> m_Users;
 
 public:
-	void TEST();
+	void RenderShadow();
 
 //	bool IsShake[25];
 	//bool IsRight[25];		//오른쪽으로 흔들리는지
