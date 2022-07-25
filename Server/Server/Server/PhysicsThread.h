@@ -25,6 +25,8 @@ DirectX::XMFLOAT3 OriginBlockExtents;
 
 int CalcTime = 0;
 
+int GameOverTimeCount = 0;
+
 void Update(vector<Player>& player, float elapsedTime)
 {
 	float elaps_time = elapsedTime / 16;
@@ -1411,9 +1413,13 @@ void ProcessClients()
 					{
 						if (i != who_lose[j])
 						{
-							SendGameOverPacket(i);
-							phyPlayers.clear();
-							return;
+							GameOverTimeCount += 1;
+							if (GameOverTimeCount > 300)
+							{
+								SendGameOverPacket(i);
+								phyPlayers.clear();
+								return;
+							}
 							//break;
 						}
 					}
