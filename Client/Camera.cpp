@@ -400,6 +400,16 @@ void Camera::SetLook(float x, float y, float z)
 	mLook = XMFLOAT3(x, y, z);
 }
 
+void Camera::SetRight(XMFLOAT3 right)
+{
+	mRight = right;
+}
+
+void Camera::SetRight(float x, float y, float z)
+{
+	mRight = XMFLOAT3(x, y, z);
+}
+
 void Camera::LookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp)
 {
 	XMVECTOR L = XMVector3Normalize(XMVectorSubtract(target, pos));

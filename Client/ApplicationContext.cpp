@@ -1413,7 +1413,7 @@ void ApplicationContext::DisplayBackground()
 		instancingObj = FindObject<GameObject>("snowcube", "snowcube" + std::to_string(25 + i));
 		instancingObj->InitializeTransform();
 		instancingObj->m_IsVisible = true;
-		instancingObj->m_MaterialIndex = 1;
+		instancingObj->m_MaterialIndex = 39;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		float size = 13;
 		instancingObj->m_World._11 = size;

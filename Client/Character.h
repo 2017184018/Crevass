@@ -137,6 +137,7 @@ public:
 
 	BoundingBox m_HitBox;
 	bool IsDead = false;
+	bool IsWin = false;
 private:
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Right;

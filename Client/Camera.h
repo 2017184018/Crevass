@@ -68,6 +68,8 @@ public:
 	void SetTarget(const DirectX::XMFLOAT3& lookAt);
 	void SetLook(XMFLOAT3 look);
 	void SetLook(float x,float y,float z);
+	void SetRight(XMFLOAT3 look);
+	void SetRight(float x,float y,float z);
 
 	// Define camera space via LookAt parameters.
 	void LookAt(DirectX::FXMVECTOR pos, DirectX::FXMVECTOR target, DirectX::FXMVECTOR worldUp);

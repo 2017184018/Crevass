@@ -1413,8 +1413,9 @@ void ProcessClients()
 					{
 						if (i != who_lose[j])
 						{
+							phyPlayers[i].is_Skillanim = true;
 							GameOverTimeCount += 1;
-							if (GameOverTimeCount > 300)
+							if (GameOverTimeCount > 300 * numOfCls * lose_count)
 							{
 								SendGameOverPacket(i);
 								phyPlayers.clear();

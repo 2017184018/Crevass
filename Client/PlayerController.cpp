@@ -267,6 +267,12 @@ void PlayerController::OnKeyPressed()
 			}
 		}
 
+		if (m_Owner->IsWin) {
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Skill), m_Owner);
+			CommandCenter::GetApp()->m_StartSkillAnim = true;
+			m_Owner->IsSkill = true;
+		}
+
 		if (InputHandler::IsKeyDown(VK_UP)) {
 			if (!m_Owner->IsSkill)
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);

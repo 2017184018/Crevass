@@ -234,8 +234,8 @@ void GameplayScene::Exit()
 
 	AppContext->HiddenParticle("snowParticle", "snowParticle");
 	g_pFramework->m_pNetwork->SetPlayerLifeCnt();
-	for (int i = 0; i < 5; i++) 
-	Player_Lifecnt[i] = 5;
+	for (int i = 0; i < 5; i++)
+		Player_Lifecnt[i] = 5;
 
 	cout << "exit===========================================" << endl << endl;
 }
@@ -495,7 +495,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 				}
 			}
 			m_Users[WatchPlayerIdx]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third, false);
-			m_Users[WatchPlayerIdx]->m_MyCamera->SetLook(0,0,1);
+			m_Users[WatchPlayerIdx]->m_MyCamera->SetLook(0, 0, 1);
+			m_Users[WatchPlayerIdx]->m_MyCamera->SetRight(1, 0, 0);
 			m_Users[m_PlayerID]->IsDead = true;
 			m_Users[m_PlayerID]->SetWatchPlayerPosition(m_Users[WatchPlayerIdx]->GetPosition());
 		}
@@ -856,10 +857,21 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 	}
 
-	{	//승리자 포커싱
-		if (g_pFramework->m_pNetwork->m_pGameInfo->m_WinnerID != -1) {
-			auto tmppso = m_Users[g_pFramework->m_pNetwork->m_pGameInfo->m_WinnerID]->GetPosition();
-			m_Users[m_PlayerID]->m_MyCamera->SetPosition(tmppso.x, tmppso.y + 150, tmppso.z - 300);
+	{	//승리자 세레모니
+		int DeathCount = 0;
+		int WinnerIndex = -1;
+		for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
+			if (Player_Lifecnt[i] == 0) {
+				++DeathCount;
+			}
+			else {
+				WinnerIndex = i;
+			}
+		}
+		if (DeathCount == g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum - 1) {
+			if (WinnerIndex == m_PlayerID) {		//자기 애니메이션
+				m_Users[m_PlayerID]->IsWin = true;
+			}
 		}
 	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
