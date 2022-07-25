@@ -26,6 +26,7 @@ DirectX::XMFLOAT3 OriginBlockExtents;
 int CalcTime = 0;
 
 int GameOverTimeCount = 0;
+bool GameOverCheck = false;
 
 void Update(vector<Player>& player, float elapsedTime)
 {
@@ -804,8 +805,8 @@ void ProcessClients()
 							phyPlayers[i].lifecnt -= 1;
 						if (phyPlayers[i].lifecnt == 0) {
 							phyPlayers[i].IsDead = true;
-							who_lose[lose_count] = i;
-							lose_count += 1;
+							//who_lose[lose_count] = i;
+							//lose_count += 1;
 						}
 						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;
@@ -1405,27 +1406,53 @@ void ProcessClients()
 					cout <<i<<": " << who_lose[i] << endl;
 				}*/
 
+			for (int i = 0; i < numOfCls; ++i)
+			{
+				if (phyPlayers[i].IsDead == true)
+				{
+					who_lose[lose_count] = i;
+					lose_count += 1;
+				}
+			}
+
 			if ((numOfCls - 1) == lose_count)
 			{
 				for (int i = 0; i < numOfCls; ++i)
 				{
 					for (int j = 0; j < lose_count; ++j)
 					{
-						if (i != who_lose[j])
+						if (i == who_lose[j])
 						{
-							phyPlayers[i].is_Skillanim = true;
-							GameOverTimeCount += 1;
-							if (GameOverTimeCount > 300 * numOfCls * lose_count)
-							{
-								SendGameOverPacket(i);
-								phyPlayers.clear();
-								return;
-							}
+							GameOverCheck = false;
+							break;
+							//phyPlayers[i].is_Skillanim = true;
+							//GameOverTimeCount += 1;
+							//if (GameOverTimeCount > 300 * numOfCls * lose_count)
+							//{
+							//	SendGameOverPacket(i);
+							//	cout << "Winner is " << i << endl;
+							//	phyPlayers.clear();
+							//	return;
+							//}
 							//break;
 						}
 					}
+					if (GameOverCheck == true)
+					{
+						phyPlayers[i].is_Skillanim = true;
+						GameOverTimeCount += 1;
+						if (GameOverTimeCount > 300 * numOfCls * lose_count)
+						{
+							SendGameOverPacket(i);
+							cout << "Winner is " << i << endl;
+							phyPlayers.clear();
+							return;
+						}
+					}
+					GameOverCheck = true;
 				}
 			}
+			lose_count = 0;
 		}
 	}
 }
