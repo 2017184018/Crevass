@@ -282,6 +282,22 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
 			m_Users[i]->m_PlayerController->SetLoop(g_pFramework->m_pNetwork->GetPenguinSkill());
+			static float skillsoundtime = 0.0f;
+			static bool skillsoundcount = false;
+			if (g_pFramework->m_pNetwork->GetPenguinSkill()) {
+				if (skillsoundtime == 0.0f) {
+					skillsoundtime = (g_pFramework->m_pNetwork->Gettime()) / 60.0f;
+				}
+				if (!skillsoundcount) {
+					float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+					SoundManager::GetApp()->PlaySoundOnce(L"Penguin_Skill.wav", SoundManager::CHANNEL_ID::PENGUIN_SKILL, -2.5f * x / 400.0f + 2.5f);
+					skillsoundcount = true;
+				}
+				if (((g_pFramework->m_pNetwork->Gettime()) / 60.0f) - skillsoundtime >= 2) {
+					skillsoundcount = false;
+					skillsoundtime = 0.0f;
+				}
+			}
 		}
 
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
