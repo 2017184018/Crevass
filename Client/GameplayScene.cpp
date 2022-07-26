@@ -16,6 +16,7 @@
 #include "Network.h"
 #include "MainFramework.h"
 #include <random>
+#include "SoundManager.h"
 
 random_device rd;
 default_random_engine dre(rd());
@@ -180,6 +181,9 @@ bool GameplayScene::Enter()
 	//눈 파티클 시작
 	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
 
+	//bgm
+	SoundManager::GetApp()->PlayBGM(L"BGM.mp3", 0.8f);
+
 	return false;
 }
 
@@ -188,6 +192,7 @@ void GameplayScene::Exit()
 	//CommandCenter Reset
 	CommandCenter::GetApp()->Release();
 	GraphicsContext::GetApp()->OnBlurEffect(false);
+	SoundManager::GetApp()->StopAll();
 
 	AppContext->HiddenBlocks();
 	AppContext->HiddenBackground();
@@ -420,18 +425,20 @@ void GameplayScene::Update(const float& fDeltaTime)
 		p.second->Update(fDeltaTime);
 	}
 
-	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
+	static bool SoundOnceCheck = true;
+	if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 	{
-		if (g_pFramework->m_pNetwork->GetCharacterFall(i) == true)
-		{
-			if (i == m_PlayerID)
-			{
-
-				m_Users[i]->m_PlayerController->Fall();
-				Fall(i);
-			}
+		m_Users[m_PlayerID]->m_PlayerController->Fall();
+		Fall(m_PlayerID);
+		if (SoundOnceCheck) {
+			SoundManager::GetApp()->PlaySoundOnce(L"Fall.mp3", SoundManager::CHANNEL_ID::PLAYER_FALL, 2.5f);
+			SoundOnceCheck = false;
 		}
 	}
+	else {
+		SoundOnceCheck = true;
+	}
+
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		//누군가 떨어졌을때
@@ -872,6 +879,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			if (WinnerIndex == m_PlayerID) {		//자기 애니메이션
 				m_Users[m_PlayerID]->IsWin = true;
 			}
+			m_Users[WinnerIndex]->Rotate(0, 1, 0);
 		}
 	}
 	MaterialReference::GetApp()->Update(fDeltaTime);

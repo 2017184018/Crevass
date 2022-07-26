@@ -33,6 +33,7 @@ class MeshReference;
 class MaterialReference;
 class Character;
 class CommandCenter;
+class SoundManager;
 class CREVASS : public IGameApp, public TemplateSingleton<CREVASS>
 {
 
@@ -56,6 +57,7 @@ public:
 	MaterialReference* m_MaterialRef;
 	SceneManager* m_SceneManager;
 	CommandCenter* m_CommandCenter;
+	SoundManager* m_SoundManager;
 
 	int currchar = 0;
 };

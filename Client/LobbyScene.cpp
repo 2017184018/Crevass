@@ -55,8 +55,8 @@ bool LobbyScene::Enter()
 	Core::g_pFramework->m_pNetwork->Recv();
 	Core::m_PlayerID = Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 
-	AppContext->DisplayUI("UI_Up", "UI_Up", 26, 130.f* m_PlayerID -270, 10.f, 30, 30);
-	AppContext->DisplayUI("UI_Down", "UI_Down", 27, 130.f* m_PlayerID-270, -90.f, 30, 30);
+	AppContext->DisplayUI("UI_Up", "UI_Up", 26, 130.f * m_PlayerID - 270, 10.f, 30, 30);
+	AppContext->DisplayUI("UI_Down", "UI_Down", 27, 130.f * m_PlayerID - 270, -90.f, 30, 30);
 
 	//for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	//{
@@ -95,7 +95,7 @@ void LobbyScene::Exit()
 	AppContext->HiddenUI("UI_Down", "UI_Down");
 	dynamic_cast<LobbyController*>(m_SceneController)->is_ready = false;
 	cout << "LobbyScene===========================================" << endl << endl;
-	
+
 }
 
 void LobbyScene::Update(const float& fDeltaTime)
@@ -114,7 +114,6 @@ void LobbyScene::Update(const float& fDeltaTime)
 	Core::mWaves->Update(fDeltaTime);
 	for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
 		switch (Core::g_pFramework->m_pNetwork->GetChooseCharacter(i)) {
-
 
 		case 0:
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
@@ -306,9 +305,9 @@ void LobbyScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Seal"], AppContext->m_RItemsVec);
 
 
-\
+	\
 
-	//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby"], AppContext->m_RItemsVec);
+		//GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["lobby"], AppContext->m_RItemsVec);
 }
 
 void LobbyScene::RenderUI()

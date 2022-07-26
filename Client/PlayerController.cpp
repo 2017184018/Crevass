@@ -2,6 +2,7 @@
 #include "PlayerController.h"
 #include "InputHandler.h"
 #include "Camera.h"
+#include "SoundManager.h"
 
 //#include "ApplicationContext.h"
 //#include "GameObject.h"
@@ -249,6 +250,7 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_ATTACK);
 
+			SoundManager::GetApp()->PlaySoundOnce(L"Attack.mp3", SoundManager::CHANNEL_ID::PLAYER_ATTACK, 2.5f);
 		}
 
 		if (InputHandler::IsKeyDown('S')) {
@@ -279,6 +281,7 @@ void PlayerController::OnKeyPressed()
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_UP_DOWN);
 		//	g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 0;
+			SoundManager::GetApp()->PlaySoundOnce(L"Walking.mp3", SoundManager::CHANNEL_ID::PLAYER_RUNNING, 2.5f);
 		}
 
 		if (InputHandler::IsKeyDown(VK_LEFT)) {
@@ -286,6 +289,7 @@ void PlayerController::OnKeyPressed()
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 6;
+			SoundManager::GetApp()->PlaySoundOnce(L"Walking.mp3", SoundManager::CHANNEL_ID::PLAYER_RUNNING, 2.5f);
 		}
 
 		if (InputHandler::IsKeyDown(VK_DOWN)) {
@@ -293,6 +297,7 @@ void PlayerController::OnKeyPressed()
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 4;
+			SoundManager::GetApp()->PlaySoundOnce(L"Walking.mp3", SoundManager::CHANNEL_ID::PLAYER_RUNNING, 2.5f);
 		}
 
 		if (InputHandler::IsKeyDown(VK_RIGHT)) {
@@ -300,6 +305,7 @@ void PlayerController::OnKeyPressed()
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
 			//g_pFramework->m_pNetwork->Send(CS_PLAYER_MOVE);
 			tmp = 2;
+			SoundManager::GetApp()->PlaySoundOnce(L"Walking.mp3", SoundManager::CHANNEL_ID::PLAYER_RUNNING, 2.5f);
 		}
 
 		if (InputHandler::IsKeyDown(VK_SPACE)) {
@@ -308,6 +314,7 @@ void PlayerController::OnKeyPressed()
 			g_pFramework->m_pNetwork->Send(CS_PLAYER_JUMP);
 
 			tmp = 8;
+			SoundManager::GetApp()->PlaySoundOnce(L"Jump.mp3", SoundManager::CHANNEL_ID::PLAYER_RUNNING, 2.5f);
 		}
 		else {
 			//SpacePush = false;

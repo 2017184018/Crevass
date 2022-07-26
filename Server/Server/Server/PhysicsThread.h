@@ -776,7 +776,7 @@ void ProcessClients()
 						phyPlayers[i].is_jumpanim = false;
 						phyPlayers[i].is_hitted = false;
 						phyPlayers[i].is_attack = false;
-						phyPlayers[i].is_Skill = false;
+						//	phyPlayers[i].is_Skill = false;
 						phyPlayers[i].is_Skillanim = false;
 						phyPlayers[i].m_keyW = false;
 						phyPlayers[i].m_keyA = false;
@@ -1441,12 +1441,17 @@ void ProcessClients()
 					{
 						phyPlayers[i].is_Skillanim = true;
 						GameOverTimeCount += 1;
-						if (GameOverTimeCount > 300 * numOfCls * lose_count)
+						if (GameOverTimeCount > 300 * numOfCls)
 						{
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
 							phyPlayers.clear();
 							return;
+						}
+						else {
+							phyPlayers[i].SetPos(DirectX::XMFLOAT3(400, 30, 400));
+							IsShake[12] = false;
+							IsDown[12] = false;
 						}
 					}
 					GameOverCheck = true;

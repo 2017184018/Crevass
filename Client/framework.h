@@ -58,6 +58,12 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "d3d11.lib")
 
+// FMOD
+#include "FMOD/inc/fmod.h"
+#pragma comment(lib,"FMOD/lib_x64/fmodL_vc.lib")
+#pragma comment(lib,"FMOD/lib_x64/fmod_vc.lib")
+
+
 using namespace std;
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
@@ -99,3 +105,4 @@ enum class CameraType { First, Third, Free, None };
 #define UI_SIZEX 30.f
 #define UI_SIZEY 20.f
 //#define DEBUG_SHADOW 0x00FF0
+#define _MSG_BOX(MESSAGE) MessageBox(0, TEXT(MESSAGE), TEXT("System Message"), MB_OK);

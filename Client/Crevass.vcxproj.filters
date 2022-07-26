@@ -89,6 +89,7 @@
       <Filter>scene</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlurFilter.h" />
@@ -162,6 +163,7 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Crevass.rc" />

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "InputHandler.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 
 #include "MeshReference.h"
 #include "ApplicationContext.h"
@@ -35,10 +36,13 @@ void CREVASS::Startup(void)
 
 	m_SceneManager = SceneManager::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
+	m_SoundManager = SoundManager::GetApp();
 
 	// Build Mesh & Material & Texture
 	m_MeshRef = MeshReference::GetApp();
 	m_MaterialRef = MaterialReference::GetApp();
+
+	SoundManager::GetApp()->ReadySoundManager("./Sounds/");
 
 	// LoadFont
 	GraphicsContext::GetApp()->LoadFont(L"Verdana", 20);
@@ -138,12 +142,15 @@ void CREVASS::Cleanup(void)
 	/* Release Commands */
 	CommandCenter::GetApp()->Release();
 
+	SoundManager::GetApp()->DestroyAll();
+
 	/* Release References */
 	SceneManager::DestroyApp();
 	CommandCenter::DestroyApp();
 	MeshReference::DestroyApp();
 	MaterialReference::DestroyApp();
 	ApplicationContext::DestroyApp();
+	SoundManager::DestroyApp();
 }
 
 void CREVASS::Update(float deltaT)
@@ -153,6 +160,7 @@ void CREVASS::Update(float deltaT)
 
 	g_pFramework->m_pNetwork->Recv();
 	SceneManager::GetApp()->UpdateScene(deltaT);
+	SoundManager::GetApp()->UpdateSoundManager();
 	// PassCB
 	m_Camera->UpdateViewMatrix();
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera, m_Lights[LIGHT_NAME_DIRECTIONAL].get());
