@@ -8,6 +8,7 @@
 #include "MainFramework.h"
 
 #include "ApplicationContext.h"
+#include "SoundManager.h"
 namespace Core
 {
 	extern std::map<int, Character*> m_Users;
@@ -325,7 +326,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		default:
 			break;
 		}
-
+		SoundManager::GetApp()->PlaySoundOnce(L"Attacked.mp3", SoundManager::CHANNEL_ID::PLAYER_ATTACKED, 3.0f);
 		break;
 	}
 
