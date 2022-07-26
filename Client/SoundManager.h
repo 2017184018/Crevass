@@ -5,7 +5,7 @@
 class SoundManager : public TemplateSingleton<SoundManager>
 {
 public:
-	enum CHANNEL_ID { BGM, PLAYER_RUNNING, PLAYER_JUMP, PLAYER_ATTACK, PLAYER_OVERlAP, PLAYER_ATTACKED, PLAYER_FALL, MAX_CHANNEL
+	enum CHANNEL_ID { BGM, PLAYER_RUNNING, PLAYER_JUMP, PLAYER_ATTACK, PLAYER_OVERlAP, PLAYER_ATTACKED, PLAYER_FALL, PENGUIN_SKILL, MAX_CHANNEL
 		/*텍스트 입력할때, 플레이어 워킹, 플레이어 어택 등등,, 따로구분해놓는게좋다.*/ };
 	void DestroyAll();
 
