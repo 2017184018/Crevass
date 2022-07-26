@@ -257,92 +257,106 @@ void MaterialReference::BuildMaterials()
 	UI_Down->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_Down->Roughness = 1.0f;
 	
+	auto UI_Youwin = std::make_unique<Material>();
+	UI_Youwin->MatCBIndex = 30;
+	UI_Youwin->DiffuseSrvHeapIndex = 30;
+	UI_Youwin->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Youwin->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	UI_Youwin->Roughness = 1.0f;
+
+	auto UI_Youlose = std::make_unique<Material>();
+	UI_Youlose->MatCBIndex = 31;
+	UI_Youlose->DiffuseSrvHeapIndex = 31;
+	UI_Youlose->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Youlose->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	UI_Youlose->Roughness = 1.0f;
+
 	auto Particle_Ice = std::make_unique<Material>();
-	Particle_Ice->MatCBIndex = 30;
-	Particle_Ice->DiffuseSrvHeapIndex = 30;
+	Particle_Ice->MatCBIndex = 32;
+	Particle_Ice->DiffuseSrvHeapIndex = 32;
 	Particle_Ice->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	Particle_Ice->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	Particle_Ice->Roughness = 1.0f;
 
 	auto snow_particle = std::make_unique<Material>();
-	snow_particle->MatCBIndex = 31;
-	snow_particle->DiffuseSrvHeapIndex = 31;
+	snow_particle->MatCBIndex = 33;
+	snow_particle->DiffuseSrvHeapIndex = 33;
 	snow_particle->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	snow_particle->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	snow_particle->Roughness = 1.0f;
 
 	auto star_particle = std::make_unique<Material>();
-	star_particle->MatCBIndex = 32;
-	star_particle->DiffuseSrvHeapIndex = 32;
+	star_particle->MatCBIndex = 34;
+	star_particle->DiffuseSrvHeapIndex = 34;
 	star_particle->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	star_particle->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	star_particle->Roughness = 1.0f;
 
 	auto snowmanicon = std::make_unique<Material>();
-	snowmanicon->MatCBIndex = 33;
-	snowmanicon->DiffuseSrvHeapIndex = 33;
+	snowmanicon->MatCBIndex = 35;
+	snowmanicon->DiffuseSrvHeapIndex = 35;
 	snowmanicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	snowmanicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	snowmanicon->Roughness = 1.0f;
 
 	auto iglooicon = std::make_unique<Material>();
-	iglooicon->MatCBIndex = 34;
-	iglooicon->DiffuseSrvHeapIndex = 34;
+	iglooicon->MatCBIndex = 36;
+	iglooicon->DiffuseSrvHeapIndex = 36;
 	iglooicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	iglooicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	iglooicon->Roughness = 1.0f;
 
 	auto blueicon = std::make_unique<Material>();
-	blueicon->MatCBIndex = 35;
-	blueicon->DiffuseSrvHeapIndex = 35;
+	blueicon->MatCBIndex = 37;
+	blueicon->DiffuseSrvHeapIndex = 37;
 	blueicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	blueicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	blueicon->Roughness = 1.0f;
 
 	auto redicon = std::make_unique<Material>();
-	redicon->MatCBIndex = 36;
-	redicon->DiffuseSrvHeapIndex = 36;
+	redicon->MatCBIndex = 38;
+	redicon->DiffuseSrvHeapIndex = 38;
 	redicon->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	redicon->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	redicon->Roughness = 1.0f;
 
 	auto TranslucentArcticFox = std::make_unique<Material>();
-	TranslucentArcticFox->MatCBIndex = 37;
+	TranslucentArcticFox->MatCBIndex = 39;
 	TranslucentArcticFox->DiffuseSrvHeapIndex = 10;
 	TranslucentArcticFox->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	TranslucentArcticFox->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	TranslucentArcticFox->Roughness = 1.0f;
 
 	auto huskyimage1 = std::make_unique<Material>();
-	huskyimage1->MatCBIndex = 38;
+	huskyimage1->MatCBIndex = 40;
 	huskyimage1->DiffuseSrvHeapIndex = 4;
 	huskyimage1->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.7f);
 	huskyimage1->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage1->Roughness = 1.0f;
 
 	auto huskyimage2 = std::make_unique<Material>();
-	huskyimage2->MatCBIndex = 39;
+	huskyimage2->MatCBIndex = 41;
 	huskyimage2->DiffuseSrvHeapIndex = 4;
 	huskyimage2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
 	huskyimage2->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage2->Roughness = 1.0f;
 
 	auto huskyimage3 = std::make_unique<Material>();
-	huskyimage3->MatCBIndex = 40;
+	huskyimage3->MatCBIndex = 42;
 	huskyimage3->DiffuseSrvHeapIndex = 4;
 	huskyimage3->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	huskyimage3->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	huskyimage3->Roughness = 1.0f;
 
 	auto bricks0 = std::make_unique<Material>();
-	bricks0->MatCBIndex = 41;
+	bricks0->MatCBIndex = 43;
 	bricks0->DiffuseSrvHeapIndex = 34;
 	bricks0->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f);
 	bricks0->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	bricks0->Roughness = 1.0f;
 
 	auto darkice = std::make_unique<Material>();
-	darkice->MatCBIndex = 42;
+	darkice->MatCBIndex = 44;
 	darkice->DiffuseSrvHeapIndex = 1;
 	darkice->DiffuseAlbedo = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	darkice->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
@@ -380,6 +394,8 @@ void MaterialReference::BuildMaterials()
 	m_Materials["UI_SelectCharater"] = std::move(UI_SelectCharater);
 	m_Materials["UI_Up"] = std::move(UI_Up);
 	m_Materials["UI_Down"] = std::move(UI_Down);
+	m_Materials["UI_Youwin"] = std::move(UI_Youwin);
+	m_Materials["UI_Youlose"] = std::move(UI_Youlose);
 	m_Materials["Particle_Ice"] = std::move(Particle_Ice);
 	m_Materials["Particle_snow"] = std::move(snow_particle);
 	m_Materials["Particle_star"] = std::move(star_particle);

@@ -76,7 +76,7 @@ public:
 	void CreateWaterDrop();
 	void CreateMinimap();
 	void CreateOutline();
-	void CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY);
+	void CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex);
 	void CreateParticle(std::string particleName, std::string instID, std::string matName, bool isLoop);
 	void CreatelobbyBlocks();
 	void CreatelobbyBackground();
@@ -110,7 +110,7 @@ public:
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName, std::string insname);
 
-	void DisplayUI(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY);
+	void DisplayUI(std::string ui2dLayer, std::string ui2dName, float posX, float posY, float sizeX, float sizeY);
 	void HiddenUI(std::string uiName, std::string instname);
 
 	void SetUI2DPosition(std::string ui2dName, float posX, float posY);

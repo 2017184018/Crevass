@@ -22,10 +22,10 @@ void LobbyScene::Initialize()
 	AppContext->CreateWave();
 	AppContext->CreatelobbyBackground();
 
-	AppContext->CreateUI2D("UI_SelectCharater", "UI_SelectCharater", 27, -280.f, -260.f, 1000.f, 1000.f);
+	AppContext->CreateUI2D("UI_SelectCharater", "UI_SelectCharater", 27);
 
-	AppContext->CreateUI2D("UI_Up", "UI_Up", 28, -280.f, -260.f, 100.f, 100.f);
-	AppContext->CreateUI2D("UI_Down", "UI_Down", 29, -280.f, -260.f, 100.f, 100.f);
+	AppContext->CreateUI2D("UI_Up", "UI_Up", 28);
+	AppContext->CreateUI2D("UI_Down", "UI_Down", 29);
 
 	AppContext->CreateParticle("snowParticle", "snowParticle", "Particle_snow", true);
 }
@@ -47,7 +47,7 @@ bool LobbyScene::Enter()
 	AppContext->DisplaylobbyBackground();
 	AppContext->DisplaylobbyBlocks();
 
-	AppContext->DisplayUI("UI_SelectCharater", "UI_SelectCharater", 25, 0.f, 230.f, 500, 100);
+	AppContext->DisplayUI("UI_SelectCharater", "UI_SelectCharater",  0.f, 230.f, 500, 100);
 
 
 	// 카메라 뷰행렬 초기화
@@ -55,8 +55,8 @@ bool LobbyScene::Enter()
 	Core::g_pFramework->m_pNetwork->Recv();
 	Core::m_PlayerID = Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 
-	AppContext->DisplayUI("UI_Up", "UI_Up", 26, 130.f * m_PlayerID - 270, 10.f, 30, 30);
-	AppContext->DisplayUI("UI_Down", "UI_Down", 27, 130.f * m_PlayerID - 270, -90.f, 30, 30);
+	AppContext->DisplayUI("UI_Up", "UI_Up", 130.f * m_PlayerID - 270, 10.f, 30, 30);
+	AppContext->DisplayUI("UI_Down", "UI_Down",  130.f * m_PlayerID - 270, -90.f, 30, 30);
 
 	//for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	//{

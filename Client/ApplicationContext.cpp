@@ -804,7 +804,7 @@ void ApplicationContext::CreateOutline() {
 	}
 }
 
-void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY)
+void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex)
 {
 	GameObject* item = CreateObject<GameObject>(ui2dLayer, ui2dName);
 	item->Geo = MeshReference::GetApp()->m_GeometryMesh["geo"].get();
@@ -2786,7 +2786,7 @@ void ApplicationContext::HiddenCharacter(std::string userName, std::string insna
 	user->m_IsVisible = false;
 }
 
-void ApplicationContext::DisplayUI(std::string ui2dLayer, std::string ui2dName, int matIndex, float posX, float posY, float sizeX, float sizeY)
+void ApplicationContext::DisplayUI(std::string ui2dLayer, std::string ui2dName,float posX, float posY, float sizeX, float sizeY)
 {
 	GameObject* item = FindObject<GameObject>(ui2dLayer, ui2dName);
 	item->InitializeTransform();

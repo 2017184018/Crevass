@@ -355,6 +355,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		memcpy(&packet, ptr, sizeof(packet));
 		isReset[packet.id] = true;
 		PlayerLifeCnt[packet.id] = packet.life;
+		AppContext->HiddenUI("player_" + std::to_string(packet.id) + "hp" + std::to_string(packet.life), "player_" + std::to_string(packet.id) + "hp" + std::to_string(packet.life));
 		break;
 	}
 

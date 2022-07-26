@@ -40,15 +40,17 @@ void GameplayScene::Initialize()
 
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
-			AppContext->CreateUI2D("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
+			AppContext->CreateUI2D("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19);
 		}
 	}
-	AppContext->CreateUI2D("ui_Penguin", "ui_Penguin", 20, -380.f, 180.f, UI_SIZEX, UI_SIZEY);
-	AppContext->CreateUI2D("ui_husky", "ui_husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
-	AppContext->CreateUI2D("ui_Seal", "ui_Seal", 22, -380.f, 120.f, UI_SIZEX, UI_SIZEY);
-	AppContext->CreateUI2D("ui_PolarBear", "ui_PolarBear", 23, -380.f, 90.f, UI_SIZEX, UI_SIZEY);
-	AppContext->CreateUI2D("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
-	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
+	AppContext->CreateUI2D("ui_Penguin", "ui_Penguin", 20 );
+	AppContext->CreateUI2D("ui_husky", "ui_husky", 21 );
+	AppContext->CreateUI2D("ui_Seal", "ui_Seal", 22 );
+	AppContext->CreateUI2D("ui_PolarBear", "ui_PolarBear", 23);
+	AppContext->CreateUI2D("ui_ArcticFox", "ui_ArcticFox", 24);
+	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25);
+	AppContext->CreateUI2D("UI_Youwin", "UI_Youwin", 30);
+	AppContext->CreateUI2D("UI_Youlose", "UI_Youlose", 31);
 	for (int i = 0; i < 25; i++) {
 		AppContext->CreateParticle("crushparticle", "crushparticle" + std::to_string(i), "Particle_Ice", false);
 	}
@@ -110,17 +112,16 @@ bool GameplayScene::Enter()
 
 	for (int j = 0; j < 5; j++) {
 		for (int i = 0; i < 5; i++) {
-			AppContext->DisplayUI("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19, -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
+			AppContext->DisplayUI("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
 		}
 	}
-	AppContext->DisplayUI("ui_Penguin", "ui_Penguin", 20, -380.f, 180.f, UI_SIZEX, UI_SIZEY);
-	AppContext->DisplayUI("ui_husky", "ui_husky", 21, -380.f, 150.f, UI_SIZEX, UI_SIZEY);
-	AppContext->DisplayUI("ui_Seal", "ui_Seal", 22, -380.f, 120.f, UI_SIZEX, UI_SIZEY);
-	AppContext->DisplayUI("ui_PolarBear", "ui_PolarBear", 23, -380.f, 90.f, UI_SIZEX, UI_SIZEY);
-	AppContext->DisplayUI("ui_ArcticFox", "ui_ArcticFox", 24, -380.f, 60.f, UI_SIZEX, UI_SIZEY);
-	AppContext->DisplayUI("ui_SkillOn", "ui_SkillOn", 25, -280.f, -260.f, 130.f, 40.f);
+	AppContext->DisplayUI("ui_Penguin", "ui_Penguin",-380.f, 180.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_husky", "ui_husky", -380.f, 150.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_Seal", "ui_Seal", -380.f, 120.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_PolarBear", "ui_PolarBear", -380.f, 90.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_ArcticFox", "ui_ArcticFox", -380.f, 60.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_SkillOn", "ui_SkillOn", -280.f, -260.f, 130.f, 40.f);
 
-	//m_PlayerID = g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 	//나 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
@@ -227,8 +228,8 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI("ui_PolarBear", "ui_PolarBear");
 	AppContext->HiddenUI("ui_ArcticFox", "ui_ArcticFox");
 	AppContext->HiddenUI("ui_SkillOn", "ui_SkillOn");
-
-
+	AppContext->HiddenUI("UI_Youlose", "UI_Youlose");
+	AppContext->HiddenUI("UI_Youwin", "UI_Youwin");
 
 	//particle
 	for (int i = 0; i < 5; i++) {
@@ -446,10 +447,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 		{
 			Player_Lifecnt[i] = g_pFramework->m_pNetwork->GetPlayerLifeCnt(i);
 
-			for (int j = 4; j > Player_Lifecnt[i] - 1; j--) {
-				AppContext->HiddenUI("player_" + std::to_string(i) + "hp" + std::to_string(j), "player_" + std::to_string(i) + "hp" + std::to_string(j));
-			}
-
 			g_pFramework->m_pNetwork->SetCharacterReset(i);
 			g_pFramework->m_pNetwork->SetCharacterFall(i);
 
@@ -460,6 +457,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			IsFall[m_PlayerID] = false;
 		}
 		if (Player_Lifecnt[m_PlayerID] == 0) {
+			AppContext->DisplayUI("UI_Youlose", "UI_Youlose", 0.f, 0.f, 400.f, 150.f);
 			m_Users[m_PlayerID]->m_IsVisible = false;
 
 			while (Player_Lifecnt[WatchPlayerIdx] == 0) {
@@ -878,6 +876,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 		if (DeathCount == g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum - 1) {
 			if (WinnerIndex == m_PlayerID) {		//자기 애니메이션
 				m_Users[m_PlayerID]->IsWin = true;
+				AppContext->DisplayUI("UI_Youwin", "UI_Youwin", 0.f, 0.f, 400.f, 150.f);
 			}
 			m_Users[WinnerIndex]->Rotate(0, 1, 0);
 		}
@@ -984,7 +983,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
-	//GraphicsContext::GetApp()->UpdateUIPassCB(0.75f);
+	
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Youwin"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_Youwin"], AppContext->m_RItemsVec);
+
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Youlose"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_Youlose"], AppContext->m_RItemsVec);
 
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
@@ -1155,7 +1159,8 @@ void GameplayScene::Render()
 	}
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
-
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Youlose"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Youwin"], AppContext->m_RItemsVec);
 
 }
 
