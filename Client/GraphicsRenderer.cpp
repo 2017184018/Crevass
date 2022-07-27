@@ -152,6 +152,7 @@ void GraphicsRenderer::LoadTextures()
 		"UI_Down",
 		"UI_Youwin",
 		"UI_Youlose",
+		"UI_Timer_back",
 		"Particle_Ice",
 		"Particle_snow",
 		"Particle_star",
@@ -195,6 +196,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/lobby/UI_down.dds",
 		L"./Textures/ingame/youwin_ui.dds",
 		L"./Textures/ingame/youlose_ui.dds",
+		L"./Textures/ingame/timer_back.dds",
 		L"./Textures/ingame/ice_particle.dds",
 		L"./Textures/ingame/snow_particle.dds",
 		L"./Textures/ingame/star_particle.dds",
@@ -269,6 +271,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	m_Textures["UI_Down"]->Resource,
 	m_Textures["UI_Youwin"]->Resource,
 	m_Textures["UI_Youlose"]->Resource,
+	m_Textures["UI_Timer_back"]->Resource,
 	m_Textures["Particle_Ice"]->Resource,
 	m_Textures["Particle_snow"]->Resource,
 	m_Textures["Particle_star"]->Resource,
@@ -417,7 +420,7 @@ void GraphicsRenderer::BuildRootSignatures()
 	skyboxTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE textureTable;
-	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,38, 2, 0);		//�ؽ��� ��
+	textureTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,39, 2, 0);		//�ؽ��� ��
 
 	CD3DX12_DESCRIPTOR_RANGE texTable2;
 	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);

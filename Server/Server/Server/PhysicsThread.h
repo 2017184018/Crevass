@@ -57,7 +57,7 @@ void Update(vector<Player>& player, float elapsedTime)
 				player[i].dir = DIR_DOWN_RIGHT;
 				saveX = player[i].GetCrossSpeed() * elaps_time;
 				saveZ = -player[i].GetCrossSpeed() * elaps_time;
-
+				 
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyA()) {
 				player[i].m_pos.z -= player[i].GetCrossSpeed() * elaps_time;

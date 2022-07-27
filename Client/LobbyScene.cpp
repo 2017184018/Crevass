@@ -8,6 +8,7 @@
 #include "Particle.h"
 #include "Character.h"
 #include "CharacterParts.h"
+#include "SoundManager.h"
 
 #include "CREVASS.h"
 #include "Network.h"
@@ -71,11 +72,13 @@ bool LobbyScene::Enter()
 	//눈 파티클 시작
 	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
 
+	SoundManager::GetApp()->PlayBGM(L"LobbyBGM.mp3", 0.8f);
 	return false;
 }
 
 void LobbyScene::Exit()
 {
+	SoundManager::GetApp()->StopAll();
 	AppContext->HiddenlobbyBackground();
 	AppContext->HiddenlobbyBlocks();
 
