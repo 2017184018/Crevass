@@ -51,6 +51,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25);
 	AppContext->CreateUI2D("UI_Youwin", "UI_Youwin", 30);
 	AppContext->CreateUI2D("UI_Youlose", "UI_Youlose", 31);
+	AppContext->CreateUI2D("UI_TimerBack", "UI_TimerBack", 32);
 	for (int i = 0; i < 25; i++) {
 		AppContext->CreateParticle("crushparticle", "crushparticle" + std::to_string(i), "Particle_Ice", false);
 	}
@@ -121,7 +122,7 @@ bool GameplayScene::Enter()
 	AppContext->DisplayUI("ui_PolarBear", "ui_PolarBear", -380.f, 90.f, UI_SIZEX, UI_SIZEY);
 	AppContext->DisplayUI("ui_ArcticFox", "ui_ArcticFox", -380.f, 60.f, UI_SIZEX, UI_SIZEY);
 	AppContext->DisplayUI("ui_SkillOn", "ui_SkillOn", -280.f, -260.f, 130.f, 40.f);
-
+	AppContext->DisplayUI("UI_TimerBack", "UI_TimerBack", 0.f, 220.f, 180.f, 180.f);
 	//나 
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
@@ -230,7 +231,8 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI("ui_SkillOn", "ui_SkillOn");
 	AppContext->HiddenUI("UI_Youlose", "UI_Youlose");
 	AppContext->HiddenUI("UI_Youwin", "UI_Youwin");
-
+	AppContext->HiddenUI("UI_TimerBack", "UI_TimerBack");
+	
 	//particle
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -1006,6 +1008,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Youlose"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_Youlose"], AppContext->m_RItemsVec);
 
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_TimerBack"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_TimerBack"], AppContext->m_RItemsVec);
+	
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 
@@ -1177,6 +1182,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Youlose"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Youwin"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_TimerBack"], AppContext->m_RItemsVec);
 
 }
 
