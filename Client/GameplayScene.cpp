@@ -184,8 +184,8 @@ bool GameplayScene::Enter()
 	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
 
 	//bgm
-	SoundManager::GetApp()->PlayBGM(L"BGM.mp3", 0.8f);
-
+	SoundManager::GetApp()->PlayBGM(L"GAMEPLAY_BGM.mp3", 0.8f);
+	
 	return false;
 }
 
