@@ -136,7 +136,6 @@ void Update(vector<Player>& player, float elapsedTime)
 				}
 			}
 		}
-
 		for (int j = 0; j < 25; ++j) {
 			if (player[i].m_pos.y < blocks[j].pos.y + 60) {
 				g_boundaries[player[i].TypeName]->Center.x += saveX;
@@ -1446,6 +1445,9 @@ void ProcessClients()
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
 							phyPlayers.clear();
+							g_boundaries.clear();
+							while (!g_MsgQueue.empty())
+								g_MsgQueue.pop();
 							return;
 						}
 						else {
