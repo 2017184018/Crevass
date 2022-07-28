@@ -96,7 +96,8 @@ void LobbyScene::Exit()
 	AppContext->HiddenUI("UI_SelectCharater", "UI_SelectCharater");
 	AppContext->HiddenUI("UI_Up", "UI_Up");
 	AppContext->HiddenUI("UI_Down", "UI_Down");
-	dynamic_cast<LobbyController*>(m_SceneController)->is_ready = false;
+	if (m_SceneController)
+		dynamic_cast<LobbyController*>(m_SceneController)->is_ready = false;
 	cout << "LobbyScene===========================================" << endl << endl;
 
 }

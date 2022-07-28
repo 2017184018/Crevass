@@ -260,8 +260,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 	{
 		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
 		m_Users[i]->SetSnowmanNum(g_pFramework->m_pNetwork->GetPlayerSnowmanNum(i));
-
+		static bool HuksySkillSound = false;
 		if (g_pFramework->m_pNetwork->GetHuskySkill()) {
+			if (!HuksySkillSound) {
+				float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+				SoundManager::GetApp()->PlaySoundOnce(L"Husky_Skill.wav", SoundManager::CHANNEL_ID::HUSKY_SKILL, -2.5f * x / 400.0f + 2.5f);
+				HuksySkillSound = true;
+			}
 			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.04f) {
 				for (int j = 3; j >= 0; --j) {
 					if (j != 0) {
@@ -281,6 +286,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			for (int j = 0; j < 4; ++j) {
 				huskyimagepos[j] = XMFLOAT3(-1000, -1000, -1000);
 			}
+			HuksySkillSound = false;
 		}
 
 		if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
@@ -303,6 +309,28 @@ void GameplayScene::Update(const float& fDeltaTime)
 			}
 		}
 
+		static bool FoxSkillSound = false;
+		if (g_pFramework->m_pNetwork->GetFoxSkill()) {
+			if (!FoxSkillSound) {
+				float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+				SoundManager::GetApp()->PlaySoundOnce(L"Fox_Skill.wav", SoundManager::CHANNEL_ID::FOX_SKILL, -2.5f * x / 400.0f + 2.5f);
+				FoxSkillSound = true;
+			}
+		}
+		else {
+			FoxSkillSound = false;
+		}
+		static bool SealSkillSound = false;
+		if (g_pFramework->m_pNetwork->GetSealSkill()) {
+			if (!SealSkillSound) {
+				float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+				SoundManager::GetApp()->PlaySoundOnce(L"Seal_Skill.mp3", SoundManager::CHANNEL_ID::SEAL_SKILL, -2.5f * x / 400.0f + 2.5f);
+				SealSkillSound = true;
+			}
+		}
+		else {
+			SealSkillSound = false;
+		}
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 
@@ -895,6 +923,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 			if (WinnerIndex == m_PlayerID) {		//자기 애니메이션
 				m_Users[m_PlayerID]->IsWin = true;
 				AppContext->DisplayUI("UI_Youwin", "UI_Youwin", 0.f, 0.f, 400.f, 150.f);
+				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);
+				SoundManager::GetApp()->PlaySoundOnce(L"Win.mp3", SoundManager::CHANNEL_ID::PLAYER_WIN, 2.5f);
+			}
+			else {
+				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);
+				SoundManager::GetApp()->PlaySoundOnce(L"Lose.WAV", SoundManager::CHANNEL_ID::PLAYER_LOSE, 2.5f);
 			}
 			m_Users[WinnerIndex]->Rotate(0, 1, 0);
 		}

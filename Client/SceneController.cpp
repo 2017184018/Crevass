@@ -35,6 +35,7 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool up = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000 && !is_ready) {
 			if (up) {
+				SoundManager::GetApp()->PlaySoundOnce(L"Button.mp3", SoundManager::CHANNEL_ID::SELECT_BUTTON, 2.0f);
 				if (CREVASS::GetApp()->currchar == 4) {
 					CREVASS::GetApp()->currchar = 0;
 				}
@@ -115,6 +116,7 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool down = true;
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000 && !is_ready) {
 			if (down) {
+				SoundManager::GetApp()->PlaySoundOnce(L"Button.mp3", SoundManager::CHANNEL_ID::SELECT_BUTTON, 2.0f);
 				if (CREVASS::GetApp()->currchar == 0) {
 					CREVASS::GetApp()->currchar = 4;
 				}
@@ -209,6 +211,7 @@ void LobbyController::HandleInput(const float deltaT)
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
 					is_ready = true;
 				}
@@ -224,6 +227,7 @@ void LobbyController::HandleInput(const float deltaT)
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
 					is_ready = true;
 				}
@@ -239,6 +243,7 @@ void LobbyController::HandleInput(const float deltaT)
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_FOX);
 					is_ready = true;
 				}
@@ -254,6 +259,7 @@ void LobbyController::HandleInput(const float deltaT)
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
 					is_ready = true;
 				}
@@ -269,6 +275,7 @@ void LobbyController::HandleInput(const float deltaT)
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
 					is_ready = true;
 				}
