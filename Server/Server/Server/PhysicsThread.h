@@ -27,6 +27,7 @@ int CalcTime = 0;
 
 int GameOverTimeCount = 0;
 bool GameOverCheck = false;
+bool BearSkill = true;
 
 void Update(vector<Player>& player, float elapsedTime)
 {
@@ -1341,6 +1342,8 @@ void ProcessClients()
 							phyPlayers[i].is_Skill = false;
 							phyPlayers[i].SkillTime = 0;
 							phyPlayers[i].IsSkillEnd = true;
+							SendBearSkill(BearSkill);
+							BearSkill = !BearSkill;
 						}
 						phyPlayers[i].SkillTime += 1;
 						if (phyPlayers[i].SkillTime >= 300) {

@@ -405,3 +405,12 @@ void SendSealSkill(bool SealSkill) {
 	SendPacket(&packet);
 }
 
+void SendBearSkill(bool BearSkill) {
+	sc_packet_bearskill packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_BEAR_SKILL;
+	packet.bearskill = BearSkill;
+
+	SendPacket(&packet);
+}
+

@@ -331,6 +331,14 @@ void GameplayScene::Update(const float& fDeltaTime)
 		else {
 			SealSkillSound = false;
 		}
+
+		static bool BearSkillSound = true;
+		if (g_pFramework->m_pNetwork->GetBearSkill()== BearSkillSound) {
+				float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+				SoundManager::GetApp()->PlaySoundOnce(L"Bear_Skill.wav", SoundManager::CHANNEL_ID::BEAR_SKILL, -2.5f * x / 400.0f + 2.5f);
+				BearSkillSound = !BearSkillSound;
+		}
+
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
 		m_Users[i]->SetDir((g_pFramework->m_pNetwork->GetPlayerDir(i)) * 45);
 

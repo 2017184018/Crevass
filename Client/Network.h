@@ -61,6 +61,7 @@ public:
 	bool GetHuskySkill()const;
 	bool GetPenguinSkill()const;
 	bool GetSealSkill()const;
+	bool GetBearSkill()const;
 	bool GetPlayerSkillCool(int num)const;
 	int GetPlayerLifeCnt(int num)const;
 	void SetPlayerLifeCnt();
@@ -91,6 +92,7 @@ private:
 	bool HuskySkill = false;
 	bool PenguinSkill = false;
 	bool SealSkill = false;
+	bool BearSkill = false;
 
 	int choosename[5]{};
 public:
