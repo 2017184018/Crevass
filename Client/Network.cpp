@@ -295,6 +295,17 @@ void Network::ProcessPacket(char* packet_buffer)
 		crash_block_index = packet.blocknum;
 		XMFLOAT3 f3 = AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(packet.blocknum))->GetPosition();
 		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(packet.blocknum), XMFLOAT3(f3.x, f3.y +60.f, f3.z));
+		
+		if (BlockDestructionCnt[packet.blocknum] == 0) {
+			SoundManager::GetApp()->PlaySoundOnce(L"broking_ice1.wav", SoundManager::CHANNEL_ID::ICE_BRAKING1, 3.0f);
+		}
+		else if (BlockDestructionCnt[packet.blocknum] == 1) {
+			SoundManager::GetApp()->PlaySoundOnce(L"broking_ice1.wav", SoundManager::CHANNEL_ID::ICE_BRAKING1, 3.0f);
+		}
+		else if (BlockDestructionCnt[packet.blocknum] == 2) {
+			SoundManager::GetApp()->PlaySoundOnce(L"broking_ice2.mp3", SoundManager::CHANNEL_ID::ICE_BRAKING2, 3.0f);
+		}
+
 		break;
 	}
 
@@ -426,7 +437,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		else if (m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
 			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
 
-		m_pGameInfo->m_ClientsNum = 0;
+		//m_pGameInfo->m_ClientsNum = 0;
 		m_pGameInfo->m_ClientID = -1;
 		m_pGameInfo->m_WinnerID = -1;
 		m_pGameInfo->m_GameOver = false;
