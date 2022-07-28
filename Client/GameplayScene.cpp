@@ -932,7 +932,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				m_Users[m_PlayerID]->IsWin = true;
 				AppContext->DisplayUI("UI_Youwin", "UI_Youwin", 0.f, 0.f, 400.f, 150.f);
 				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);
-				SoundManager::GetApp()->PlaySoundOnce(L"Win.mp3", SoundManager::CHANNEL_ID::PLAYER_WIN, 2.5f);
+				SoundManager::GetApp()->PlaySoundOnce(L"newwin.mp3", SoundManager::CHANNEL_ID::PLAYER_WIN, 2.5f);
 			}
 			else {
 				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);

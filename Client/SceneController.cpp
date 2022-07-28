@@ -208,11 +208,15 @@ void LobbyController::HandleInput(const float deltaT)
 						break;
 					}
 				}
-				if (!IsCharacterSeleted) {
+				if (!IsCharacterSeleted && !is_ready) {
 					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
 					is_ready = true;
 				}
+				else {
+					is_ready = false;
+				}
+
 				break;
 			}
 			case 1: {
@@ -228,6 +232,9 @@ void LobbyController::HandleInput(const float deltaT)
 					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
 					is_ready = true;
+				}
+				else {
+					is_ready = false;
 				}
 				break;
 			}
@@ -245,6 +252,9 @@ void LobbyController::HandleInput(const float deltaT)
 					g_pFramework->m_pNetwork->Send(CS_READY_FOX);
 					is_ready = true;
 				}
+				else {
+					is_ready = false;
+				}
 				break;
 			}
 			case 3: {
@@ -261,6 +271,9 @@ void LobbyController::HandleInput(const float deltaT)
 					g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
 					is_ready = true;
 				}
+				else {
+					is_ready = false;
+				}
 				break;
 			}
 			case 4: {
@@ -276,6 +289,9 @@ void LobbyController::HandleInput(const float deltaT)
 					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
 					is_ready = true;
+				}
+				else {
+					is_ready = false;
 				}
 				break;
 			}
