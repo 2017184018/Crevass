@@ -35,6 +35,7 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool up = true;
 		if (GetAsyncKeyState(VK_UP) & 0x8000 && !is_ready) {
 			if (up) {
+				SoundManager::GetApp()->PlaySoundOnce(L"Button.mp3", SoundManager::CHANNEL_ID::SELECT_BUTTON, 2.0f);
 				if (CREVASS::GetApp()->currchar == 4) {
 					CREVASS::GetApp()->currchar = 0;
 				}
@@ -102,8 +103,6 @@ void LobbyController::HandleInput(const float deltaT)
 				case 4:
 					g_pFramework->m_pNetwork->Send(CS_CHOOSE_SEAL);
 					break;
-
-
 				}
 			}
 		}
@@ -115,6 +114,7 @@ void LobbyController::HandleInput(const float deltaT)
 		static bool down = true;
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000 && !is_ready) {
 			if (down) {
+				SoundManager::GetApp()->PlaySoundOnce(L"Button.mp3", SoundManager::CHANNEL_ID::SELECT_BUTTON, 2.0f);
 				if (CREVASS::GetApp()->currchar == 0) {
 					CREVASS::GetApp()->currchar = 4;
 				}
@@ -209,6 +209,7 @@ void LobbyController::HandleInput(const float deltaT)
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_HUSKY);
 					is_ready = true;
 				}
@@ -217,13 +218,14 @@ void LobbyController::HandleInput(const float deltaT)
 			case 1: {
 				bool IsCharacterSeleted = false;
 				for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
-					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CS_READY_PENGUIN) {
+					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_PENGUIN) {
 						IsCharacterSeleted = true;
 						SoundManager::GetApp()->PlaySoundOnce(L"Overlap.mp3", SoundManager::CHANNEL_ID::PLAYER_OVERlAP, 2.5f);
 						break;
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_PENGUIN);
 					is_ready = true;
 				}
@@ -232,13 +234,14 @@ void LobbyController::HandleInput(const float deltaT)
 			case 2: {
 				bool IsCharacterSeleted = false;
 				for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
-					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CS_READY_FOX) {
+					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
 						IsCharacterSeleted = true;
 						SoundManager::GetApp()->PlaySoundOnce(L"Overlap.mp3", SoundManager::CHANNEL_ID::PLAYER_OVERlAP, 2.5f);
 						break;
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_FOX);
 					is_ready = true;
 				}
@@ -247,13 +250,14 @@ void LobbyController::HandleInput(const float deltaT)
 			case 3: {
 				bool IsCharacterSeleted = false;
 				for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
-					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CS_READY_POLARBEAR) {
+					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_POLARBEAR) {
 						IsCharacterSeleted = true;
 						SoundManager::GetApp()->PlaySoundOnce(L"Overlap.mp3", SoundManager::CHANNEL_ID::PLAYER_OVERlAP, 2.5f);
 						break;
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_POLARBEAR);
 					is_ready = true;
 				}
@@ -262,13 +266,14 @@ void LobbyController::HandleInput(const float deltaT)
 			case 4: {
 				bool IsCharacterSeleted = false;
 				for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
-					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CS_READY_SEAL) {
+					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
 						IsCharacterSeleted = true;
 						SoundManager::GetApp()->PlaySoundOnce(L"Overlap.mp3", SoundManager::CHANNEL_ID::PLAYER_OVERlAP, 2.5f);
 						break;
 					}
 				}
 				if (!IsCharacterSeleted) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
 					g_pFramework->m_pNetwork->Send(CS_READY_SEAL);
 					is_ready = true;
 				}

@@ -27,6 +27,7 @@ int CalcTime = 0;
 
 int GameOverTimeCount = 0;
 bool GameOverCheck = false;
+bool BearSkill = true;
 
 void Update(vector<Player>& player, float elapsedTime)
 {
@@ -1223,7 +1224,7 @@ void ProcessClients()
 						else if (phyPlayers[i].TypeName == "husky") {
 							phyPlayers[i].IsSkillCool = true;
 							static float HittedIdx = -1;
-							if (phyPlayers[i].m_pos.y < 65) {
+							if (phyPlayers[i].m_pos.y < 40) {
 								phyPlayers[i].m_pos.y += 10.0f;
 							}
 							if (phyPlayers[i].SkillTime >= 10 && phyPlayers[i].SkillTime <= 80) {
@@ -1341,6 +1342,8 @@ void ProcessClients()
 							phyPlayers[i].is_Skill = false;
 							phyPlayers[i].SkillTime = 0;
 							phyPlayers[i].IsSkillEnd = true;
+							SendBearSkill(BearSkill);
+							BearSkill = !BearSkill;
 						}
 						phyPlayers[i].SkillTime += 1;
 						if (phyPlayers[i].SkillTime >= 300) {
@@ -1452,6 +1455,7 @@ void ProcessClients()
 						}
 						else {
 							phyPlayers[i].SetPos(DirectX::XMFLOAT3(400, 30, 400));
+							phyPlayers[i].gravity = 0.0f;
 							IsShake[12] = false;
 							IsDown[12] = false;
 						}

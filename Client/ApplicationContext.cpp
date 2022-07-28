@@ -165,7 +165,7 @@ void ApplicationContext::CreateBlocks()
 			top->BaseVertexLocation = top->Geo->DrawArgs["snow_top"].BaseVertexLocation;
 			top->m_Bounds = instancingObj->Geo->DrawArgs["snow_top"].Bounds;
 			top->m_IsVisible = false;
-			top->m_MaterialIndex = 40; MaterialReference::GetApp()->m_Materials["darkice"]->DiffuseSrvHeapIndex;
+			top->m_MaterialIndex = 45; MaterialReference::GetApp()->m_Materials["darkice"]->DiffuseSrvHeapIndex;
 			top->m_World = MathHelper::Identity4x4();
 			XMStoreFloat4x4(&top->m_World, XMLoadFloat4x4(&top->m_World) * XMMatrixRotationY(3.141592 * uid4(dre2)));
 			top->m_TexTransform = MathHelper::Identity4x4();
@@ -1413,7 +1413,7 @@ void ApplicationContext::DisplayBackground()
 		instancingObj = FindObject<GameObject>("snowcube", "snowcube" + std::to_string(25 + i));
 		instancingObj->InitializeTransform();
 		instancingObj->m_IsVisible = true;
-		instancingObj->m_MaterialIndex = 40;
+		instancingObj->m_MaterialIndex = 45;
 		instancingObj->m_World = MathHelper::Identity4x4();
 		float size = 13;
 		instancingObj->m_World._11 = size;
