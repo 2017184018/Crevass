@@ -442,10 +442,10 @@ void Network::ProcessPacket(char* packet_buffer)
 
 		m_pGameInfo->m_WinnerID = (int)packet.id;
 		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
-		if (m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
+	/*	if (m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
 			MessageBox(nullptr, L"You Win", L"Game Over!", MB_OK);
 		else if (m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
-			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
+			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);*/
 
 		//m_pGameInfo->m_ClientsNum = 0;
 		//m_pGameInfo->m_ClientID = -1;
@@ -455,7 +455,15 @@ void Network::ProcessPacket(char* packet_buffer)
 		//타입 초기화
 		for(int i=0;i<TOTAL_PLAYER_NUM;i++)
 		CharacterType[i] = -1;
-
+		for (int i = 0; i < 5; ++i) {
+			IsFall[i] = false;
+			isReset[i] = false;
+		}
+		FoxSkill = false;
+		HuskySkill = false;
+		PenguinSkill = false;
+		SealSkill = false;
+		BearSkill = false;
 		SceneManager::GetApp()->ChangeScene(SceneType::Lobby);
 		break;
 	}

@@ -144,7 +144,7 @@ private:
 	DirectX::XMFLOAT3 m_Up;
 	DirectX::XMFLOAT3 m_Look;
 	DirectX::XMFLOAT3 WatchPlayerPosition;
-	;
+	
 	float m_Pitch;
 	float m_Yaw;
 	float m_Roll;

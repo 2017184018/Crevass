@@ -15,19 +15,7 @@ bool IsRight[25];
 UINT ShakeCnt[25];
 bool IsDown[25];
 bool IsShake[25];
-bool BlockIn = false;
-bool IsFall[5] = { false,false,false,false,false };
 Block blocks[25];
-bool dir_switch[5];
-bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
-Hail hails[5];
-DirectX::XMFLOAT3 OriginBlockExtents;
-
-int CalcTime = 0;
-
-int GameOverTimeCount = 0;
-bool GameOverCheck = false;
-bool BearSkill = true;
 
 void Update(vector<Player>& player, float elapsedTime)
 {
@@ -364,7 +352,17 @@ void PolarbearSkill(int tmp) {
 
 void ProcessClients()
 {
+	Hail hails[5];
+	DirectX::XMFLOAT3 OriginBlockExtents;
+	int CalcTime = 0;
 	g_player_lock.lock();
+	int GameOverTimeCount = 0;
+	bool GameOverCheck = false;
+	bool BlockIn = false;
+	bool IsFall[5] = { false,false,false,false,false };
+	bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
+	bool dir_switch[5];
+	bool BearSkill = true;
 	Pro_Player players[5] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]},{g_initialPos[3]},{g_initialPos[4]} };
 
 	for (int i = 0; i < 5; ++i) {
@@ -384,7 +382,6 @@ void ProcessClients()
 			g_boundaries["PolarBear"]->Center = players[i].pos;
 		}
 	}
-
 	DirectX::XMFLOAT3 tmp[25];
 
 	for (int i = 0; i < 25; ++i) {
@@ -1450,7 +1447,7 @@ void ProcessClients()
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
 							phyPlayers.clear();
-							g_boundaries.clear();
+						//	g_boundaries.clear();
 
 
 							while (!g_MsgQueue.empty())
@@ -1459,7 +1456,7 @@ void ProcessClients()
 							for (int i = 0; i < numOfCls; ++i)
 							{
 								g_playerReadyInfo[i].ready = 0;
-								g_initialPos[i].Character_type = -1;
+								g_initialPos[i].Character_type = CHARACTER_NONE;
 							}
 
 							g_isPlaying = false;

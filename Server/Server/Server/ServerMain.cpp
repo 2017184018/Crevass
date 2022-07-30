@@ -150,7 +150,6 @@ int main()
 		// 접속한 클라이언트에 id 알려주기
 		SendLoginOkPacket(user_id);
 
-
 		//나에게 나머지의 레디상황
 		//나머지 클라에게 나의 레디상황
 		for (int i = 0; i < MAXPLAYER; ++i)	// 유저아이디가 순서대로 증가할 때만 가능
@@ -170,8 +169,5 @@ int main()
 		// RecvThread 생성
 		thread RecvThread(Receiver, user_id);			//조정필요
 		RecvThread.detach();
-
 	}
-
-
 }

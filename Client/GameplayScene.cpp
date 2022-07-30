@@ -143,7 +143,6 @@ bool GameplayScene::Enter()
 			m_Users[i] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
 		}
 		m_Users[i]->m_IsVisible = true;
-
 	}
 	WatchPlayerIdx = m_PlayerID;
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third, true);
@@ -171,13 +170,11 @@ bool GameplayScene::Enter()
 		SnowmanIndex[i] = g_pFramework->m_pNetwork->GetSnowmanLocation(i);
 	}
 
-
 	//여기서 초기화
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->SetPosition(-380.f, 180.f - i * 30.f, 1.f);
 		AppContext->FindObject<GameObject>("ui_" + m_Users[i]->GetType(), "ui_" + m_Users[i]->GetType())->m_positionRatio = { (-380.f - (UI_SIZEX / 20.f)) / 800.f, (180.f - i * 30.f - (UI_SIZEY / 20.f)) / 600.f };
-
 	}
 
 	//눈 파티클 시작
@@ -945,7 +942,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 			if (WinnerIndex == m_PlayerID) {		//자기 애니메이션
 				AppContext->DisplayUI("UI_Youwin", "UI_Youwin", 0.f, 0.f, 400.f, 150.f);
 				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);
-				if (m_Users[m_PlayerID]->IsWin==0) {
+				if (m_Users[m_PlayerID]->IsWin == 0) {
 					SoundManager::GetApp()->PlaySoundOnce(L"newwin.mp3", SoundManager::CHANNEL_ID::PLAYER_WIN, 2.5f);
 					m_Users[m_PlayerID]->IsWin = 1;
 				}

@@ -164,8 +164,6 @@ void CREVASS::Update(float deltaT)
 	// PassCB
 	m_Camera->UpdateViewMatrix();
 	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera, m_Lights[LIGHT_NAME_DIRECTIONAL].get());
-
-	
 }
 
 void CREVASS::RenderScene(void)

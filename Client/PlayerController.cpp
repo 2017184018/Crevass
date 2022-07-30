@@ -274,7 +274,7 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->m_StartSkillAnim = true;
 			m_Owner->IsSkill = true;
 			++Count;
-			if (Count >= 7) {
+			if (Count >= 5) {
 				m_Owner->IsWin = 3;
 				Count = 0;
 			}

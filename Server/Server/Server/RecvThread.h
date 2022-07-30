@@ -226,7 +226,6 @@ void Receiver(char id)
 
 				if (CheckGameStart())
 				{
-
 					SendGameStartPacket();
 					g_isPlaying = true;
 					// Physics Thread ����
@@ -234,9 +233,7 @@ void Receiver(char id)
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
-
 			}
-
 			break;
 		}
 		case CS_READY_HUSKY:

@@ -74,29 +74,18 @@ public:
 
 public:
 	void RenderShadow();
+	void Fall(int num);
 
-//	bool IsShake[25];
-	//bool IsRight[25];		//오른쪽으로 흔들리는지
-	//UINT ShakeCnt[25];		//좌우로 몇 번 움직였는지
 	UINT DestructionCnt[25];	//몇 번 파괴 됐는지
-
-	//bool IsDown[25];		//내려가는 중인지
-
 
 	UINT iglooLocaArray[9] = { 0,2,4,10,12,14,20,22,24 };
 
-	bool IsFall[5] = { 0, };		// 블러링, 높은 물결
+	bool IsFall[5] = { 0,0,0,0,0 };		// 블러링, 높은 물결
 
-	bool BlockIn = false;		//블록 한번만 밟게
-	int tmp1 = -1;
-	int tmp2 = -1;
-
-	void Fall(int num);
-	UINT Player_Lifecnt[5] = {5,5,5,5,5};
+	UINT Player_Lifecnt[5] = { 5,5,5,5,5 };
 
 	int WatchPlayerIdx = -1;
 	int FallX, FallZ;
-	float Gravity = 0.1;
 
 	int m_Timer;
 };
