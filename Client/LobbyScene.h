@@ -43,5 +43,10 @@ public:
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
 	virtual void RenderUI() override;
+
+	void Shake3DUI();
+
+public:
+	BOOL m_3DUIdir[2] = {0,0};
 };
 

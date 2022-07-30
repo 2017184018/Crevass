@@ -187,6 +187,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 			break;
 		}
 	}
+	Shake3DUI();
 
 	AppContext->FindObject<Particle>("snowParticle", "snowParticle")->Update(fDeltaTime);
 
@@ -320,4 +321,48 @@ void LobbyScene::Render()
 
 void LobbyScene::RenderUI()
 {
+}
+
+void LobbyScene::Shake3DUI()
+{
+	if (AppContext->FindObject<GameObject>("UI_Up", "UI_Up")->GetPosition().y > 160 )
+	{
+		//start down
+		m_3DUIdir[0] = true;
+	}
+	else if (AppContext->FindObject<GameObject>("UI_Up", "UI_Up")->GetPosition().y < 130)
+	{
+		//start up
+		m_3DUIdir[0] = false;
+	}
+
+	if (m_3DUIdir[0])
+	{
+		AppContext->FindObject<GameObject>("UI_Up", "UI_Up")->MoveUp(-1.f);
+	}
+	else if(!m_3DUIdir[0])
+	{
+		AppContext->FindObject<GameObject>("UI_Up", "UI_Up")->MoveUp(1.f);
+	}
+
+
+	if (AppContext->FindObject<GameObject>("UI_Down", "UI_Down")->GetPosition().y > 0)
+	{
+		//start down
+		m_3DUIdir[1] = true;
+	}
+	else if (AppContext->FindObject<GameObject>("UI_Down", "UI_Down")->GetPosition().y < -30)
+	{
+		//start up
+		m_3DUIdir[1] = false;
+	}
+
+	if (m_3DUIdir[1])
+	{
+		AppContext->FindObject<GameObject>("UI_Down", "UI_Down")->MoveUp(-1.f);
+	}
+	else if (!m_3DUIdir[1])
+	{
+		AppContext->FindObject<GameObject>("UI_Down", "UI_Down")->MoveUp(1.f);
+	}
 }
