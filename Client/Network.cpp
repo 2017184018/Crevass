@@ -27,7 +27,7 @@ void Network::InitSocket()
 	BOOL optval = TRUE;
 	setsockopt(m_ClientSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
 	ioctlsocket(m_ClientSocket, FIONBIO, &on);	//nonblock
-	
+
 
 	ZeroMemory(&serveraddr, sizeof(SOCKADDR_IN));
 	serveraddr.sin_family = AF_INET;
@@ -195,7 +195,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		cout << (int)packet.id << endl;
 		cout << (int)packet.type << endl;
 		break;
-	}	
+	}
 	case SC_CHOOSE_SEAL:
 	{
 		sc_packet_choose packet;
@@ -214,7 +214,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_game_start packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = true;
-	
+
 		for (int i = 0; i < TOTAL_PLAYER_NUM; ++i)
 		{
 			if (packet.players[i].id != -1)
@@ -225,6 +225,7 @@ void Network::ProcessPacket(char* packet_buffer)
 					{
 						m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players->pos);
 						m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetCharacterType(packet.players->Character_type);
+					
 					}
 				}
 			}
@@ -294,7 +295,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		cout << "crash cube num = " << packet.blocknum << endl;
 		crash_block_index = packet.blocknum;
 		XMFLOAT3 f3 = AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(packet.blocknum))->GetPosition();
-		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(packet.blocknum), XMFLOAT3(f3.x, f3.y +60.f, f3.z));
+		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(packet.blocknum), XMFLOAT3(f3.x, f3.y + 60.f, f3.z));
 
 		if (BlockDestructionCnt[packet.blocknum] == 0) {
 			SoundManager::GetApp()->PlaySoundOnce(L"broking_ice1.wav", SoundManager::CHANNEL_ID::ICE_BRAKING1, 3.0f);
@@ -312,7 +313,7 @@ void Network::ProcessPacket(char* packet_buffer)
 
 	case SC_HITPLAYER:
 	{
-	
+
 		sc_packet_hitplayer packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		cout << "type num = " << packet.typenum << endl;
@@ -384,7 +385,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_time packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_timer = packet.time;// % 3600 / 60;
-		
+
 		break;
 	}
 	case SC_HAIL:
@@ -393,6 +394,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		memcpy(&packet, ptr, sizeof(packet));
 		for (int i = 0; i < 5; ++i) {
 			AppContext->FindObject<GameObject>("rock_1", "rock_1" + std::to_string(i + 15))->SetPosition(packet.pos[i]);
+			HailPos[i] = packet.pos[i];
 		}
 		break;
 	}
@@ -437,7 +439,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_gameover packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = false;
-		
+
 		m_pGameInfo->m_WinnerID = (int)packet.id;
 		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
 		if (m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
@@ -446,10 +448,13 @@ void Network::ProcessPacket(char* packet_buffer)
 			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
 
 		//m_pGameInfo->m_ClientsNum = 0;
-		m_pGameInfo->m_ClientID = -1;
+		//m_pGameInfo->m_ClientID = -1;
 		m_pGameInfo->m_WinnerID = -1;
 		m_pGameInfo->m_GameOver = false;
 		m_pGameInfo->m_GameStart = false;
+		//타입 초기화
+		for(int i=0;i<TOTAL_PLAYER_NUM;i++)
+		CharacterType[i] = -1;
 
 		SceneManager::GetApp()->ChangeScene(SceneType::Lobby);
 		break;

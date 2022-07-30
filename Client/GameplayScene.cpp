@@ -43,9 +43,9 @@ void GameplayScene::Initialize()
 			AppContext->CreateUI2D("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), 19);
 		}
 	}
-	AppContext->CreateUI2D("ui_Penguin", "ui_Penguin", 20 );
-	AppContext->CreateUI2D("ui_husky", "ui_husky", 21 );
-	AppContext->CreateUI2D("ui_Seal", "ui_Seal", 22 );
+	AppContext->CreateUI2D("ui_Penguin", "ui_Penguin", 20);
+	AppContext->CreateUI2D("ui_husky", "ui_husky", 21);
+	AppContext->CreateUI2D("ui_Seal", "ui_Seal", 22);
 	AppContext->CreateUI2D("ui_PolarBear", "ui_PolarBear", 23);
 	AppContext->CreateUI2D("ui_ArcticFox", "ui_ArcticFox", 24);
 	AppContext->CreateUI2D("ui_SkillOn", "ui_SkillOn", 25);
@@ -116,7 +116,7 @@ bool GameplayScene::Enter()
 			AppContext->DisplayUI("player_" + std::to_string(j) + "hp" + std::to_string(i), "player_" + std::to_string(j) + "hp" + std::to_string(i), -350.f + i * 23.f, 180.f - j * 30.f, 20.f, 10.5f);
 		}
 	}
-	AppContext->DisplayUI("ui_Penguin", "ui_Penguin",-380.f, 180.f, UI_SIZEX, UI_SIZEY);
+	AppContext->DisplayUI("ui_Penguin", "ui_Penguin", -380.f, 180.f, UI_SIZEX, UI_SIZEY);
 	AppContext->DisplayUI("ui_husky", "ui_husky", -380.f, 150.f, UI_SIZEX, UI_SIZEY);
 	AppContext->DisplayUI("ui_Seal", "ui_Seal", -380.f, 120.f, UI_SIZEX, UI_SIZEY);
 	AppContext->DisplayUI("ui_PolarBear", "ui_PolarBear", -380.f, 90.f, UI_SIZEX, UI_SIZEY);
@@ -185,7 +185,7 @@ bool GameplayScene::Enter()
 
 	//bgm
 	SoundManager::GetApp()->PlayBGM(L"GAMEPLAY_BGM.mp3", 0.8f);
-	
+
 	return false;
 }
 
@@ -232,7 +232,7 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI("UI_Youlose", "UI_Youlose");
 	AppContext->HiddenUI("UI_Youwin", "UI_Youwin");
 	AppContext->HiddenUI("UI_TimerBack", "UI_TimerBack");
-	
+
 	//particle
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -312,9 +312,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static bool FoxSkillSound = false;
 		if (g_pFramework->m_pNetwork->GetFoxSkill()) {
 			if (!FoxSkillSound) {
-				float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
-				SoundManager::GetApp()->PlaySoundOnce(L"Fox_Skill.wav", SoundManager::CHANNEL_ID::FOX_SKILL, -2.5f * x / 400.0f + 2.5f);
-				FoxSkillSound = true;
+				if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
+					float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+					SoundManager::GetApp()->PlaySoundOnce(L"Fox_Skill.wav", SoundManager::CHANNEL_ID::FOX_SKILL, -2.5f * x / 400.0f + 2.5f);
+					FoxSkillSound = true;
+				}
 			}
 		}
 		else {
@@ -323,9 +325,11 @@ void GameplayScene::Update(const float& fDeltaTime)
 		static bool SealSkillSound = false;
 		if (g_pFramework->m_pNetwork->GetSealSkill()) {
 			if (!SealSkillSound) {
-				float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
-				SoundManager::GetApp()->PlaySoundOnce(L"Seal_Skill.mp3", SoundManager::CHANNEL_ID::SEAL_SKILL, -2.5f * x / 400.0f + 2.5f);
-				SealSkillSound = true;
+				if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
+					float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+					SoundManager::GetApp()->PlaySoundOnce(L"Seal_Skill.mp3", SoundManager::CHANNEL_ID::SEAL_SKILL, -2.5f * x / 400.0f + 2.5f);
+					SealSkillSound = true;
+				}
 			}
 		}
 		else {
@@ -333,10 +337,17 @@ void GameplayScene::Update(const float& fDeltaTime)
 		}
 
 		static bool BearSkillSound = true;
-		if (g_pFramework->m_pNetwork->GetBearSkill()== BearSkillSound) {
+		if (g_pFramework->m_pNetwork->GetBearSkill() == BearSkillSound) {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_POLARBEAR) {
 				float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
 				SoundManager::GetApp()->PlaySoundOnce(L"Bear_Skill.wav", SoundManager::CHANNEL_ID::BEAR_SKILL, -2.5f * x / 400.0f + 2.5f);
 				BearSkillSound = !BearSkillSound;
+			}
+		}
+
+		if (g_pFramework->m_pNetwork->GetHailPos(i).y == 200.0f) {
+			float x = distance(m_Users[i]->GetPosition(), m_Users[m_PlayerID]->GetPosition());
+			SoundManager::GetApp()->PlaySoundOnce(L"Hail.mp3", SoundManager::CHANNEL_ID::HAIL, -2.5f * x / 400.0f + 2.5f);
 		}
 
 		m_Users[i]->SetPosition(g_pFramework->m_pNetwork->GetPlayerPos(i));
@@ -483,9 +494,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	static bool SoundOnceCheck = true;
 	if (g_pFramework->m_pNetwork->GetCharacterFall(m_PlayerID))
 	{
-		m_Users[m_PlayerID]->m_PlayerController->Fall();
-		Fall(m_PlayerID);
 		if (SoundOnceCheck) {
+			m_Users[m_PlayerID]->m_PlayerController->Fall();
+			Fall(m_PlayerID);
 			SoundManager::GetApp()->PlaySoundOnce(L"Fall.mp3", SoundManager::CHANNEL_ID::PLAYER_FALL, 2.5f);
 			SoundOnceCheck = false;
 		}
@@ -927,18 +938,27 @@ void GameplayScene::Update(const float& fDeltaTime)
 				WinnerIndex = i;
 			}
 		}
+		static bool LoseSoundCheck = true;
 		if (DeathCount == g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum - 1) {
 			if (WinnerIndex == m_PlayerID) {		//자기 애니메이션
-				m_Users[m_PlayerID]->IsWin = true;
 				AppContext->DisplayUI("UI_Youwin", "UI_Youwin", 0.f, 0.f, 400.f, 150.f);
 				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);
-				SoundManager::GetApp()->PlaySoundOnce(L"newwin.mp3", SoundManager::CHANNEL_ID::PLAYER_WIN, 2.5f);
+				if (!m_Users[m_PlayerID]->IsWin) {
+					SoundManager::GetApp()->PlaySoundOnce(L"newwin.mp3", SoundManager::CHANNEL_ID::PLAYER_WIN, 2.5f);
+					m_Users[m_PlayerID]->IsWin = true;
+				}
 			}
 			else {
 				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);
-				SoundManager::GetApp()->PlaySoundOnce(L"Lose.WAV", SoundManager::CHANNEL_ID::PLAYER_LOSE, 2.5f);
+				if (LoseSoundCheck) {
+					SoundManager::GetApp()->PlaySoundOnce(L"Lose.WAV", SoundManager::CHANNEL_ID::PLAYER_LOSE, 2.5f);
+					LoseSoundCheck = false;
+				}
 			}
 			m_Users[WinnerIndex]->Rotate(0, 1, 0);
+		}
+		else {
+			LoseSoundCheck = true;
 		}
 	}
 	MaterialReference::GetApp()->Update(fDeltaTime);
@@ -1043,7 +1063,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["ui_SkillOn"], AppContext->m_RItemsVec);
-	
+
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Youwin"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_Youwin"], AppContext->m_RItemsVec);
 
@@ -1052,7 +1072,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_TimerBack"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_TimerBack"], AppContext->m_RItemsVec);
-	
+
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[0]);
 	GraphicsContext::GetApp()->UpdateWave(Core::mWaves.get(), Core::wave[1]);
 
