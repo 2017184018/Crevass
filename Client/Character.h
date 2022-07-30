@@ -123,14 +123,16 @@ public:
 	void SetSkillCool(bool cool);
 	bool GetSkillCool();
 
+	void SetSkill(bool skill);
+
 	void SetWatchPlayerPosition(float x, float y, float z);
 	void SetWatchPlayerPosition(DirectX::XMFLOAT3 v);
 public:
 	Camera* m_MyCamera;
 	std::unique_ptr<PlayerController> m_PlayerController;
 	std::map<std::string, CharacterParts*> m_Parts;
-	BOOL bJump = false;
-	BOOL is_Inair = false;
+
+
 	BOOL is_fall = false;
 	BOOL is_StartFallAnim = false;
 	float m_CurrentAngle = 0.0f;

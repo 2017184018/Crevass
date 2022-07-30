@@ -270,6 +270,7 @@ void Network::ProcessPacket(char* packet_buffer)
 		for (int i = 0; i < m_pGameInfo->m_ClientsNum; ++i)
 		{
 			PlayerPos[i] = packet.players[i].pos;
+			
 			dir[i] = packet.players[i].dir;
 			PlayerHide[i] = packet.players[i].IsHide;
 			PlayerSnowmanHide[i] = packet.players[i].SnowmanNum;
@@ -458,12 +459,14 @@ void Network::ProcessPacket(char* packet_buffer)
 		for (int i = 0; i < 5; ++i) {
 			IsFall[i] = false;
 			isReset[i] = false;
+			dir[i] = 0;
 		}
 		FoxSkill = false;
 		HuskySkill = false;
 		PenguinSkill = false;
 		SealSkill = false;
 		BearSkill = false;
+		
 		SceneManager::GetApp()->ChangeScene(SceneType::Lobby);
 		break;
 	}

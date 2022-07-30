@@ -2761,7 +2761,7 @@ void ApplicationContext::DisplayCharacter(Character* user, XMFLOAT3 pos, bool is
 	user->SetAnimationPlayerState(Character::PlayerState::STATE_IDLE);
 	user->m_IsVisible = isVisible;
 	user->Scale(20.f, 20.f, 20.f);
-	user->Rotate(0, 180, 0);
+	//user->Rotate(0, 180, 0);
 	user->SetPosition(pos);
 
 
@@ -2775,6 +2775,13 @@ void ApplicationContext::HiddenCharacter(std::string userName, std::string insna
 	user->m_MyCamera = nullptr;
 	user->SetAnimationPlayerState(Character::PlayerState::STATE_IDLE);
 	user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
+	
+	user->IsDead = false;
+	user->IsWin = false;
+	user->is_fall = false;
+	user->SetSkillCool(false);
+	user->SetSkill(false);
+	user->SetDir(0);
 	user->m_PlayerController.release();
 
 	ZeroMemory(&user->m_World, sizeof(user->m_World));

@@ -77,7 +77,7 @@ private:
 
 	int iglooLocation[2];
 	int SnowmanLocation[4];
-	char dir[5];
+	char dir[5] = {0,0,0,0,0};
 
 	DirectX::XMFLOAT3 BlockPos[25];
 	int BlockDestructionCnt[25];

@@ -271,6 +271,7 @@ void SendPos(Pro_Player& players)
 	sc_packet_pos packet;
 	packet.size = sizeof(packet);
 	packet.type = SC_POS;
+	
 	memcpy(&packet.players, &players, sizeof(packet.players));
 
 	SendPacket(&packet);

@@ -130,22 +130,27 @@ bool GameplayScene::Enter()
 		if (ty == CHARACTER_PENGUIN) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Penguin", "Penguin0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Penguin", "Penguin0");
+		
 		}
 		else if (ty == CHARACTER_ARCTICFOX) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("ArcticFox", "ArcticFox0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
+		
 		}
 		else if (ty == CHARACTER_HUSKY) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("husky", "husky0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("husky", "husky0");
+		
 		}
 		else if (ty == CHARACTER_SEAL) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Seal", "Seal0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Seal", "Seal0");
+		
 		}
 		else /*if (ty == CHARACTER_POLARBEAR)*/ {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("PolarBear", "PolarBear0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
+	
 		}
 	//	m_Users[i]->m_IsVisible = true;
 	}

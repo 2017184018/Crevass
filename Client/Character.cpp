@@ -917,6 +917,11 @@ bool Character::GetSkillCool()
 	return IsSkillCool;
 }
 
+void Character::SetSkill(bool skill)
+{
+	IsSkill = skill;
+}
+
 void Character::SetWatchPlayerPosition(float x, float y, float z)
 {
 	WatchPlayerPosition = XMFLOAT3(x, y, z);
