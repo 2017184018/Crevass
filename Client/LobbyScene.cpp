@@ -56,9 +56,10 @@ bool LobbyScene::Enter()
 	Core::g_pFramework->m_pNetwork->Recv();
 	Core::m_PlayerID = Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientID;
 
-	AppContext->DisplayUI("UI_Up", "UI_Up", 130.f * m_PlayerID - 270, 10.f, 30, 30);
-	AppContext->DisplayUI("UI_Down", "UI_Down",  130.f * m_PlayerID - 270, -90.f, 30, 30);
-
+	/*AppContext->DisplayUI("UI_Up", "UI_Up", 130.f * m_PlayerID - 270, 10.f, 30, 30);
+	AppContext->DisplayUI("UI_Down", "UI_Down",  130.f * m_PlayerID - 270, -90.f, 30, 30);*/
+	AppContext->DisplayUI3D("UI_Down", "UI_Down", 200.f * m_PlayerID, 0.f, 50, 50);
+	AppContext->DisplayUI3D("UI_Up", "UI_Up", 200.f * m_PlayerID, 130.f, 50, 50);
 	//for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	//{
 	//	AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->m_IsVisible = true;
@@ -220,9 +221,9 @@ void LobbyScene::Update(const float& fDeltaTime)
 
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_SelectCharater"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_SelectCharater"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Up"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Up"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_Up"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Down"], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap["UI_Down"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["UI_Down"], AppContext->m_RItemsVec);
 
 	AppContext->FindObject<Character>("Penguin", "Penguin0")->Update(fDeltaTime);
@@ -264,6 +265,9 @@ void LobbyScene::Render()
 
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Sea"], AppContext->m_RItemsVec);
 
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Up"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Down"], AppContext->m_RItemsVec);
+
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["Penguin"], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["husky"], AppContext->m_RItemsVec);
@@ -282,8 +286,8 @@ void LobbyScene::Render()
 	/* UI */
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_SelectCharater"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Up"], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Down"], AppContext->m_RItemsVec);
+	/*GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Up"], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItems(AppContext->m_RItemsMap["UI_Down"], AppContext->m_RItemsVec);*/
 
 	/*Shadow*/
 	GraphicsContext::GetApp()->SetResourceShadowPassCB();

@@ -246,14 +246,14 @@ void MaterialReference::BuildMaterials()
 	auto UI_Up = std::make_unique<Material>();
 	UI_Up->MatCBIndex = 28;
 	UI_Up->DiffuseSrvHeapIndex = 28;
-	UI_Up->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Up->DiffuseAlbedo = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	UI_Up->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_Up->Roughness = 1.0f;
 
 	auto UI_Down = std::make_unique<Material>();
 	UI_Down->MatCBIndex = 29;
 	UI_Down->DiffuseSrvHeapIndex = 29;
-	UI_Down->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	UI_Down->DiffuseAlbedo = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	UI_Down->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	UI_Down->Roughness = 1.0f;
 	

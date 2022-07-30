@@ -111,6 +111,7 @@ public:
 	void HiddenCharacter(std::string userName, std::string insname);
 
 	void DisplayUI(std::string ui2dLayer, std::string ui2dName, float posX, float posY, float sizeX, float sizeY);
+	void DisplayUI3D(std::string ui2dLayer, std::string ui2dName, float posX, float posY, float sizeX, float sizeY);
 	void HiddenUI(std::string uiName, std::string instname);
 
 	void SetUI2DPosition(std::string ui2dName, float posX, float posY);
