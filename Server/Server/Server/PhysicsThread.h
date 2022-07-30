@@ -1457,9 +1457,11 @@ void ProcessClients()
 							{
 								g_playerReadyInfo[i].ready = 0;
 								g_initialPos[i].Character_type = CHARACTER_NONE;
+								who_lose[i] = 0;
 							}
 
 							g_isPlaying = false;
+							
 							return;
 						}
 						else if (GameOverTimeCount > 270 * numOfCls) {

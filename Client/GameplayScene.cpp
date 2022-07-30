@@ -128,21 +128,26 @@ bool GameplayScene::Enter()
 	{
 		int ty = g_pFramework->m_pNetwork->GetCharacterType(i);
 		if (ty == CHARACTER_PENGUIN) {
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Penguin", "Penguin0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Penguin", "Penguin0");
 		}
 		else if (ty == CHARACTER_ARCTICFOX) {
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("ArcticFox", "ArcticFox0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
 		}
 		else if (ty == CHARACTER_HUSKY) {
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("husky", "husky0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("husky", "husky0");
 		}
 		else if (ty == CHARACTER_SEAL) {
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Seal", "Seal0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Seal", "Seal0");
 		}
 		else /*if (ty == CHARACTER_POLARBEAR)*/ {
+			AppContext->DisplayCharacter(AppContext->FindObject<Character>("PolarBear", "PolarBear0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
 		}
-		m_Users[i]->m_IsVisible = true;
+	//	m_Users[i]->m_IsVisible = true;
 	}
 	WatchPlayerIdx = m_PlayerID;
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third, true);
@@ -193,6 +198,8 @@ void GameplayScene::Exit()
 	GraphicsContext::GetApp()->OnBlurEffect(false);
 	SoundManager::GetApp()->StopAll();
 
+	
+
 	AppContext->HiddenBlocks();
 	AppContext->HiddenBackground();
 	AppContext->HiddenOutline();
@@ -241,8 +248,9 @@ void GameplayScene::Exit()
 	g_pFramework->m_pNetwork->SetPlayerLifeCnt();
 	for (int i = 0; i < 5; i++)
 		Player_Lifecnt[i] = 5;
-
-	m_Users[m_PlayerID]->IsWin = 2;
+	m_Users.clear();
+	WatchPlayerIdx = -1;
+	//m_Users[m_PlayerID]->IsWin = 2;
 
 	cout << "exit===========================================" << endl << endl;
 }
