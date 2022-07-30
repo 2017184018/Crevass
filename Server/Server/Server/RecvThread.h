@@ -218,9 +218,12 @@ void Receiver(char id)
 				{
 					g_initialPos[id].Character_type = -1;
 				}
+
 				char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
+
 				for (auto& cl : g_clients)
 					SendReadyPenguin(cl.first, id, ready);
+
 				if (CheckGameStart())
 				{
 
@@ -233,6 +236,7 @@ void Receiver(char id)
 				}
 
 			}
+
 			break;
 		}
 		case CS_READY_HUSKY:

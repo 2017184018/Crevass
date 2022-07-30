@@ -225,6 +225,7 @@ void Network::ProcessPacket(char* packet_buffer)
 					{
 						m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetPosition(packet.players->pos);
 						m_pGameInfo->m_PlayersInfo[static_cast<int>(packet.players[i].id)]->SetCharacterType(packet.players->Character_type);
+					
 					}
 				}
 			}
@@ -446,10 +447,13 @@ void Network::ProcessPacket(char* packet_buffer)
 			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);
 
 		//m_pGameInfo->m_ClientsNum = 0;
-		m_pGameInfo->m_ClientID = -1;
+		//m_pGameInfo->m_ClientID = -1;
 		m_pGameInfo->m_WinnerID = -1;
 		m_pGameInfo->m_GameOver = false;
 		m_pGameInfo->m_GameStart = false;
+		//타입 초기화
+		for(int i=0;i<TOTAL_PLAYER_NUM;i++)
+		CharacterType[i] = -1;
 
 		SceneManager::GetApp()->ChangeScene(SceneType::Lobby);
 		break;

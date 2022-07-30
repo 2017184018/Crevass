@@ -746,6 +746,7 @@ void ProcessClients()
 				}
 				if (phyPlayers[i].m_pos.y < -100)
 				{
+
 					IsFall[i] = true;
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
@@ -1449,8 +1450,18 @@ void ProcessClients()
 							cout << "Winner is " << i << endl;
 							phyPlayers.clear();
 							g_boundaries.clear();
+						
+
 							while (!g_MsgQueue.empty())
 								g_MsgQueue.pop();
+
+							for (int i = 0; i < numOfCls; ++i)
+							{
+								g_playerReadyInfo[i].ready = 0;
+								g_initialPos[i].Character_type = -1;
+							}
+
+							g_isPlaying = false;
 							return;
 						}
 						else {

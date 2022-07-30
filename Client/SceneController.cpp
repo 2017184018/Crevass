@@ -198,15 +198,18 @@ void LobbyController::HandleInput(const float deltaT)
 
 		if (InputHandler::IsKeyUp('B'))
 		{
+			cout <<"currchar =" << CREVASS::GetApp()->currchar << endl;
 			switch (CREVASS::GetApp()->currchar) {
 			case 0: {
 				bool IsCharacterSeleted = false;
 				for (int i = 0; i < Core::g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i) {
+
 					if (Core::g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
 						IsCharacterSeleted = true;
 						SoundManager::GetApp()->PlaySoundOnce(L"Overlap.mp3", SoundManager::CHANNEL_ID::PLAYER_OVERlAP, 2.5f);
 						break;
 					}
+
 				}
 				if (!IsCharacterSeleted && !is_ready) {
 					SoundManager::GetApp()->PlaySoundOnce(L"Select.mp3", SoundManager::CHANNEL_ID::SELECT_OK, 2.0f);
