@@ -1154,56 +1154,59 @@ void ProcessClients()
 					phyPlayers[i].m_pos.y += (JUMP_POWER + phyPlayers[i].gravity);
 				}
 				{		//우박 hail
-					if (phyPlayers[i].CurrentBlockNum != -1) {
-						if (phyPlayers[i].TimeWhileBlock >= 10080) {		//한 블록에 3초 이상
-							float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
-							hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
-							g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
-							for (int j = 0; j < 5; ++j) {
-								if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[phyPlayers[i].TypeName]) && phyPlayers[i].SnowmanNum == -1) {
-									phyPlayers[i].is_hitted = true;
-									if (phyPlayers[i].TypeName == "husky") {
-										phyPlayers[j].is_Skill = false;
-										phyPlayers[j].is_Skillanim = false;
-										phyPlayers[i].SetSpeed(1.0f * BASE_SPEED);
-										phyPlayers[i].SetCrossSpeed(cos(45) * BASE_HITTEDSPEED);
-									}
-									float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
-									float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
-									if (SubX < -9) {
-										if (SubZ < -9)
-											phyPlayers[i].hitted_dir = 1;
-										else if (SubZ >= -9 && SubZ < 9)
-											phyPlayers[i].hitted_dir = 2;
-										else if (SubZ >= 9)
-											phyPlayers[i].hitted_dir = 3;
-									}
-									else 	if (SubX >= -9 && SubX <= 9) {
-										if (SubZ < -9)
-											phyPlayers[i].hitted_dir = 0;
-										else if (SubZ >= -9 && SubZ < 9)
-											phyPlayers[i].hitted_dir = 0;
-										else if (SubZ >= 9)
-											phyPlayers[i].hitted_dir = 4;
-									}
-									else 	if (SubX > 9) {
-										if (SubZ < -9)
-											phyPlayers[i].hitted_dir = 7;
-										else if (SubZ >= -9 && SubZ < 9)
-											phyPlayers[i].hitted_dir = 6;
-										else if (SubZ >= 9)
-											phyPlayers[i].hitted_dir = 5;
+					if (!GameOverCheck) {
+						if (phyPlayers[i].CurrentBlockNum != -1) {
+							if (phyPlayers[i].TimeWhileBlock >= 180) {		//한 블록에 3초 이상
+								float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
+								hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
+								g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
+								for (int j = 0; j < 5; ++j) {
+									if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[phyPlayers[i].TypeName]) && phyPlayers[i].SnowmanNum == -1) {
+										phyPlayers[i].is_hitted = true;
+										SendHitPalyer(players[i].Character_type, phyPlayers[i].GetPos());
+										if (phyPlayers[i].TypeName == "husky") {
+											phyPlayers[i].is_Skill = false;
+											phyPlayers[i].is_Skillanim = false;
+											phyPlayers[i].SetSpeed(1.0f * BASE_SPEED);
+											phyPlayers[i].SetCrossSpeed(cos(45) * BASE_HITTEDSPEED);
+										}
+										float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
+										float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
+										if (SubX < -9) {
+											if (SubZ < -9)
+												phyPlayers[i].hitted_dir = 1;
+											else if (SubZ >= -9 && SubZ < 9)
+												phyPlayers[i].hitted_dir = 2;
+											else if (SubZ >= 9)
+												phyPlayers[i].hitted_dir = 3;
+										}
+										else 	if (SubX >= -9 && SubX <= 9) {
+											if (SubZ < -9)
+												phyPlayers[i].hitted_dir = 0;
+											else if (SubZ >= -9 && SubZ < 9)
+												phyPlayers[i].hitted_dir = 0;
+											else if (SubZ >= 9)
+												phyPlayers[i].hitted_dir = 4;
+										}
+										else 	if (SubX > 9) {
+											if (SubZ < -9)
+												phyPlayers[i].hitted_dir = 7;
+											else if (SubZ >= -9 && SubZ < 9)
+												phyPlayers[i].hitted_dir = 6;
+											else if (SubZ >= 9)
+												phyPlayers[i].hitted_dir = 5;
+										}
 									}
 								}
+								if (hails[i].GetPos().y <= -90) {
+									hails[i].SetPos(-1000, -1000, -1000);
+								}
 							}
-							if (hails[i].GetPos().y <= -90) {
+							else if (phyPlayers[i].TimeWhileBlock == 0) {
 								hails[i].SetPos(-1000, -1000, -1000);
 							}
+							phyPlayers[i].TimeWhileBlock += 1;
 						}
-						else if (phyPlayers[i].TimeWhileBlock == 0) {
-							hails[i].SetPos(-1000, -1000, -1000);
-						}
-						phyPlayers[i].TimeWhileBlock += 1;
 					}
 				}
 			}
