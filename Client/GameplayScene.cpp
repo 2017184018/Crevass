@@ -245,6 +245,8 @@ void GameplayScene::Exit()
 	for (int i = 0; i < 5; i++)
 		Player_Lifecnt[i] = 5;
 
+	m_Users[m_PlayerID]->IsWin = 2;
+
 	cout << "exit===========================================" << endl << endl;
 }
 
@@ -943,9 +945,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 			if (WinnerIndex == m_PlayerID) {		//자기 애니메이션
 				AppContext->DisplayUI("UI_Youwin", "UI_Youwin", 0.f, 0.f, 400.f, 150.f);
 				SoundManager::GetApp()->StopSound(SoundManager::CHANNEL_ID::BGM);
-				if (!m_Users[m_PlayerID]->IsWin) {
+				if (m_Users[m_PlayerID]->IsWin==0) {
 					SoundManager::GetApp()->PlaySoundOnce(L"newwin.mp3", SoundManager::CHANNEL_ID::PLAYER_WIN, 2.5f);
-					m_Users[m_PlayerID]->IsWin = true;
+					m_Users[m_PlayerID]->IsWin = 1;
 				}
 			}
 			else {
@@ -955,6 +957,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					LoseSoundCheck = false;
 				}
 			}
+			m_Users[WinnerIndex]->m_IsVisible = true;
 			m_Users[WinnerIndex]->Rotate(0, 1, 0);
 		}
 		else {

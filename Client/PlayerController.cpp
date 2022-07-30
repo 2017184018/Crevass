@@ -268,11 +268,22 @@ void PlayerController::OnKeyPressed()
 				m_Owner->IsSkill = true;
 			}
 		}
-
-		if (m_Owner->IsWin) {
+		static int Count = 0;
+		if (m_Owner->IsWin==1) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Skill), m_Owner);
 			CommandCenter::GetApp()->m_StartSkillAnim = true;
 			m_Owner->IsSkill = true;
+			++Count;
+			if (Count >= 7) {
+				m_Owner->IsWin = 3;
+				Count = 0;
+			}
+		}
+		else if (m_Owner->IsWin == 2) {
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Skill));
+			CommandCenter::GetApp()->m_StartSkillAnim = false;
+			m_Owner->IsSkill = false;
+			m_Owner->IsWin = 0;
 		}
 
 		if (InputHandler::IsKeyDown(VK_UP)) {

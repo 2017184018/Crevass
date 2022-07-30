@@ -58,7 +58,7 @@ void Update(vector<Player>& player, float elapsedTime)
 				player[i].dir = DIR_DOWN_RIGHT;
 				saveX = player[i].GetCrossSpeed() * elaps_time;
 				saveZ = -player[i].GetCrossSpeed() * elaps_time;
-				 
+
 			}
 			else if (player[i].GetKeyS() && player[i].GetKeyA()) {
 				player[i].m_pos.z -= player[i].GetCrossSpeed() * elaps_time;
@@ -457,7 +457,6 @@ void ProcessClients()
 	auto prev_Time = chrono::high_resolution_clock::now();
 	float elapsedTime{};
 	float deltaT;
-
 	while (true)
 	{
 		auto cur_Time = chrono::high_resolution_clock::now();
@@ -1445,7 +1444,6 @@ void ProcessClients()
 					}
 					if (GameOverCheck == true)
 					{
-						phyPlayers[i].is_Skillanim = true;
 						GameOverTimeCount += 1;
 						if (GameOverTimeCount > 300 * numOfCls)
 						{
@@ -1453,7 +1451,7 @@ void ProcessClients()
 							cout << "Winner is " << i << endl;
 							phyPlayers.clear();
 							g_boundaries.clear();
-						
+
 
 							while (!g_MsgQueue.empty())
 								g_MsgQueue.pop();
@@ -1467,9 +1465,15 @@ void ProcessClients()
 							g_isPlaying = false;
 							return;
 						}
+						else if (GameOverTimeCount > 270 * numOfCls) {
+							phyPlayers[i].is_Skillanim = false;
+						}
 						else {
+							phyPlayers[i].is_Skillanim = true;
+							phyPlayers[i].IsHide = false;
 							phyPlayers[i].SetPos(DirectX::XMFLOAT3(400, 30, 400));
 							phyPlayers[i].gravity = 0.0f;
+							phyPlayers[i].SnowmanNum = -1;
 							IsShake[12] = false;
 							IsDown[12] = false;
 						}

@@ -67,12 +67,12 @@ bool LobbyScene::Enter()
 	//	AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->m_IsVisible = true;
 	//	AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->m_IsVisible = true;
 	//	AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->m_IsVisible = true;
-
+	
 	//	
 	//}
 	//눈 파티클 시작
 	AppContext->DisplayParticle("snowParticle", "snowParticle", XMFLOAT3(500, 500, 800));
-
+	
 	SoundManager::GetApp()->PlayBGM(L"LobbyBGM.mp3", 0.8f);
 	return false;
 }
