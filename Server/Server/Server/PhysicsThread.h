@@ -1163,8 +1163,8 @@ void ProcessClients()
 										if (phyPlayers[i].TypeName == "husky") {
 											phyPlayers[i].is_Skill = false;
 											phyPlayers[i].is_Skillanim = false;
-											phyPlayers[i].SetSpeed(1.0f * BASE_SPEED);
-											phyPlayers[i].SetCrossSpeed(cos(45) * BASE_HITTEDSPEED);
+											phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 4.0f);
+											phyPlayers[i].SetCrossSpeed(cos(45)* (BASE_SPEED + 0.2f * 4.0f));
 										}
 										float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
 										float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
@@ -1284,8 +1284,8 @@ void ProcessClients()
 								phyPlayers[i].SetKeyA(false);
 								phyPlayers[i].SetKeyS(false);
 								phyPlayers[i].SetKeyD(false);
-								phyPlayers[i].SetSpeed(1.0f * BASE_SPEED);
-								phyPlayers[i].SetCrossSpeed(cos(45) * 1.5f);
+								phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 4.0f);
+								phyPlayers[i].SetCrossSpeed(cos(45)* (BASE_SPEED + 0.2f * 4.0f));
 								phyPlayers[i].IsSkillEnd = true;
 								if (HittedIdx != -1)
 									phyPlayers[HittedIdx].SetHittedSpeed(1.0f * 1.5f);
