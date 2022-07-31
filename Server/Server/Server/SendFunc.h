@@ -21,7 +21,6 @@ void SendPacket(void* buff)
 {
 	char* packet = reinterpret_cast<char*> (buff);
 	int packet_size = MAKEWORD(packet[0], packet[1]);
-	//int packet_size = packet[0];
 
 	for (auto& cl : g_clients)
 		int retval = send(cl.second, packet, packet_size, 0);
@@ -46,7 +45,6 @@ void SendLoginOkPacket(char id)
 	g_PlayerLobbyStateInfoLock.unlock();
 
 	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
-	//SendPacket( id, &packet );
 }
 
 void SendReadyPacket(char id, char other, char ready)
@@ -58,7 +56,6 @@ void SendReadyPacket(char id, char other, char ready)
 	//mutex 필요
 	packet.ready = g_playerReadyInfo[other].ready;
 	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
-	//SendPacket( id, &packet );
 }
 
 void SendReadyPenguin(char id, char other, char ready) {
@@ -125,8 +122,6 @@ void SendChooseHusky(char id)
 	packet.type = SC_CHOOSE_HUSKY;
 
 	SendPacket(&packet);
-	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
-	cout << (int)packet.type << endl;
 }
 
 void SendChoosePenguin(char id)
@@ -137,8 +132,6 @@ void SendChoosePenguin(char id)
 	packet.type = SC_CHOOSE_PENGUIN;
 
 	SendPacket(&packet);
-	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
-	cout << (int)packet.type << endl;
 
 }
 
@@ -150,8 +143,6 @@ void SendChooseFox(char id)
 	packet.type = SC_CHOOSE_FOX;
 
 	SendPacket(&packet);
-	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
-	cout << (int)packet.type << endl;
 
 }
 
@@ -163,8 +154,6 @@ void SendChooseBear(char id)
 	packet.type = SC_CHOOSE_POLARBEAR;
 
 	SendPacket(&packet);
-	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
-	cout << (int)packet.type << endl;
 
 }
 
@@ -176,8 +165,6 @@ void SendChooseSeal(char id)
 	packet.type = SC_CHOOSE_SEAL;
 
 	SendPacket(&packet);
-	//int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
-	cout << (int)packet.type << endl;
 
 }
 
@@ -191,7 +178,6 @@ void SendGameStartPacket()
 	// 현재 들어온 클라이언트 정보만 넣어서 보내주기.
 	g_InitialPosLock.lock();
 	Pro_Player tempPlayer[5] = { {g_initialPos[0]},{g_initialPos[1]},{g_initialPos[2]},{g_initialPos[3]},{g_initialPos[4]} }; // 일단 복사.
-//	cout << static_cast<int>(tempPlayer[1].Character_type) << endl;
 	g_InitialPosLock.unlock();
 
 	g_PlayerReadyInfoLock.lock();
@@ -267,7 +253,6 @@ void SendGameStartPacket()
 
 void SendGameOverPacket(char id)
 {
-	std::cout << "Send Game over" << std::endl;
 	sc_packet_gameover packet;
 	packet.id = id;
 	packet.size = sizeof(packet);
@@ -316,7 +301,6 @@ void SendReset(int client,int life)
 	packet.id = client;
 	packet.life = life;
 
-	cout << (int)packet.id << " life=" <<(int) packet.life << endl;
 
 	SendPacket(&packet);
 }
