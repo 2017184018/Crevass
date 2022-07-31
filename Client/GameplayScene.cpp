@@ -216,10 +216,20 @@ void GameplayScene::Exit()
 
 	AppContext->HiddenCharacter("Penguin", "Penguin0");
 	AppContext->HiddenCharacter("Husky", "Husky0");
+
+
 	AppContext->HiddenCharacter("ArcticFox", "ArcticFox0");
 	AppContext->HiddenCharacter("PolarBear", "PolarBear0");
 	AppContext->HiddenCharacter("Seal", "Seal0");
 
+		for (int j = 0; j < 3; ++j) {
+			AppContext->HiddenCharacter("husky", "husky" + std::to_string(105 + j));
+
+			/*AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_World = huskyimagerota[j + 1];
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;*/
+		}
 	AppContext->HiddenParticle("starParticle", "Penguin_star_particle");
 	AppContext->HiddenParticle("starParticle", "husky_star_particle");
 	AppContext->HiddenParticle("starParticle", "PolarBear_star_particle");
@@ -651,12 +661,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	{
 		for (int j = 0; j < 3; ++j) {
-			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_World = huskyimagerota[j + 1];
-			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
-			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
-			AppContext->FindObject<GameObject>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_World = huskyimagerota[j + 1];
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;
 		}
 	}
+
 	{		//minimap
 		float FallDistance = 200;
 		{

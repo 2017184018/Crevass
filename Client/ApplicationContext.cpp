@@ -1113,23 +1113,18 @@ void ApplicationContext::DisplayOutline()
 	//309~313
 	Character* husky = FindObject<Character>("huskyOutline", "huskyOutline0");
 	husky->InitializeTransform();
-//	husky->m_IsVisible = true;
 
 	Character* penguin = FindObject<Character>("PenguinOutline", "PenguinOutline0");
 	penguin->InitializeTransform();
-	//penguin->m_IsVisible = true;
 
 	Character* arcticfox = FindObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
 	arcticfox->InitializeTransform();
-	//arcticfox->m_IsVisible = true;
 
 	Character* polarbear = FindObject<Character>("PolarBearOutline", "PolarBearOutline0");
 	polarbear->InitializeTransform();
-	//polarbear->m_IsVisible = true;
 
 	Character* seal = FindObject<Character>("SealOutline", "SealOutline0");
 	seal->InitializeTransform();
-	//seal->m_IsVisible = true;
 
 }
 
@@ -1620,31 +1615,31 @@ void ApplicationContext::DisplayBackground()
 
 void ApplicationContext::HiddenOutline()
 {
-	Character* husky = CreateObject<Character>("huskyOutline", "huskyOutline0");
+	Character* husky = FindObject<Character>("huskyOutline", "huskyOutline0");
 	if (!husky)
 		return;
 	ZeroMemory(&husky->m_World, sizeof(husky->m_World));
 	ZeroMemory(&husky->m_TexTransform, sizeof(husky->m_TexTransform));
 
-	Character* penguin = CreateObject<Character>("PenguinOutline", "PenguinOutline0");
+	Character* penguin = FindObject<Character>("PenguinOutline", "PenguinOutline0");
 	if (!penguin)
 		return;
 	ZeroMemory(&penguin->m_World, sizeof(penguin->m_World));
 	ZeroMemory(&penguin->m_TexTransform, sizeof(penguin->m_TexTransform));
 
-	Character* arcticfox = CreateObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
+	Character* arcticfox = FindObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0");
 	if (!arcticfox)
 		return;
 	ZeroMemory(&arcticfox->m_World, sizeof(arcticfox->m_World));
 	ZeroMemory(&arcticfox->m_TexTransform, sizeof(arcticfox->m_TexTransform));
 
-	Character* polarbear = CreateObject<Character>("PolarBearOutline", "PolarBearOutline0");
+	Character* polarbear = FindObject<Character>("PolarBearOutline", "PolarBearOutline0");
 	if (!polarbear)
 		return;
 	ZeroMemory(&polarbear->m_World, sizeof(polarbear->m_World));
 	ZeroMemory(&polarbear->m_TexTransform, sizeof(polarbear->m_TexTransform));
 
-	Character* seal = CreateObject<Character>("SealOutline", "SealOutline0");
+	Character* seal = FindObject<Character>("SealOutline", "SealOutline0");
 	if (!seal)
 		return;
 	ZeroMemory(&seal->m_World, sizeof(seal->m_World));
@@ -2777,13 +2772,13 @@ void ApplicationContext::HiddenCharacter(std::string userName, std::string insna
 	user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
 	
 	user->IsDead = false;
-	user->IsWin = false;
+	user->IsWin = 0;
 	user->is_fall = false;
 	user->SetSkillCool(false);
 	user->SetSkill(false);
-	user->SetDir(0);
+	user->m_CurrentAngle = 0.f;
 	user->m_PlayerController.release();
-
+	
 	ZeroMemory(&user->m_World, sizeof(user->m_World));
 	ZeroMemory(&user->m_TexTransform, sizeof(user->m_TexTransform));
 	user->ReleaseTransform();
