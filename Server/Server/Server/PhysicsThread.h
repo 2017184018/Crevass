@@ -1414,7 +1414,7 @@ void ProcessClients()
 					if (GameOverCheck == true)
 					{
 						GameOverTimeCount += 1;
-						if (GameOverTimeCount > 300 * numOfCls)
+						if (GameOverTimeCount > 300 /** numOfCls*/)
 						{
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
@@ -1436,12 +1436,11 @@ void ProcessClients()
 							g_isPlaying = false;
 							lose_count = 0;
 							phyPlayers = *new std::vector <Player>;
-							for (int i = 0; i < 25; i++)
-								blocks[i] = *new Block;
+							//delete[] blocks;
 
 							return;
 						}
-						else if (GameOverTimeCount > 270 * numOfCls) {
+						else if (GameOverTimeCount > 270 /** numOfCls*/) {
 							phyPlayers[i].is_Skillanim = false;
 						}
 						else {

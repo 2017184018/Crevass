@@ -34,10 +34,10 @@ std::vector <Player> phyPlayers;
 
 Pro_Player g_initialPos[5] = { 
 	{0,DirectX::XMFLOAT3(0.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
-	{1,DirectX::XMFLOAT3(400.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
-	{2,DirectX::XMFLOAT3(800.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
-	{3,DirectX::XMFLOAT3(1200.0f,100.0f,0.0f),0,0,CHARACTER_NONE} ,
-	{4,DirectX::XMFLOAT3(1600.0f,100.0f,0.0f),0,0,CHARACTER_NONE} 
+	{1,DirectX::XMFLOAT3(200.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
+	{2,DirectX::XMFLOAT3(400.0f,100.0f,0.0f),0,0,CHARACTER_NONE},
+	{3,DirectX::XMFLOAT3(600.0f,100.0f,0.0f),0,0,CHARACTER_NONE} ,
+	{4,DirectX::XMFLOAT3(800.0f,100.0f,0.0f),0,0,CHARACTER_NONE}
 };
 
 char g_characterTypeChoose[5] = { 0,0,0,0,0 };
