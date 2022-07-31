@@ -1373,7 +1373,6 @@ void ProcessClients()
 							g_isPlaying = false;
 							lose_count = 0;
 							phyPlayers = *new std::vector <Player>;
-							delete[] blocks;
 
 							return;
 						}

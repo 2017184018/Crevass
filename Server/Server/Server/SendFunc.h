@@ -173,7 +173,6 @@ void SendChooseSeal(char id)
 
 void SendGameStartPacket()
 {
-	std::cout << "Send Game Start!" << std::endl;
 	// player에 초기화 좌표를 다 넣어줘야한다
 	// 현재 들어온 클라이언트 정보만 넣어서 보내주기.
 	g_InitialPosLock.lock();
