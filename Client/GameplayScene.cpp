@@ -155,6 +155,9 @@ bool GameplayScene::Enter()
 		//	m_Users[i]->m_IsVisible = true;
 	}
 	WatchPlayerIdx = m_PlayerID;
+	CREVASS::GetApp()->m_Camera = new Camera;
+	CREVASS::GetApp()->m_Camera->SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
+	CREVASS::GetApp()->m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 2000.0f);
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third, true);
 	m_Users[m_PlayerID]->SetController();
 
@@ -215,7 +218,7 @@ void GameplayScene::Exit()
 	AppContext->Hiddenigloos();
 
 	AppContext->HiddenCharacter("Penguin", "Penguin0");
-	AppContext->HiddenCharacter("Husky", "Husky0");
+	AppContext->HiddenCharacter("husky", "husky0");
 	AppContext->HiddenCharacter("ArcticFox", "ArcticFox0");
 	AppContext->HiddenCharacter("PolarBear", "PolarBear0");
 	AppContext->HiddenCharacter("Seal", "Seal0");
@@ -253,7 +256,7 @@ void GameplayScene::Exit()
 	g_pFramework->m_pNetwork->SetPlayerLifeCnt();
 	for (int i = 0; i < 5; i++)
 		Player_Lifecnt[i] = 5;
-	m_Users = *(new std::map<int, Character*>());
+	 m_Users = *(new std::map<int, Character*>());
 	//m_Users.clear();
 	WatchPlayerIdx = -1;
 	HuskySkillTime = 0.0f;
@@ -268,11 +271,11 @@ void GameplayScene::Exit()
 	AppContext->FindObject<Character>("PolarBearOutline", "PolarBearOutline0")->m_IsVisible = false;
 	AppContext->FindObject<Character>("SealOutline", "SealOutline0")->m_IsVisible = false;
 
-	AppContext->FindObject<Character>("Penguin", "Penguin0")->m_IsVisible = false;
-	AppContext->FindObject<Character>("ArcticFox", "ArcticFox0")->m_IsVisible = false;
-	AppContext->FindObject<Character>("husky", "husky0")->m_IsVisible = false;
-	AppContext->FindObject<Character>("Seal", "Seal0")->m_IsVisible = false;
-	AppContext->FindObject<Character>("PolarBear", "PolarBear0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("Penguin", "Penguin0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("ArcticFox", "ArcticFox0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("husky", "husky0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("Seal", "Seal0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("PolarBear", "PolarBear0")->m_IsVisible = false;
 	cout << "exit===========================================" << endl << endl;
 }
 
