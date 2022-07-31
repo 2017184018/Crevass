@@ -21,7 +21,6 @@
 #define SC_SEAL_SKILL				24
 #define SC_BEAR_SKILL				26
 
-
 #define SC_CHOOSE_PENGUIN			18
 #define SC_CHOOSE_HUSKY				19
 #define SC_CHOOSE_FOX				20

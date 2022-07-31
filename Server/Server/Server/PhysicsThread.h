@@ -5,6 +5,8 @@
 #include <string>
 #include <random>
 
+#define swap(a, b) {float tmp=a; a=b; b=tmp;}
+
 random_device rd;
 default_random_engine dre(rd());
 uniform_int_distribution<> uid{ 0,2 };
@@ -58,24 +60,45 @@ void Update(vector<Player>& player, float elapsedTime)
 			else {
 				if (player[i].GetKeyW())
 				{
+				
+					if (player[i].dir == DIR_LEFT || player[i].dir == DIR_RIGHT) {
+						swap(g_boundaries[phyPlayers[i].TypeName]->Extents.x, g_boundaries[phyPlayers[i].TypeName]->Extents.z);
+						/*float temp = 0.f;
+						g_boundaries[phyPlayers[i].TypeName]->Extents.x = g_boundaries[phyPlayers[i].TypeName]->Extents.z;*/
+					}
 					player[i].m_pos.z += player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_UP;
 					saveZ = player[i].GetSpeed() * elaps_time;
 				}
 				if (player[i].GetKeyS())
 				{
+					if (player[i].dir == DIR_LEFT || player[i].dir == DIR_RIGHT) {
+						swap(g_boundaries[phyPlayers[i].TypeName]->Extents.x, g_boundaries[phyPlayers[i].TypeName]->Extents.z);
+						/*float temp = 0.f;
+						g_boundaries[phyPlayers[i].TypeName]->Extents.x = g_boundaries[phyPlayers[i].TypeName]->Extents.z;*/
+					}
 					player[i].m_pos.z -= player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_DOWN;
 					saveZ = -player[i].GetSpeed() * elaps_time;
 				}
 				if (player[i].GetKeyA())
 				{
+					if (player[i].dir == DIR_UP || player[i].dir == DIR_DOWN) {
+						swap(g_boundaries[phyPlayers[i].TypeName]->Extents.x, g_boundaries[phyPlayers[i].TypeName]->Extents.z);
+						/*float temp = 0.f;
+						g_boundaries[phyPlayers[i].TypeName]->Extents.x = g_boundaries[phyPlayers[i].TypeName]->Extents.z;*/
+					}
 					player[i].m_pos.x -= player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_LEFT;
 					saveX = -player[i].GetSpeed() * elaps_time;
 				}
 				if (player[i].GetKeyD())
 				{
+					if (player[i].dir == DIR_UP || player[i].dir == DIR_DOWN) {
+						swap(g_boundaries[phyPlayers[i].TypeName]->Extents.x, g_boundaries[phyPlayers[i].TypeName]->Extents.z);
+						/*float temp = 0.f;
+						g_boundaries[phyPlayers[i].TypeName]->Extents.x = g_boundaries[phyPlayers[i].TypeName]->Extents.z;*/
+					}
 					player[i].m_pos.x += player[i].GetSpeed() * elaps_time;
 					player[i].dir = DIR_RIGHT;
 					saveX = player[i].GetSpeed() * elaps_time;
@@ -1126,7 +1149,7 @@ void ProcessClients()
 				{		//우박 hail
 					if (!GameOverCheck) {
 						if (phyPlayers[i].CurrentBlockNum != -1) {
-							if (phyPlayers[i].TimeWhileBlock >= 180) {		//한 블록에 3초 이상
+							if (phyPlayers[i].TimeWhileBlock >= 18000) {		//한 블록에 3초 이상
 								float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
 								hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
 								g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
@@ -1387,10 +1410,6 @@ void ProcessClients()
 				SendTime(CalcTime);
 			}
 
-			/*	for (int i = 0; i < 5; ++i) {
-					cout <<i<<": " << who_lose[i] << endl;
-				}*/
-
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				if (phyPlayers[i].IsDead == true)
@@ -1438,8 +1457,7 @@ void ProcessClients()
 							g_isPlaying = false;
 							lose_count = 0;
 							phyPlayers = *new std::vector <Player>;
-							delete[] blocks;
-
+							
 							return;
 						}
 						else if (GameOverTimeCount > 270 * numOfCls) {

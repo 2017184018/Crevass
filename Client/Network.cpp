@@ -362,6 +362,8 @@ void Network::ProcessPacket(char* packet_buffer)
 		break;
 	}
 
+
+
 	case SC_REMOVE_PLAYER:
 	{
 		sc_packet_remove_player packet;
