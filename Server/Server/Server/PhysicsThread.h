@@ -25,7 +25,7 @@ void Update(vector<Player>& player, float elapsedTime)
 	{
 		float saveX = 0;
 		float saveZ = 0;
-		if (player[i].is_hitted == false) {
+		if (player[i].is_hitted == false || player[i].IsFall==false) {
 			if (player[i].GetKeyW() && player[i].GetKeyA()) {
 				player[i].m_pos.z += player[i].GetCrossSpeed() * elaps_time;
 				player[i].m_pos.x -= player[i].GetCrossSpeed() * elaps_time;
@@ -216,26 +216,7 @@ void Hitted_Pos_Update(Player& player, int tyname_num, float anitime) {
 		saveZ = player.GetHittedSpeed() * cos(45) * HITTED_POWER;
 	}
 
-	//if (anitime < 30) {
-	//   player.m_pos.y += speed;
-	//}
-	//else {
-	//   player.m_pos.y -= speed;
-	//}
 
-	//for (int j = 0; j < numOfCls; ++j) {
-	//	if (tyname_num != j) {
-	//		g_boundaries[TypeName[tyname_num]]->Center.x += saveX;
-	//		g_boundaries[TypeName[tyname_num]]->Center.z += saveZ;
-	//		if (g_boundaries[TypeName[tyname_num]]->Intersects(*g_boundaries[TypeName[j]])) {
-
-	//			player.m_pos.x -= saveX;
-	//			player.m_pos.z -= saveZ;
-	//			g_boundaries[TypeName[tyname_num]]->Center.x -= saveX;
-	//			g_boundaries[TypeName[tyname_num]]->Center.z -= saveZ;
-	//		}
-	//	}
-	//}
 	for (int j = 0; j < 25; ++j) {
 		if (player.m_pos.y < blocks[j].pos.y + 60) {
 			g_boundaries[player.TypeName]->Center.x += saveX;
@@ -362,7 +343,7 @@ void ProcessClients()
 	int GameOverTimeCount = 0;
 	bool GameOverCheck = false;
 	bool BlockIn = false;
-	bool IsFall[5] = { false,false,false,false,false };
+	
 	bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 	bool dir_switch[5];
 	bool BearSkill = true;
@@ -550,25 +531,25 @@ void ProcessClients()
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 1)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 3)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
 
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 5)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
 
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 7)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
 
 						}
 
@@ -731,7 +712,7 @@ void ProcessClients()
 					}
 					else {
 						if (phyPlayers[i].m_pos.y - blocks[phyPlayers[i].CurrentSnowcube].pos.y >= 50 &&
-							phyPlayers[i].is_jump == false && !IsFall[i] && phyPlayers[i].m_pos.y - blocks[phyPlayers[i].CurrentSnowcube].pos.y <= 70)
+							phyPlayers[i].is_jump == false && !phyPlayers[i].IsFall && phyPlayers[i].m_pos.y - blocks[phyPlayers[i].CurrentSnowcube].pos.y <= 70)
 						{
 							phyPlayers[i].m_pos.y = blocks[phyPlayers[i].CurrentSnowcube].pos.y + 60;
 							players[i].pos.y = phyPlayers[i].m_pos.y;
@@ -746,7 +727,11 @@ void ProcessClients()
 				if (phyPlayers[i].m_pos.y < -100)
 				{
 
-					IsFall[i] = true;
+					phyPlayers[i].IsFall = true;
+					phyPlayers[i].m_keyW = false;
+					phyPlayers[i].m_keyA = false;
+					phyPlayers[i].m_keyS = false;
+					phyPlayers[i].m_keyD = false;
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
 					phyPlayers[i].gravity = 0.0f;
@@ -769,7 +754,7 @@ void ProcessClients()
 					phyPlayers[i].ResetTimeCount += 1;
 					if (phyPlayers[i].ResetTimeCount > 180.0f)
 					{
-						IsFall[i] = false;
+						phyPlayers[i].IsFall = false;
 						phyPlayers[i].is_reset = false;
 						phyPlayers[i].ResetTimeCount = 0.0f;
 						phyPlayers[i].is_jump = false;
@@ -1436,18 +1421,9 @@ void ProcessClients()
 						{
 							GameOverCheck = false;
 							break;
-							//phyPlayers[i].is_Skillanim = true;
-							//GameOverTimeCount += 1;
-							//if (GameOverTimeCount > 300 * numOfCls * lose_count)
-							//{
-							//	SendGameOverPacket(i);
-							//	cout << "Winner is " << i << endl;
-							//	phyPlayers.clear();
-							//	return;
-							//}
-							//break;
 						}
 					}
+
 					if (GameOverCheck == true)
 					{
 						GameOverTimeCount += 1;
@@ -1487,6 +1463,7 @@ void ProcessClients()
 							IsDown[12] = false;
 						}
 					}
+
 					GameOverCheck = true;
 				}
 			}
