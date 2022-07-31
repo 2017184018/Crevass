@@ -123,8 +123,16 @@ void Network::ProcessPacket(char* packet_buffer)
 		m_pGameInfo->m_ClientID = static_cast<int>(packet.id);
 		//	m_pGameInfo->m_ClientsNum += 1;
 		m_pGameInfo->CreatePlayerInfo(packet.id, true);
+		for(int i=0;i<5;++i)
+			cout << i << " = " << (int)packet.players[i].character_type << ", " << (int)packet.players[i].ready << endl;
 
+		for (int i = 0; i < 5; ++i) {
+			if ((int)packet.players[i].character_type != 0)
+				choosename[i] = (int)packet.players[i].character_type - 1;
+		}
 		break;
+
+
 	}
 	case SC_READY:
 	{

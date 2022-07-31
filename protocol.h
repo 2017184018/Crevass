@@ -110,11 +110,18 @@ struct Block {
 	char destuctioncnt;
 };
 
+struct LobbyPlayerState
+{
+	char character_type;
+	char ready;
+};
+
 /* Server to Client */
 struct sc_packet_login_ok {
 	short size;
 	char type;
 	char id;
+	LobbyPlayerState players[5];
 };
 
 struct sc_packet_ready {
