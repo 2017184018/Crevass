@@ -130,31 +130,34 @@ bool GameplayScene::Enter()
 		if (ty == CHARACTER_PENGUIN) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Penguin", "Penguin0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Penguin", "Penguin0");
-		
+
 		}
 		else if (ty == CHARACTER_ARCTICFOX) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("ArcticFox", "ArcticFox0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("ArcticFox", "ArcticFox0");
-		
+
 		}
 		else if (ty == CHARACTER_HUSKY) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("husky", "husky0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("husky", "husky0");
-		
+
 		}
 		else if (ty == CHARACTER_SEAL) {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Seal", "Seal0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Seal", "Seal0");
-		
+
 		}
 		else /*if (ty == CHARACTER_POLARBEAR)*/ {
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("PolarBear", "PolarBear0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("PolarBear", "PolarBear0");
-	
+
 		}
-	//	m_Users[i]->m_IsVisible = true;
+		//	m_Users[i]->m_IsVisible = true;
 	}
 	WatchPlayerIdx = m_PlayerID;
+	CREVASS::GetApp()->m_Camera = new Camera;
+	CREVASS::GetApp()->m_Camera->SetPosition(45.0f * 4, 45.0f * 2, -45.0f * 3);
+	CREVASS::GetApp()->m_Camera->SetLens(0.25f * MathHelper::Pi, static_cast<float>(g_DisplayWidth) / g_DisplayHeight, 1.0f, 2000.0f);
 	m_Users[m_PlayerID]->SetCamera(CREVASS::GetApp()->m_Camera, CameraType::Third, true);
 	m_Users[m_PlayerID]->SetController();
 
@@ -203,7 +206,7 @@ void GameplayScene::Exit()
 	GraphicsContext::GetApp()->OnBlurEffect(false);
 	SoundManager::GetApp()->StopAll();
 
-	
+
 
 	AppContext->HiddenBlocks();
 	AppContext->HiddenBackground();
@@ -215,9 +218,7 @@ void GameplayScene::Exit()
 	AppContext->Hiddenigloos();
 
 	AppContext->HiddenCharacter("Penguin", "Penguin0");
-	AppContext->HiddenCharacter("Husky", "Husky0");
-
-
+	AppContext->HiddenCharacter("husky", "husky0");
 	AppContext->HiddenCharacter("ArcticFox", "ArcticFox0");
 	AppContext->HiddenCharacter("PolarBear", "PolarBear0");
 	AppContext->HiddenCharacter("Seal", "Seal0");
@@ -263,10 +264,26 @@ void GameplayScene::Exit()
 	g_pFramework->m_pNetwork->SetPlayerLifeCnt();
 	for (int i = 0; i < 5; i++)
 		Player_Lifecnt[i] = 5;
-	m_Users.clear();
+	 m_Users = *(new std::map<int, Character*>());
+	//m_Users.clear();
 	WatchPlayerIdx = -1;
+	HuskySkillTime = 0.0f;
+	for (int i = 0; i < 4; ++i) {
+		huskyimagepos[i] = XMFLOAT3(0, 0, 0);
+		huskyimagerota[i] = MathHelper::Identity4x4();
+	}
 	//m_Users[m_PlayerID]->IsWin = 2;
+	AppContext->FindObject<Character>("huskyOutline", "huskyOutline0")->m_IsVisible = false;
+	AppContext->FindObject<Character>("PenguinOutline", "PenguinOutline0")->m_IsVisible = false;
+	AppContext->FindObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0")->m_IsVisible = false;
+	AppContext->FindObject<Character>("PolarBearOutline", "PolarBearOutline0")->m_IsVisible = false;
+	AppContext->FindObject<Character>("SealOutline", "SealOutline0")->m_IsVisible = false;
 
+	//AppContext->FindObject<Character>("Penguin", "Penguin0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("ArcticFox", "ArcticFox0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("husky", "husky0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("Seal", "Seal0")->m_IsVisible = false;
+	//AppContext->FindObject<Character>("PolarBear", "PolarBear0")->m_IsVisible = false;
 	cout << "exit===========================================" << endl << endl;
 }
 
@@ -274,10 +291,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 {
 	m_Timer = 300 - (g_pFramework->m_pNetwork->Gettime()) / 60.0f;
 	m_SceneController->Update(fDeltaTime);
-	static float time = 0.0f;
-	static XMFLOAT3 huskyimagepos[4];
-	static XMFLOAT4X4 huskyimagerota[4];
-	time += fDeltaTime;
+	HuskySkillTime += fDeltaTime;
 	for (int i = 0; i < g_pFramework->m_pNetwork->m_pGameInfo->m_ClientsNum; ++i)
 	{
 		m_Users[i]->SetHide(g_pFramework->m_pNetwork->GetPlayerHide(i));
@@ -289,7 +303,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 				SoundManager::GetApp()->PlaySoundOnce(L"Husky_Skill.wav", SoundManager::CHANNEL_ID::HUSKY_SKILL, -2.5f * x / 400.0f + 2.5f);
 				HuksySkillSound = true;
 			}
-			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && time >= 0.04f) {
+			if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY && HuskySkillTime >= 0.04f) {
 				for (int j = 3; j >= 0; --j) {
 					if (j != 0) {
 						huskyimagepos[j] = huskyimagepos[j - 1];
@@ -299,7 +313,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 						huskyimagepos[j] = g_pFramework->m_pNetwork->GetPlayerPos(i);
 						const std::map<std::string, UINT>& info = AppContext->m_RItemsMap["husky"]->GetinstanceKeymap();
 						huskyimagerota[j] = AppContext->m_RItemsVec[info.begin()->second]->m_World;
-						time = 0.0f;
+						HuskySkillTime = 0.0f;
 					}
 				}
 			}

@@ -88,5 +88,8 @@ public:
 	int FallX, FallZ;
 
 	int m_Timer;
+	float HuskySkillTime = 0.0f;
+	XMFLOAT3 huskyimagepos[4];
+	XMFLOAT4X4 huskyimagerota[4];
 };
 
