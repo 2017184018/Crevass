@@ -1138,7 +1138,6 @@ void ProcessClients()
 				}
 			}
 			//1
-
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
@@ -1220,6 +1219,14 @@ void ProcessClients()
 								phyPlayers[i].is_jump = true;
 							}
 							SendPenguinSkill(true);
+							if (phyPlayers[i].SkillTime >= 180) {
+								phyPlayers[i].is_Skill = false;
+								phyPlayers[i].is_Skillanim = false;
+								phyPlayers[i].SkillTime = 0;
+								phyPlayers[i].IsSkillCool = true;
+								SendPenguinSkill(false);
+								phyPlayers[i].IsSkillEnd = true;
+							}
 						}
 						else if (phyPlayers[i].TypeName == "husky") {
 							phyPlayers[i].IsSkillCool = true;
@@ -1352,7 +1359,6 @@ void ProcessClients()
 							phyPlayers[i].SkillTime = 0;
 							phyPlayers[i].IsSkillCool = true;
 							SendFoxSkill(false);
-							SendPenguinSkill(false);
 							SendSealSkill(false);
 							phyPlayers[i].IsSkillEnd = true;
 						}
@@ -1462,7 +1468,7 @@ void ProcessClients()
 							}
 
 							g_isPlaying = false;
-							
+							lose_count = 0;
 							return;
 						}
 						else if (GameOverTimeCount > 270 * numOfCls) {

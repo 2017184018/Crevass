@@ -143,7 +143,7 @@ bool GameplayScene::Enter()
 
 		}
 		else if (ty == CHARACTER_SEAL) {
-			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Seal", "Seal0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
+			AppContext->DisplayCharacterSeal(AppContext->FindObject<Character>("Seal", "Seal0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Seal", "Seal0");
 
 		}

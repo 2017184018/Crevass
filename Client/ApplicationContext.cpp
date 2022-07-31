@@ -2748,7 +2748,6 @@ void ApplicationContext::HiddenlobbyBlocks()
 
 void ApplicationContext::DisplayCharacter(Character* user, XMFLOAT3 pos, bool isVisible)
 {
-
 	if (!user) { cout << "return0000000000000000000000000" << endl;  return; };
 
 	user->InitializeTransform();
@@ -2758,8 +2757,19 @@ void ApplicationContext::DisplayCharacter(Character* user, XMFLOAT3 pos, bool is
 	user->Scale(20.f, 20.f, 20.f);
 	//user->Rotate(0, 180, 0);
 	user->SetPosition(pos);
+}
 
+void ApplicationContext::DisplayCharacterSeal(Character* user, XMFLOAT3 pos, bool isVisible)
+{
+	if (!user) { cout << "return0000000000000000000000000" << endl;  return; };
 
+	user->InitializeTransform();
+	user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
+	user->SetAnimationPlayerState(Character::PlayerState::STATE_IDLE);
+	user->m_IsVisible = isVisible;
+	user->Scale(15.0f, 15.0f, 15.0f);
+	//user->Rotate(0, 180, 0);
+	user->SetPosition(pos);
 }
 
 void ApplicationContext::HiddenCharacter(std::string userName, std::string insname)
