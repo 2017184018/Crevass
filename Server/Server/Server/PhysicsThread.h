@@ -528,25 +528,25 @@ void ProcessClients()
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 1)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 3)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
 
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 5)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
 
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 7)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
-							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z * cos(45);
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
 
 						}
 
