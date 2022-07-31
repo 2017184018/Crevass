@@ -6,13 +6,6 @@
 
 void Receiver(char id)
 {
-	// RecvThread ������ �Լ�
-
-	// RecvThread�� thread �Լ� �Դϴ�.
-	// Ŭ���̾�Ʈ�� ���� ���� ��Ŷ�� Ÿ���� �����մϴ�.
-	// cs_packet_ready�� �Լ� ���ο��� ó���մϴ�.
-	// �׿��� cs ��Ŷ�� Message ������ ���� �־� MsgQueue�� push �մϴ�.
-	// sc_gamestart_packet�� ������ PhysicThread�� ����ϴ�.
 
 	std::cout << "RecvThread is operating!" << std::endl;
 
@@ -24,12 +17,10 @@ void Receiver(char id)
 
 	while (true)
 	{
-		// ID�� 0���� �����̹Ƿ� -1�� �ʱ�ȭ �մϴ�.
 		msg.id = -1;
 		char buf[BUFSIZE];
 		char retval = recv(sock, buf, 1, 0);
 
-		// Ŭ���̾�Ʈ ���� ����, recv ���� ó��
 		if (retval == 0 || retval == SOCKET_ERROR)
 		{
 			closesocket(sock);
@@ -56,7 +47,6 @@ void Receiver(char id)
 			return;
 
 		}
-		// Message ������ ���� �ʱ�ȭ
 		ZeroMemory(&msg, sizeof(Message));
 		msg.id = -1;
 		switch ((int)buf[0])
@@ -68,7 +58,6 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = true;
-			//printf("%d updown\n", msg.id);
 			break;
 		}
 		case CS_PLAYER_DOWN_DOWN:
@@ -87,7 +76,6 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = true;
-			//printf("%d leftdown\n",msg.id);
 
 			break;
 		}
@@ -97,7 +85,6 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_RIGHT;
 			msg.isPushed = true;
-			//printf("%d rightdown\n",msg.id);
 			break;
 		}
 		case CS_PLAYER_UP_UP:
@@ -106,7 +93,6 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_UP;
 			msg.isPushed = false;
-			//printf("%d upup\n",msg.id);
 
 			break;
 		}
@@ -119,7 +105,6 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_DOWN;
 			msg.isPushed = false;
-			//printf("%d downup\n",msg.id);
 
 			break;
 		}
@@ -132,7 +117,6 @@ void Receiver(char id)
 			msg.type = TYPE_PLAYER;
 			msg.dir = DIR_LEFT;
 			msg.isPushed = false;
-			//printf("%d leftup\n",msg.id);
 
 			break;
 		}
@@ -204,7 +188,6 @@ void Receiver(char id)
 				}
 			}
 
-			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
 			if (OverlapCheck == false)
@@ -228,8 +211,7 @@ void Receiver(char id)
 				{
 					SendGameStartPacket();
 					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread start!" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
@@ -250,7 +232,6 @@ void Receiver(char id)
 				}
 			}
 
-			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
 			if (OverlapCheck == false)
@@ -272,13 +253,11 @@ void Receiver(char id)
 
 					SendGameStartPacket();
 					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread start!" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
 
-				//g_initialPos[id].Character_type = CHARACTER_HUSKY;
 			}
 			break;
 		}
@@ -296,7 +275,6 @@ void Receiver(char id)
 				}
 			}
 
-			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
 			if (OverlapCheck == false)
@@ -318,13 +296,11 @@ void Receiver(char id)
 
 					SendGameStartPacket();
 					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread start!" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
 
-				//g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
 			}
 			break;
 		}
@@ -342,7 +318,6 @@ void Receiver(char id)
 				}
 			}
 
-			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
 			if (OverlapCheck == false)
@@ -364,13 +339,11 @@ void Receiver(char id)
 
 					SendGameStartPacket();
 					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread start!" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
 
-				//g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
 			}
 			break;
 		}
@@ -388,7 +361,6 @@ void Receiver(char id)
 				}
 			}
 
-			//char ready = g_playerReadyInfo[id].ready = ((int)g_playerReadyInfo[id].ready + 1) % 2;
 			g_PlayerReadyInfoLock.unlock();
 
 			if (OverlapCheck == false)
@@ -410,13 +382,11 @@ void Receiver(char id)
 
 					SendGameStartPacket();
 					g_isPlaying = true;
-					// Physics Thread ����
-					std::cout << "physics thread ����!" << std::endl;
+					std::cout << "physics thread start!" << std::endl;
 					thread PhysicsThread(ProcessClients);
 					PhysicsThread.detach();
 				}
 
-				//g_initialPos[id].Character_type = CHARACTER_SEAL;
 			}
 			break;
 		}
@@ -461,13 +431,6 @@ void Receiver(char id)
 		}
 
 
-		//case CS_PLAYER_LOSE:
-		//{
-		//	who_lose[lose_count] = id;
-		//	lose_count += 1;
-		//	//SendGameOverPacket(id);
-		//	break;
-		//}
 		default:
 			cout << "Packet Type Error! - " << buf[0] << endl;
 			while (true);
@@ -480,16 +443,6 @@ void Receiver(char id)
 			g_MsgQueueLock.unlock();
 		}
 
-		//if (CheckGameStart())
-		//{
-
-		//	SendGameStartPacket();
-		//	g_isPlaying = true;
-		//	// Physics Thread ����
-		//	std::cout << "physics thread ����!" << std::endl;
-		//	thread PhysicsThread(ProcessClients);
-		//	PhysicsThread.detach();
-		//}
 
 	}
 }

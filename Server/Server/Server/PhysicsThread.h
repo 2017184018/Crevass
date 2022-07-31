@@ -159,24 +159,17 @@ void Update(vector<Player>& player, float elapsedTime)
 			if (player[i].m_pos.y < blocks[j].pos.y + 60) {
 				g_boundaries[phyPlayers[i].TypeName]->Center = player[i].m_pos;
 
-				//	g_boundaries[player[i].TypeName]->Center.x += saveX;
-				//	g_boundaries[player[i].TypeName]->Center.z += saveZ;
 				if (BlockCheck(j)) {
 					if (g_boundaries["icecube" + std::to_string(j)]->Intersects(*g_boundaries[player[i].TypeName])) {
 						player[i].m_pos.x -= saveX;
 						player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
-						//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
-						//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 					}
 				}
 				else {
 					if (g_boundaries["snowcube" + std::to_string(j)]->Intersects(*g_boundaries[player[i].TypeName])) {
 						player[i].m_pos.x -= saveX;
-						//player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
-						//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
-						//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 					}
 				}
 			}
@@ -428,7 +421,6 @@ void ProcessClients()
 	{
 		temp = { players[i].pos.x, players[i].pos.y,players[i].pos.z };
 		phyPlayers.emplace_back(Player());
-		//phyPlayers.emplace_back(Player());
 		phyPlayers[i].SetPos(temp);
 		if (players[i].Character_type == CHARACTER_HUSKY) {
 			phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 4.0f);
@@ -474,7 +466,6 @@ void ProcessClients()
 		deltaT = FpFloatMilliseconds(cur_Time - prev_Time).count();
 		prev_Time = cur_Time;
 
-		//FramePerSec = duration_cast<frame>(steady_clock::now() - fpsTimer);
 
 		if (elapsedTime > 1000.0f / 60.0f)
 		{
@@ -588,7 +579,6 @@ void ProcessClients()
 							if (phyMsg.id != i) {
 								//맞았다면
 								if (phyPlayers[phyMsg.id].Hit_BB.Intersects(*g_boundaries[phyPlayers[i].TypeName])) {
-									cout << "hit!" << endl;
 									phyPlayers[i].is_hitted = true;
 									phyPlayers[i].is_jump = true;
 									//맞은 방향
@@ -616,32 +606,6 @@ void ProcessClients()
 					}
 				}
 
-				//Update(phyPlayers);
-
-				//if (phyMsg.type == TYPE_PLAYER)
-				//{
-				//   for (int i = 0; i < numOfCls; ++i)
-				//   {
-				//      players[i].id = i;
-				//      players[i].pos.x = phyPlayers[i].m_pos.x;
-				//      players[i].pos.y = phyPlayers[i].m_pos.y;
-				//      players[i].pos.z = phyPlayers[i].m_pos.z;
-				//      players[i].dir = phyPlayers[i].dir;
-				//      players[i].anim = phyPlayers[i].GetAnimType();
-
-				//      g_boundaries[TypeName[i]]->Center = players[i].pos;
-				//      //임시방편
-				//      if (TypeName[i] == "Penguin") {
-				//         g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-				//      }
-				//      else {
-				//         g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-				//      }
-
-				//   }
-				//   //   SendPos(*players);
-				//   SendAnim(*players);
-				//}
 			}
 
 			for (int i = 0; i < numOfCls; ++i)
@@ -654,7 +618,6 @@ void ProcessClients()
 						phyPlayers[i].AttackTimeCount = 0.0f;
 						phyPlayers[i].is_attack = false;
 						players[i].anim = phyPlayers[i].GetAnimType();
-						//SendAnim(*players);   /
 					}
 				}
 
@@ -666,7 +629,6 @@ void ProcessClients()
 						phyPlayers[i].JumpTimeCount = 0.0f;
 						phyPlayers[i].is_jumpanim = false;
 						players[i].anim = phyPlayers[i].GetAnimType();
-						//SendAnim(*players);   /
 					}
 				}
 
@@ -690,7 +652,6 @@ void ProcessClients()
 						phyPlayers[i].hittedTimeCount = 0.0f;
 						phyPlayers[i].is_hitted = false;
 						players[i].anim = phyPlayers[i].GetAnimType();
-						//SendAnim(*players);   /
 					}
 					else {
 						Hitted_Pos_Update(phyPlayers[i], i, phyPlayers[i].hittedTimeCount);
@@ -699,7 +660,6 @@ void ProcessClients()
 						players[i].pos.y = phyPlayers[i].m_pos.y;
 						players[i].pos.z = phyPlayers[i].m_pos.z;
 						players[i].dir = phyPlayers[i].dir;
-						//SendPos(*players);
 
 					}
 				}
@@ -761,8 +721,6 @@ void ProcessClients()
 					SendFall(i);
 					phyPlayers[i].is_reset = true;
 				}
-
-				\
 			}
 
 			for (int i = 0; i < numOfCls; ++i)
@@ -779,7 +737,6 @@ void ProcessClients()
 						phyPlayers[i].is_jumpanim = false;
 						phyPlayers[i].is_hitted = false;
 						phyPlayers[i].is_attack = false;
-						//	phyPlayers[i].is_Skill = false;
 						phyPlayers[i].is_Skillanim = false;
 						phyPlayers[i].m_keyW = false;
 						phyPlayers[i].m_keyA = false;
@@ -904,7 +861,6 @@ void ProcessClients()
 							phyPlayers[j].m_pos.z - 10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[i].pos.z - 54 &&
 							phyPlayers[j].m_pos.y <= blocks[i].pos.y + 60 && blocks[i].destuctioncnt != 3)
 						{
-							//	if (tmp1[j] == -1 && g_boundaries["icecube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= 30) {
 							phyPlayers[j].CurrentIcecube = i;
 							phyPlayers[j].gravity = 0.0f;
 							phyPlayers[j].is_jump = false;
@@ -924,16 +880,12 @@ void ProcessClients()
 								phyPlayers[j].m_pos.z - 10 <= blocks[phyPlayers[j].CurrentIcecube].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[phyPlayers[j].CurrentIcecube].pos.z - 54 &&
 								phyPlayers[j].m_pos.y <= blocks[phyPlayers[j].CurrentIcecube].pos.y + 70))
 						{
-							//	if (tmp1[j] != -1 && !(g_boundaries["icecube" + std::to_string(tmp1[j])]->Intersects(*g_boundaries[TypeName[j]]))) {
 							BlockIn = false;
-							//if (!phyPlayers[j].is_jump)
-							//   Gravity += 0.05;
 							phyPlayers[j].CurrentIcecube = -1;
 						}
 					}
 					else {
 						g_boundaries["snowcube" + std::to_string(i)]->Center = blocks[i].pos;
-						/*if (tmp2[j] == -1 && g_boundaries["snowcube" + std::to_string(i)]->Intersects(*g_boundaries[TypeName[j]]) && phyPlayers[j].GetPos().y >= blocks[i].pos.y + 60)*/
 						if (phyPlayers[j].CurrentSnowcube == -1 &&
 							phyPlayers[j].m_pos.x - 10 <= blocks[i].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[i].pos.x - 54 &&
 							phyPlayers[j].m_pos.z - 10 <= blocks[i].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[i].pos.z - 54 &&
@@ -950,7 +902,6 @@ void ProcessClients()
 								phyPlayers[j].TimeWhileBlock = 0;
 							}
 						}
-						/*if (tmp2[j] != -1 && !(g_boundaries["snowcube" + std::to_string(tmp2[j])]->Intersects(*g_boundaries[TypeName[j]])))*/
 						if (phyPlayers[j].CurrentSnowcube != -1 &&
 							!(phyPlayers[j].m_pos.x - 10 <= blocks[phyPlayers[j].CurrentSnowcube].pos.x + 54 && phyPlayers[j].m_pos.x + 10 >= blocks[phyPlayers[j].CurrentSnowcube].pos.x - 54 &&
 								phyPlayers[j].m_pos.z - 10 <= blocks[phyPlayers[j].CurrentSnowcube].pos.z + 54 && phyPlayers[j].m_pos.z + 10 >= blocks[phyPlayers[j].CurrentSnowcube].pos.z - 54 &&
@@ -1138,7 +1089,6 @@ void ProcessClients()
 			//1
 			for (int i = 0; i < numOfCls; ++i)
 			{
-				//cout << phyPlayers[0].m_pos.y <<", "<< phyPlayers[0].gravity << endl;
 				if (phyPlayers[i].is_jump == true && phyPlayers[i].is_hitted == true) {
 					phyPlayers[i].m_pos.y += (HITTED_JUMP_POWER + phyPlayers[i].gravity);
 				}
@@ -1207,7 +1157,6 @@ void ProcessClients()
 			}
 
 			SendHail(*hails);
-			//   Update(phyPlayers)
 			{	//skill
 				for (int i = 0; i < numOfCls; ++i) {
 					if (phyPlayers[i].is_Skill && phyPlayers[i].SnowmanNum == -1 && !phyPlayers[i].IsSkillEnd) {
@@ -1365,7 +1314,6 @@ void ProcessClients()
 					}
 					else {
 						phyPlayers[i].is_Skill = false;
-						//	phyPlayers[i].is_Skillanim = false;
 					}
 					if (phyPlayers[i].IsSkillCool) {
 						phyPlayers[i].SkillCoolTime += 1;
@@ -1388,20 +1336,12 @@ void ProcessClients()
 				players[i].IsSkillCool = phyPlayers[i].IsSkillCool;
 
 				g_boundaries[phyPlayers[i].TypeName]->Center = players[i].pos;
-				/*		if (TypeName[i] == "Penguin") {
-							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-						}
-						else {
-							g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-						}*/
 
 			}
 			SendPos(*players);
 			SendAnim(*players);
 
 
-			//fpsTimer = steady_clock::now();
-			//cout << "LastFrame:" << duration_cast<ms>(FramePerSec).count() << "ms | FPS: " << FramePerSec.count() * FPS << endl;
 			elapsedTime = 0;
 			CalcTime += 1;
 
@@ -1409,6 +1349,7 @@ void ProcessClients()
 			{
 				SendTime(CalcTime);
 			}
+
 
 			for (int i = 0; i < numOfCls; ++i)
 			{
@@ -1440,8 +1381,6 @@ void ProcessClients()
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
 							phyPlayers = *new std::vector <Player>;
-							//	phyPlayers.clear();
-							//	g_boundaries.clear();
 
 
 							while (!g_MsgQueue.empty())
@@ -1457,7 +1396,7 @@ void ProcessClients()
 							g_isPlaying = false;
 							lose_count = 0;
 							phyPlayers = *new std::vector <Player>;
-							
+
 							return;
 						}
 						else if (GameOverTimeCount > 270 * numOfCls) {
