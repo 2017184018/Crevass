@@ -40,6 +40,8 @@ Pro_Player g_initialPos[5] = {
 	{4,DirectX::XMFLOAT3(1600.0f,100.0f,0.0f),0,0,CHARACTER_NONE} 
 };
 
+char g_characterTypeChoose[5] = { 0,0,0,0,0 };
+
 PlayerReadyInfo g_playerReadyInfo[5]{ {-1, 0}, {-1, 0}, {-1, 0},{-1, 0},{-1, 0} };
 
 // =======================================

@@ -39,7 +39,7 @@ void SendLoginOkPacket(char id)
 	LobbyPlayerState LobbyState[5];
 	for (int i = 0; i < 5; ++i)
 	{
-		packet.players[i].character_type= g_initialPos[i].Character_type;
+		packet.players[i].character_type= g_characterTypeChoose[i];
 		packet.players[i].ready = g_playerReadyInfo[i].ready;
 	}
 
