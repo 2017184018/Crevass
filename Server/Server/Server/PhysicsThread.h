@@ -121,7 +121,10 @@ void Update(vector<Player>& player, float elapsedTime)
 					g_boundaries[player[i].TypeName]->Center.x -= saveX;
 					g_boundaries[player[i].TypeName]->Center.y -= player[i].gravity;
 					g_boundaries[player[i].TypeName]->Center.z -= saveZ;
-					player[i].gravity = 0;
+					if (player[i].GetPos().y < player[j].GetPos().y)
+						player[j].gravity = 0;
+					else
+						player[i].gravity = 0;
 				}
 			}
 		}
@@ -1163,7 +1166,7 @@ void ProcessClients()
 											phyPlayers[i].is_Skill = false;
 											phyPlayers[i].is_Skillanim = false;
 											phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 4.0f);
-											phyPlayers[i].SetCrossSpeed(cos(45)* (BASE_SPEED + 0.2f * 4.0f));
+											phyPlayers[i].SetCrossSpeed(cos(45) * (BASE_SPEED + 0.2f * 4.0f));
 										}
 										float SubX = hails[j].GetPos().x - phyPlayers[i].GetPos().x;
 										float SubZ = hails[j].GetPos().z - phyPlayers[i].GetPos().z;
@@ -1292,7 +1295,7 @@ void ProcessClients()
 								phyPlayers[i].SetKeyS(false);
 								phyPlayers[i].SetKeyD(false);
 								phyPlayers[i].SetSpeed(BASE_SPEED + 0.2f * 4.0f);
-								phyPlayers[i].SetCrossSpeed(cos(45)* (BASE_SPEED + 0.2f * 4.0f));
+								phyPlayers[i].SetCrossSpeed(cos(45) * (BASE_SPEED + 0.2f * 4.0f));
 								phyPlayers[i].IsSkillEnd = true;
 								if (HittedIdx != -1)
 									phyPlayers[HittedIdx].SetHittedSpeed(1.0f * 1.5f);
@@ -1453,8 +1456,8 @@ void ProcessClients()
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
 							phyPlayers = *new std::vector <Player>;
-						//	phyPlayers.clear();
-						//	g_boundaries.clear();
+							//	phyPlayers.clear();
+							//	g_boundaries.clear();
 
 
 							while (!g_MsgQueue.empty())
