@@ -223,14 +223,14 @@ void GameplayScene::Exit()
 	AppContext->HiddenCharacter("PolarBear", "PolarBear0");
 	AppContext->HiddenCharacter("Seal", "Seal0");
 
-		for (int j = 0; j < 3; ++j) {
-			AppContext->HiddenCharacter("husky", "husky" + std::to_string(105 + j));
+	for (int j = 0; j < 3; ++j) {
+		AppContext->HiddenCharacter("husky", "husky" + std::to_string(105 + j));
 
-			/*AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_World = huskyimagerota[j + 1];
-			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
-			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
-			AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;*/
-		}
+		/*AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_World = huskyimagerota[j + 1];
+		AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->SetPosition(huskyimagepos[j + 1]);
+		AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_MaterialIndex = MaterialReference::GetApp()->m_Materials["huskyimage" + std::to_string(j + 1)]->MatCBIndex;
+		AppContext->FindObject<Character>("husky", "husky" + std::to_string(105 + j))->m_IsVisible = true;*/
+	}
 	AppContext->HiddenParticle("starParticle", "Penguin_star_particle");
 	AppContext->HiddenParticle("starParticle", "husky_star_particle");
 	AppContext->HiddenParticle("starParticle", "PolarBear_star_particle");
@@ -264,7 +264,7 @@ void GameplayScene::Exit()
 	g_pFramework->m_pNetwork->SetPlayerLifeCnt();
 	for (int i = 0; i < 5; i++)
 		Player_Lifecnt[i] = 5;
-	 m_Users = *(new std::map<int, Character*>());
+	m_Users = *(new std::map<int, Character*>());
 	//m_Users.clear();
 	WatchPlayerIdx = -1;
 	HuskySkillTime = 0.0f;
@@ -547,10 +547,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 			g_pFramework->m_pNetwork->SetCharacterFall(i);
 
 			//내가 떨어졌을때 
-			m_Users[m_PlayerID]->m_PlayerController->SetIsFall();
-			GraphicsContext::GetApp()->OnBlurEffect(false);
+			if (m_PlayerID == i) {
+				m_Users[i]->m_PlayerController->SetIsFall();
+				GraphicsContext::GetApp()->OnBlurEffect(false);
 
-			IsFall[m_PlayerID] = false;
+				IsFall[i] = false;
+			}
 		}
 		if (Player_Lifecnt[m_PlayerID] == 0) {
 			AppContext->DisplayUI("UI_Youlose", "UI_Youlose", 0.f, 0.f, 400.f, 150.f);
