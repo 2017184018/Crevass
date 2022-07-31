@@ -1099,7 +1099,7 @@ void ProcessClients()
 				{		//우박 hail
 					if (!GameOverCheck) {
 						if (phyPlayers[i].CurrentBlockNum != -1) {
-							if (phyPlayers[i].TimeWhileBlock >= 18000) {		//한 블록에 3초 이상
+							if (phyPlayers[i].TimeWhileBlock >= 180) {//우박 3초
 								float time = phyPlayers[i].TimeWhileBlock / 60.0 - 3;
 								hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
 								g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
