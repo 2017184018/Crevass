@@ -126,8 +126,10 @@ void Network::ProcessPacket(char* packet_buffer)
 		for(int i=0;i<5;++i)
 			cout << i << " = " << (int)packet.players[i].character_type << ", " << (int)packet.players[i].ready << endl;
 
-		for (int i = 0; i < 5; ++i)
-			choosename[i] = packet.players[i].character_type;
+		for (int i = 0; i < 5; ++i) {
+			if ((int)packet.players[i].character_type != 0)
+				choosename[i] = (int)packet.players[i].character_type - 1;
+		}
 		break;
 
 
