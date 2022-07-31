@@ -198,7 +198,6 @@ void LobbyController::HandleInput(const float deltaT)
 
 		if (InputHandler::IsKeyUp('B'))
 		{
-			cout <<"currchar =" << CREVASS::GetApp()->currchar << endl;
 			switch (CREVASS::GetApp()->currchar) {
 			case 0: {
 				bool IsCharacterSeleted = false;
@@ -321,31 +320,6 @@ void GameplayController::Update(const float deltaT)
 
 void GameplayController::HandleInput(const float deltaT)
 {
-	if (InputHandler::IsKeyUp('Q')) {
-		SceneManager::GetApp()->ChangeScene(SceneType::Lobby);
-		//	SceneManager::GetApp()->ChangeScene();
-	}
-
-	// 파티클 루프 테스트
-	if (InputHandler::IsKeyUp('P')) {
-		//AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(11))->BlockParticle();
-		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(5), XMFLOAT3(0, 0, 0));
-		//AppContext->DisplayParticle("starParticle", "Penguin_star_particle", AppContext->FindObject<Character>("Penguin", "Penguin0")->m_HitBox.Center);
-	}
-	if (InputHandler::IsKeyUp('O')) {
-		AppContext->HiddenParticle("crushparticle", "crushparticle" + std::to_string(11));
-	}
-
-	//if (InputHandler::IsOverlap(VK_UP))
-	//{
-	//	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x += 0.01f;
-	//	cout << CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x << endl;
-	//}
-	//if (InputHandler::IsOverlap(VK_DOWN))
-	//{
-	//	CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x -= 0.01f;
-	//	cout << CREVASS::GetApp()->m_Lights[LIGHT_NAME_DIRECTIONAL]->Direction.x << endl;
-	//}
 
 }
 

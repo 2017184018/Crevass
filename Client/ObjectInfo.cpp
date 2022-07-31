@@ -11,7 +11,6 @@ ObjectInfo::ObjectInfo(std::string instID, UINT instIndex) :
 void ObjectInfo::AddInstance(std::string instID, UINT instIndex)
 {
 	if (m_InstanceKeymap.find(instID) != m_InstanceKeymap.end()) {
-		cout << "해당 ID 인스턴스가 존재함" << endl;
 	}
 	else
 	{
@@ -25,7 +24,6 @@ void ObjectInfo::AddInstance(std::string instID, UINT instIndex)
 UINT ObjectInfo::GetInstanceIndex(std::string instID)
 {
 	if (!m_InstanceKeymap.count(instID)) {
-		cout << "없는 key입니다. -"<< instID << endl;
 		return -1;
 	}
 

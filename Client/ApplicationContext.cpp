@@ -48,7 +48,6 @@ std::string ApplicationContext::FindAnimName(int animCode) const
 		animName = "Fall";
 		break;
 	default:
-		cout << "None Anim Code" << endl;
 		break;
 	}
 
@@ -2748,7 +2747,7 @@ void ApplicationContext::HiddenlobbyBlocks()
 
 void ApplicationContext::DisplayCharacter(Character* user, XMFLOAT3 pos, bool isVisible)
 {
-	if (!user) { cout << "return0000000000000000000000000" << endl;  return; };
+	if (!user) {   return; };
 
 	user->InitializeTransform();
 	user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
@@ -2761,7 +2760,7 @@ void ApplicationContext::DisplayCharacter(Character* user, XMFLOAT3 pos, bool is
 
 void ApplicationContext::DisplayCharacterSeal(Character* user, XMFLOAT3 pos, bool isVisible)
 {
-	if (!user) { cout << "return0000000000000000000000000" << endl;  return; };
+	if (!user) {  return; };
 
 	user->InitializeTransform();
 	user->SetAnimationKeyState(Character::PlayerState::STATE_IDLE);
@@ -2775,7 +2774,7 @@ void ApplicationContext::DisplayCharacterSeal(Character* user, XMFLOAT3 pos, boo
 void ApplicationContext::HiddenCharacter(std::string userName, std::string insname)
 {
 	Character* user = FindObject<Character>(userName, insname);
-	if (!user) { cout << userName << "return" << endl; return; }
+	if (!user) { return; }
 
 	user->m_MyCamera = nullptr;
 	user->SetAnimationPlayerState(Character::PlayerState::STATE_IDLE);
@@ -2827,7 +2826,6 @@ void ApplicationContext::HiddenUI(std::string uiName, std::string instname)
 {
 	GameObject* obj = FindObject<GameObject>(uiName, instname);
 	if (!obj) {
-		cout << "return" << endl;
 		return;
 	}
 	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
@@ -2849,7 +2847,7 @@ void ApplicationContext::SetUI2DPosition(std::string ui2dName, float posX, float
 void ApplicationContext::DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos)
 {
 	Particle* ptc = FindObject<Particle>(particleName, instID);
-	if (!ptc) { cout << "return1111111" << endl;  return; }
+	if (!ptc) {  return; }
 	ptc->m_IsVisible = true;
 	ptc->m_World = MathHelper::Identity4x4();
 	ptc->m_TexTransform = MathHelper::Identity4x4();

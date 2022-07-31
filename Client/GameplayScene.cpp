@@ -95,7 +95,6 @@ void GameplayScene::OnResize()
 
 bool GameplayScene::Enter()
 {
-	cout << "GamePlay Scene" << endl;
 	/* Create SceneBounds for Shadow */
 	m_SceneBounds.Center = XMFLOAT3(500.f, 0.0f, 500.f);
 	m_SceneBounds.Radius = sqrtf(1000.f * 1000.f + 1000.f * 1000.f);
@@ -278,8 +277,6 @@ void GameplayScene::Exit()
 	AppContext->FindObject<Character>("ArcticFoxOutline", "ArcticFoxOutline0")->m_IsVisible = false;
 	AppContext->FindObject<Character>("PolarBearOutline", "PolarBearOutline0")->m_IsVisible = false;
 	AppContext->FindObject<Character>("SealOutline", "SealOutline0")->m_IsVisible = false;
-
-	cout << "exit===========================================" << endl << endl;
 }
 
 void GameplayScene::Update(const float& fDeltaTime)
@@ -449,7 +446,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._22 = 1;
 			AppContext->m_RItemsVec[2 * (i + 1)]->m_World._33 = 1;
-			//cout << "how meny -" << AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(1))->m_Particles.size() << endl;
 
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._11 = 1;
 			AppContext->m_RItemsVec[2 * i + 1]->m_World._22 = 1;
@@ -724,8 +720,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 					AppContext->FindObject<GameObject>("Minimapicicle", "Minimapicicle" + std::to_string(i))->m_World._42 = MinimapCubePos[i].y + m_Users[m_PlayerID]->m_World._42 + 100;
 					AppContext->FindObject<GameObject>("Minimapicicle", "Minimapicicle" + std::to_string(i))->m_World._43 = MinimapCubePos[i].z + m_Users[m_PlayerID]->m_World._43;
 				}
-				//cout << i << ": " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._41 << ", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._42 <<
-				//	", " << AppContext->m_RItemsVec[2 * (i + 1) + 222]->m_World._43 << endl;
 			}
 		}
 		{

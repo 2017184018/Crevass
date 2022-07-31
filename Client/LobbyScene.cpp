@@ -38,7 +38,6 @@ void LobbyScene::OnResize()
 
 bool LobbyScene::Enter()
 {
-	cout << "Lobby Scene" << endl;
 	/* Create SceneBounds for Shadow */
 	m_SceneBounds.Center = XMFLOAT3(500.11, 0, 500);
 	m_SceneBounds.Radius = sqrtf(2000.f * 2000.f + 2000.f * 2000.f);
@@ -99,7 +98,6 @@ void LobbyScene::Exit()
 	AppContext->HiddenUI("UI_Down", "UI_Down");
 	if (m_SceneController)
 		dynamic_cast<LobbyController*>(m_SceneController)->is_ready = false;
-	cout << "LobbyScene===========================================" << endl << endl;
 
 }
 

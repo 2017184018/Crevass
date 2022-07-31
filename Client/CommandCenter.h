@@ -33,7 +33,6 @@ public:
 
 	void Order(float deltaT)
 	{
-		//		cout << m_FSM.size() << endl;
 		if (m_FSM.empty()) return;
 
 		if (m_StartAttackAnim)

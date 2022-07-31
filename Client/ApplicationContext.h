@@ -30,7 +30,6 @@ public:
 		// Map 중복체크
 		if (m_RItemsMap.find(type) != m_RItemsMap.end())
 		{
-			cout << "Create Instance!" << endl;
 			// Instancemap 조정
 			m_RItemsMap[type]->AddInstance(instID, obj->GetIndex());
 		}
@@ -50,7 +49,6 @@ public:
 	TObject* FindObject(std::string type, std::string instID)
 	{
 		if (!m_RItemsMap.count(type)) {
-			cout << "Error! None Type" << endl;
 			return nullptr;
 		}
 

@@ -8,9 +8,6 @@ namespace InputHandler
 
 	bool InputHandler::IsKeyDown(int key)
 	{
-		//if (key == VK_RIGHT) {
-		//	cout << KeyFlag[key] << endl;
-		//}
 		if (GetAsyncKeyState(key) & 0x8000) {
 			if (!KeyFlag[key]) {
 				KeyFlag[key] = true;
