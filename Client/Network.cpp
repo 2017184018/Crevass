@@ -125,6 +125,9 @@ void Network::ProcessPacket(char* packet_buffer)
 		m_pGameInfo->CreatePlayerInfo(packet.id, true);
 		for(int i=0;i<5;++i)
 			cout << i << " = " << (int)packet.players[i].character_type << ", " << (int)packet.players[i].ready << endl;
+
+		for (int i = 0; i < 5; ++i)
+			choosename[i] = packet.players[i].character_type;
 		break;
 
 

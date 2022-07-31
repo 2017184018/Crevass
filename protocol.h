@@ -112,7 +112,6 @@ struct Block {
 
 struct LobbyPlayerState
 {
-	char id;
 	char character_type;
 	char ready;
 };

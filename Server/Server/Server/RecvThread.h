@@ -423,22 +423,28 @@ void Receiver(char id)
 
 		case CS_CHOOSE_HUSKY:
 		{
+			g_initialPos[id].Character_type = CHARACTER_HUSKY;
 			SendChooseHusky(id);
 			break;
 		}
 		case CS_CHOOSE_PENGUIN:
 		{
+			g_initialPos[id].Character_type = CHARACTER_PENGUIN;
 			SendChoosePenguin(id);
 			break;
 		}
 
 		case CS_CHOOSE_FOX:
 		{
+			g_initialPos[id].Character_type = CHARACTER_ARCTICFOX;
+
 			SendChooseFox(id);
 			break;
 		}
 
 		case CS_CHOOSE_POLARBEAR:
+			g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
+
 		{
 			SendChooseBear(id);
 			break;
@@ -446,6 +452,7 @@ void Receiver(char id)
 
 		case CS_CHOOSE_SEAL:
 		{
+			g_initialPos[id].Character_type = CHARACTER_SEAL;
 			SendChooseSeal(id);
 			break;
 		}
