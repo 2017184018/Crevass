@@ -1131,13 +1131,9 @@ void ProcessClients()
 								hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
 								g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
 								for (int j = 0; j < 5; ++j) {
-									static bool hailhit = false;
 									if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[phyPlayers[i].TypeName]) && phyPlayers[i].SnowmanNum == -1) {
 										phyPlayers[i].is_hitted = true;
-										if (!hailhit) {
-											SendHitPalyer(players[i].Character_type, phyPlayers[i].GetPos());
-											hailhit = true;
-										}
+										SendHitPalyer(players[i].Character_type, phyPlayers[i].GetPos());
 										if (phyPlayers[i].TypeName == "husky") {
 											phyPlayers[i].is_Skill = false;
 											phyPlayers[i].is_Skillanim = false;
@@ -1170,9 +1166,8 @@ void ProcessClients()
 											else if (SubZ >= 9)
 												phyPlayers[i].hitted_dir = 5;
 										}
-									}
-									else {
-										hailhit = false;
+										hails[i].SetPos(-1000, -1000, -1000);
+										phyPlayers[i].TimeWhileBlock = 0;
 									}
 								}
 								if (hails[i].GetPos().y <= -90) {
@@ -1443,11 +1438,11 @@ void ProcessClients()
 							g_isPlaying = false;
 							lose_count = 0;
 							phyPlayers = *new std::vector <Player>;
-							//delete[] blocks;
+							delete[] blocks;
 
 							return;
 						}
-						else if (GameOverTimeCount > 270 /** numOfCls*/) {
+						else if (GameOverTimeCount > 270 * numOfCls) {
 							phyPlayers[i].is_Skillanim = false;
 						}
 						else {
