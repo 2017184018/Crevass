@@ -35,7 +35,6 @@ public:
 	bool m_keyS = false;
 	bool m_keyA = false;
 	bool m_keyD = false;
-	bool m_keySpace = false;
 	bool m_keyAttack = false;
 
 	bool is_attack = false;

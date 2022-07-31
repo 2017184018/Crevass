@@ -144,7 +144,7 @@ void Update(vector<Player>& player, float elapsedTime)
 				else {
 					if (g_boundaries["snowcube" + std::to_string(j)]->Intersects(*g_boundaries[player[i].TypeName])) {
 						player[i].m_pos.x -= saveX;
-						//player[i].m_pos.y -= 1.f;
+						player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
 						g_boundaries[player[i].TypeName]->Center.x -= saveX;
 						g_boundaries[player[i].TypeName]->Center.z -= saveZ;
@@ -554,6 +554,8 @@ void ProcessClients()
 						}
 
 						for (int i = 0; i < numOfCls; i++) {
+							g_boundaries[phyPlayers[i].TypeName]->Center = players[i].pos;
+
 							if (phyMsg.id != i) {
 								//맞았다면
 								if (phyPlayers[phyMsg.id].Hit_BB.Intersects(*g_boundaries[phyPlayers[i].TypeName])) {
@@ -675,16 +677,6 @@ void ProcessClients()
 
 
 			}
-			/*   for (int i = 0; i < numOfCls; ++i)
-			   {
-				  players[i].id = i;
-				  players[i].anim = phyPlayers[i].anim;
-			   }
-			   if (phyMsg.type == TYPE_ANIMATION)
-			   {
-				  players[phyMsg.id].anim = phyPlayers[phyMsg.id].GetAnimType();
-				  SendAnim(*players);
-			   }*/
 			for (int i = 0; i < numOfCls; ++i)
 			{
 				//아이스 , 스노우 아무것도 출동하지 않을때 
@@ -724,6 +716,7 @@ void ProcessClients()
 						}
 					}
 				}
+
 				if (phyPlayers[i].m_pos.y < -100)
 				{
 
@@ -732,19 +725,15 @@ void ProcessClients()
 					phyPlayers[i].m_keyA = false;
 					phyPlayers[i].m_keyS = false;
 					phyPlayers[i].m_keyD = false;
+					phyPlayers[i].is_jump = false;
 					phyPlayers[i].m_pos.y = -100;
 					players[i].pos.y = phyPlayers[i].m_pos.y;
 					phyPlayers[i].gravity = 0.0f;
 					SendFall(i);
 					phyPlayers[i].is_reset = true;
 				}
-				g_boundaries[phyPlayers[i].TypeName]->Center = players[i].pos;
-				/*			if (TypeName[i] == "Penguin") {
-								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-							}
-							else {
-								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-							}*/
+				
+		\
 			}
 
 			for (int i = 0; i < numOfCls; ++i)
@@ -790,17 +779,9 @@ void ProcessClients()
 							phyPlayers[i].lifecnt -= 1;
 						if (phyPlayers[i].lifecnt == 0) {
 							phyPlayers[i].IsDead = true;
-							//who_lose[lose_count] = i;
-							//lose_count += 1;
 						}
-						//phyPlayers[i].anim = ANIM_IDLE;
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;
-						/*	if (TypeName[i] == "Penguin") {
-								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 3;
-							}
-							else {
-								g_boundaries[TypeName[i]]->Center.y += g_boundaries[TypeName[i]]->Extents.y / 1.5;
-							}*/
+				
 						if (phyPlayers[i].lifecnt >= 0)
 							SendReset(i, phyPlayers[i].lifecnt);
 
@@ -1448,6 +1429,10 @@ void ProcessClients()
 
 							g_isPlaying = false;
 							lose_count = 0;
+							phyPlayers = *new std::vector <Player>;
+							for (int i = 0; i < 25; i++)
+								blocks[i] = *new Block;
+
 							return;
 						}
 						else if (GameOverTimeCount > 270 * numOfCls) {
