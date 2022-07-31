@@ -25,7 +25,7 @@ void Update(vector<Player>& player, float elapsedTime)
 	{
 		float saveX = 0;
 		float saveZ = 0;
-		if (player[i].is_hitted == false || player[i].IsFall==false) {
+		if (player[i].is_hitted == false || player[i].IsFall == false) {
 			if (player[i].GetKeyW() && player[i].GetKeyA()) {
 				player[i].m_pos.z += player[i].GetCrossSpeed() * elaps_time;
 				player[i].m_pos.x -= player[i].GetCrossSpeed() * elaps_time;
@@ -136,15 +136,15 @@ void Update(vector<Player>& player, float elapsedTime)
 			if (player[i].m_pos.y < blocks[j].pos.y + 60) {
 				g_boundaries[phyPlayers[i].TypeName]->Center = player[i].m_pos;
 
-			//	g_boundaries[player[i].TypeName]->Center.x += saveX;
-			//	g_boundaries[player[i].TypeName]->Center.z += saveZ;
+				//	g_boundaries[player[i].TypeName]->Center.x += saveX;
+				//	g_boundaries[player[i].TypeName]->Center.z += saveZ;
 				if (BlockCheck(j)) {
 					if (g_boundaries["icecube" + std::to_string(j)]->Intersects(*g_boundaries[player[i].TypeName])) {
 						player[i].m_pos.x -= saveX;
 						player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
-					//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
-					//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
+						//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
+						//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 					}
 				}
 				else {
@@ -152,8 +152,8 @@ void Update(vector<Player>& player, float elapsedTime)
 						player[i].m_pos.x -= saveX;
 						//player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
-					//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
-					//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
+						//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
+						//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 					}
 				}
 			}
@@ -349,7 +349,7 @@ void ProcessClients()
 	int GameOverTimeCount = 0;
 	bool GameOverCheck = false;
 	bool BlockIn = false;
-	
+
 	bool HideInSnowman[4] = { false,false,false,false };	//n번째 눈사람에 누군가 숨어있는지
 	bool dir_switch[5];
 	bool BearSkill = true;
@@ -537,25 +537,25 @@ void ProcessClients()
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 1)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
-							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 3)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.x += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
 							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
 
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 5)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
-							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
 
 						}
 						else if (static_cast<int>(phyPlayers[phyMsg.id].dir) == 7)
 						{
-							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
-							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z ;
+							phyPlayers[phyMsg.id].Hit_BB.Center.x -= g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
+							phyPlayers[phyMsg.id].Hit_BB.Center.z += g_boundaries[phyPlayers[phyMsg.id].TypeName]->Extents.z;
 
 						}
 
@@ -738,8 +738,8 @@ void ProcessClients()
 					SendFall(i);
 					phyPlayers[i].is_reset = true;
 				}
-				
-		\
+
+				\
 			}
 
 			for (int i = 0; i < numOfCls; ++i)
@@ -787,7 +787,7 @@ void ProcessClients()
 							phyPlayers[i].IsDead = true;
 						}
 						g_boundaries[phyPlayers[i].TypeName]->Center = phyPlayers[i].m_pos;
-				
+
 						if (phyPlayers[i].lifecnt >= 0)
 							SendReset(i, phyPlayers[i].lifecnt);
 
@@ -1131,9 +1131,13 @@ void ProcessClients()
 								hails[i].SetPosCalc(phyPlayers[i].CurrentBlockNum / 5 * 200, 200, phyPlayers[i].CurrentBlockNum % 5 * 200, time);
 								g_boundaries["hail" + std::to_string(i)]->Center = hails[i].GetPos();
 								for (int j = 0; j < 5; ++j) {
+									static bool hailhit = false;
 									if (g_boundaries["hail" + std::to_string(j)]->Intersects(*g_boundaries[phyPlayers[i].TypeName]) && phyPlayers[i].SnowmanNum == -1) {
 										phyPlayers[i].is_hitted = true;
-										SendHitPalyer(players[i].Character_type, phyPlayers[i].GetPos());
+										if (!hailhit) {
+											SendHitPalyer(players[i].Character_type, phyPlayers[i].GetPos());
+											hailhit = true;
+										}
 										if (phyPlayers[i].TypeName == "husky") {
 											phyPlayers[i].is_Skill = false;
 											phyPlayers[i].is_Skillanim = false;
@@ -1166,6 +1170,9 @@ void ProcessClients()
 											else if (SubZ >= 9)
 												phyPlayers[i].hitted_dir = 5;
 										}
+									}
+									else {
+										hailhit = false;
 									}
 								}
 								if (hails[i].GetPos().y <= -90) {
@@ -1414,7 +1421,7 @@ void ProcessClients()
 					if (GameOverCheck == true)
 					{
 						GameOverTimeCount += 1;
-						if (GameOverTimeCount > 300 * numOfCls)
+						if (GameOverTimeCount > 300)
 						{
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
@@ -1436,8 +1443,7 @@ void ProcessClients()
 							g_isPlaying = false;
 							lose_count = 0;
 							phyPlayers = *new std::vector <Player>;
-							for (int i = 0; i < 25; i++)
-								blocks[i] = *new Block;
+							delete[] blocks;
 
 							return;
 						}

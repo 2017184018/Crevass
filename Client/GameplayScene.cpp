@@ -822,6 +822,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 1;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_ARCTICFOX) {
@@ -835,6 +836,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 1;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_HUSKY) {
@@ -848,6 +850,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 1;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 				else if (g_pFramework->m_pNetwork->GetCharacterType(i) == CHARACTER_SEAL) {
@@ -861,6 +864,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline / 20 * 15;
+					AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 1;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 					if (g_pFramework->m_pNetwork->GetSealSkill()) {
 						AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 2;
@@ -880,6 +884,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 					XMStoreFloat4x4(&tmpuser, XMLoadFloat4x4(&tmpuser) * XMLoadFloat4x4(&m_Users[i]->m_World));
 					AppContext->m_RItemsVec[tmp->second]->m_World = tmpuser;
 					AppContext->m_RItemsVec[tmp->second]->m_World._42 -= syncoutline;
+					AppContext->m_RItemsVec[tmp->second]->m_MaterialIndex = 1;
 					AppContext->m_RItemsVec[tmp->second]->m_IsVisible = true;
 				}
 			}

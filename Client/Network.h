@@ -3,8 +3,8 @@
 #include "GameInfo.h"
 
 
-#define SERVERIP "127.0.0.1"
-//#define SERVERIP "192.168.35.197"
+//#define SERVERIP "127.0.0.1"
+#define SERVERIP "192.168.35.197"
 //#define SERVERIP "192.168.35.252"
 
 
