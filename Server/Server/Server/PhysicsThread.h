@@ -1443,11 +1443,11 @@ void ProcessClients()
 							g_isPlaying = false;
 							lose_count = 0;
 							phyPlayers = *new std::vector <Player>;
-							delete[] blocks;
+							//delete[] blocks;
 
 							return;
 						}
-						else if (GameOverTimeCount > 270 * numOfCls) {
+						else if (GameOverTimeCount > 270 /** numOfCls*/) {
 							phyPlayers[i].is_Skillanim = false;
 						}
 						else {
