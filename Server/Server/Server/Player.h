@@ -62,6 +62,8 @@ public:
 	int lifecnt = 5;
 	int ResetLocation = -1;
 	float ResetLocationSaveCount = 0.0f;
+
+	bool IsFall = false;
 public:
 	char dir = 0;
 	char anim = 0;
