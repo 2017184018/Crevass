@@ -35,6 +35,21 @@ void SendLoginOkPacket(char id)
 	packet.size = sizeof(packet);
 	packet.type = SC_LOGIN_OK;
 
+	g_PlayerLobbyStateInfoLock.lock();
+	LobbyPlayerState LobbyState[5];
+	for (int i = 0; i < 5; ++i)
+	{
+		LobbyState[i].character_type = g_initialPos[i].Character_type;
+		LobbyState[i].id = i;
+		LobbyState[i].ready = g_playerReadyInfo[i].ready;
+	}
+	g_PlayerLobbyStateInfoLock.unlock();
+
+	for (int i = 0; i < 5; ++i)
+	{
+		packet.players[i] = LobbyState[i];
+	}
+
 	int retval = send(g_clients[id], (char*)&packet, sizeof(packet), 0);
 	//SendPacket( id, &packet );
 }
