@@ -443,9 +443,8 @@ void Receiver(char id)
 		}
 
 		case CS_CHOOSE_POLARBEAR:
-			g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
-
 		{
+			g_initialPos[id].Character_type = CHARACTER_POLARBEAR;
 			SendChooseBear(id);
 			break;
 		}

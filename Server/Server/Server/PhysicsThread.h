@@ -109,6 +109,8 @@ void Update(vector<Player>& player, float elapsedTime)
 				saveZ = player[i].GetSpeed() * elaps_time;
 			}
 		}
+
+
 		for (int j = 0; j < numOfCls; ++j) {
 			if (i != j && !(player[i].TypeName == "husky" && player[i].is_Skill)) {
 				g_boundaries[player[i].TypeName]->Center.x += saveX;
@@ -128,26 +130,30 @@ void Update(vector<Player>& player, float elapsedTime)
 				}
 			}
 		}
+
+
 		for (int j = 0; j < 25; ++j) {
 			if (player[i].m_pos.y < blocks[j].pos.y + 60) {
-				g_boundaries[player[i].TypeName]->Center.x += saveX;
-				g_boundaries[player[i].TypeName]->Center.z += saveZ;
+				g_boundaries[phyPlayers[i].TypeName]->Center = player[i].m_pos;
+
+			//	g_boundaries[player[i].TypeName]->Center.x += saveX;
+			//	g_boundaries[player[i].TypeName]->Center.z += saveZ;
 				if (BlockCheck(j)) {
 					if (g_boundaries["icecube" + std::to_string(j)]->Intersects(*g_boundaries[player[i].TypeName])) {
 						player[i].m_pos.x -= saveX;
 						player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
-						g_boundaries[player[i].TypeName]->Center.x -= saveX;
-						g_boundaries[player[i].TypeName]->Center.z -= saveZ;
+					//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
+					//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 					}
 				}
 				else {
 					if (g_boundaries["snowcube" + std::to_string(j)]->Intersects(*g_boundaries[player[i].TypeName])) {
 						player[i].m_pos.x -= saveX;
-						player[i].m_pos.y -= 1.f;
+						//player[i].m_pos.y -= 1.f;
 						player[i].m_pos.z -= saveZ;
-						g_boundaries[player[i].TypeName]->Center.x -= saveX;
-						g_boundaries[player[i].TypeName]->Center.z -= saveZ;
+					//	g_boundaries[player[i].TypeName]->Center.x -= saveX;
+					//	g_boundaries[player[i].TypeName]->Center.z -= saveZ;
 					}
 				}
 			}
