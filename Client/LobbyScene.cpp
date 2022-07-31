@@ -122,6 +122,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 
 		case 0:
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->FindObject<Character>("husky", "husky" + std::to_string(100 + i))->Rotate(0, 180, 0);
 			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
 			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
 			AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
@@ -135,6 +136,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 			break;
 		case 1:
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->FindObject<Character>("Penguin", "Penguin" + std::to_string(110 + i))->Rotate(0, 180, 0);
 			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
 			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
 			AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
@@ -148,6 +150,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 			break;
 		case 2:
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->FindObject<Character>("ArcticFox", "ArcticFox" + std::to_string(120 + i))->Rotate(0, 180, 0);
 			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
 			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
 			AppContext->HiddenCharacter("PolarBear", "PolarBear" + std::to_string(130 + i));
@@ -161,6 +164,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 			break;
 		case 3:
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->FindObject<Character>("PolarBear", "PolarBear" + std::to_string(130 + i))->Rotate(0, 180, 0);
 			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
 			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
 			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));
@@ -174,6 +178,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 			break;
 		case 4:
 			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i)), XMFLOAT3(200.f * i, 30.f, 0.f), true);
+			AppContext->FindObject<Character>("Seal", "Seal" + std::to_string(140 + i))->Rotate(0, 180, 0);
 			AppContext->HiddenCharacter("husky", "husky" + std::to_string(100 + i));
 			AppContext->HiddenCharacter("Penguin", "Penguin" + std::to_string(110 + i));
 			AppContext->HiddenCharacter("ArcticFox", "ArcticFox" + std::to_string(120 + i));

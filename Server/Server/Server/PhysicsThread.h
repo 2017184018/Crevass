@@ -1446,7 +1446,8 @@ void ProcessClients()
 						{
 							SendGameOverPacket(i);
 							cout << "Winner is " << i << endl;
-							phyPlayers.clear();
+							phyPlayers = *new std::vector <Player>;
+						//	phyPlayers.clear();
 						//	g_boundaries.clear();
 
 
