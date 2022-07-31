@@ -106,6 +106,7 @@ public:
 	void HiddenlobbyBlocks();
 
 	void DisplayCharacter(Character* user, XMFLOAT3 pos, bool isVisible);
+	void DisplayCharacterSeal(Character* user, XMFLOAT3 pos, bool isVisible);
 	void DisplayCharacter(std::string mapName, std::string userName, int spawnLocation, bool isVisible = true);
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName, std::string insname);

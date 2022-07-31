@@ -143,7 +143,7 @@ bool GameplayScene::Enter()
 
 		}
 		else if (ty == CHARACTER_SEAL) {
-			AppContext->DisplayCharacter(AppContext->FindObject<Character>("Seal", "Seal0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
+			AppContext->DisplayCharacterSeal(AppContext->FindObject<Character>("Seal", "Seal0"), g_pFramework->m_pNetwork->GetPlayerPos(i), true);
 			m_Users[i] = AppContext->FindObject<Character>("Seal", "Seal0");
 
 		}
@@ -279,11 +279,6 @@ void GameplayScene::Exit()
 	AppContext->FindObject<Character>("PolarBearOutline", "PolarBearOutline0")->m_IsVisible = false;
 	AppContext->FindObject<Character>("SealOutline", "SealOutline0")->m_IsVisible = false;
 
-	//AppContext->FindObject<Character>("Penguin", "Penguin0")->m_IsVisible = false;
-	//AppContext->FindObject<Character>("ArcticFox", "ArcticFox0")->m_IsVisible = false;
-	//AppContext->FindObject<Character>("husky", "husky0")->m_IsVisible = false;
-	//AppContext->FindObject<Character>("Seal", "Seal0")->m_IsVisible = false;
-	//AppContext->FindObject<Character>("PolarBear", "PolarBear0")->m_IsVisible = false;
 	cout << "exit===========================================" << endl << endl;
 }
 
