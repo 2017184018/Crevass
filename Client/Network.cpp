@@ -42,7 +42,6 @@ void Network::Connect(/*std::string* ipAddr*/)
 	if (m_Retval == SOCKET_ERROR) {
 		if (WSAGetLastError() != WSAEWOULDBLOCK)
 		{
-			//std::cout << " error connect " << std::endl;
 		}
 	}
 }
@@ -63,7 +62,6 @@ void Network::Recv()
 		return;
 	}
 	else if (retval == 0) {
-		std::cout << "SERVER FULL! CAN'T CONNECT!" << std::endl;
 		PostQuitMessage(0);
 		return;
 	}
@@ -112,7 +110,6 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 	case SC_LOGIN_OK:
 	{
-		std::cout << "login ok" << std::endl;
 		sc_packet_login_ok packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		//Info::GetInstance()->m_IsConnect = true;
@@ -123,8 +120,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		m_pGameInfo->m_ClientID = static_cast<int>(packet.id);
 		//	m_pGameInfo->m_ClientsNum += 1;
 		m_pGameInfo->CreatePlayerInfo(packet.id, true);
-		for(int i=0;i<5;++i)
-			cout << i << " = " << (int)packet.players[i].character_type << ", " << (int)packet.players[i].ready << endl;
 
 		for (int i = 0; i < 5; ++i) {
 			if ((int)packet.players[i].character_type != 0)
@@ -171,8 +166,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		choosename[(int)packet.id] = 0;
-		cout << (int)packet.id << endl;
-		cout << (int)packet.type << endl;
 		break;
 	}
 	case SC_CHOOSE_PENGUIN:
@@ -180,8 +173,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		choosename[(int)packet.id] = 1;
-		cout << (int)packet.id << endl;
-		cout << (int)packet.type << endl;
 		break;
 	}
 
@@ -190,8 +181,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		choosename[(int)packet.id] = 2;
-		cout << (int)packet.id << endl;
-		cout << (int)packet.type << endl;
 		break;
 	}
 
@@ -200,8 +189,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		choosename[(int)packet.id] = 3;
-		cout << (int)packet.id << endl;
-		cout << (int)packet.type << endl;
 		break;
 	}
 	case SC_CHOOSE_SEAL:
@@ -209,16 +196,12 @@ void Network::ProcessPacket(char* packet_buffer)
 		sc_packet_choose packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		choosename[(int)packet.id] = 4;
-		cout << (int)packet.id << endl;
-		cout << (int)packet.type << endl;
 		break;
 	}
 
 
 	case SC_GAMESTART:
 	{
-
-		std::cout << "game start" << std::endl;
 		sc_packet_game_start packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = true;
@@ -301,7 +284,6 @@ void Network::ProcessPacket(char* packet_buffer)
 	{
 		sc_packet_crash packet;
 		memcpy(&packet, ptr, sizeof(packet));
-		cout << "crash cube num = " << packet.blocknum << endl;
 		crash_block_index = packet.blocknum;
 		XMFLOAT3 f3 = AppContext->FindObject<GameObject>("icecube", "icecube" + std::to_string(packet.blocknum))->GetPosition();
 		AppContext->DisplayParticle("crushparticle", "crushparticle" + std::to_string(packet.blocknum), XMFLOAT3(f3.x, f3.y + 60.f, f3.z));
@@ -325,7 +307,6 @@ void Network::ProcessPacket(char* packet_buffer)
 
 		sc_packet_hitplayer packet;
 		memcpy(&packet, ptr, sizeof(packet));
-		cout << "type num = " << packet.typenum << endl;
 		switch (packet.typenum)
 		{
 		case CHARACTER_HUSKY:
@@ -383,7 +364,6 @@ void Network::ProcessPacket(char* packet_buffer)
 
 	case SC_REMOVE_PLAYER:
 	{
-		std::cout << "remove player" << std::endl;
 		sc_packet_remove_player packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->DeletePlayerInfo(packet.id);
@@ -444,20 +424,11 @@ void Network::ProcessPacket(char* packet_buffer)
 	}
 	case SC_GAMEOVER:
 	{
-		std::cout << "game over" << std::endl;
 		sc_packet_gameover packet;
 		memcpy(&packet, ptr, sizeof(packet));
 		m_pGameInfo->m_GameStart = false;
 
 		m_pGameInfo->m_WinnerID = (int)packet.id;
-		cout << "Game Over, Winner is " << m_pGameInfo->m_WinnerID << endl;
-	/*	if (m_pGameInfo->m_WinnerID == m_pGameInfo->m_ClientID)
-			MessageBox(nullptr, L"You Win", L"Game Over!", MB_OK);
-		else if (m_pGameInfo->m_WinnerID != m_pGameInfo->m_ClientID)
-			MessageBox(nullptr, L"You Lose", L"Game Over!", MB_OK);*/
-
-		//m_pGameInfo->m_ClientsNum = 0;
-		//m_pGameInfo->m_ClientID = -1;
 		m_pGameInfo->m_WinnerID = -1;
 		m_pGameInfo->m_GameOver = false;
 		m_pGameInfo->m_GameStart = false;
@@ -479,7 +450,6 @@ void Network::ProcessPacket(char* packet_buffer)
 		break;
 	}
 	default:
-		std::cout << "None Receive Packet" << std::endl;
 		break;
 	}
 	return;
@@ -510,8 +480,6 @@ void Network::ErrorDisplay(const char* msg)
 		NULL, WSAGetLastError(),
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		(LPWSTR)&lpMsgBuf, 0, NULL);
-
-	std::cout << "Error! - " << msg << "descripton: " << lpMsgBuf << std::endl;
 }
 
 DirectX::XMFLOAT3 Network::GetPlayerPos(int num)const
@@ -571,8 +539,6 @@ bool Network::GetCharacterFall(int num)const
 void Network::SetCharacterFall(int num)
 {
 	IsFall[num] = false;
-	cout << num << endl;
-
 }
 
 bool Network::GetCharacterReset(int num)const
@@ -643,8 +609,5 @@ void Network::SetPlayerLifeCnt()
 
 int Network::GetChooseCharacter(int num)const
 {
-	//for (int i = 0; i < 5; ++i) {
-	//	cout << "c" <<i<<": " << choosename[i] << endl;
-	//}
 	return choosename[num];
 }

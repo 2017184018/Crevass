@@ -52,7 +52,6 @@ void SoundManager::PlaySoundOnce(const TCHAR* pSoundKey, CHANNEL_ID eID, float v
 void SoundManager::PlaySoundLoop(const TCHAR* pSoundKey, CHANNEL_ID eID)
 {
 	if (m_MapSound.empty()) {
-		cout << "mapSound empty" << endl;
 		return;
 	}
 

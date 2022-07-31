@@ -35,10 +35,6 @@ void SceneManager::InitializeScenes()
 
 void SceneManager::ChangeScene(SceneType sceneType)
 {
-	if (m_CurScene == -1)
-		cout << "NullScene" << endl;
-	cout << "curscene == "<< endl;
-	cout << "curscene == " << m_CurScene << endl;
 	m_Scenes[m_CurScene]->Exit();
 
 	m_CurScene = static_cast<int>(sceneType);
@@ -60,9 +56,6 @@ void SceneManager::ExitScene()
 
 void SceneManager::ChangeScene()
 {
-	if (m_CurScene == -1)
-		cout << "NullScene" << endl;
-
 	m_Scenes[m_CurScene]->Exit();
 
 	m_CurScene += 1;

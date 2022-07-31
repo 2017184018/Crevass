@@ -480,7 +480,6 @@ void MeshReference::BuildSkinnedModelAnimation(std::string meshName, const std::
 {
 	if (!m_SkinnedModelInsts.count(meshName))
 	{
-		cout << "LoadModelAnimation: None MeshName" << endl;
 	}
 	else
 	{

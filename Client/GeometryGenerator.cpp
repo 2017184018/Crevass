@@ -16,9 +16,6 @@ GeometryGenerator::MeshData GeometryGenerator::CreateBox(BoundingBox BB, uint32 
 	BB.GetCorners(corners);
 
 	Vertex v[24];
-	cout << "w2 = " << BB.Extents.x;
-	cout << "h2 = " << BB.Extents.y;
-	cout << "d2 = " << BB.Extents.z;
 	float w2 = BB.Extents.x;;
 	float h2 = BB.Extents.y;
 	float d2 = BB.Extents.z;

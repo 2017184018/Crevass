@@ -12,14 +12,11 @@ void GameresultScene::OnResize()
 
 bool GameresultScene::Enter()
 {
-	cout << "Gameresult Scene" << endl;
-
 	return false;
 }
 
 void GameresultScene::Exit()
 {
-	cout << "exitGameresultScene===========================================" << endl << endl;
 }
 
 void GameresultScene::Update(const float& fDeltaTime)
